@@ -32,12 +32,14 @@
                                     <tr>
                                         <th>Inscrições</th>
                                         <th>Validadas</th>
+                                        <th>Total Recebido</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
                                         <td>{{$evento->inscricaos_count}}</td>
                                         <td>{{$evento->inscricoes_validadas_count}}</td>
+                                        <td>R$ {{number_format($evento->total_arrecadado ?? 0, 2, ',', '.')}}</td>
                                     </tr>
                                 </tbody>
                             </table>
