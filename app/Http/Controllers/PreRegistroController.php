@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\PreRegistro;
+use App\Models\Users\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
@@ -21,7 +22,7 @@ class PreRegistroController extends Controller
     {
         $rules = [
             'nome' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
+            'email' => 'required|email',
             'pais' => 'required|string',
         ];
 
@@ -42,6 +43,13 @@ class PreRegistroController extends Controller
         }
 
         $request->validate($rules, $messages);
+
+        // Verifica se existe um usuário com soft delete
+        $userDeletado = User::withTrashed()->where('email', $request->email)->first();
+        
+        if ($userDeletado && $userDeletado->deleted_at === null) {
+            return back()->withErrors(['email' => 'Este email já está cadastrado no sistema.']);
+        }
 
         // Verifica se já existe um código ainda válido para esse e-mail ou CPF
         $registroExistente = PreRegistro::where(function ($query) use ($request) {
