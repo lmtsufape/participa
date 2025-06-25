@@ -100,7 +100,7 @@
                 @if ($inscricao->categoria)
                 <div class="form-group">
                     <label class="text-center">Categoria</label>
-                    <input type="text" class="form-control" value="{{$inscricao->categoria->nome}}" disabled>
+                    <input type="text" class="form-control" value="{{ $inscricao->categoria?->nome ?? '–' }}" disabled>
                 </div>
                 @endif
                 @forelse ($inscricao->camposPreenchidos as $campo)
