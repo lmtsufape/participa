@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use MercadoPago\Exceptions\MPApiException;
 use Throwable;
+use Carbon\Carbon;
 
 // use Ramsey\Uuid\Uuid;
 
@@ -151,7 +152,11 @@ class CheckoutController extends Controller
                             "city" => $contents['payer']['address']['city'],
                             "federal_unit" => $contents['payer']['address']['federal_unit'],
                         ],
-                    ]
+
+                    ],
+                    "date_of_expiration"   => Carbon::now('America/Recife')
+                                            ->addDays(10)
+                                            ->format('Y-m-d\TH:i:s.000-03:00'),
                 ];
                 break;
             case 'master':
