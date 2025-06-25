@@ -65,7 +65,7 @@
                                     @endif
                                     <td data-bs-toggle="modal" data-bs-target="#modal-listar-campos-formulario-{{$inscricao->id}}">{{$inscricao->user->name}}</td>
                                     <td data-bs-toggle="modal" data-bs-target="#modal-listar-campos-formulario-{{$inscricao->id}}">{{$inscricao->user->email}}</td>
-                                    <td data-bs-toggle="modal" data-bs-target="#modal-listar-campos-formulario-{{$inscricao->id}}">{{$inscricao->categoria->nome}}</td>
+                                    <td data-bs-toggle="modal" data-bs-target="#modal-listar-campos-formulario-{{$inscricao->id}}">{{$inscricao->categoria?->nome ?? 'N/A'}}</td>
                                     <td data-bs-toggle="modal" data-bs-target="#modal-listar-campos-formulario-{{$inscricao->id}}">R$ {{ $inscricao->categoria ? number_format($inscricao->categoria->valor_total, 2, ',', '.') : 'N/A' }}</td>
                                     <td data-bs-toggle="modal" data-bs-target="#modal-listar-campos-formulario-{{$inscricao->id}}">
                                         @if($inscricao->finalizada == true)
