@@ -99,7 +99,7 @@
                 @if ($inscricao->categoria)
                 <div class="form-group">
                     <label class="text-center">Categoria</label>
-                    <input type="text" class="form-control" value="{{$inscricao->categoria->nome}}" disabled>
+                    <input type="text" class="form-control" value="{{$inscricao->categoria?->nome ?? '–' }}" disabled>
                     <div class="col-md-4">
                         <label class="text-center">Valor da Inscrição</label>
                         <input type="text" class="form-control" value="R$ {{ number_format($inscricao->categoria->valor_total, 2, ',', '.') }}" disabled>
