@@ -41,7 +41,7 @@
                             <tr>
                               <td>{{$loop->iteration}}</td>
                               <td>{{$candidatura->user->name ?? 'N/A'}}</td>
-                              <td>{{$candidatura->user->email}}</td>
+                              <td>{{$candidatura->user->email ?? 'N/A'}}</td>
                               <td class="text-center">
                                 @if ($candidatura->aprovado)
                                     <span class="badge bg-success">Aprovado</span>
