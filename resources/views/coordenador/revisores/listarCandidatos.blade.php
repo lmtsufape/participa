@@ -39,8 +39,8 @@
 
                         @foreach($candidaturas  as $candidatura)
                             <tr>
-                              <td>{{$loop->iteration}}</td>  
-                              <td>{{$candidatura->user->name}}</td>
+                              <td>{{$loop->iteration}}</td>
+                              <td>{{$candidatura->user->name ?? 'N/A'}}</td>
                               <td>{{$candidatura->user->email}}</td>
                               <td class="text-center">
                                 @if ($candidatura->aprovado)
