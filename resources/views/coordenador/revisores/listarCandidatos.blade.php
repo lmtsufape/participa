@@ -83,7 +83,7 @@
                                     </div>
                                     <div class="modal-body">
                                     Tem certeza de que deseja <strong>aprovar</strong> a candidatura de
-                                    <em>{{ $candidatura->user->name }}</em>?
+                                    <em>{{ $candidatura->user->name ?? 'N/A'}}</em>?
                                     </div>
                                     <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
@@ -91,7 +91,7 @@
                                         @csrf
                                         @method('PUT')
                                         <input type="hidden" name="evento_id" value="{{ $evento->id }}">
-                                        <input type="hidden" name="user_id"   value="{{ $candidatura->user->id }}">
+                                        <input type="hidden" name="user_id"   value="{{ $candidatura->user->id ?? 'N/A'}}">
                                         <button type="submit" class="btn btn-success">Sim, Aprovar</button>
                                     </form>
                                     </div>
@@ -109,14 +109,14 @@
                                         </div>
                                         <div class="modal-body">
                                             Tem certeza de que deseja <strong>reprovar</strong> a candidatura de
-                                            <em>{{ $candidatura->user->name }}</em>?
+                                            <em>{{ $candidatura->user->name ?? 'N/A'}}</em>?
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                                             <form action="{{ route('coord.candidaturas.rejeitar', $candidatura->id) }}" method="POST" class="d-inline">
                                                 @csrf
                                                 <input type="hidden" name="evento_id" value="{{ $evento->id }}">
-                                                <input type="hidden" name="user_id"   value="{{ $candidatura->user->id }}">
+                                                <input type="hidden" name="user_id"   value="{{ $candidatura->user->id ?? 'N/A' }}">
                                                 <button type="submit" class="btn btn-danger">Sim, reprovar</button>
                                             </form>
                                         </div>
@@ -147,11 +147,11 @@
         <div class="row mb-3">
             <div class="col-md-6">
                 <label class="form-label fw-bold">Nome do Candidato</label>
-                <p>{{$candidatura->user->name}}</p>
+                <p>{{$candidatura->user->name ?? 'N/A'}}</p>
             </div>
             <div class="col-md-6">
                 <label class="form-label fw-bold">E-mail</label>
-                <p>{{$candidatura->user->email}}</p>
+                <p>{{$candidatura->user->email ?? 'N/A'}}</p>
             </div>
         </div>
 
