@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Submissao;
 
 use App\Http\Requests\CandidatoAvaliadorRequest;
+use App\Models\Submissao\Area;
 use App\Models\Submissao\Evento;
 use App\Models\CandidatoAvaliador;
 use App\Mail\EmailConviteAvaliador;
@@ -54,15 +55,23 @@ class CandidatoAvaliadorController extends Controller
 
     public function listarCandidatos($eventoId)
     {
-
         $evento = Evento::findOrFail($eventoId);
 
-        $todosCandidatos = CandidatoAvaliador::with(['user', 'area'])
+        $todos = CandidatoAvaliador::with(['user','area'])
             ->where('evento_id', $evento->id)
             ->get();
 
-        // agrupa por usuário e monta objeto com todos os eixos num array
-        $candidaturas = $todosCandidatos
+
+        $statusPorUsuarioEixo = [];
+        foreach ($todos as $item) {
+            $statusPorUsuarioEixo[$item->user_id][$item->area->nome] = [
+                'aprovado'   => $item->aprovado,
+                'em_analise' => $item->em_analise,
+            ];
+        }
+
+
+        $candidaturas = $todos
             ->groupBy('user_id')
             ->map(function($group) {
                 $first = $group->first();
@@ -70,7 +79,7 @@ class CandidatoAvaliadorController extends Controller
                     'id'            => $first->id,
                     'user'          => $first->user,
                     'aprovado'      => $first->aprovado,
-                    'em_analise'   => $first->em_analise,
+                    'em_analise'    => $first->em_analise,
                     'lattes_link'   => $first->link_lattes,
                     'resumo_lattes' => $first->resumo_lattes,
                     'eixos'         => $group->pluck('area.nome')->toArray(),
@@ -80,55 +89,57 @@ class CandidatoAvaliadorController extends Controller
             })
             ->values();
 
-        return view('coordenador.revisores.listarCandidatos', compact('evento', 'candidaturas'));
+        return view(
+            'coordenador.revisores.listarCandidatos',
+            compact('evento','candidaturas','statusPorUsuarioEixo')
+        );
     }
 
     public function aprovar(Request $request)
     {
+
         $eventoId = $request->input('evento_id');
         $userId   = $request->input('user_id');
-        CandidatoAvaliador::where('evento_id', $eventoId)
+        $eixo   = $request->input('eixo');
+        $area = Area::where('nome', $eixo)->firstOrFail();
+        CandidatoAvaliador::where('area_id', $area->id)
         ->where('user_id',   $userId)
         ->update([
             'aprovado'   => true,
             'em_analise' => false,
         ]);
 
-        $user = User::find($request->user_id);
-        $evento = Evento::find($request->evento_id);
+        $user   = User::findOrFail($userId);
+        $evento = Evento::findOrFail($eventoId);
 
-         $areas = CandidatoAvaliador::where('evento_id', $eventoId)
-            ->where('user_id', $userId)
-            ->pluck('area_id')
-            ->unique()
-            ->toArray();
 
         $modalidades = $evento->modalidades()->pluck('id')->toArray();
 
-        if ($user->revisor()->where('evento_id', $eventoId)->doesntExist()) {
-            foreach ($areas as $areaId) {
-                foreach ($modalidades as $modalidadeId) {
-                    Revisor::create([
-                        'user_id'               => $user->id,
-                        'evento_id'             => $evento->id,
-                        'areaId'                => $areaId,
-                        'modalidadeId'          => $modalidadeId,
-                        'trabalhosCorrigidos'   => 0,
-                        'correcoesEmAndamento'  => 0,
-                    ]);
-                }
+
+        $jaRevisor = $user->revisor()
+            ->where('evento_id', $eventoId)
+            ->where('areaId',     $area->id)
+            ->exists();
+
+        if (! $jaRevisor) {
+            foreach ($modalidades as $modalidadeId) {
+                Revisor::create([
+                    'user_id'              => $user->id,
+                    'evento_id'            => $evento->id,
+                    'areaId'               => $area->id,
+                    'modalidadeId'         => $modalidadeId,
+                    'trabalhosCorrigidos'  => 0,
+                    'correcoesEmAndamento' => 0,
+                ]);
             }
         } else {
-            return redirect()->back()->withErrors(['errorRevisor' => 'Esse revisor já está cadastrado para o evento.']);
+            return redirect()->back()
+                ->withErrors(['errorRevisor' => 'Você já é revisor desta área para o evento.']);
         }
 
-        $status  = 'aprovada';
+        // --- Envio de e-mail e retorno ---
         Mail::to($user->email)
-        ->send(new EmailRespostaAvaliador(
-            $user,
-            $evento,
-            $status
-        ));
+            ->send(new EmailRespostaAvaliador($user, $evento, 'aprovada'));
 
         return redirect()->back()
             ->with('sucesso', 'Candidatura aprovada e candidato notificado.');
@@ -145,23 +156,28 @@ class CandidatoAvaliadorController extends Controller
     {
         $eventoId = $request->input('evento_id');
         $userId   = $request->input('user_id');
+        $eixo     = $request->input('eixo');
+        $area     = Area::where('nome', $eixo)->firstOrFail();
+
         CandidatoAvaliador::where('evento_id', $eventoId)
-        ->where('user_id',   $userId)
-        ->update([
-            'aprovado'   => false,
-            'em_analise' => false,
-        ]);
-        $usuario = User::find($request->user_id);
-        $evento = Evento::find($request->evento_id);
-        $status  = 'rejeitada';
+            ->where('user_id',    $userId)
+            ->where('area_id',    $area->id)
+            ->update([
+                'aprovado'   => false,
+                'em_analise' => false,
+            ]);
+
+        $usuario = User::findOrFail($userId);
+        $evento  = Evento::findOrFail($eventoId);
 
         Mail::to($usuario->email)
-        ->send(new EmailRespostaAvaliador(
-            $usuario,
-            $evento,
-            $status
-        ));
+            ->send(new EmailRespostaAvaliador(
+                $usuario,
+                $evento,
+                'rejeitada'
+            ));
 
+        // 5) redireciona com feedback
         return redirect()->back()
             ->with('sucesso', 'Candidatura rejeitada e candidato notificado.');
     }
