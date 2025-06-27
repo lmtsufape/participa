@@ -173,9 +173,11 @@
                                                     </a>
                                                 </th>
                                                 <th scope="col">Atribuir</th>
+                                                @can('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento)
                                                 <th scope="col">Arquivar</th>
-                                                <th scope="col">Excluir</th>
-                                                <th scope="col">Editar</th>
+                                                    <th scope="col">Excluir</th>
+                                                    <th scope="col">Editar</th>
+                                                @endcan
                                             </tr>
                                             </thead>
 
@@ -231,15 +233,18 @@
                                                             </a>
                                                         </td>
                                                         <td style="text-align:center">
-                                                            @if ($trabalho->status == 'arquivado')
+                                                            @can('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento)
+
+                                                                @if ($trabalho->status == 'arquivado')
                                                                 <a href="{{ route('trabalho.status', [$trabalho->id, 'rascunho']) }}" >
                                                                     <i class="fas fa-folder-open"></i>
                                                                 </a>
-                                                            @else
+                                                                @else
                                                                 <a href="{{ route('trabalho.status', [$trabalho->id, 'arquivado'] ) }}" >
                                                                     <img src="{{asset('img/icons/archive.png')}}" class="icon-card" width="20" alt="Arquivar">
                                                                 </a>
-                                                            @endif
+                                                                @endif
+                                                            @endcan
                                                         </td>
                                                         <td style="text-align:center">
                                                             @can('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento)
