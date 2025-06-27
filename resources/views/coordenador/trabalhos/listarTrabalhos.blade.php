@@ -122,37 +122,37 @@
                                                 <th class="col-md-1">
                                                     ID
                                                     <a href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'id', 'asc', $status])}}">
-                                                        <i class="fas fa-arrow-alt-circle-up"></i>
+                                                        <img class="" src="{{asset('img/icons/sobe.png')}}" style="width:10px">
                                                     </a>
                                                     <a href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'id', 'desc', $status])}}">
-                                                        <i class="fas fa-arrow-alt-circle-down"></i>
+                                                        <img class="" src="{{asset('img/icons/desce.png')}}" style="width:10px">
                                                     </a>
                                                 </th>
                                                 <th scope="col">
                                                     Título
                                                     <a href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'titulo', 'asc', $status])}}">
-                                                        <i class="fas fa-arrow-alt-circle-up"></i>
+                                                        <img class="" src="{{asset('img/icons/sobe.png')}}" style="width:10px">
                                                     </a>
                                                     <a href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'titulo', 'desc', $status])}}">
-                                                        <i class="fas fa-arrow-alt-circle-down"></i>
+                                                        <img class="" src="{{asset('img/icons/desce.png')}}" style="width:10px">
                                                     </a>
                                                 </th>
                                                 <th scope="col">
                                                     Área
                                                     <a href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'areaId', 'asc', $status])}}">
-                                                        <i class="fas fa-arrow-alt-circle-up"></i>
+                                                        <img class="" src="{{asset('img/icons/sobe.png')}}" style="width:10px">
                                                     </a>
                                                     <a href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'areaId', 'desc', $status])}}">
-                                                        <i class="fas fa-arrow-alt-circle-down"></i>
+                                                        <img class="" src="{{asset('img/icons/desce.png')}}" style="width:10px">
                                                     </a>
                                                 </th>
                                                 <th scope="col">
                                                     Autor
                                                     <a href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'autor', 'asc', $status])}}">
-                                                        <i class="fas fa-arrow-alt-circle-up"></i>
+                                                        <img class="" src="{{asset('img/icons/sobe.png')}}" style="width:10px">
                                                     </a>
                                                     <a href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'autor', 'desc', $status])}}">
-                                                        <i class="fas fa-arrow-alt-circle-down"></i>
+                                                        <img class="" src="{{asset('img/icons/desce.png')}}" style="width:10px">
                                                     </a>
                                                 </th>
                                                 @foreach ($modalidade->midiasExtra as $midia)
@@ -166,10 +166,10 @@
                                                 <th scope="col">
                                                     Data
                                                     <a href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'created_at', 'asc', $status])}}">
-                                                        <i class="fas fa-arrow-alt-circle-up"></i>
+                                                        <img class="" src="{{asset('img/icons/sobe.png')}}" style="width:10px">
                                                     </a>
                                                     <a href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'created_at', 'desc', $status])}}">
-                                                        <i class="fas fa-arrow-alt-circle-down"></i>
+                                                        <img class="" src="{{asset('img/icons/desce.png')}}" style="width:10px">
                                                     </a>
                                                 </th>
                                                 <th scope="col">Atribuir</th>
