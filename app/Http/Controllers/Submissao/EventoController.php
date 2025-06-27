@@ -50,6 +50,7 @@ use Illuminate\Support\Str;
 use Intervention\Image\ImageManagerStatic as Image;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Gate;
 
 // dd($request->all());
 class EventoController extends Controller
@@ -436,7 +437,12 @@ class EventoController extends Controller
     {
         $evento = Evento::find($request->eventoId);
 
-        $this->authorize('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento);
+        if (! Gate::any([
+            'isCoordenadorOrCoordenadorDaComissaoCientifica',
+            'isCoordenadorEixo'
+        ], $evento)) {
+            abort(403, 'Acesso negado');
+        }
         $revisores = User::whereHas('revisor', function (Builder $query) use ($evento) {
             $query->where('evento_id', $evento->id);
         })->orderBy('name')->get();
@@ -506,7 +512,7 @@ class EventoController extends Controller
         $evento = Evento::find($request->eventoId);
 
         $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
-        
+
         $users = $evento->usuariosDaComissao;
 
         foreach ($users as $user) {
@@ -514,7 +520,7 @@ class EventoController extends Controller
                                         ->where('user_id', $user->id)
                                         ->with('area')
                                         ->get();
-                                        
+
             $user->eixosCoordenados = $eixos->pluck('area.nome');
         }
 
@@ -541,7 +547,7 @@ class EventoController extends Controller
 
         return Excel::download(new InscritosExport($evento), $nomeArquivo, \Maatwebsite\Excel\Excel::XLSX);
     }
-    
+
 
     public function exportInscritosCertifica(Evento $evento, Request $request)
     {

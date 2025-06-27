@@ -242,16 +242,20 @@
                                                             @endif
                                                         </td>
                                                         <td style="text-align:center">
-                                                            @if ($trabalho->status == 'arquivado')
-                                                                <a href="#" data-bs-toggle="modal" data-bs-target="#modalExcluirTrabalho_{{$trabalho->id}}">
-                                                                    <img src="{{asset('img/icons/lixo.png')}}" class="icon-card" width="20" alt="Excluir">
-                                                                </a>
-                                                            @endif
+                                                            @can('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento)
+                                                                @if ($trabalho->status == 'arquivado')
+                                                                    <a href="#" data-bs-toggle="modal" data-bs-target="#modalExcluirTrabalho_{{$trabalho->id}}">
+                                                                        <img src="{{asset('img/icons/lixo.png')}}" class="icon-card" width="20" alt="Excluir">
+                                                                    </a>
+                                                                @endif
+                                                            @endcan
                                                         </td>
                                                         <td style="text-align:center">
-                                                            <a href="{{ route('coord.trabalho.edit', ['id' => $trabalho->id]) }}" >
-                                                                <img src="{{asset('img/icons/edit-regular.svg')}}" class="icon-card" width="20" alt="Editar">
-                                                            </a>
+                                                            @can('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento)
+                                                                <a href="{{ route('coord.trabalho.edit', ['id' => $trabalho->id]) }}" >
+                                                                    <img src="{{asset('img/icons/edit-regular.svg')}}" class="icon-card" width="20" alt="Editar">
+                                                                </a>
+                                                            @endcan
                                                         </td>
                                                     </tr>
                                                 @endforeach
