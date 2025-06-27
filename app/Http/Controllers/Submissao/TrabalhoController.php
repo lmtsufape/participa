@@ -994,7 +994,7 @@ class TrabalhoController extends Controller
             }
             $arquivo = $trabalho->arquivoAvaliacao()->where([['versaoFinal', true], ['revisorId', $revisor->id]])->first();
             $eventoPolicy = new EventoPolicy();
-            if ($eventoPolicy->isCoordenadorOrCoordenadorDaComissaoCientifica(auth()->user(), $trabalho->evento)) {
+            if ($eventoPolicy->isCoordenadorOrCoordenadorDaComissaoCientifica(auth()->user(), $trabalho->evento) || $eventoPolicy->isRevisor(auth()->user(), $trabalho->evento)) {
                 if ($arquivo != null && Storage::disk()->exists($arquivo->nome)) {
                     return Storage::download($arquivo->nome);
                 }

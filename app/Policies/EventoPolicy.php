@@ -58,9 +58,7 @@ class EventoPolicy
 
     public function isRevisor(User $user, Evento $evento)
     {
-        $usuariosRevisores = $evento->revisors()->distinct()->pluck('user_id');
-
-        return in_array($user->id, $usuariosRevisores);
+        return $evento->revisors()->where('user_id', $user->id)->exists();
     }
 
     public function isRevisorComAtribuicao(User $user)
