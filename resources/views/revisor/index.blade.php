@@ -205,7 +205,7 @@
                                         <td class="d-flex flex-column align-items-center">
                                             @if ($trabalho->arquivoCorrecao != null)
                                                 <a href="{{route('downloadCorrecao', ['id' => $trabalho->id])}}"><img src="{{asset('img/icons/file-download-solid-black.svg')}}" style="width:20px"></a>
-                                                <a type="button" data-target="#validacaoCorrecaoModal{{$trabalho->id}}" data-toggle="modal" class="btn btn-sm btn-primary mt-2">
+                                                <a type="button" data-bs-target="#validacaoCorrecaoModal{{$trabalho->id}}" data-bs-toggle="modal" class="btn btn-sm btn-primary mt-2">
                                                     Fazer validação
                                                 </a>
 
