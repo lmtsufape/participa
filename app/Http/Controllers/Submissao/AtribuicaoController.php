@@ -14,6 +14,7 @@ use App\Models\Users\Revisor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Gate;
 
 class AtribuicaoController extends Controller
 {
@@ -204,7 +205,12 @@ class AtribuicaoController extends Controller
         ]);
 
         $evento = Evento::find($request->eventoId);
-        $this->authorize('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento);
+        if (! Gate::any([
+            'isCoordenadorOrCoordenadorDaComissaoCientifica',
+            'isCoordenadorEixo'
+        ], $evento)) {
+            abort(403, 'Acesso negado');
+        }
 
         $trabalho = Trabalho::find($request->trabalhoId);
         $trabalho->avaliado = 'processando';
