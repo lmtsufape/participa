@@ -43,7 +43,7 @@
                         <div class="card-body">
                             @if (!is_null($trabalhos->first()))
                                 <h5 class="card-title">Modalidade: <span
-                                        class="card-subtitle mb-2 text-muted">{{ $trabalhos[0]->modalidade->nome }}</span></h5>
+                                        class="card-subtitle mb-2 text-muted">{{ $trabalhos->first()->modalidade->nome }}</span></h5>
                             @endif
                             <div class="row table-trabalhos">
                                 <div class="col-sm-12">
