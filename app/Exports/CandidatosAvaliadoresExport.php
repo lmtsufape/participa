@@ -55,8 +55,8 @@ class CandidatosAvaliadoresExport implements FromCollection, WithHeadings, WithM
             $this->lastUserId = $candidato->user_id;
 
             return [
-                $candidato->user->name,
-                $candidato->user->email,
+                $candidato->user->name ?? 'N/A',
+                $candidato->user->email ?? 'N/A',
                 $status,
                 $candidato->link_lattes,
                 $candidato->resumo_lattes,

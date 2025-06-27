@@ -140,6 +140,7 @@
                                 <th scope="col" style="text-align:center">Avaliação do trabalho</th>
                                 <th scope="col" style="text-align:center">Validação das correções</th>
                                 <th scope="col" style="text-align:center">Atribuído em</th>
+                                <th scope="col" style="text-align:center">Prazo</th>
                                 </tr>
                             </thead>
                             @foreach($trabalhosDoRevisor as $trabalho)
@@ -164,7 +165,7 @@
                                     @endif
                                     </td>
                                     @if (!$trabalho->avaliado(auth()->user())){{--avaliacao do revisor aqui--}}
-                                        @if (now() >= $trabalho->modalidade->inicioRevisao && now() <= $trabalho->modalidade->fimRevisao)
+                                        @if (now() >= $trabalho->modalidade->inicioRevisao && now() <= $trabalho->modalidade->fimRevisao && ($trabalho->atribuicoes->first()->pivot->prazo_correcao == null || now() <= $trabalho->atribuicoes->first()->pivot->prazo_correcao))
                                             {{-- <td>
                                             <a href="#"><img src="{{asset('img/icons/check-solid.svg')}}" style="width:20px" data-bs-toggle="modal" data-bs-target="#modalAvaliarTrabalho{{$trabalho->id}}"></a>
                                             </td> --}}
@@ -175,6 +176,7 @@
                                                 <input type="hidden" name="trabalho_id" value="{{$trabalho->id}}">
                                                 <input type="hidden" name="evento_id" value="{{$eventos[$key]->id}}">
                                                 <input type="hidden" name="modalidade_id" value="{{$trabalho->modalidade->id}}">
+                                                <input type="hidden" name="prazo_correcao" value="{{$trabalho->atribuicoes->first()->pivot->prazo_correcao}}">
                                                 <div class="d-flex justify-content-center">
                                                     <button type="submit" class="btn btn-success">
                                                     Avaliar
@@ -185,7 +187,7 @@
                                         @else
                                             <div class="d-flex justify-content-center">
                                                 <td style="text-align:center">
-                                                    <img src="{{asset('img/icons/check-solid.svg')}}" style="width:20px" title="Avaliação disponível em {{date('d/m/Y',strtotime($trabalho->modalidade->inicioRevisao))}} até {{date('d/m/Y',strtotime($trabalho->modalidade->fimRevisao))}}">
+                                                    <img src="{{asset('img/icons/check-solid.svg')}}" style="width:20px" title="Avaliação disponível em {{date('d/m/Y',strtotime($trabalho->modalidade->inicioRevisao))}} até {{date('d/m/Y',strtotime($trabalho->atribuicoes->first()->pivot->prazo_correcao))}}">
                                                 </td>
                                             </div>
                                         @endif
@@ -211,6 +213,11 @@
                                         </td>
                                         <td style="text-align:center">
                                             {{date('d/m/Y H:i',strtotime($trabalho->atribuicoes->first()->pivot->created_at))}}
+                                        </td>
+                                        <td style="text-align:center">
+                                            @if ($trabalho->atribuicoes->first()->pivot->prazo_correcao)
+                                                {{ date('d/m/Y H:i', strtotime($trabalho->atribuicoes->first()->pivot->prazo_correcao)) }}
+                                            @endif
                                         </td>
                                     </tr>
                                     @include('revisor.validarCorrecao-modal')
