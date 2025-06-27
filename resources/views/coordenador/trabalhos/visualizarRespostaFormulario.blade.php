@@ -154,7 +154,7 @@
                     <h6 style="margin-left: 5px; margin-top:1px; margin-bottom: 1px;">Baixar trabalho corrigido</h6>
                 </div>
             </a>
-            @can('isCoordenadorOrCoordenadorDasComissoes', $evento)
+            @canany(['isCoordenadorOrCoordenadorDaComissaoCientifica', 'isCoordenadorEixo'], $evento)
                 <div class="col-md-4" style="padding-ridht:0">
                     @if ($trabalho->avaliado($revisor->user))
                         @if ($trabalho->getParecerAtribuicao($revisor->user) != "encaminhado")

@@ -447,7 +447,12 @@ class TrabalhoController extends Controller
     {
         $trabalho = Trabalho::find($id);
         $evento = $trabalho->evento;
-        $this->authorize('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento);
+        if (! Gate::any([
+            'isCoordenadorOrCoordenadorDaComissaoCientifica',
+            'isCoordenadorEixo'
+        ], $evento)) {
+            abort(403, 'Acesso negado');
+        }
         if ($trabalho->getParecerAtribuicao($revisor->user) == 'encaminhado') {
             $trabalho->atribuicoes()->where('revisor_id', $revisor->id)->first()->pivot->update(['parecer' => 'avaliado']);
 

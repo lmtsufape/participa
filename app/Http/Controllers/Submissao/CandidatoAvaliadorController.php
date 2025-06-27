@@ -48,6 +48,16 @@ class CandidatoAvaliadorController extends Controller
 
             return redirect()->route('evento.visualizar', ['id' => $eventoId])->with(['message' => 'Candidatura enviada com sucesso!', 'class' => 'success']);
         } catch (\Exception $e) {
+            //log the error for debugging
+            \Log::error('Erro ao cadastrar candidato avaliador: ' . $e->getMessage(), [
+                'user_id' => $user->id,
+                'evento_id' => $eventoId,
+                'areas' => $areas,
+                'link_lattes' => $link_lattes,
+                'resumo_lattes' => $resumo_lattes,
+                'ja_avaliou' => $jaAvaliou,
+                'dispIdiomas' => $dispIdiomas,
+            ]);
             return redirect()->back()->with(['message' => 'Houve um erro durante sua candidatura!', 'class' => 'danger']);
         }
     }
