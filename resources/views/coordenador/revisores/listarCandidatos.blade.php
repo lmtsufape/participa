@@ -40,7 +40,7 @@
                         @foreach($candidaturas as $candidatura)
                             @foreach($candidatura->eixos as $index => $eixo)
                                 @php
-                                    $status = $statusPorUsuarioEixo[$candidatura->user->id][$eixo];
+                                    $status = $statusPorUsuarioEixo[$candidatura->user->id][$eixo] ?? 'em_analise';
                                 @endphp
 
                                 <tr>
@@ -79,7 +79,7 @@
                                 </tr>
 
                                 {{-- Modal Aprovar para ESTE eixo --}}
-                                <div class="modal fade" id="confirmAprovarModal{{ $candidatura->id }}-{{ $index }}" tabindex="-1" aria-hidden="true">
+                                <div class="modal fade" id="confirmAprovarModal{{ $candidatura->id ?? 'N/A' }}-{{ $index }}" tabindex="-1" aria-hidden="true">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
                                             <div class="modal-header bg-success text-white">
@@ -88,14 +88,14 @@
                                             </div>
                                             <div class="modal-body">
                                                 Tem certeza de que deseja <strong>aprovar</strong> o eixo
-                                                <em>{{ $eixo }}</em> de <em>{{ $candidatura->user->name }}</em>?
+                                                <em>{{ $eixo }}</em> de <em>{{ $candidatura->user->name ?? 'N/A' }}</em>?
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                                                 <form action="{{ route('coord.candidaturas.aprovar', $candidatura->id) }}" method="POST" class="d-inline">
                                                     @csrf @method('PUT')
                                                     <input type="hidden" name="evento_id" value="{{ $evento->id }}">
-                                                    <input type="hidden" name="user_id" value="{{ $candidatura->user->id }}">
+                                                    <input type="hidden" name="user_id" value="{{ $candidatura->user->id ?? 'N/A'}}">
                                                     {{-- Identificador do eixo: use area_id ou o próprio nome --}}
                                                     <input type="hidden" name="eixo" value="{{ $eixo }}">
                                                     <button type="submit" class="btn btn-success">Sim, Aprovar</button>
@@ -115,14 +115,14 @@
                                             </div>
                                             <div class="modal-body">
                                                 Tem certeza de que deseja <strong>reprovar</strong> o eixo
-                                                <em>{{ $eixo }}</em> de <em>{{ $candidatura->user->name }}</em>?
+                                                <em>{{ $eixo }}</em> de <em>{{ $candidatura->user->name ?? 'N/A' }}</em>?
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                                                 <form action="{{ route('coord.candidaturas.rejeitar', $candidatura->id) }}" method="POST" class="d-inline">
                                                     @csrf @method('POST')
                                                     <input type="hidden" name="evento_id" value="{{ $evento->id }}">
-                                                    <input type="hidden" name="user_id" value="{{ $candidatura->user->id }}">
+                                                    <input type="hidden" name="user_id" value="{{ $candidatura->user->id ?? 'N/A'}}">
                                                     <input type="hidden" name="eixo" value="{{ $eixo }}">
                                                     <button type="submit" class="btn btn-danger">Sim, Reprovar</button>
                                                 </form>
