@@ -6,9 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Users\User;
 use App\Models\Submissao\Evento;
 use App\Models\Submissao\Area;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class CandidatoAvaliador extends Model
 {
+    use softDeletes;
     protected $table = 'candidatos_avaliadores';
     protected $fillable = [
         'user_id',
@@ -20,6 +22,8 @@ class CandidatoAvaliador extends Model
         'disponibilidade_idiomas',
         'aprovado'
     ];
+
+    protected array $dates = ['deleted_at'];
 
     public function user()
     {
