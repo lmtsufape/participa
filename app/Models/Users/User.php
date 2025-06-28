@@ -2,6 +2,7 @@
 
 namespace App\Models\Users;
 
+use App\Models\CandidatoAvaliador;
 use App\Models\Submissao\Area;
 use App\Models\Submissao\Atividade;
 use App\Models\Submissao\Certificado;
@@ -59,14 +60,16 @@ class User extends Authenticatable
         static::deleting(function (User $user) {
             if ($user->isForceDeleting()) {
                 $user->inscricaos()->forceDelete();
-            }
-            else {
+                $user->candidatosAvaliadores()->forceDelete();
+            } else {
                 $user->inscricaos()->delete();
+                $user->candidatosAvaliadores()->delete();
             }
         });
 
         static::restoring(function (User $user) {
             $user->inscricaos()->withTrashed()->restore();
+            $user->candidatosAvaliadores()->withTrashed()->restore();
         });
     }
 
@@ -95,6 +98,7 @@ class User extends Authenticatable
         return $this->hasOne(Administrador::class);
     }
 
+
     public function coordComissaoCientifica()
     {
         return $this->belongsToMany('App\Models\Submissao\Evento', 'coord_comissao_cientificas', 'user_id', 'eventos_id')->using('App\Models\Users\CoordComissaoCientifica');
@@ -103,6 +107,11 @@ class User extends Authenticatable
     public function coordComissaoOrganizadora()
     {
         return $this->belongsToMany('App\Models\Submissao\Evento', 'coord_comissao_organizadoras', 'user_id', 'eventos_id')->using('App\Models\Users\CoordComissaoOrganizadora');
+    }
+
+    public function candidatosAvaliadores()
+    {
+        return $this->hasMany(CandidatoAvaliador::class, 'user_id');
     }
 
     public function trabalho()
