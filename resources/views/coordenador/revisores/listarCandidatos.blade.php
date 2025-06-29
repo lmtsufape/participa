@@ -40,7 +40,11 @@
                         @foreach($candidaturas as $candidatura)
                             @foreach($candidatura->eixos as $index => $eixo)
                                 @php
-                                    $status = $statusPorUsuarioEixo[$candidatura->user->id][$eixo] ?? 'em_analise';
+                                    if ($candidatura->user && isset($statusPorUsuarioEixo[$candidatura->user->id][$eixo])) {
+                                        $status = $statusPorUsuarioEixo[$candidatura->user->id][$eixo];
+                                    } else {
+                                        $status = ['em_analise' => true, 'aprovado' => false, 'reprovado' => false];
+                                    }
                                 @endphp
 
                                 <tr>
