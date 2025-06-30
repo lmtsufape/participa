@@ -10,7 +10,7 @@
     <div class="modal-content">
       <div class="modal-header" style="background-color: #114048ff; color: white;">
         <h5 class="modal-title" id="exampleModalCenterTitle">Submeter nova versão</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
+        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close" style="color: white;">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -59,7 +59,7 @@
 
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
           <button type="submit" class="btn btn-primary">Salvar</button>
         </div>
       </form>
@@ -200,7 +200,7 @@
                   <div class="modal-content">
                     <div class="modal-header" style="background-color: #114048ff; color: white;">
                       <h5>Parecer final</h5>
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
+                      <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close" style="color: white;">
                         <span aria-hidden="true">&times;</span>
                       </button>
                     </div>
@@ -216,7 +216,7 @@
                       </p>
                     </div>
                     <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
                     </div>
                   </div>
                 </div>
@@ -322,7 +322,7 @@
     <div class="modal-content">
       <div class="modal-header" style="background-color: #114048ff; color: white;">
         <h5 class="modal-title" id="modalEditarTrabalho_{{$trabalho->id}}Label">Editar {{$trabalho->id}}</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
+        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close" style="color: white;">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -373,7 +373,7 @@
               <div class="col mr-5">
                 <div class="float-right">
                   <a href="#" style="color: #196572ff;text-decoration: none;" title="Clique aqui para adicionar coautor(es), se houver" onclick="montarLinhaInput(this, {{$trabalho->id}}, event)" id="addCoautor_{{$trabalho->id}}">
-                    <i class="fas fa-user-plus fa-2x"></i>
+                    <img id="icone-add-coautor" src="{{asset('img/icons/user-plus-black-solid.svg')}}" alt="ícone de adicionar " width="30px" class="mb-2 m-2">{{$trabalho->evento->formSubTrab->etiquetacoautortrabalho}}
                   </a>
                 </div>
               </div>
@@ -878,7 +878,7 @@
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
         <button type="submit" class="btn btn-primary" form="formEditarTrab{{$trabalho->id}}">Salvar</button>
       </div>
     </div>
@@ -895,7 +895,7 @@
     <div class="modal-content">
       <div class="modal-header" style="background-color: #114048ff; color: white;">
         <h5 class="modal-title">Coautores do trabalho {{$trabalho->titulo}}</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
+        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close" style="color: white;">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -921,7 +921,7 @@
       <div class="modal-content">
         <div class="modal-header" style="background-color: #114048ff; color: white;">
           <h5 class="modal-title" id="modalCorrecaoTrabalho_{{$trabalho->id}}Label">Correção do trabalho {{$trabalho->titulo}}</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
+          <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close" style="color: white;">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
@@ -1046,7 +1046,7 @@
           </form>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
           <button type="submit" class="btn btn-primary" form="formCorrecaoTrabalho{{$trabalho->id}}">Enviar correção</button>
         </div>
       </div>
@@ -1090,13 +1090,13 @@
               </div>
               <div class="col-sm-3">
                   <a style="color: #d30909;" href="#" onclick="deletarCoautor(this, ${id}, event)" class="delete pr-2">
-                      <i class="fas fa-user-times fa-2x"></i>
+                      <img class="" src="{{asset('img/icons/trash-alt-regular.svg')}}" style="width:20px">
                   </a>
                   <a href="#" onclick="mover(this.parentElement.parentElement.parentElement, 1, ${id}, event)">
-                      <i class="fas fa-arrow-up fa-2x" id="arrow-up" style=""></i>
+                     <img src="{{asset('img/icons/sobe.png')}}" class="icon-card" width="24" alt="Subir">
                   </a>
                   <a href="#" onclick="mover(this.parentElement.parentElement.parentElement, 0, ${id}, event)">
-                      <i class="fas fa-arrow-down fa-2x" id="arrow-down" style="margin-top:35px"></i>
+                      <img src="{{asset('img/icons/desce.png')}}" class="icon-card" width="24" alt="Descer">
                   </a>
               </div>
           </div>
