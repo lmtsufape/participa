@@ -34,7 +34,7 @@
                     <tr>
                         <td bgcolor="#004d51" align="center" valign="top" style="padding: 40px 20px 20px 20px; border-radius: 4px 4px 0px 0px; color: #ffffff; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 48px; font-weight: 400; letter-spacing: 4px; line-height: 48px;">
                             <img src="{{ $message->embed(public_path('img/LOGO-RODAPE.png')) }}" width="125" height="120" style="display: block; border: 0px;" />
-                            <h5 class="small" style="font-weight: 400; margin: 2;">candidatura {{ $status === 'aprovada' ? 'aprovada' : 'não homologada' }} </h1>
+                            <h5 class="small" style="font-weight: 400; margin: 2;">Candidatura {{ $status === 'aprovada' ? 'homologada' : 'não homologada' }} </h1>
                         </td>
                     </tr>
                 </table>
@@ -51,17 +51,14 @@
                                 <br> <br>
 
 
-                                Sua candidatura para atuar como avaliador(a) no {{ $eixo }} do "{{ $evento->nome }}"  {{ $status === 'aprovada' ? 'foi  aprovada 🎉' : 'não foi homologada' }}
+                                Sua candidatura para atuar como avaliador(a) no {{ $eixo }} do "{{ $evento->nome }}"  {{ $status === 'aprovada' ? 'foi homologada' : 'não foi homologada' }}.
                                 <br><br>
                                 @if($status === 'aprovada')
-                                Agradecemos sua disponibilidade.<br><br>
+                                Agradecemos sua disponibilidade!<br><br>
                                 @else
-                                Agradecemos o interesse e esperamos contar com sua participação em futuras oportunidades.<br><br>
+                                Agradecemos o interesse e esperamos contar com sua participação em futuras oportunidades!<br><br>
                                 @endif
 
-                                @component('mail::button', ['url' => route('home')])
-                                Acessar o Sistema
-                                @endcomponent
 
                                 Abraços,<br>
                                 Plataforma de inscrições e submissões de trabalhos <br>
