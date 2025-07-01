@@ -12,6 +12,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Users\Revisor;
 use App\Models\Users\User;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Auth;
 use App\Exports\CandidatosAvaliadoresExport;
@@ -63,15 +64,39 @@ class CandidatoAvaliadorController extends Controller
         }
     }
 
-    public function listarCandidatos($eventoId)
+    public function listarCandidatos(Request $request, $eventoId)
     {
         $evento = Evento::findOrFail($eventoId);
 
-        $todos = CandidatoAvaliador::with(['user','area'])
-            ->where('evento_id', $evento->id)
-            ->get();
+        $query = CandidatoAvaliador::with(['user','area'])
+            ->where('evento_id', $evento->id);
+
+        $allAxes = CandidatoAvaliador::where('evento_id', $evento->id)
+            ->with('area')
+            ->get()
+            ->pluck('area.nome')
+            ->unique()
+            ->sort()
+            ->values();
 
 
+        if ($request->filled('name')) {
+            $query->whereHas('user', function($q) use ($request) {
+                $q->where('name', 'like', '%'.$request->name.'%');
+            });
+        }
+        if ($request->filled('axis')) {
+            $query->whereHas('area', function($q) use ($request) {
+                $q->where('nome', $request->axis);
+            });
+        }
+        if ($request->filled('email')) {
+            $query->whereHas('user', function($q) use ($request) {
+                $q->where('email', 'like', '%'.$request->email.'%');
+            });
+        }
+
+        $todos = $query->get();
         $statusPorUsuarioEixo = [];
         foreach ($todos as $item) {
             $statusPorUsuarioEixo[$item->user_id][$item->area->nome] = [
@@ -80,16 +105,13 @@ class CandidatoAvaliadorController extends Controller
             ];
         }
 
-
-        $candidaturas = $todos
+        $candidaturasCollection = $todos
             ->groupBy('user_id')
             ->map(function($group) {
                 $first = $group->first();
                 return (object)[
                     'id'            => $first->id,
                     'user'          => $first->user,
-                    'aprovado'      => $first->aprovado,
-                    'em_analise'    => $first->em_analise,
                     'lattes_link'   => $first->link_lattes,
                     'resumo_lattes' => $first->resumo_lattes,
                     'eixos'         => $group->pluck('area.nome')->toArray(),
@@ -99,10 +121,29 @@ class CandidatoAvaliadorController extends Controller
             })
             ->values();
 
-        return view(
-            'coordenador.revisores.listarCandidatos',
-            compact('evento','candidaturas','statusPorUsuarioEixo')
+
+        $perPage = 10;
+        $page    = $request->get('page', 1);
+        $offset  = ($page - 1) * $perPage;
+        $slice   = $candidaturasCollection->slice($offset, $perPage)->values();
+
+        $candidaturas = new LengthAwarePaginator(
+            $slice,
+            $candidaturasCollection->count(),
+            $perPage,
+            $page,
+            [
+                'path'  => $request->url(),
+                'query' => $request->query(),
+            ]
         );
+
+        return view('coordenador.revisores.listarCandidatos', compact(
+            'evento',
+            'candidaturas',
+            'statusPorUsuarioEixo',
+            'allAxes'
+        ));
     }
 
     public function aprovar(Request $request)

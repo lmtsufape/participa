@@ -22,6 +22,38 @@
                         <a href="{{ route('coord.candidatos.exportar', $evento) }}" class="btn btn-primary">Exportar .xlsx</a>
                     </div>
                   </div>
+                    <form method="GET" action="{{ route('coord.candidatoAvaliador.listarCandidatos', $evento) }}" class="row g-3 mt-2 mb-4">
+                        <div class="col-md-3">
+                            <input
+                                type="text"
+                                name="name"
+                                value="{{ request('name') }}"
+                                class="form-control"
+                                placeholder="Filtrar por nome">
+                        </div>
+
+                        <div class="col-md-3">
+                            <input
+                                type="text"
+                                name="email"
+                                value="{{ request('email') }}"
+                                class="form-control"
+                                placeholder="Filtrar por e-mail">
+                        </div>
+
+                        <div class="col-md-3">
+                            <select name="axis" class="form-select">
+                                <option value="">Todos os eixos</option>
+                                @foreach($allAxes as $ax)
+                                    <option value="{{ $ax }}" @selected(request('axis') === $ax)>{{ $ax }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-4 d-flex align-items-start">
+                            <button type="submit" class="btn btn-primary me-2">Filtrar</button>
+                            <a href="{{ route('coord.candidatoAvaliador.listarCandidatos', $evento) }}" class="btn btn-secondary">Limpar</a>
+                        </div>
+                    </form>
                   <p class="card-text">
                     <table class="table table-hover table-responsive-lg table-sm">
                         <thead>
@@ -140,6 +172,9 @@
                         </tbody>
                     </table>
                   </p>
+                    <div class="d-flex justify-content-center">
+                        {{ $candidaturas->links() }}
+                    </div>
                 </div>
               </div>
         </div>
