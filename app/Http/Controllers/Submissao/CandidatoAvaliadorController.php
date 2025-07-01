@@ -68,11 +68,9 @@ class CandidatoAvaliadorController extends Controller
     {
         $evento = Evento::findOrFail($eventoId);
 
-        // 1) Query base
         $query = CandidatoAvaliador::with(['user','area'])
             ->where('evento_id', $evento->id);
 
-        // 2) Coletar todos os eixos existentes para popular o select
         $allAxes = CandidatoAvaliador::where('evento_id', $evento->id)
             ->with('area')
             ->get()
@@ -81,7 +79,7 @@ class CandidatoAvaliadorController extends Controller
             ->sort()
             ->values();
 
-        // 3) Aplicar filtros recebidos
+
         if ($request->filled('name')) {
             $query->whereHas('user', function($q) use ($request) {
                 $q->where('name', 'like', '%'.$request->name.'%');
@@ -92,8 +90,12 @@ class CandidatoAvaliadorController extends Controller
                 $q->where('nome', $request->axis);
             });
         }
+        if ($request->filled('email')) {
+            $query->whereHas('user', function($q) use ($request) {
+                $q->where('email', 'like', '%'.$request->email.'%');
+            });
+        }
 
-        // 4) Trazer tudo e montar status por usuário-eixo
         $todos = $query->get();
         $statusPorUsuarioEixo = [];
         foreach ($todos as $item) {
@@ -103,7 +105,6 @@ class CandidatoAvaliadorController extends Controller
             ];
         }
 
-        // 5) Agrupar candidaturas por usuário
         $candidaturasCollection = $todos
             ->groupBy('user_id')
             ->map(function($group) {

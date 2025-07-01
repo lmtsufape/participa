@@ -23,7 +23,7 @@
                     </div>
                   </div>
                     <form method="GET" action="{{ route('coord.candidatoAvaliador.listarCandidatos', $evento) }}" class="row g-3 mt-2 mb-4">
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <input
                                 type="text"
                                 name="name"
@@ -31,7 +31,17 @@
                                 class="form-control"
                                 placeholder="Filtrar por nome">
                         </div>
-                        <div class="col-md-4">
+
+                        <div class="col-md-3">
+                            <input
+                                type="text"
+                                name="email"
+                                value="{{ request('email') }}"
+                                class="form-control"
+                                placeholder="Filtrar por e-mail">
+                        </div>
+
+                        <div class="col-md-3">
                             <select name="axis" class="form-select">
                                 <option value="">Todos os eixos</option>
                                 @foreach($allAxes as $ax)
