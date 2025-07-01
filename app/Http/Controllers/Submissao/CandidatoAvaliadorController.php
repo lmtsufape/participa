@@ -190,7 +190,7 @@ class CandidatoAvaliadorController extends Controller
 
         // --- Envio de e-mail e retorno ---
         Mail::to($user->email)
-            ->send(new EmailRespostaAvaliador($user, $evento, 'aprovada'));
+            ->send(new EmailRespostaAvaliador($user, $evento, 'aprovada', $area->nome));
 
         return redirect()->back()
             ->with('sucesso', 'Candidatura aprovada e candidato notificado.');
@@ -225,7 +225,8 @@ class CandidatoAvaliadorController extends Controller
             ->send(new EmailRespostaAvaliador(
                 $usuario,
                 $evento,
-                'rejeitada'
+                'rejeitada',
+                $area->nome
             ));
 
         // 5) redireciona com feedback
