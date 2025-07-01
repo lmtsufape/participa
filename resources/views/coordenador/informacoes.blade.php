@@ -19,6 +19,7 @@
         @endif
 
         <!-- Row trabalhos -->
+        @can('isCoordenador', $evento) 
         <div class="row justify-content-center">
           <div class="col-sm-8">
             <div class="card">
@@ -47,6 +48,7 @@
                     </div>
                 </div>
             </div>
+            @endcan
             <div class="row justify-content-center">
               <div class="col-sm-12">
                   <div class="card">
