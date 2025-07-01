@@ -15,20 +15,22 @@ class EmailRespostaAvaliador extends Mailable
     public $status;   // string: "aprovada" ou "rejeitada"
     public $email;
     public $subject;
+    public $eixo;
 
     /**
      * Create a new message instance.
      */
-    public function __construct($user, $evento, string $status, string $email = null)
+    public function __construct($user, $evento, string $status, string $eixo, string $email = null)
     {
         $this->user    = $user;
         $this->evento  = $evento;
         $this->status  = $status;
+        $this->eixo    = $eixo;
         $this->email   = $email ?: $user->email;
         $this->subject = config('app.name') . ' - '
                        . ($status === 'aprovada'
-                          ? 'Sua candidatura foi aprovada'
-                          : 'Sua candidatura não foi aprovada');
+                          ? 'Candidatura homologada no ' . $eixo
+                          : 'Candidatura não homologada no ' . $eixo);
     }
 
     /**
@@ -45,6 +47,7 @@ class EmailRespostaAvaliador extends Mailable
                 'user'   => $this->user,
                 'evento' => $this->evento,
                 'status' => $this->status,
+                'eixo'   => $this->eixo,
             ]);
     }
 }
