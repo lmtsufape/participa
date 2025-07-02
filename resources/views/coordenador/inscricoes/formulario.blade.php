@@ -25,7 +25,7 @@
                             <h6 class="card-subtitle mb-2 text-muted">Campos que o formulário de inscrição vai ter.</h6>
                         </div>
                         <div class="col-sm-6">
-                            <button id="criarCampo" data-toggle="modal" data-target="#modalCriarCampo" class="btn btn-primary float-md-right">+ Novo campo</button>
+                            <button id="criarCampo" data-bs-toggle="modal" data-bs-target="#modalCriarCampo" class="btn btn-primary float-md-right">+ Novo campo</button>
                         </div>
                     </div>
                     <p class="card-text">
@@ -56,8 +56,8 @@
                                     @elseif ($campo->tipo == "cpf")
                                     <h6 class="card-subtitle mb-2 text-muted">Campo de CPF</h6>
                                     @endif
-                                    <a href="#" class="card-link button-a btn-excluir" data-toggle="modal" data-target="#modalCampoDelete{{$campo->id}}">Excluir</a>
-                                    <a href="#" class="card-link button-a btn-editar" data-toggle="modal" data-target="#modalCampoEdit{{$campo->id}}">Editar</a>
+                                    <a href="#" class="card-link button-a btn-excluir" data-bs-toggle="modal" data-bs-target="#modalCampoDelete{{$campo->id}}">Excluir</a>
+                                    <a href="#" class="card-link button-a btn-editar" data-bs-toggle="modal" data-bs-target="#modalCampoEdit{{$campo->id}}">Editar</a>
                                 </div>
                             </div>
                         </div>

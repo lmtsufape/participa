@@ -37,7 +37,7 @@
                     <td >{{$inscrito->cpf}}</td>
                     <td>{{$inscrito->instituicao}}</td>
                     <td>
-                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalCancelarInscricao{{$inscrito->id}}">
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalCancelarInscricao{{$inscrito->id}}">
                            Cancelar Inscrição
                         </button>
                     </td>

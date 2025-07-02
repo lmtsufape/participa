@@ -72,10 +72,6 @@ footer {
     width: 102%;
 }
 
-.navbar{
-    background-color: #114048ff;
-    color: white;
-}
 .navbar img{
     width:20px;
     margin-right: 10px;
@@ -706,10 +702,6 @@ body { top: 0px !important; }
     padding-right: 10px;
     box-shadow: 5px 5px 5px black;
     background-color: #298F7D;
-}
-
-.navbar-dark .navbar-nav .nav-link:hover {
-    color: rgb(255 255 255);
 }
 
 .card-visualizar-evento {

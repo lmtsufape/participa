@@ -32,10 +32,10 @@
                             <tr>
                                 <td>{{$modalidade->nome}}</td>
                                 <td style="text-align:center">
-                                    <a href="#" data-toggle="modal" data-target="#modalEditarModalidade{{$modalidade->id}}"><img src="{{asset('img/icons/edit-regular.svg')}}" style="width:20px"></a>
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#modalEditarModalidade{{$modalidade->id}}"><img src="{{asset('img/icons/edit-regular.svg')}}" style="width:20px"></a>
                                 </td>
                                 <td style="text-align:center">
-                                    <a href="" data-toggle="modal" data-target="#modalExcluirModalidade{{$modalidade->id}}"><img src="{{asset('img/icons/trash-alt-regular.svg')}}" class="icon-card" alt=""></a>
+                                    <a href="" data-bs-toggle="modal" data-bs-target="#modalExcluirModalidade{{$modalidade->id}}"><img src="{{asset('img/icons/trash-alt-regular.svg')}}" class="icon-card" style="width:20px; height:auto;" alt="Remover" ></a>
                                 </td>
                             </tr>
                             @endforeach
@@ -152,6 +152,38 @@
                                         </div>
 
                                     </div>{{-- end row--}}
+                                    @if ($evento->is_multilingual)
+                                    <div class="row mt-2"> {{-- Label Row (mt-2 para espaçamento opcional) --}}
+                                        <div class="col-sm-12">
+                                            <label for="nomeModalidadeEdit_en{{$modalidade->id}}" class="col-form-label font-weight-bold">{{ __('Nome (Inglês)') }}</label> {{-- Sem '*' se for nullable --}}
+                                        </div>
+                                    </div>
+                                    <div class="row justify-content-center"> {{-- Input Row --}}
+                                        <div class="col-sm-12">
+                                            <input id="nomeModalidadeEdit_en{{$modalidade->id}}" type="text" class="form-control @error('nome_en'.$modalidade->id) is-invalid @enderror" name="nome_en{{$modalidade->id}}" value="{{ old('nome_en'.$modalidade->id, $modalidade->nome_en) }}" autocomplete="off"> {{-- Sem 'required' se for nullable --}}
+                                            @error('nome_en'.$modalidade->id)
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                            @enderror
+                                        </div>
+                                    </div>{{-- end row --}}    
+                                    <div class="row mt-2"> {{-- Label Row (mt-2 para espaçamento opcional) --}}
+                                        <div class="col-sm-12">
+                                            <label for="nomeModalidadeEdit_es{{$modalidade->id}}" class="col-form-label font-weight-bold">{{ __('Nome (Espanhol)') }}</label> {{-- Sem '*' se for nullable --}}
+                                        </div>
+                                    </div>
+                                    <div class="row justify-content-center"> {{-- Input Row --}}
+                                        <div class="col-sm-12">
+                                            <input id="nomeModalidadeEdit_es{{$modalidade->id}}" type="text" class="form-control @error('nome_es'.$modalidade->id) is-invalid @enderror" name="nome_es{{$modalidade->id}}" value="{{ old('nome_es'.$modalidade->id, $modalidade->nome_es) }}" autocomplete="off"> {{-- Sem 'required' se for nullable --}}
+                                            @error('nome_es'.$modalidade->id)
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                            @enderror
+                                        </div>
+                                    </div>{{-- end row --}}
+                                    @endif
 
                                     </p>
 
@@ -275,7 +307,21 @@
                                         </div>
                                     </div>
                                     {{-- end Data: resultado --}}
+                                    {{-- Data: Numeros de coautores --}}
+                                    <div class="row">
 
+                                        <div class="col-sm-6">
+                                            <label for="numMaxCoautores" class="col-form-label font-weight-bold">{{ __('Número de coautores') }}</label>
+                                            <input id="numMaxCoautores" type="text" class="form-control @error('numMaxCoautores') is-invalid @enderror" name="numMaxCoautores" value="@if(old('numMaxCoautores'.$modalidade->id)!=null){{old('numMaxCoautores'.$modalidade->id)}}@else{{$modalidade->numMaxCoautores}}@endif" autocomplete="numMaxCoautores" autofocus>
+
+                                            @error('numMaxCoautores')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    {{-- end Data: Numeros de coautores --}}
                                     <div id="datas">
                                         <template x-for="(data, index) in datas" :key="index">
                                             <div class="row mt-2 justify-content-center">
@@ -680,7 +726,7 @@
                                             <div class="custom-file">
                                                 <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivoRegras{{$modalidade->id}}">
                                             </div>
-                                            <small>O arquivo Selecionado deve ser no formato PDF de até 2mb.</small><br>
+                                            <small>O arquivo Selecionado deve ser no formato PDF de até 10mb.</small><br>
                                             <small>Se deseja alterar o arquivo, envie a nova versão.</small>
                                             @error('arquivoRegras'.$modalidade->id)
                                             <span class="invalid-feedback" role="alert" style="overflow: visible; display:block">

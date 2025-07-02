@@ -44,6 +44,7 @@
   "Your email address is not verified.": "Seu endereço de e-mail não está verificado.",
   "Whoops!": "Ops!",
     "Visualizar eventos passados":"Visualizar eventos passados",
-  "usuarioInscritoNoEvento": "O usuário com e-mail :input precisa estar inscrito no evento"
+  "usuarioInscritoNoEvento": "O usuário com e-mail :input precisa estar inscrito no evento",
+  "usuarioCadastradoNaPlataforma": "O usuário com e-mail :input precisa estar cadastrado na plataforma"
 
 }

@@ -2,6 +2,7 @@
 
 namespace App\Models\Submissao;
 
+use App\Models\Users\CoordEixoTematico;
 use Illuminate\Database\Eloquent\Model;
 
 class Area extends Model
@@ -12,7 +13,7 @@ class Area extends Model
      * @var array
      */
     protected $fillable = [
-        'nome', 'eventoId',
+        'nome', 'eventoId', 'resumo', 'resumo_en', 'resumo_es', 'nome_en', 'nome_es'
     ];
 
     public function modalidade()
@@ -43,5 +44,9 @@ class Area extends Model
     public function mensagensParecer()
     {
         return $this->hasMany('App\Models\Submissao\MensagemParecer');
+    }
+
+    public function coordEixosTematicos(){
+        return $this->hasMany(CoordEixoTematico::class);
     }
 }

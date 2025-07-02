@@ -6,6 +6,13 @@ const phoneInput = window.intlTelInput(phoneInputField, {
     preferredCountries: ["br", "us"],
         utilsScript:
         "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+
+    customPlaceholder: function(selectedCountryPlaceholder, selectedCountryData) {
+        if (selectedCountryData.iso2 === 'br') {
+            return '(00) 00000-0000';
+        }
+        return selectedCountryPlaceholder;
+    }
 });
 const info = document.querySelector(".alert-info");
 const error = document.querySelector("#celular-invalido");

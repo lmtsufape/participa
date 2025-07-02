@@ -43,7 +43,7 @@ class CoautorController extends Controller
                     $trabalhos->push($trab);
                 }
             }
-        }
+        }   
 
         return view('coautor.listarTrabalhos', [
             'trabalhos' => $trabalhos,

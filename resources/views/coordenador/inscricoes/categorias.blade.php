@@ -16,7 +16,7 @@
                             <h6 class="card-subtitle mb-2 text-muted">Categorias cadastradas no seu evento</h6>
                         </div>
                         <div class="col-md-6 d-flex justify-content-sm-start justify-content-md-end align-items-center">
-                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
                                 Cadastrar categoria
                             </button>
                             <!-- Modal criar categoria -->
@@ -56,25 +56,16 @@
                                                             @enderror
                                                         </div>
                                                         <div class="form-group">
-                                                            {{-- <label for="valor_total"
+                                                            <label for="valor_total"
                                                                     class="col-form-label">{{ __('Valor da inscrição') }}*</label>
-                                                            <small>(0 para inscrição gratuita)</small> --}}
-                                                            <input id="valor_total" type="hidden" step="0.1" class="form-control @error('valor_total') is-invalid @enderror" name="valor_total" value="0" required autocomplete="valor_total" autofocus>
+                                                            <small>(0 para inscrição gratuita)</small>
+                                                            <input id="valor_total" type="number" step="0.1" class="form-control @error('valor_total') is-invalid @enderror" name="valor_total" value="0" required autocomplete="valor_total" autofocus>
                                                             @error('valor_total')
                                                             <span class="invalid-feedback" role="alert">
                                                                 <strong>{{ $message }}</strong>
                                                             </span>
                                                             @enderror
                                                         </div>
-                                                        <!-- <div class="form-group">
-                                                            <label for="link" class="col-form-label">{{ __('Link') }}*</label>
-                                                            <input id="link" type="text" class="form-control @error('link') is-invalid @enderror" name="link" value="{{ old('link') }}" required autocomplete="link" autofocus>
-                                                            @error('link')
-                                                            <span class="invalid-feedback" role="alert">
-                                                                <strong>{{ $message }}</strong>
-                                                            </span>
-                                                            @enderror
-                                                        </div> -->
                                                         <div class="form-group">
                                                             <label for="limite_inscricao" class="col-form-label">{{ __('Data limite para inscrição') }}</label>
                                                             <input id="limite_inscricao" type="datetime-local" class="form-control @error('limite_inscricao') is-invalid @enderror" name="limite_inscricao" value="{{ old('limite_inscricao') }}" autocomplete="limite_inscricao" autofocus>
@@ -83,14 +74,6 @@
                                                                 <strong>{{ $message }}</strong>
                                                             </span>
                                                             @enderror
-                                                        </div>
-
-                                                        <div class="linksExtras">
-
-                                                        </div>
-
-                                                        <div class="form-group">
-                                                            <button class="btn btn-primary" type="button" onclick="adicionarLink()">+ Adicionar link de pagamento</button>
                                                         </div>
 
                                                         <div class="form-group">
@@ -157,14 +140,14 @@
                                     <td>{{ $categoria->permite_inscricao ? "Sim" : "Não" }}</td>
                                     <td>{{ $categoria->limite_inscricao?->format('d/m/Y H:i')}}</td>
                                     <td style="text-align:center">
-                                        <a href="#" data-toggle="modal" data-target="#modalEditarCategoria{{ $categoria->id }}"><img src="{{ asset('img/icons/edit-regular.svg') }}" style="width:20px"></a>
+                                        <a href="#" data-bs-toggle="modal" data-bs-target="#modalEditarCategoria{{ $categoria->id }}"><img src="{{ asset('img/icons/edit-regular.svg') }}" style="width:20px"></a>
                                     </td>
                                     <td style="text-align:center">
                                         <form id="formExcluirCategoria{{ $categoria->id }}" action="{{ route('categoria.participante.destroy', $categoria->id) }}" method="POST">
                                             @csrf
                                             @method('DELETE')
-                                            <a href="#" data-toggle="modal" data-target="#modalExcluirCategoria{{ $categoria->id }}">
-                                                <img src="{{ asset('img/icons/trash-alt-regular.svg') }}" class="icon-card" alt="">
+                                            <a href="#" data-bs-toggle="modal" data-bs-target="#modalExcluirCategoria{{ $categoria->id }}">
+                                                <img src="{{ asset('img/icons/trash-alt-regular.svg') }}" class="icon-card" style="width:20px; height:auto;" alt="">
                                             </a>
                                         </form>
                                     </td>
@@ -193,9 +176,7 @@
                 <form id="formEditarCategoria{{ $categoria->id }}" action="{{ route('categoria.participante.update', ['id' => $categoria->id]) }}" method="POST">
                     @csrf
                     @method('PUT')
-                    <input type="hidden" name="valor_total_{{ $categoria->id }}" value="0">
                     <input type="hidden" name="editarCategoria" value="{{ $categoria->id }}">
-                    <input type="hidden" id="linkIdExcluir" name="linkIdExcluir[]" value="">
                     <div class="form-group" style="margin-top: 20px; margin-bottom: 20px;">
                         <label for="nome_">Nome*</label>
                         <input id="nome_" type="text" class="form-control @error('nome_') is-invalid @enderror" name="nome_{{ $categoria->id }}" value="{{ old('nome_'.$categoria->id, $categoria->nome) }}">
@@ -215,98 +196,20 @@
                         @enderror
                     </div>
 
-                    @foreach($linksAtuais as $linkAtual)
-                    @if($linkAtual->categoria_id == $categoria->id)
-                    <div class="form-group">
-                        <label for="link" class="col-form-label">{{ __('Link atual') }}*:</label>
-                        <a href="">{{$linkAtual->link }}</a>
+                    <div class="form-group" style="margin-top: 20px; margin-bottom: 20px;">
+                        <label for="valor_total_edit_{{ $categoria->id }}">Valor*</label>
+                        <input id="valor_total_edit_{{ $categoria->id }}" type="number" step="0.01" min="0" class="form-control @error('valor_total_'.$categoria->id) is-invalid @enderror" name="valor_total_{{ $categoria->id }}" value="{{ old('valor_total_'.$categoria->id, $categoria->valor_total) }}" required>
+                        <small>(0 para inscrição gratuita)</small>
+                        @error('valor_total_'.$categoria->id)
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                        @enderror
                     </div>
-                    @endif
-                    @endforeach
-
-                    @foreach($links as $link)
-                    @if($link->categoria_id == $categoria->id)
-                    <div class="form-row" id="links">
-                        <div class="form-group col-md-3">
-                            <label :for="id" class="col-form-label">
-                                {{ __('Link para pagamento') }}
-                            </label>
-                            <input id="link_pagamento" type="text" class="form-control @error('link_pagamento') is-invalid @enderror" name="linkPagamento[]" value="{{ $link->link}}" autocomplete="link_pagamento" autofocus>
-                            @error('linkPagamento[]')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                            @enderror
-                        </div>
-                        <div class="form-group col-md-2">
-                            <label :for="id" class="col-form-label">
-                                {{ __('Valor') }}
-                            </label>
-                            <input id="valor" type="text" class="form-control @error('valor') is-invalid @enderror" name="valorLink[]" value="{{ $link->valor }}" placeholder="R$" autocomplete="valor" autofocus>
-                            @error('valorLink[]')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                            @enderror
-                        </div>
-                        <div class="form-group col-md-3">
-                            <label :for="id" class="col-form-label">
-                                {{ __('Data de Início') }}
-                            </label>
-                            <input :id="id" type="datetime-local" class="form-control" x-model="data.inicio" name="dataInicioLink[]" value="{{$link->dataInicio}}">
-                            @error('dataInicioLink[]')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                            @enderror
-                        </div>
-                        <div class="form-group col-md-3">
-                            <label :for="id" class="col-form-label">
-                                {{ __('Data de Fim') }}
-                            </label>
-                            <input :id="id" type="datetime-local" class="form-control" x-model="data.fim" name="dataFinalLink[]" value="{{$link->dataFim}}">
-                            @error('dataFinalLink[]')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                            @enderror
-
-
-                        </div>
-                        <div class="col-md-1">
-                            <!-- <form id="formExcluirLink{{ $link->id }}" action="{{ route('link.pagamento.destroy', $link->id) }}" method="DELETE"> -->
-                                <!-- @csrf
-                                @method('DELETE') -->
-                                <!-- <a href="#" data-toggle="modal" data-target="#modalExcluirCategoria{{ $categoria->id }}">
-                                                <img src="{{ asset('img/icons/trash-alt-regular.svg') }}" class="icon-card" alt="">
-                                            </a> -->
-                                <!--  -->
-
-                                <a href="#" class="deleteEdit" onclick="enviarLinkParaExclusao('{{$link->id}}')">
-                                    <img src="{{asset('img/icons/lixo.png')}}" style="width:25px;margin-top:35px">
-                                </a>
-
-
-                        </div>
-                    </div>
-
-                    @endif
-                    <!-- Modal de exclusão do link -->
-
-                    @endforeach
-
-                    <div class="linksExtrasEdit">
-
-                    </div>
-
-                    <div class="form-group">
-                        <button class="btn btn-primary" type="button" onclick="adicionarLinkEdit()">+ Adicionar link de pagamento</button>
-                    </div>
-
 
                     <div class="form-group" style="margin-top: 20px; margin-bottom: 20px;">
-                        <label for="limite_inscricao_">Valor*</label>
-                        <input id="limite_inscricao_" type="datetime-local" class="form-control @error('limite_inscricao_') is-invalid @enderror" name="limite_inscricao_{{ $categoria->id }}" value="{{ old('limite_inscricao_'.$categoria->id, $categoria->limite_inscricao) }}">
+                        <label for="limite_inscricao_edit_{{ $categoria->id }}">Data limite de inscrição</label>
+                        <input id="limite_inscricao_edit_{{ $categoria->id }}" type="datetime-local" class="form-control @error('limite_inscricao_'.$categoria->id) is-invalid @enderror" name="limite_inscricao_{{ $categoria->id }}" value="{{ old('limite_inscricao_'.$categoria->id, $categoria->limite_inscricao ? \Carbon\Carbon::parse($categoria->limite_inscricao)->format('Y-m-d\TH:i') : '') }}">
                         @error('limite_inscricao_'.$categoria->id)
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>
@@ -378,92 +281,5 @@
 <script type="text/javascript">
     CKEDITOR.replaceAll('ckeditor-texto');
     $.fn.modal.Constructor.prototype._enforceFocus = function() {};
-
-    function adicionarLink() {
-        var caminhoImagem = "{{ asset('img/icons/lixo.png') }}";
-
-        $('.linksExtras').append(
-            '<div class="form-row" id="linkExtra">' +
-            '<div class="form-group col-md-3">' +
-            '<label for="link_pagamento" class="col-form-label">Link para pagamento</label>' +
-            '<input id="link_pagamento" type="text" class="form-control" name="linkPagamento[]" value="" autocomplete="link_pagamento" autofocus>' +
-            '</div>' +
-            '<div class="form-group col-md-2">' +
-            '<label for="valor" class="col-form-label">Valor</label>' +
-            '<input id="valor" type="text" class="form-control" name="valorLink[]" value="" placeholder="R$" autocomplete="valor" autofocus>' +
-            '</div>' +
-            '<div class="form-group col-md-3">' +
-            '<label for="dataInicio" class="col-form-label">Data de Início</label>' +
-            '<input id="dataInicio" type="datetime-local" class="form-control" name="dataInicioLink[]">' +
-            '</div>' +
-            '<div class="form-group col-md-3">' +
-            '<label for="dataFim" class="col-form-label">Data de Fim</label>' +
-            '<input id="dataFim" type="datetime-local" class="form-control" name="dataFinalLink[]">' +
-            '</div>' +
-            '<div class="col-md-1">' +
-            '<a href="#" id="delete" onclick="removerLink(\'delete\')">' +
-            '<img src="' + caminhoImagem + '" style="width:25px;margin-top:35px">' +
-            '</a>' +
-            '</div>' +
-            '</div>'
-        );
-    }
-
-
-
-
-    function adicionarLinkEdit() {
-        var caminhoImagem = "{{ asset('img/icons/lixo.png') }}";
-
-        $('.linksExtrasEdit').append(
-            '<div class="form-row" id="linkExtraEdit">' +
-            '<div class="form-group col-md-3">' +
-            '<label for="link_pagamento" class="col-form-label">Link para pagamento</label>' +
-            '<input id="link_pagamento" type="text" class="form-control" name="linkPagamento[]" value="" autocomplete="link_pagamento" autofocus>' +
-            '</div>' +
-            '<div class="form-group col-md-2">' +
-            '<label for="valor" class="col-form-label">Valor</label>' +
-            '<input id="valor" type="text" class="form-control" name="valorLink[]" value="" placeholder="R$" autocomplete="valor" autofocus>' +
-            '</div>' +
-            '<div class="form-group col-md-3">' +
-            '<label for="dataInicio" class="col-form-label">Data de Início</label>' +
-            '<input id="dataInicio" type="datetime-local" class="form-control" name="dataInicioLink[]">' +
-            '</div>' +
-            '<div class="form-group col-md-3">' +
-            '<label for="dataFim" class="col-form-label">Data de Fim</label>' +
-            '<input id="dataFim" type="datetime-local" class="form-control" name="dataFinalLink[]">' +
-            '</div>' +
-            '<div class="col-md-1">' +
-            '<a href="#" id="delete" onclick="removerLinkExtraEdit(\'delete\')">' +
-            '<img src="' + caminhoImagem + '" style="width:25px;margin-top:35px">' +
-            '</a>' +
-            '</div>' +
-            '</div>'
-        );
-    }
-
-    function removerLink(id) {
-
-        $('#' + id).closest('#linkExtra').remove();
-
-    }
-
-    function removerLinkExtraEdit(id) {
-
-        $('#' + id).closest('#linkExtraEdit').remove();
-
-    }
-
-    function enviarLinkParaExclusao(linkId){
-        document.getElementById('linkIdExcluir').value = linkId;
-        alert(document.getElementById('linkIdExcluir').value);
-
-    }
-
-    document.getElementById('formEditarCategoria7').addEventListener('submit', function(event){
-        alert(document.getElementById('linkIdExcluir').value);
-    });
-
-
 </script>
 @endsection

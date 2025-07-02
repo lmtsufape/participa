@@ -1,5 +1,4 @@
 
-
 <div class="modal fade" id="validacaoCorrecaoModal{{$trabalho->id}}" tabindex="-1" aria-labelledby="#validacaoCorrecaoModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">

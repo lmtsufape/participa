@@ -103,12 +103,12 @@
                                                 <td>
                                                     @if ($trabalho->arquivo)
                                                         <a href="{{route('downloadTrabalho', ['id' => $trabalho->id])}}">
-                                                            <span class="d-inline-block text-truncate" class="d-inline-block" tabindex="0" data-toggle="tooltip" title="{{$trabalho->titulo}}" style="max-width: 150px;">
+                                                            <span class="d-inline-block text-truncate" class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" title="{{$trabalho->titulo}}" style="max-width: 150px;">
                                                                 {{$trabalho->titulo}}
                                                             </span>
                                                         </a>
                                                     @else
-                                                        <span class="d-inline-block text-truncate" class="d-inline-block" tabindex="0" data-toggle="tooltip" title="{{$trabalho->titulo}}" style="max-width: 150px;">
+                                                        <span class="d-inline-block text-truncate" class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" title="{{$trabalho->titulo}}" style="max-width: 150px;">
                                                             {{$trabalho->titulo}}
                                                         </span>
                                                     @endif
@@ -116,12 +116,12 @@
                                                 <td>
                                                     @if ($trabalho->arquivoCorrecao)
                                                         <a href="{{route('downloadCorrecao', ['id' => $trabalho->id])}}">
-                                                            <span class="d-inline-block text-truncate" class="d-inline-block" tabindex="0" data-toggle="tooltip" title="{{$trabalho->titulo}}" style="max-width: 150px;">
+                                                            <span class="d-inline-block text-truncate" class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" title="{{$trabalho->titulo}}" style="max-width: 150px;">
                                                                 {{$trabalho->titulo}}
                                                             </span>
                                                         </a>
                                                     @else
-                                                        <span class="d-inline-block text-truncate" class="d-inline-block" tabindex="0" data-toggle="tooltip" title="{{$trabalho->titulo}}" style="max-width: 150px;">
+                                                        <span class="d-inline-block text-truncate" class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" title="{{$trabalho->titulo}}" style="max-width: 150px;">
                                                             {{$trabalho->titulo}}
                                                         </span>
                                                     @endif
@@ -143,6 +143,21 @@
                                                     @endforeach
                                                 </td>
                                                 <td class="text-center">{{$trabalho->lembrete_enviado ? 'Sim' : 'Não'}}</td>
+                                                 <td class="text-center">
+                                                    @switch($trabalho->avaliado)
+                                                        @case('corrigido')
+                                                            Finalizado: aprovado completamente
+                                                            @break
+                                                        @case('corrigido_parcialmente')
+                                                            Finalizado: aprovado parcialmente
+                                                            @break
+                                                        @case('nao_corrigido')
+                                                            Finalizado: reprovado
+                                                            @break
+                                                        @default
+                                                        Em análise
+                                                    @endswitch
+                                                </td>
 
                                                 <td class="text-center">
                                                     @switch($trabalho->avaliado)
@@ -161,7 +176,7 @@
                                                 </td>
 
                                                 <td style="text-align:center">
-                                                    <a href="#" data-toggle="modal" data-target="#modalCorrecaoTrabalho_{{$trabalho->id}}" style="color:#114048ff">
+                                                    <a href="#" data-bs-toggle="modal" data-bs-target="#modalCorrecaoTrabalho_{{$trabalho->id}}" style="color:#114048ff">
                                                         <i class="fas fa-edit"></i>
                                                     </a>
 

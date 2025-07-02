@@ -154,7 +154,7 @@
                     <h6 style="margin-left: 5px; margin-top:1px; margin-bottom: 1px;">Baixar trabalho corrigido</h6>
                 </div>
             </a>
-            @can('isCoordenadorOrCoordenadorDasComissoes', $evento)
+            @canany(['isCoordenadorOrCoordenadorDaComissaoCientifica', 'isCoordenadorEixo'], $evento)
                 <div class="col-md-4" style="padding-ridht:0">
                     @if ($trabalho->avaliado($revisor->user))
                         @if ($trabalho->getParecerAtribuicao($revisor->user) != "encaminhado")
@@ -209,19 +209,19 @@
 
     <div class="d-flex flex-row justify-content-center p-5">
         <div class="px-2">
-            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal{{$trabalho->id}}">
+            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{$trabalho->id}}">
                 Deletar Avaliação
             </button>
         </div>
         <div>
             <button class="btn {{$trabalho->aprovado == true ? 'btn-primary' : 'btn-secondary'}}"
-            data-toggle="modal" data-target="#reprovar-trabalho-{{$trabalho->id}}" {{$trabalho->aprovado == true ? '' : 'disabled' }}>
+            data-bs-toggle="modal" data-bs-target="#reprovar-trabalho-{{$trabalho->id}}" {{$trabalho->aprovado == true ? '' : 'disabled' }}>
                 Reprovar para Correção
             </button>
         </div>
         <div class="px-2">
             <button class="btn {{$trabalho->aprovado == false ? 'btn-primary' : 'btn-secondary'}}"
-            data-toggle="modal" data-target="#aprovar-trabalho-{{$trabalho->id}}" {{$trabalho->aprovado == false ? '' : 'disabled' }}>
+            data-bs-toggle="modal" data-bs-target="#aprovar-trabalho-{{$trabalho->id}}" {{$trabalho->aprovado == false ? '' : 'disabled' }}>
                 Aprovar para Correção
             </button>
         </div>

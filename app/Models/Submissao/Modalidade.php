@@ -17,7 +17,7 @@ class Modalidade extends Model
         'eventoId', 'texto', 'arquivo', 'caracteres', 'mincaracteres',
         'maxcaracteres', 'palavras', 'minpalavras', 'maxpalavras',
         'pdf', 'jpg', 'jpeg', 'png', 'docx', 'odt', 'zip', 'svg', 'mp4', 'mp3', 'ogg', 'wav', 'ogv', 'mpg', 'mpeg', 'mkv', 'avi', 'odp', 'pptx', 'csv', 'ods', 'xlsx',
-        'regra', 'template', 'modelo_apresentacao', 'instrucoes',
+        'regra', 'template', 'modelo_apresentacao', 'instrucoes','numMaxCoautores', 'nome_en', 'nome_es'
     ];
 
     public function trabalho()

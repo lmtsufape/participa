@@ -272,7 +272,7 @@ return [
         'arquivoRegras*' => [
             'file' => 'O campo arquivo regras deve ter um arquivo válido.',
             'mimes' => 'O arquivo deve ser do tipo PDF.',
-            'max' => 'O arquivo deve ter no máximo 2mb.',
+            'max' => 'O arquivo deve ter no máximo 10mb.',
         ],
         'arquivoTemplates*' => [
             'file' => 'O campo arquivo template deve ter um arquivo válido.',

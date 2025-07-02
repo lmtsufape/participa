@@ -35,6 +35,8 @@
                     <div class="card" style="width: 18rem;">
                         @if($evento->is_multilingual && Session::get('idiomaAtual') === 'en' && isset($evento->fotoEvento_en))
                             <img src="{{asset('storage/'.$evento->fotoEvento_en)}}" class="card-img-top" alt="...">
+                        @elseif($evento->is_multilingual && Session::get('idiomaAtual') === 'es' && isset($evento->fotoEvento_es))
+                            <img src="{{asset('storage/'.$evento->fotoEvento_es)}}" class="card-img-top" alt="...">
                         @elseif(isset($evento->fotoEvento))
                             <img src="{{asset('storage/'.$evento->fotoEvento)}}" class="card-img-top" alt="...">
                         @else
@@ -49,6 +51,8 @@
                                                 <a href="{{route('evento.visualizar',['id'=>$evento->id])}}" style="text-decoration: inherit;">
                                                     @if($evento->is_multilingual && Session::get('idiomaAtual') === 'en')
                                                         {{$evento->nome_en}}
+                                                    @elseif($evento->is_multilingual && Session::get('idiomaAtual') === 'es')
+                                                        {{$evento->nome_es}}
                                                     @else
                                                         {{$evento->nome}}
                                                     @endif
@@ -88,7 +92,7 @@
                                 </div>
                                 @can('isCoordenador', $evento)
                                 <div>
-                                    <a href="#" data-toggle="modal" data-target="#modalExcluirEvento{{$evento->id}}">
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#modalExcluirEvento{{$evento->id}}">
                                         <i class="far fa-trash-alt" style="color: black"></i>&nbsp;&nbsp;Deletar
                                     </a>
                                 </div>

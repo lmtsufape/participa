@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Users;
 
+use App\Models\PerfilIdentitario;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\Submissao\Area;
@@ -22,7 +23,7 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-    //
+
     public function perfil($pais = null)
     {
         $user = User::find(Auth::user()->id);
@@ -39,12 +40,21 @@ class UserController extends Controller
             app()->setLocale('pt-BR');
         }
         $areas = Area::orderBy('nome')->get();
+        $perfilIdentitario = PerfilIdentitario::query()
+            ->where('userId', $user->id)
+            ->first();
 
-        return view('user.perfilUser', compact('user', 'end', 'areas', 'pais'));
+        if ($user->usuarioTemp) {
+            app()->setLocale('pt-BR');
+        }
+
+        return view('user.perfilUser', compact('user', 'end', 'areas', 'pais', 'perfilIdentitario'));
     }
 
     public function editarPerfil(Request $request)
     {
+
+
         if ($request->passaporte != null && $request->cpf != null ||
             $request->passaporte != null && $request->cnpj != null ) {
 
@@ -57,12 +67,16 @@ class UserController extends Controller
         }
 
         $user = User::find($request->id);
+
+        $temp = $user->usuarioTemp;
+
+
         $validations = [
             'name' => 'required|string|max:255',
             'cpf' => ($request->passaporte == null && $request->cnpj == null ? ['bail', 'required', 'cpf'] : 'nullable'),
             'cnpj' => ($request->passaporte == null && $request->cpf == null ? ['bail', 'required'] : 'nullable'),
             'passaporte' => ($request->cpf == null && $request->cnpj == null ? ['bail', 'required', 'max:10'] : ['nullable']),
-            'celular' => 'required|string|max:20',
+            'celular' => '|string|max:20',
             'instituicao' => 'required|string| max:255',
             'rua' => 'required|string|max:255',
             'numero' => 'required|string',
@@ -83,10 +97,6 @@ class UserController extends Controller
             $validations['numero'] = ['nullable', 'string'];
             $validations['bairro'] = ['nullable', 'string'];
             $validations['cep'] = ['nullable', 'string'];
-        }
-        if ($user->usuarioTemp) {
-            $validations['password'] = 'required|string|min:8|confirmed';
-            $validations['email'] = '';
         }
         $validator = $request->validate($validations);
 
@@ -112,9 +122,6 @@ class UserController extends Controller
             $user->password = $password;
         }
 
-        if ($user->usuarioTemp) {
-            $user->password = Hash::make($request->password);
-        }
 
         if ($user->email != $request->email && !$user->usuarioTemp) {
             $check_user_email = User::where('email', $request->email)->first();
@@ -148,7 +155,25 @@ class UserController extends Controller
             $end->fill($validator);
             $end->update();
         }
-        app()->setLocale('pt-BR');
+
+        $perfilIdentitario = PerfilIdentitario::query()
+            ->where('userId', $user->id)
+            ->first();
+
+        if ($perfilIdentitario == null) {
+            $perfilIdentitario = new PerfilIdentitario();
+            $perfilIdentitario->userId = $user->id;
+            $perfilIdentitario->setAttributes($data);
+            $perfilIdentitario->save();
+        }
+        else{
+            $perfilIdentitario->editAttributes($data);
+            $perfilIdentitario->save();
+        }
+
+        if($temp){
+            return redirect()->route('index')->with(['message' => 'Perfil atualizado com sucesso!']);
+        }
 
         return back()->with(['message' => 'Atualizado com sucesso!']);
     }
@@ -232,10 +257,12 @@ class UserController extends Controller
 
     public function areaParticipante(){
         $user = Auth::user();
-        $eventos = Evento::whereHas('inscricaos', function($query) use ($user) {
-            $query->where('user_id', $user->id);
-        })->get();
 
+        $eventos = Evento::whereHas('inscricaos', function($query) use ($user) {
+                $query->where('user_id', $user->id);
+            });
+
+        $eventos = $eventos->paginate(9);
 
         return view('user.areaParticipante', ['eventos' => $eventos]);
 
