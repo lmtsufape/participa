@@ -51,7 +51,7 @@
                                 <br> <br>
 
 
-                                Sua candidatura para atuar como avaliador(a) no {{ $eixo }} do "{{ $evento->nome }}"  {{ $status === 'aprovada' ? 'foi homologada' : 'não foi homologada' }}.
+                                Sua candidatura para atuar como avaliador(a) no <strong>{{ $eixo }}</strong> do "{{ $evento->nome }}"  {{ $status === 'aprovada' ? 'foi homologada' : 'não foi homologada' }}.
                                 <br><br>
                                 @if($status === 'aprovada')
                                 Agradecemos sua disponibilidade!<br><br>
