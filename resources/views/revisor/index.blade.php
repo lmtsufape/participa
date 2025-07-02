@@ -136,6 +136,7 @@
                                 <th scope="col" style="text-align:center">Status</th>
                                 <th scope="col" style="text-align:center">Resumo</th>
                                 <th scope="col" style="text-align:center">Baixar</th>
+
                                 {{-- <th scope="col">Avaliar</th> --}}
                                 <th scope="col" style="text-align:center">Avaliação do trabalho</th>
                                 <th scope="col" style="text-align:center">Validação das correções</th>
@@ -164,6 +165,7 @@
                                         <a href="{{route('downloadTrabalho', ['id' => $trabalho->id])}}"><img src="{{asset('img/icons/file-download-solid-black.svg')}}" style="width:20px"></a>
                                     @endif
                                     </td>
+
                                     @if (!$trabalho->avaliado(auth()->user())){{--avaliacao do revisor aqui--}}
                                         @if (now() >= $trabalho->modalidade->inicioRevisao && now() <= $trabalho->modalidade->fimRevisao && ($trabalho->atribuicoes->first()->pivot->prazo_correcao == null || now() <= $trabalho->atribuicoes->first()->pivot->prazo_correcao))
                                             {{-- <td>
@@ -205,20 +207,27 @@
                                         <td class="d-flex flex-column align-items-center">
                                             @if ($trabalho->arquivoCorrecao != null)
                                                 <a href="{{route('downloadCorrecao', ['id' => $trabalho->id])}}"><img src="{{asset('img/icons/file-download-solid-black.svg')}}" style="width:20px"></a>
-                                                <a type="button" data-bs-target="#validacaoCorrecaoModal{{$trabalho->id}}" data-bs-toggle="modal" class="btn btn-sm btn-primary mt-2">
-                                                    Fazer validação
-                                                </a>
+
+
+                                                @if(!in_array($trabalho->avaliado, ['corrigido', 'corrigido_parcialmente', 'nao_corrigido']))
+                                                    <a type="button" data-target="#validacaoCorrecaoModal{{$trabalho->id}}" data-toggle="modal" class="btn btn-sm btn-primary mt-2">
+                                                        Fazer validação
+                                                    </a>
+                                                @endif
 
                                             @endif
                                         </td>
                                         <td style="text-align:center">
                                             {{date('d/m/Y H:i',strtotime($trabalho->atribuicoes->first()->pivot->created_at))}}
                                         </td>
+
+
                                         <td style="text-align:center">
                                             @if ($trabalho->atribuicoes->first()->pivot->prazo_correcao)
                                                 {{ date('d/m/Y H:i', strtotime($trabalho->atribuicoes->first()->pivot->prazo_correcao)) }}
                                             @endif
                                         </td>
+
                                     </tr>
                                     @include('revisor.validarCorrecao-modal')
                             @endforeach

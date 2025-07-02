@@ -159,6 +159,22 @@
                                                     @endswitch
                                                 </td>
 
+                                                <td class="text-center">
+                                                    @switch($trabalho->avaliado)
+                                                        @case('corrigido')
+                                                            Finalizado: aprovado completamente
+                                                            @break
+                                                        @case('corrigido_parcialmente')
+                                                            Finalizado: aprovado parcialmente
+                                                            @break
+                                                        @case('nao_corrigido')
+                                                            Finalizado: reprovado
+                                                            @break
+                                                        @default
+                                                        Em análise
+                                                    @endswitch
+                                                </td>
+
                                                 <td style="text-align:center">
                                                     <a href="#" data-bs-toggle="modal" data-bs-target="#modalCorrecaoTrabalho_{{$trabalho->id}}" style="color:#114048ff">
                                                         <i class="fas fa-edit"></i>
