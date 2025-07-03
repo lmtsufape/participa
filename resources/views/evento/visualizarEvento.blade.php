@@ -415,23 +415,23 @@
                                     @endforeach
                                     @if(Auth::user())
                                         @if (!$jaCandidatou)
-                                            <button class="btn btn-my-success w-50 rounded btn-lg mt-3"
+                                           <!-- <button class="btn btn-my-success w-50 rounded btn-lg mt-3"
                                                 data-bs-toggle="modal"
                                                 data-bs-target="#modalInscreverAvaliador">
                                                 {{ __('Quero ser avaliador') }}
-                                            </button>
+                                            </button>-->
                                         @else
                                             <button class="btn btn-my-success w-100 rounded btn-lg mt-3" disabled>
                                                 {{ __('Você já se candidatou a avaliador neste evento') }}
                                             </button>
                                         @endif
                                     @else
-                                            <button class="btn btn-my-success w-50 rounded btn-lg mt-3"
+                                           <!--{ <button class="btn btn-my-success w-50 rounded btn-lg mt-3"
                                                 data-bs-toggle="modal"
                                                 data-bs-target="#modalLoginPrompt"
                                                 data-acao="{{ __('se candidatar a avaliador') }}">
-                                                {{ __('Quero ser avaliador') }}
-                                            </button>
+                                                { __('Quero ser avaliador') }}
+                                            </button>-->
                                     @endif
                                 </div>
                             </div>
