@@ -13,6 +13,7 @@ use App\Models\Users\Revisor;
 use App\Models\Users\User;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Auth;
 use App\Exports\CandidatosAvaliadoresExport;
@@ -68,8 +69,13 @@ class CandidatoAvaliadorController extends Controller
     {
         $evento = Evento::findOrFail($eventoId);
 
-        $query = CandidatoAvaliador::with(['user','area'])
-            ->where('evento_id', $evento->id);
+        $query = CandidatoAvaliador::select(DB::raw(
+            'DISTINCT ON (user_id, evento_id, area_id) candidatos_avaliadores.*'
+        ))->with(['user','area'])->where('evento_id', $evento->id)
+            ->orderBy('user_id')
+            ->orderBy('evento_id')
+            ->orderBy('area_id')
+            ->orderBy('id');
 
         $allAxes = CandidatoAvaliador::where('evento_id', $evento->id)
             ->with('area')
