@@ -1,15 +1,15 @@
-<nav class="navbar navbar-expand-lg shadow-sm" style="background-color: #FFF9F2">
+<nav class="navbar navbar-expand-lg shadow-sm" style="background-color: #114048">
     @php
         $incompleto = optional(Auth::user())->usuarioTemp;
     @endphp
     <div class="container">
         @if($incompleto)
             <a class="navbar-brand" href="">
-                <img src="{{ asset('/img/logoatualizada.png') }}" alt="" width="250vw">
+                <img src="{{ asset('/img/logoatualizadanova.png') }}" alt="" width="250vw">
             </a>
         @else
             <a class="navbar-brand" href="{{route('index')}}">
-                <img src="{{ asset('/img/logoatualizada.png') }}" alt="" width="250vw">
+                <img src="{{ asset('/img/logoatualizadabranca.png') }}" alt="" width="250vw">
             </a>
         @endif
 
@@ -191,7 +191,7 @@
 
                 @else
                     <li class="nav-item dropdown">
-                        <a class="nav-link text-my-primary fw-semibold" href="{{ route('login') }}" style="margin-right: 5px; margin-left: 5px">{{ __('Login') }}</a>
+                        <a class="nav-link text-white fw-semibold" href="{{ route('login') }}" style="margin-right: 5px; margin-left: 5px">{{ __('Login') }}</a>
                     </li>
                     <li class="nav-item dropdown">
                         <div class="nav-link text-my-primary fw-semibold">
@@ -199,7 +199,7 @@
                         </div>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link text-my-primary fw-semibold" href="{{ route('preRegistro') }}">{{ __('Cadastre-se') }}</a>
+                        <a class="nav-link text-white fw-semibold" href="{{ route('preRegistro') }}">{{ __('Cadastre-se') }}</a>
                     </li>
                     <li class="nav-item dropdown">
                         <div class="nav-link text-my-primary fw-semibold">
@@ -212,7 +212,7 @@
 
                 <li class="nav-item dropdown">
                     <a id="navbarDropdown"
-                    class="nav-link dropdown-toggle d-inline-flex align-items-center gap-2 text-my-primary fw-semibold"
+                    class="nav-link dropdown-toggle d-inline-flex align-items-center gap-2 text-white fw-semibold"
                     href="#" role="button"
                     data-bs-toggle="dropdown"
                     aria-haspopup="true"

@@ -22,7 +22,7 @@ p{
     <div class="row">
         <section class="col-md-6 d-flex flex-column justify-content-center">
             <a class="navbar-brand" href="{{route('index')}}">
-                <img src="{{ asset('/img/logoatualizada.png') }}" alt="logo" width="50%">
+                <img src="{{ asset('/img/logoatualizadanova.png') }}" alt="logo" width="50%">
             </a>
 
             <p class="mt-3 fs-4 text-justify">{{ __('Plataforma de inscrições e submissão de trabalhos da Associação Brasileira de Agroecologia (ABA), desenvolvida e mantida pelo Laboratório Multidisciplinar de Tecnologias Sociais da Universidade Federal do Agreste de Pernambuco') }}.</p>
