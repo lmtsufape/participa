@@ -40,15 +40,12 @@ class UserController extends Controller
             app()->setLocale('pt-BR');
         }
         $areas = Area::orderBy('nome')->get();
-        $perfilIdentitario = PerfilIdentitario::query()
-            ->where('userId', $user->id)
-            ->first();
 
         if ($user->usuarioTemp) {
             app()->setLocale('pt-BR');
         }
 
-        return view('user.perfilUser', compact('user', 'end', 'areas', 'pais', 'perfilIdentitario'));
+        return view('user.perfilUser', compact('user', 'end', 'areas', 'pais'));
     }
 
     public function editarPerfil(Request $request)
@@ -73,7 +70,9 @@ class UserController extends Controller
 
         $validations = [
             'name' => 'required|string|max:255',
+            'nomeSocial' => 'nullable|string|max:255',
             'cpf' => ($request->passaporte == null && $request->cnpj == null ? ['bail', 'required', 'cpf'] : 'nullable'),
+            'dataNascimento' => ['required', 'date', 'before:today'],
             'cnpj' => ($request->passaporte == null && $request->cpf == null ? ['bail', 'required'] : 'nullable'),
             'passaporte' => ($request->cpf == null && $request->cnpj == null ? ['bail', 'required', 'max:10'] : ['nullable']),
             'celular' => '|string|max:20',
@@ -156,20 +155,6 @@ class UserController extends Controller
             $end->update();
         }
 
-        $perfilIdentitario = PerfilIdentitario::query()
-            ->where('userId', $user->id)
-            ->first();
-
-        if ($perfilIdentitario == null) {
-            $perfilIdentitario = new PerfilIdentitario();
-            $perfilIdentitario->userId = $user->id;
-            $perfilIdentitario->setAttributes($data);
-            $perfilIdentitario->save();
-        }
-        else{
-            $perfilIdentitario->editAttributes($data);
-            $perfilIdentitario->save();
-        }
 
         if($temp){
             return redirect()->route('index')->with(['message' => 'Perfil atualizado com sucesso!']);
