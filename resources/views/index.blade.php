@@ -1,186 +1,171 @@
+@php use Illuminate\Support\Facades\Storage; @endphp
 @extends('layouts.app')
 
 @section('css')
-    <link rel="stylesheet" href="/css/home/home.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <!-- Flickity CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/flickity@2/dist/flickity.min.css" />
+
     <style>
-        .swiper {
-            width: 100% !important;
-            max-width: 100%;
-            max-height: 100%;
-            overflow: hidden;
+        /* container do carrossel */
+        .main-carousel {
+            overflow: visible;    /* para que as setas fiquem para fora */
+        }
+        /* cada célula do Flickity */
+        .carousel-cell-images {
+            width: 60%;           /* slide central ocupa 60% da largura */
+            height: 430px;       /* altura fixa para os slides */
+            margin-right: 2%;     /* espaçamento entre slides */
             position: relative;
         }
-        .swiper-wrapper {
-            display: flex;
-            width: 100% !important;
-        }
-        .swiper-slide {
-            flex: 0 0 100% !important;
-            width: 100% !important;
-            height: 100%;
-            position: relative;
-        }
-        .swiper-slide img {
+        /* imagem dentro do slide */
+        .carousel-cell-images img {
+            display: block;
             width: 100%;
             height: 100%;
-            object-fit: cover;
             border-radius: 8px;
         }
-        .swiper-button-next,
-        .swiper-button-prev {
-            color: #000;
+        /* título e legenda */
+        .tit-carrossel-home {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #000;          /* título sempre visível */
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
-        .carousel-caption {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            padding: 1rem 1.5rem;
-            background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-        }
-        .carousel-caption h1 {
-            font-size: 1.5rem;
-            color: #fff;
-            margin: 0;
-        }
-        .carousel-caption .caption-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: .5rem;
-            width: 100%;
-        }
-        .carousel-caption .info {
+        .sub-carrossel-home {
+            font-size: 0.9rem;
+            color: #555;
             display: flex;
             align-items: center;
             gap: .5rem;
-            font-size: .9rem;
-            color: #ddd;
-        }
-        .carousel-caption .info svg {
-            flex-shrink: 0;
-        }
-        .carousel-caption .btn {
-            flex-shrink: 0;
-        }
-        /* ------------------------- */
-        /* ajuste de altura para tablets */
-        @media (max-width: 992px) {
-            .swiper {
-                height: 300px;
-            }
         }
 
-        /* ajuste de altura para telas menores */
-        @media (max-width: 768px) {
-            .swiper {
-                height: 240px;
-            }
+        /* customização das setas */
+        .flickity-prev-next-button {
+            width: 3rem;
+            height: 3rem;
+            background: #fff;
+            opacity: 0.9;
+            border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
         }
-
-        /* ajuste de altura para mobile */
-        @media (max-width: 576px) {
-            .swiper {
-                height: 180px;
-            }
+        .flickity-prev-next-button:hover {
+            background: #fff;
+            opacity: 1;
         }
+        .flickity-prev-next-button.previous { left: -1.5rem; }
+        .flickity-prev-next-button.next     { right: -1.5rem; }
+        .flickity-button-icon { fill: #333; }
 
+        /* paginação (bolinhas) */
+        .flickity-page-dots {
+            bottom: -2rem;
+        }
+        .flickity-page-dots .dot {
+            width: 0.75rem;
+            height: 0.75rem;
+            margin: 0 0.25rem;
+            opacity: 0.5;
+            background: #888;
+        }
+        .flickity-page-dots .dot.is-selected {
+            background: #337ab7;
+            opacity: 1;
+        }
     </style>
 @endsection
 
 @section('content')
     @if($eventos_destaques->isNotEmpty())
         <div class="container d-flex flex-column pb-5">
-            <div class="container d-flex align-items-center mb-3 position-relative">
+            <div class="d-flex align-items-center mb-3 position-relative">
                 <h2 class="text-my-primary position-absolute start-50 translate-middle-x" style="white-space: nowrap;">
                     {{ __('Eventos com inscrições abertas ou em realização') }}
                 </h2>
                 <a href="{{ route('eventos.proximos') }}"
-                class="btn btn-my-outline-primary rounded-5 ms-auto">
+                   class="btn btn-my-outline-primary rounded-5 ms-auto">
                     {{ __('Ver todos') }}
                 </a>
             </div>
 
-            <!-- Swiper -->
-            <div class="swiper mySwiper">
-                <div class="swiper-wrapper">
-                    @foreach ($eventos_destaques->take(5) as $evento)
-                    <a href="{{ route('evento.visualizar', ['id' => $evento->id]) }}">
-                        <div class="swiper-slide">
-                            <img src="{{ Storage::url($evento->fotoEvento) }}" alt="Foto do evento">
-                            <div class="carousel-caption">
-                                <a href="{{ route('evento.visualizar', ['id' => $evento->id]) }}">
-                                    <h1 class="text-start mb-4">{{ __('13º Congresso Brasileiro de Agroecologia: inscrições e submissões de trabalhos') }}</h1>
-                                </a>
-                                <div class="caption-row">
-                                    <p class="info mb-2">
+            <!-- carrossel Flickity -->
+            <div
+                class="main-carousel js-flickity"
+                id="CarouselHome"
+                data-flickity='{
+                    "cellAlign": "center",
+                    "contain": true,
+                    "pageDots": true,
+                    "prevNextButtons": true,
+                    "groupCells": false,
+                    "wrapAround": true
+                }'
+            >
+                @foreach ($eventos_destaques->take(7) as $evento)
+                    @php
 
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                            fill="currentColor" class="bi bi-calendar-event"
-                                            viewBox="0 0 16 16">
-                                            <path d="M11 6.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5z"/>
-                                            <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0
-                                                    1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0
-                                                    1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5
-                                                    0 0 1 .5-.5M1 4v10a1 1 0 0
-                                                    0 1 1h12a1 1 0 0 0 1-1V4z"/>
-                                        </svg>
-                                         <?php
+                        $inicio = \Carbon\Carbon::parse($evento->dataInicio);
+                        $fim    = \Carbon\Carbon::parse($evento->dataFim);
+                        $idioma = Session::get('idiomaAtual', 'pt');
+                        $mesIgual = $inicio->isSameMonth($fim);
+                        switch ($idioma) {
+                            case 'en':
+                                $suf = 'to'; $fmt1 = 'd F'; $fmt2 = 'd F Y'; break;
+                            case 'es':
+                                $suf = 'hasta'; $fmt1 = 'd \\d\\e F'; $fmt2 = 'd \\d\\e F \\d\\e Y'; break;
+                            default:
+                                $suf = 'a';
+                                if ($mesIgual) { $fmt1 = 'd'; $fmt2 = 'd \\d\\e F \\d\\e Y'; }
+                                else          { $fmt1 = 'd \\d\\e F'; $fmt2 = 'd \\d\\e F \\d\\e Y'; }
+                                break;
+                        }
+                    @endphp
 
+                    <div class="carousel-cell-images">
+                        @php
 
-                                            $dataInicio = \Carbon\Carbon::parse($evento->dataInicio);
-                                            $dataFim = \Carbon\Carbon::parse($evento->dataFim);
+                            $imgUrl = $evento->fotoEvento
+                                ? Storage::url($evento->fotoEvento)
+                                : asset('img/fundo-vagalumes.png');
+                        @endphp
 
-                                            $idioma = Session::get('idiomaAtual', 'pt');
-                                            $mesIgual = $dataInicio->isSameMonth($dataFim);
-                                            switch ($idioma) {
-                                                case 'en':
-                                                    $suffixo      = 'to';
-                                                    $startFormat = 'd F';
-                                                    $endFormat   = 'd F Y';
-                                                    break;
-                                                case 'es':
-                                                    $suffixo     = 'hasta';
-                                                    $startFormat = 'd \\d\\e F';
-                                                    $endFormat   = 'd \\d\\e F \\d\\e Y';
-                                                    break;
-                                                default:
-                                                    $suffixo = 'a';
-                                                    if ($mesIgual) {
-                                                        $startFormat = 'd';
-                                                        $endFormat   = 'd \\d\\e F \\d\\e Y';
-                                                    } else {
-                                                        $startFormat = 'd \\d\\e F';
-                                                        $endFormat   = 'd \\d\\e F \\d\\e Y';
-                                                    }
-                                                    break;
-                                            }
-                                        ?>
-                                        {{ $dataInicio->translatedFormat($startFormat) }}
-                                        {{ $suffixo }}
-                                        {{ $dataFim->translatedFormat($endFormat) }}
-                                    </p>
-                                    <a href="{{ route('evento.visualizar', ['id' => $evento->id]) }}"
-                                    class="btn btn-outline-light rounded-3">
-                                        {{ __('Saiba mais') }}
-                                    </a>
-                                </div>
-                            </div>
+                        <a href="{{ route('evento.visualizar', $evento->id) }}" class="d-block">
+                            <img
+                                src="{{ $imgUrl }}"
+                                alt="{{ $evento->nome }}"
+                                width="1024"
+                                height="425"
+                                style="object-fit: cover; border-radius: 8px;"
+                            >
+                        </a>
+
+                        <div class="card-text mt-2">
+                            <h5 class="tit-carrossel-home text-dark">
+                                {{ $evento->nome }}
+                            </h5>
+                            <p class="sub-carrossel-home mb-0">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                     fill="currentColor" class="bi bi-calendar-event"
+                                     viewBox="0 0 16 16">
+                                    <path d="M11 6.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5z"/>
+                                    <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0
+                            1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0
+                            1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5
+                            0 0 1 .5-.5M1 4v10a1 1 0 0
+                            0 1 1h12a1 1 0 0 0 1-1V4z"/>
+                                </svg>
+                                {{ $inicio->translatedFormat($fmt1) }}
+                                {{ $suf }}
+                                {{ $fim->translatedFormat($fmt2) }}
+                            </p>
                         </div>
-                    </a>
-                    @endforeach
-                </div>
-                <!-- Navegação do Swiper -->
-                <div class="swiper-button-next"></div>
-                <div class="swiper-button-prev"></div>
-                <div class="swiper-pagination"></div>
+                    </div>
+                @endforeach
             </div>
         </div>
     @endif
+
     @if($eventos_passados->isNotEmpty())
         <div class="container py-5">
             @include('components.carrossel', [
@@ -192,7 +177,9 @@
         </div>
     @endif
 
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+
+    <script src="https://unpkg.com/flickity@2/dist/flickity.pkgd.min.js"></script>
     <script>
         const slideCount = {{ $eventos_destaques->count() }};
         new Swiper('.mySwiper', {
