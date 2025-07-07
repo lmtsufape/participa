@@ -143,7 +143,7 @@
                         @elseif(!$InscritoSemCategoria)
                             <a href="{{ route('checkout.telaPagamento', $evento) }}"
                                     class="text-center mt-2 w-100">{{ __('Realizar pagamento') }}</a>
-                            
+
                             <a href="#" class="ms-3" data-bs-toggle="modal" data-bs-target="#modalAlterarCategoria">
                                 {{ __('Alterar categoria') }}
                             </a>
@@ -165,8 +165,6 @@
                         {!! $evento->descricao !!}
                     @endif
                 </div>
-                <br>
-                <strong>Para mais informações, <a href="https://cba.aba-agroecologia.org.br/">clique aqui</a> e acesse o site oficial do 13º CBA.</strong>
             </div>
 
 
