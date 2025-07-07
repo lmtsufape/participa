@@ -57,7 +57,7 @@
                     <div class="small text-orange d-flex align-items-center gap-1">
                       <img src="{{ asset('img/icons/calendar.png') }}" width="16" alt="Data">
                       <span class="text-my-secondary">
-                        {{ \Carbon\Carbon::parse($evento->dataFim)->format('l, d F') }}
+                        {{ \Carbon\Carbon::parse($evento->dataFim)->translatedFormat('l, d \d\e F') }}
                       </span>
                     </div>
                     <a href="{{ route('evento.visualizar', $evento->id) }}"
