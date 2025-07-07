@@ -20,32 +20,35 @@
         }
 
 
-        .carousel-cell-images .img-wrapper {
-               /* largura fixa */
-            height: 320px;      /* altura fixa */
-            overflow: hidden;   /* corta qualquer “overflow” se usar cover */
-            border-radius: 8px;
-            background: #f0f0f0;/* cor de fundo enquanto carrega */
-            position: relative;
+        .carousel-cell-images {
+            width: 60%;
+            margin-right: 2%;
+            display: flex;
+            flex-direction: column;
         }
 
+        .carousel-cell-images .img-wrapper {
+            width: 100%; /* Garante que o wrapper ocupe toda a largura do card */
+            height: 320px; /* Altura fixa do card */
+            overflow: hidden; /* Corta qualquer excesso */
+            border-radius: 8px;
+            background: #f0f0f0; /* Cor de fundo enquanto carrega */
+            position: relative;
+        }
 
         .carousel-cell-images .img-wrapper .img-fixed {
             display: block;
             width: 100%;
             height: 100%;
-            /* ⇢ para **não cortar** nenhuma parte da imagem: */
-            object-fit: contain;
-            /* ⇢ se quiser **preencher inteiro e cortar** o excesso, use:
-               object-fit: cover; */
-            object-position: center;
+            object-fit: cover; /* Preenche o espaço, cortando o excesso */
+            /* Ou use object-fit: contain; para mostrar a imagem inteira */
+            object-position: center; /* Centraliza a imagem */
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
         }
 
-
         .carousel-cell-images .card-text {
-            margin-top: .75rem;
+            margin-top: 0.75rem;
         }
         /* título e legenda */
         .tit-carrossel-home {
@@ -158,7 +161,7 @@
                                 <img
                                     src="{{ $imgUrl }}"
                                     alt="{{ $evento->nome }}"
-                                    class="img-cropped"
+                                    class="img-fixed"
                                 >
                             </a>
                         </div>
