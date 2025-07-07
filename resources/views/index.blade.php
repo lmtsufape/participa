@@ -15,30 +15,35 @@
         .carousel-cell-images {
             width: 60%;
             margin-right: 2%;
-            /* aqui o card pode crescer em altura para caber o texto */
             display: flex;
             flex-direction: column;
         }
 
-        /* wrapper que define a “janela” de recorte */
+
         .carousel-cell-images .img-wrapper {
-            height: 425px;     /* altura máxima permitida */
-            overflow: hidden;  /* corta tudo que passar desse limite */
+               /* largura fixa */
+            height: 320px;      /* altura fixa */
+            overflow: hidden;   /* corta qualquer “overflow” se usar cover */
             border-radius: 8px;
+            background: #f0f0f0;/* cor de fundo enquanto carrega */
             position: relative;
         }
 
-        /* imagem escala para preencher a janela e é cortada se necessário */
-        .carousel-cell-images .img-wrapper .img-cropped {
+
+        .carousel-cell-images .img-wrapper .img-fixed {
             display: block;
             width: 100%;
             height: 100%;
-            object-fit: cover;      /* cobre todo o espaço, cortando o excesso */
-            object-position: center;/* centraliza o crop */
-            box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+            /* ⇢ para **não cortar** nenhuma parte da imagem: */
+            object-fit: contain;
+            /* ⇢ se quiser **preencher inteiro e cortar** o excesso, use:
+               object-fit: cover; */
+            object-position: center;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
         }
 
-        /* texto fica sempre abaixo, sem risco de sobreposição */
+
         .carousel-cell-images .card-text {
             margin-top: .75rem;
         }
