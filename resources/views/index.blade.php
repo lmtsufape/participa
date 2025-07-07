@@ -10,19 +10,37 @@
         .main-carousel {
             overflow: visible;    /* para que as setas fiquem para fora */
         }
-        /* cada célula do Flickity */
+
+
         .carousel-cell-images {
-            width: 60%;           /* slide central ocupa 60% da largura */
-            height: 430px;       /* altura fixa para os slides */
-            margin-right: 2%;     /* espaçamento entre slides */
+            width: 60%;
+            margin-right: 2%;
+            /* aqui o card pode crescer em altura para caber o texto */
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* wrapper que define a “janela” de recorte */
+        .carousel-cell-images .img-wrapper {
+            height: 425px;     /* altura máxima permitida */
+            overflow: hidden;  /* corta tudo que passar desse limite */
+            border-radius: 8px;
             position: relative;
         }
-        /* imagem dentro do slide */
-        .carousel-cell-images img {
+
+        /* imagem escala para preencher a janela e é cortada se necessário */
+        .carousel-cell-images .img-wrapper .img-cropped {
             display: block;
             width: 100%;
             height: 100%;
-            border-radius: 8px;
+            object-fit: cover;      /* cobre todo o espaço, cortando o excesso */
+            object-position: center;/* centraliza o crop */
+            box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+        }
+
+        /* texto fica sempre abaixo, sem risco de sobreposição */
+        .carousel-cell-images .card-text {
+            margin-top: .75rem;
         }
         /* título e legenda */
         .tit-carrossel-home {
@@ -130,15 +148,15 @@
                                 : asset('img/fundo-vagalumes.png');
                         @endphp
 
-                        <a href="{{ route('evento.visualizar', $evento->id) }}" class="d-block">
-                            <img
-                                src="{{ $imgUrl }}"
-                                alt="{{ $evento->nome }}"
-                                width="1024"
-                                height="425"
-                                style="object-fit: cover; border-radius: 8px;"
-                            >
-                        </a>
+                        <div class="img-wrapper">
+                            <a href="{{ route('evento.visualizar', $evento->id) }}">
+                                <img
+                                    src="{{ $imgUrl }}"
+                                    alt="{{ $evento->nome }}"
+                                    class="img-cropped"
+                                >
+                            </a>
+                        </div>
 
                         <div class="card-text mt-2">
                             <h5 class="tit-carrossel-home text-dark">
