@@ -88,6 +88,9 @@
                             <label for="nome" class="col-form-label text-start d-block fw-bold mb-3 required-field">{{ __('Nome do evento') }}</label>
                             <input id="nome" type="text" class="form-control @error('nome') is-invalid @enderror"
                                 name="nome" value="{{ old('nome', $evento->nome) }}" required autocomplete="nome" autofocus>
+                            <div id="erro-nome" class="text-danger mt-1" style="display: none;">
+                                <small>{{ __('O nome do evento é obrigatório') }}</small>
+                            </div>
 
                             @error('nome')
                                 <span class="invalid-feedback" role="alert">
@@ -101,6 +104,9 @@
                             <input class="form-control @error('email') is-invalid @enderror" type="email"
                                 value="{{ old('email', $evento->email) }}" name="email" id="email" required autofocus
                                 autocomplete="email">
+                            <div id="erro-email" class="text-danger mt-1" style="display: none;">
+                                <small>{{ __('O e-mail de contato é obrigatório') }}</small>
+                            </div>
 
                             @error('email')
                                 <span class="invalid-feedback" role="alert">
@@ -284,6 +290,9 @@
                             <textarea class="form-control mb-3 @error('descricao') is-invalid @enderror required-field" required
                                 autocomplete="descricao" autofocus id="descricao" name="descricao" rows="8">
                                 @if(old('descricao') != null) {{ old('descricao') }} @else {{$evento->descricao}} @endif</textarea>
+                            <div id="erro-descricao" class="text-danger mt-1" style="display: none;">
+                                <small>{{ __('A descrição é obrigatória') }}</small>
+                            </div>
                             @error('descricao')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -886,8 +895,39 @@
         };
 
         function proximaEtapa() {
-            document.getElementById('etapa-1').style.display = 'none';
-            document.getElementById('etapa-2').style.display = 'block';
+            // Limpar mensagens de erro anteriores
+            document.getElementById('erro-nome').style.display = 'none';
+            document.getElementById('erro-email').style.display = 'none';
+            document.getElementById('erro-descricao').style.display = 'none';
+
+            let temErro = false;
+
+            // Validar nome do evento
+            const nome = document.getElementById('nome').value.trim();
+            if (nome === '') {
+                document.getElementById('erro-nome').style.display = 'block';
+                temErro = true;
+            }
+
+            // Validar email
+            const email = document.getElementById('email').value.trim();
+            if (email === '') {
+                document.getElementById('erro-email').style.display = 'block';
+                temErro = true;
+            }
+
+            // Validar descrição
+            const descricao = document.getElementById('descricao').value.trim();
+            if (descricao === '') {
+                document.getElementById('erro-descricao').style.display = 'block';
+                temErro = true;
+            }
+
+            // Só prosseguir se não houver erros
+            if (!temErro) {
+                document.getElementById('etapa-1').style.display = 'none';
+                document.getElementById('etapa-2').style.display = 'block';
+            }
         }
 
         function etapaAnterior() {
