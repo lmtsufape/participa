@@ -48,19 +48,19 @@
                         </form>
                     @else
                         <li class="nav-item">
-                            <a class="nav-link text-my-primary fw-semibold" href="{{ route('home') }}" style="margin-right: 5px; margin-left: 5px">
+                            <a class="nav-link fw-semibold" href="{{ route('home') }}" style="margin-right: 5px; margin-left: 5px; color: white;">
                                 @lang('public.meusEventos')
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-my-primary fw-semibold" href="{{ route('meusCertificados') }}" style="margin-right: 5px; margin-left: 5px">
+                            <a class="nav-link fw-semibold" href="{{ route('meusCertificados') }}" style="margin-right: 5px; margin-left: 5px; color: white;">
                                 @lang('public.meusCertificados')
                             </a>
                         </li>
 
 
                         <li class="nav-item dropdown">
-                            <a id="menuDropdown" class="nav-link dropdown-toggle text-my-primary fw-semibold" href="#"  role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <a id="menuDropdown" class="nav-link dropdown-toggle fw-semibold" href="#"  role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color: white;">
                                 {{ Auth::user()->name }}
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="menuDropdown">
