@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Users;
 
-use App\Models\PerfilIdentitario;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\Submissao\Area;
