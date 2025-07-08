@@ -25,7 +25,7 @@ p{
                 <img src="{{ asset('/img/logoatualizadanova.png') }}" alt="logo" width="50%">
             </a>
 
-            <p class="mt-3 fs-4 text-justify">{{ __('Plataforma de inscrições e submissão de trabalhos da Associação Brasileira de Agroecologia (ABA), desenvolvida e mantida pelo Laboratório Multidisciplinar de Tecnologias Sociais da Universidade Federal do Agreste de Pernambuco') }}.</p>
+            <p class="mt-3 fs-4 text-justify">{{ __('É um sistema de Gestão de Eventos Científicos que busca contribuir com instituições acadêmicas públicas ou privadas que necessitem de uma ferramenta para gerenciar eventos científicos') }}.</p>
         </section>
 
         <div class="col-md-6 d-flex align-items-center justify-content-end">
