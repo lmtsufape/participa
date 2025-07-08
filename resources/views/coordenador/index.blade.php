@@ -9,9 +9,9 @@
                 <div>
                     <h1>{{__('Meus Eventos')}}</h1>
                 </div>
-                {{-- <div>
+                 <div>
                     <a href="{{route('evento.criar')}}" class="btn btn-primary">{{__('Novo Evento')}}</a>
-                </div> --}}
+                </div>
 
     </div>
     <div class="row">
