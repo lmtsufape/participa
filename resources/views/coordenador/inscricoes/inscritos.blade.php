@@ -178,11 +178,7 @@
                 @endif
                 @empty
                 @endforelse
-                    @php
-                        $perfilIdentitario = \App\Models\PerfilIdentitario::query()
-                            ->where('userId', $inscricao->user->id)
-                            ->first();
-                    @endphp
+
                 <div class="form-row">
                     <div class="form-group col-md-6">
                         <label for="">Nome completo</label>
@@ -190,67 +186,15 @@
                     </div>
                     <div class="form-group col-md-6">
                         <label for="">Nome social</label>
-                        <input type="text" class="form-control" value="{{ $perfilIdentitario->nomeSocial ?? 'Não informado' }}" disabled>
+                        <input type="text" class="form-control" value="{{ $inscricao->user->nomeSocial ?? 'Não informado' }}" disabled>
                     </div>
                     <div class="form-group col-md-6">
                         <label for="">Data de nascimento</label>
                         <input type="text" class="form-control"
-                               value="{{ optional($perfilIdentitario)->dataNascimento ? \Carbon\Carbon::parse($perfilIdentitario->dataNascimento)->format('d/m/Y') : 'não informado' }}"
+                               value="{{ $inscricao->user->dataNascimento ? \Carbon\Carbon::parse($inscricao->user->dataNascimento)->format('d/m/Y') : 'não informado' }}"
                                disabled>
-                    </div>
-                    <div class="form-group col-md-6">
-                        <label for="">Gênero</label>
-                        <input type="text" class="form-control"
-                               value="{{ isset($perfilIdentitario) && $perfilIdentitario->genero && $perfilIdentitario->genero !== 'outro' ? ucfirst($perfilIdentitario->genero) : (isset($perfilIdentitario) && $perfilIdentitario->outroGenero ? ucfirst($perfilIdentitario->outroGenero) : 'Não informado') }}"
-                               disabled>
-                    </div>
-                    <div class="form-group col-md-6">
-                        <label for="">Raça</label>
-                        <input type="text" class="form-control"
-                            value="{{ isset($perfilIdentitario, $perfilIdentitario->raca) && is_array($perfilIdentitario->raca) && !empty($perfilIdentitario->raca) ?
-                                        collect($perfilIdentitario->raca)->map(function($raca) use ($perfilIdentitario) {
-                                            if ($raca === 'outra_raca' && !empty($perfilIdentitario->outraRaca)) {
-                                                return 'Outra: ' . ucfirst($perfilIdentitario->outraRaca);
-                                            }
-                                            return ucfirst(str_replace('_raca', '', str_replace('_', ' ', $raca)));
-                                        })->implode(', ')
-                                        : 'Não informado' }}"
-                            disabled>
                     </div>
 
-                    @if(isset($perfilIdentitario) && ($perfilIdentitario->comunidadeTradicional === true || $perfilIdentitario->comunidadeTradicional === 'true'))
-                        <div class="form-group col-md-6">
-                            <label for="">Comunidade tradicional</label>
-                            <input type="text" class="form-control"
-                                   value="{{ $perfilIdentitario->nomeComunidadeTradicional ?? 'Não informado' }}"
-                                   disabled>
-                        </div>
-                    @endif
-
-                    <div class="form-group col-md-6">
-                        <label for="">LGBTIA+</label>
-                        <input type="text" class="form-control"
-                               value="{{ isset($perfilIdentitario) && ($perfilIdentitario->lgbtqia === true || $perfilIdentitario->lgbtqia === 'true') ? 'Sim' : 'Não' }}"
-                               disabled>
-                    </div>
-                    <div class="form-group col-md-6">
-                        <label for="">Pessoa idosa ou com deficiência</label>
-                        <input type="text" class="form-control"
-                               value="{{ isset($perfilIdentitario) && ($perfilIdentitario->deficienciaIdoso === true || $perfilIdentitario->deficienciaIdoso === 'true') ? 'Sim' : 'Não' }}"
-                               disabled>
-                    </div>
-                    <div class="form-group col-md-6">
-                        <label for="">Necessidades Especiais</label>
-                        <input type="text" class="form-control"
-                               value="{{ isset($perfilIdentitario) && !empty($perfilIdentitario->necessidadesEspeciais) && is_array($perfilIdentitario->necessidadesEspeciais) ? collect($perfilIdentitario->necessidadesEspeciais)->map(fn($item) => ucfirst($item))->implode(', ') : 'Não informado' }}"
-                               disabled>
-                    </div>
-                    <div class="form-group col-md-6">
-                        <label for="">Associado à ABA</label>
-                        <input type="text" class="form-control"
-                               value="{{ isset($perfilIdentitario) && ($perfilIdentitario->associadoAba === true || $perfilIdentitario->associadoAba === 'true') ? 'Sim' : 'Não' }}"
-                               disabled>
-                    </div>
                     <div class="form-group col-md-6">
                         <label for="">
                             @if ($inscricao->user->cpf) CPF

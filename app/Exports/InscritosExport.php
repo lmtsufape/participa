@@ -3,7 +3,6 @@
 namespace App\Exports;
 
 use App\Models\Submissao\Evento;
-use App\Models\PerfilIdentitario;
 use Carbon\Carbon;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
@@ -33,10 +32,8 @@ class InscritosExport implements FromCollection, WithHeadings, WithMapping
     {
         $camposBase = [
             '#', 'Status', 'Pagamento Confirmado', 'Nome Completo', 'Nome Social', 'E-mail', 'CPF/CNPJ/Passaporte',
-            'Data de Nascimento', 'Gênero', 'Raça/Cor', 'Comunidade Tradicional', 'LGBTQIA+', 
-            'Pessoa Idosa ou com Deficiência', 'Necessidades Especiais', 'Associado à ABA',
-            'Instituição', 'Celular', 'País', 'Estado', 'Cidade', 'Bairro', 'Rua', 'Número', 'CEP', 'Complemento',
-            'Categoria', 'Valor (R$)',
+            'Data de Nascimento', 'Instituição', 'Celular', 'País', 'Estado', 'Cidade', 'Bairro',
+            'Rua', 'Número', 'CEP', 'Complemento', 'Categoria', 'Valor (R$)',
         ];
 
         $camposExtras = $this->evento->camposFormulario()->pluck('titulo')->all();
@@ -53,32 +50,21 @@ class InscritosExport implements FromCollection, WithHeadings, WithMapping
         $user = $inscricao->user;
         $categoria = $inscricao->categoria;
 
-        $perfil = PerfilIdentitario::where('userId', $user->id)->first();
+
 
         $valor = $categoria ? number_format($categoria->valor_total, 2, ',', '.') : 'N/A';
         $documento = $user->cpf ?? ($user->cnpj ?? $user->passaporte);
-        $genero = ($perfil->genero ?? '') === 'outro' ? $perfil->outroGenero : ucfirst($perfil->genero ?? '');
-        $raca = is_array($perfil->raca ?? []) ? implode(', ', array_map('ucfirst', str_replace('_', ' ', $perfil->raca))) : '';
-        if (str_contains($raca, 'Outra raca')) {
-            $raca = 'Outra: ' . $perfil->outraRaca;
-        }
+
 
         $valoresBase = [
             $inscricao->id,
             $inscricao->finalizada ? 'Inscrito' : 'Pré-inscrito',
             $inscricao->finalizada ? 'Sim' : 'Não',
             $user->name,
-            $perfil->nomeSocial ?? '',
+            $user->nomeSocial ?? '',
             $user->email,
             $documento,
-            $perfil && $perfil->dataNascimento ? Carbon::parse($perfil->dataNascimento)->format('d/m/Y') : '',
-            $genero,
-            $raca,
-            ($perfil->comunidadeTradicional ?? false) ? $perfil->nomeComunidadeTradicional : 'Não',
-            ($perfil->lgbtqia ?? false) ? 'Sim' : 'Não',
-            ($perfil->deficienciaIdoso ?? false) ? 'Sim' : 'Não',
-            is_array($perfil->necessidadesEspeciais ?? []) ? implode(', ', $perfil->necessidadesEspeciais) : '',
-            ($perfil->associadoAba ?? false) ? 'Sim' : 'Não',
+            Carbon::parse($user->dataNascimento)->format('d/m/Y'),
             $user->instituicao,
             $user->celular,
             $user->endereco->pais ?? '',
@@ -92,7 +78,7 @@ class InscritosExport implements FromCollection, WithHeadings, WithMapping
             $categoria->nome ?? 'Não definida',
             $valor,
         ];
-        
+
         $camposExtrasValores = [];
         $camposFormulario = $this->evento->camposFormulario;
         foreach ($camposFormulario as $campo) {
