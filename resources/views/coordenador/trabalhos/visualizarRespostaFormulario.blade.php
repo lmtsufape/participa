@@ -179,7 +179,7 @@
         </div>
     @else
         <div>
-            @can('isCoordenadorOrCoordenadorDasComissoes', $evento)
+            @canany(['isCoordenadorOrCoordenadorDaComissaoCientifica', 'isCoordenadorEixo'], $evento)
                 <div class="py-3">
                     @if ($trabalho->avaliado($revisor->user))
                         @if ($trabalho->getParecerAtribuicao($revisor->user) != "encaminhado")
