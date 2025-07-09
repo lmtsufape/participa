@@ -254,10 +254,10 @@
                                 <label class="custom-control-label me-2" for="customRadioInline1">{{ __('Online') }}</label>
 
                                 <input type="radio"  name="customRadioInline" class="custom-control-input">
-                                <label class="custom-control-label me-2" for="customRadioInline2">{{__('Remoto')}}</label>
+                                <label class="custom-control-label me-2" for="customRadioInline2">{{__('Presencial')}}</label>
 
                                 <input type="radio" name="customRadioInline" class="custom-control-input">
-                                <label class="custom-control-label " for="customRadioInline3">{{__('Hibrido')}}</label>
+                                <label class="custom-control-label " for="customRadioInline3">{{__('Híbrido')}}</label>
                             </div>
                         </div>
 

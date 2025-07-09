@@ -26,6 +26,13 @@
             display: flex;
             flex-direction: column;
         }
+        @media (max-width: 768px) {
+            .carousel-cell-images {
+                width: 100%; /* Em telas menores, o card ocupa a largura total */
+                margin-right: 0;
+            }
+
+        }
 
         .carousel-cell-images .img-wrapper {
             width: 100%; /* Garante que o wrapper ocupe toda a largura do card */

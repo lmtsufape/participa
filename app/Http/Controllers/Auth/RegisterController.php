@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Models\PerfilIdentitario;
 use App\Models\Submissao\Endereco;
 use App\Models\Users\User;
 use App\Providers\RouteServiceProvider;
