@@ -521,8 +521,6 @@
 
                     </div>
 
-
-
                         <div class="form-group row">
                             <div class="col-md-6">
                             <label for="numero" class="col-form-label text-start d-block fw-bold mb-3">{{ __('Número') }}</label>
