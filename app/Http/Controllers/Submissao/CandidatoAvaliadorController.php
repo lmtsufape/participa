@@ -217,6 +217,7 @@ class CandidatoAvaliadorController extends Controller
         $eventoId = $request->input('evento_id');
         $userId   = $request->input('user_id');
         $eixo     = $request->input('eixo');
+        $justificativa = $request->input('justificativa');
         $area     = Area::where('nome', $eixo)->firstOrFail();
 
         CandidatoAvaliador::where('evento_id', $eventoId)
@@ -225,6 +226,7 @@ class CandidatoAvaliadorController extends Controller
             ->update([
                 'aprovado'   => false,
                 'em_analise' => false,
+                'justificativa' => $justificativa,
             ]);
 
         $usuario = User::findOrFail($userId);
@@ -235,7 +237,9 @@ class CandidatoAvaliadorController extends Controller
                 $usuario,
                 $evento,
                 'rejeitada',
-                $area->nome
+                $area->nome,
+                null,
+                $justificativa
             ));
 
         // 5) redireciona com feedback

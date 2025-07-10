@@ -512,3 +512,7 @@ Route::get('/cadastro/validacao-cadastro', [PreRegistroController::class, 'preRe
 Route::post('/cadastro/enviar-email-codigo', [PreRegistroController::class, 'enviarCodigo'])->name('enviarCodigo');
 Route::get('/cadastro/inserir-codigo/{id}', [PreRegistroController::class, 'inserirCodigo'])->name('inserirCodigo');
 Route::post('/cadastro/validar-codigo', [PreRegistroController::class, 'verificarCodigo'])->name('verificarCodigo');
+
+Route::get('/avaliador/aceitar/{token}', [AtribuicaoController::class, 'aceitarConvite'])->name('avaliador.aceitar');
+Route::get('/avaliador/recusar/{token}', [AtribuicaoController::class, 'recusarConvite'])->name('avaliador.show_recusar');
+Route::post('/avaliador/recusar/{token}', [AtribuicaoController::class, 'recusarConvite'])->name('avaliador.recusar');

@@ -57,10 +57,14 @@
                                 Agradecemos sua disponibilidade!<br><br>
                                 @else
                                 Agradecemos o interesse e esperamos contar com sua participação em futuras oportunidades!<br><br>
+                                @if(!empty($justificativa))
+                                    <strong>Justificativa da não homolagação:</strong><br><br>
+                                    <span>{{ $justificativa }}</span><br><br><br>
+                                @endif
                                 @endif
 
 
-                                Abraços,<br>
+                                Abraços,<br><br>
                                 Plataforma de inscrições e submissões de trabalhos <br>
                                 Participa (UFAPE/LMTS) <br>
                                 Associação Brasileira de Agroecologia (ABA) <br>
