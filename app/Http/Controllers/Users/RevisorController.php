@@ -28,6 +28,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 
 class RevisorController extends Controller
 {
@@ -55,6 +56,15 @@ class RevisorController extends Controller
             $trabalhos = collect();
             foreach ($revisorEvento as $revisor) {
                 $trabalhosAtribuidos = $revisor->trabalhosAtribuidos()->orderBy('titulo')->get();
+                // // Filtrar para só mostrar trabalhos cuja justificativa_recusa é null
+                foreach ($trabalhosAtribuidos as $trabalho) {
+                    $pivot = $trabalho->atribuicoes()->where('revisor_id', $revisor->id)->first()->pivot;
+                    if ($pivot->justificativa_recusa != null) {
+                        $trabalhosAtribuidos = $trabalhosAtribuidos->reject(function ($item) use ($pivot) {
+                            return $item->id === $pivot->trabalho_id;
+                        });
+                    }
+                }
                 if (count($trabalhosAtribuidos) > 0) {
                     $trabalhos->push($trabalhosAtribuidos);
                 }
@@ -445,10 +455,19 @@ class RevisorController extends Controller
 
     public function responde(Request $request)
     {
-
         $data = $request->all();
         if($data['prazo_correcao'] < now()){
             return redirect()->back()->withErrors(['message' => 'Prazo de correção expirado.']);
+        }
+
+        // Verificar se o revisor recusou o convite para este trabalho
+        $atribuicao = DB::table('atribuicaos')
+            ->where('trabalho_id', $data['trabalho_id'])
+            ->where('revisor_id', $data['revisor_id'])
+            ->first();
+
+        if ($atribuicao && $atribuicao->justificativa_recusa) {
+            return redirect()->back()->withErrors(['message' => 'Você recusou o convite para avaliar este trabalho.']);
         }
         $evento = Evento::find($data['evento_id']);
         $data['revisor'] = Revisor::find($data['revisor_id']);
@@ -464,6 +483,16 @@ class RevisorController extends Controller
     {
         // dd($request);
         $data = $request->all();
+
+        // Verificar se o revisor recusou o convite para este trabalho
+        $atribuicao = DB::table('atribuicaos')
+            ->where('trabalho_id', $data['trabalho_id'])
+            ->where('revisor_id', $data['revisor_id'])
+            ->first();
+
+        if ($atribuicao && $atribuicao->justificativa_recusa) {
+            return redirect()->back()->withErrors(['message' => 'Você recusou o convite para avaliar este trabalho.']);
+        }
         // $comment = $post->comments()->create([
         //     'message' => 'A new comment.',
         // ]);

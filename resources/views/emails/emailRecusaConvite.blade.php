@@ -36,7 +36,7 @@
                             style="padding: 40px 20px 20px 20px; border-radius: 4px 4px 0px 0px; color: #ffffff; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 48px; font-weight: 400; letter-spacing: 4px; line-height: 48px;">
                             <img src="{{ $message->embed(public_path('img/LOGO-RODAPE.png')) }}" width="125"
                                 height="120" style="display: block; border: 0px;" />
-                            <h5 class="small" style="font-weight: 400; margin: 2;">Convite avaliação</h1>
+                            <h5 class="small" style="font-weight: 400; margin: 2;">Convite para avaliação não aceito</h1>
                         </td>
                     </tr>
                 </table>
@@ -49,42 +49,39 @@
                         <td bgcolor="#ffffff" align="left"
                             style="padding: 20px 30px 40px 30px; color: #666666; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;">
                             <p style="margin: 0;">
-                                Olá {{ $user->name }}!
+                                Olá {{ $coordenador->name }}!
 
                                 <br> <br>
 
-                                Você foi convidado(a) pelo evento "{{ $evento->nome }}" para atuar como avaliador(a) ou
-                                parecerista de atividades.
+                                Informamos que o avaliador <strong>{{ $revisor->user->name }}</strong> recusou o convite
+                                para avaliar um trabalho no evento <strong>{{ $evento->nome }}</strong>.
 
-                                <br> <br>
-                                Caso tenha disponibilidade, clique nos botões de Aceitar convite ou Rejeitar convite, ao
-                                final deste e-mail.
+                                <br><br>
 
-                                <br> <br>
-                                Se por ventura ainda não tiver cadastro, pedimos que acesse o site para realizá-lo e ter
-                                acesso aos trabalhos para avaliação.
-                                <br> <br>
-                                Agradecemos de antemão pela sua disponibilidade para colaborar com a realização deste
-                                evento.
+                                <strong>Detalhes do Trabalho:</strong><br>
+                                <strong>Título:</strong> {{ $trabalho->titulo }}<br>
+                                <strong>Modalidade:</strong> {{ $trabalho->modalidade->nome }}<br>
+                                <strong>Área:</strong> {{ $trabalho->area->nome }}
 
+                                <br><br>
 
-                            <div style="text-align: center; margin: 30px 0;">
-                                <div style="display: inline-block; margin: 0 10px;">
-                                    @component('mail::button', ['url' => route('avaliador.aceitar', ['token' => $token]), 'color' => 'success'])
-                                        Aceitar convite
-                                    @endcomponent
-                                </div>
-                                <div style="display: inline-block; margin: 0 10px;">
-                                    @component('mail::button', ['url' => route('avaliador.recusar', ['token' => $token]), 'color' => 'error'])
-                                        Recusar convite
-                                    @endcomponent
-                                </div>
-                            </div>
+                                <strong>Justificativa da Recusa:</strong><br>
+                                <blockquote style="margin: 10px 0; padding: 10px; border-left: 4px solid #004d51; background-color: #f9f9f9;">
+                                    {{ $justificativa }}
+                                </blockquote>
 
-                            Abraços,<br>
-                            Plataforma de inscrições e submissões de trabalhos <br>
-                            Participa (UFAPE/LMTS) <br>
-                            Associação Brasileira de Agroecologia (ABA) <br>
+                                <strong>Próximos Passos:</strong><br>
+                                Recomendamos que você:<br>
+                                1. Verifique se há outros avaliadores disponíveis para esta área<br>
+                                2. Considere fazer uma nova atribuição manual<br>
+                                3. Entre em contato com outros potenciais avaliadores se necessário
+
+                                <br><br>
+
+                                Abraços,<br>
+                                Plataforma de inscrições e submissões de trabalhos<br>
+                                Participa (UFAPE/LMTS)<br>
+                                Associação Brasileira de Agroecologia (ABA)
                             </p>
                         </td>
                     </tr>
