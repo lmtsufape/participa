@@ -152,17 +152,19 @@
                                                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                                             </div>
                                             <div class="modal-body">
-                                                Tem certeza de que deseja <strong>reprovar</strong> o eixo
-                                                <em>{{ $eixo }}</em> de <em>{{ $candidatura->user->name ?? 'N/A' }}</em>?
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                                <form action="{{ route('coord.candidaturas.rejeitar', $candidatura->id) }}" method="POST" class="d-inline">
+                                                Tem certeza de que deseja <strong>reprovar</strong> a candidatura como avaliador(a) de <em>{{ $candidatura->user->name ?? 'N/A' }}</em> para o eixo
+                                                <em>{{ $eixo }}</em>?
+                                                <form action="{{ route('coord.candidaturas.rejeitar', $candidatura->id) }}" method="POST" class="mt-3">
                                                     @csrf @method('POST')
                                                     <input type="hidden" name="evento_id" value="{{ $evento->id }}">
                                                     <input type="hidden" name="user_id" value="{{ $candidatura->user->id ?? 'N/A'}}">
                                                     <input type="hidden" name="eixo" value="{{ $eixo }}">
-                                                    <button type="submit" class="btn btn-danger">Sim, Reprovar</button>
+                                                    <label for="justificativa-{{ $candidatura->id }}-{{ $index }}" class="form-label">Justificativa (opcional)</label>
+                                                    <textarea class="form-control w-100" name="justificativa" id="justificativa-{{ $candidatura->id }}-{{ $index }}" rows="3" placeholder="Informe uma justificativa"></textarea>
+                                                    <div class="modal-footer d-flex justify-content-between px-0">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                                        <button type="submit" class="btn btn-danger">Sim, Reprovar</button>
+                                                    </div>
                                                 </form>
                                             </div>
                                         </div>
