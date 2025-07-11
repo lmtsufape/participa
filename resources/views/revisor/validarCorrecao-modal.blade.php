@@ -8,29 +8,29 @@
           <button type="button" class="btn" data-dismiss="modal" aria-label="Close">X</button>
         </div>
         <div class="modal-body">
-            <form class="mt-1" id="validacao-correcao" action="{{route('revisor.verificarCorrecao', ['trabalho_id' => $trabalho->id])}}" method="POST">
+            <form class="mt-1" id="validacao-correcao-{{$trabalho->id}}" action="{{route('revisor.verificarCorrecao', ['trabalho_id' => $trabalho->id])}}" method="POST">
                 @csrf
                 @method('PUT')
                 <fieldset class="mb-3">
                     <legend class="form-label pt-0 h5">O participante fez as correções indicadas?</legend>
 
                     <div class="form-check ml-3">
-                        <input class="form-check-input" type="radio" id="completamente" name="status_correcao" value="corrigido"  @checked($trabalho->avaliado == 'corrigido')>
-                        <label class="form-check-label" for="completamente">
+                        <input class="form-check-input" type="radio" id="completamente-{{$trabalho->id}}" name="status_correcao" value="corrigido" @checked(old('status_correcao', $trabalho->avaliado) == 'corrigido')>
+                        <label class="form-check-label" for="completamente-{{$trabalho->id}}">
                             Sim, completamente.
                         </label>
                     </div>
 
                     <div class="form-check ml-3">
-                        <input class="form-check-input" type="radio" id="parcialmente" name="status_correcao" value="corrigido_parcialmente"@checked($trabalho->avaliado == 'corrigido_parcialmente')>
-                        <label class="form-check-label" for="parcialmente">
+                        <input class="form-check-input" type="radio" id="parcialmente-{{$trabalho->id}}" name="status_correcao" value="corrigido_parcialmente" @checked(old('status_correcao', $trabalho->avaliado) == 'corrigido_parcialmente')>
+                        <label class="form-check-label" for="parcialmente-{{$trabalho->id}}">
                             Sim, parcialmente.
                         </label>
                     </div>
 
                     <div class="form-check ml-3">
-                        <input class="form-check-input" type="radio" id="nao" name="status_correcao" value="nao_corrigido" @checked($trabalho->avaliado == 'nao_corrigido')>
-                        <label class="form-check-label" for="nao_corrigido">
+                        <input class="form-check-input" type="radio" id="nao_corrigido-{{$trabalho->id}}" name="status_correcao" value="nao_corrigido" @checked(old('status_correcao', $trabalho->avaliado) == 'nao_corrigido')>
+                        <label class="form-check-label" for="nao_corrigido-{{$trabalho->id}}">
                             Não.
                         </label>
                     </div>
@@ -39,7 +39,7 @@
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-            <button type="submit" class="btn btn-success" form="validacao-correcao">
+            <button type="submit" class="btn btn-success" form="validacao-correcao-{{$trabalho->id}}">
                 Submeter
             </button>
         </div>
