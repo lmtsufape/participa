@@ -19,7 +19,7 @@
                         <h6 class="card-subtitle mb-2 text-muted">Lista de candidatos a avaliadores para o evento</h6>
                     </div>
                     <div>
-                        <a href="{{ route('coord.candidatos.exportar', $evento) }}" class="btn btn-primary">Exportar .xlsx</a>
+                        <a href="{{ route('coord.candidatos.exportar', $evento) }}?name={{ request('name') }}&email={{ request('email') }}&axis={{ request('axis') }}" class="btn btn-primary">Exportar .xlsx</a>
                     </div>
                   </div>
                     <form method="GET" action="{{ route('coord.candidatoAvaliador.listarCandidatos', $evento) }}" class="row g-3 mt-2 mb-4">
