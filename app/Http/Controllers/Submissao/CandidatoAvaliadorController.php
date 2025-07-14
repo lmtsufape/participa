@@ -211,7 +211,7 @@ class CandidatoAvaliadorController extends Controller
 
         $eixos = $request->input('axis');
         if ($eixos && !is_array($eixos)) {
-            $eixos = explode(',', $eixos); // caso venha como string separada por vírgula
+            $eixos = [$eixos];
         }
 
         if ($eixos) {
