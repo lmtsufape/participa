@@ -19,7 +19,7 @@
         @endif
 
         <!-- Row trabalhos -->
-        @can('isCoordenador', $evento) 
+        @can('isCoordenador', $evento)
         <div class="row justify-content-center">
           <div class="col-sm-8">
             <div class="card">
@@ -49,38 +49,41 @@
                 </div>
             </div>
             @endcan
-            <div class="row justify-content-center">
-              <div class="col-sm-12">
-                  <div class="card">
-                      <div class="card-body">
-                          <h5 class="card-title">Candidaturas de Avaliadores</h5>
-                          <h6 class="card-subtitle mb-2 text-muted">Informações referente às candidaturas para avaliador</h6>
-                          <div class="card-text">
-                              <div class="table-responsive text-center">
-                                  <table class="table">
-                                      <thead>
-                                          <tr>
-                                              <th>Total de Candidatos</th>
-                                              <th>Aprovados</th>
-                                              <th>Pendentes</th>
-                                              <th>Rejeitados</th>
-                                          </tr>
-                                      </thead>
-                                      <tbody>
-                                          <tr>
-                                              <td>{{ $evento->candidaturas_count }}</td>
-                                              <td>{{ $evento->candidaturas_aprovadas_count }}</td>
-                                              <td>{{ $evento->candidaturas_pendentes_count }}</td>
-                                              <td>{{ $evento->candidaturas_rejeitadas_count }}</td>
-                                          </tr>
-                                      </tbody>
-                                  </table>
+              @if($evento->formEvento->modavaliacao)
+                  <div class="row justify-content-center">
+                      <div class="col-sm-12">
+                          <div class="card">
+                              <div class="card-body">
+                                  <h5 class="card-title">Candidaturas de Avaliadores</h5>
+                                  <h6 class="card-subtitle mb-2 text-muted">Informações referente às candidaturas para avaliador</h6>
+                                  <div class="card-text">
+                                      <div class="table-responsive text-center">
+                                          <table class="table">
+                                              <thead>
+                                              <tr>
+                                                  <th>Total de Candidatos</th>
+                                                  <th>Aprovados</th>
+                                                  <th>Pendentes</th>
+                                                  <th>Rejeitados</th>
+                                              </tr>
+                                              </thead>
+                                              <tbody>
+                                              <tr>
+                                                  <td>{{ $evento->candidaturas_count }}</td>
+                                                  <td>{{ $evento->candidaturas_aprovadas_count }}</td>
+                                                  <td>{{ $evento->candidaturas_pendentes_count }}</td>
+                                                  <td>{{ $evento->candidaturas_rejeitadas_count }}</td>
+                                              </tr>
+                                              </tbody>
+                                          </table>
+                                      </div>
+                                  </div>
                               </div>
                           </div>
                       </div>
                   </div>
-              </div>
-            </div>
+              @endif
+
 
             <div class="row justify-content-center">
               <div class="col-sm-12">
