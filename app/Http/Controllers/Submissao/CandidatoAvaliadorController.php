@@ -205,11 +205,23 @@ class CandidatoAvaliadorController extends Controller
             ->with('sucesso', 'Candidatura aprovada e candidato notificado.');
     }
 
-    public function exportar(Evento $evento)
+    public function exportar(Request $request, Evento $evento)
     {
         $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
 
-        return Excel::download(new CandidatosAvaliadoresExport($evento->id), 'candidatos-avaliadores-'.$evento->nome.'.xlsx');
+        $eixos = $request->input('axis');
+        if ($eixos && !is_array($eixos)) {
+            $eixos = explode(',', $eixos); // caso venha como string separada por vírgula
+        }
+
+        if ($eixos) {
+            $eixos = Area::whereIn('nome', $eixos)->pluck('id')->toArray();
+        }
+
+        return Excel::download(
+            new CandidatosAvaliadoresExport($evento->id, $eixos),
+            'candidatos-avaliadores-' . $evento->nome . '.xlsx'
+        );
     }
 
     public function rejeitar(Request $request)
