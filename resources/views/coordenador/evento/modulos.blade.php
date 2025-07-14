@@ -8,6 +8,9 @@
         </div>
     </div>
     {{-- Habilitar Modulos --}}
+
+
+
     <div class="justify-content-center container d-flex">
         <div class="col-lg-10 col-xl-8">
             <div class="card">
@@ -136,9 +139,37 @@
                             @enderror
                         </div>
 
-                    </div>{{-- end row--}}
-
+                    </div>
                     </p>
+
+                        <p class="card-text">
+                            <input type="hidden" name="modavaliacao" value="0">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <label for="modavaliacao" class="col-form-label">{{ __('Avaliação') }}</label>
+                            </div>
+                        </div>
+                        <div class="row justify-content-center">
+                            <div class="col-sm-12">
+
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" @if($modulos->modavaliacao) checked @endif name="modavaliacao" id="modavaliacao" value="1">
+                                    <label class="form-check-label" for="modavaliacao">
+                                        Habilitar
+                                    </label>
+                                </div>
+
+                                @error('modavaliacao')
+                                <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                                @enderror
+                            </div>
+
+                        </div>
+                        </p>
+
+
 
                     <p class="card-text">
                     <input type="hidden" name="modsubmissao" value="0">

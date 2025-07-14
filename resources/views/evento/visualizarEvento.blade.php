@@ -93,7 +93,7 @@
                     </p>
                 </div>
 
-                @if ($etiquetas->modinscricao == true)
+                @if ($etiquetas->modinscricao)
                     <div class="d-flex flex-wrap gap-2">
                         <button id="btn-inscrevase" class="btn btn-my-success w-60 rounded btn-lg" data-bs-toggle="modal" data-bs-target="#modalInscrever"
                             @if (($isInscrito && !$InscritoSemCategoria)  || $encerrada) disabled @endif>
@@ -411,26 +411,29 @@
                                             </div>
                                         </div>
                                     @endforeach
-                                    @if(Auth::user())
-                                        @if (!$jaCandidatou)
-                                            <button class="btn btn-my-success w-50 rounded btn-lg mt-3"
-                                                data-bs-toggle="modal"
-                                                data-bs-target="#modalInscreverAvaliador">
-                                                {{ __('Quero ser avaliador') }}
-                                            </button>
-                                        @else
-                                            <button class="btn btn-my-success w-100 rounded btn-lg mt-3" disabled>
-                                                {{ __('Você já se candidatou a avaliador neste evento') }}
-                                            </button>
-                                        @endif
-                                    @else
-                                            <button class="btn btn-my-success w-50 rounded btn-lg mt-3"
-                                                data-bs-toggle="modal"
-                                                data-bs-target="#modalLoginPrompt"
-                                                data-acao="{{ __('se candidatar a avaliador') }}">
-                                                {{ __('Quero ser avaliador') }}
-                                            </button>
+                                    @if($etiquetas->modavaliacao)
+                                            @if(Auth::user())
+                                                @if (!$jaCandidatou)
+                                                    <button class="btn btn-my-success w-50 rounded btn-lg mt-3"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#modalInscreverAvaliador">
+                                                        {{ __('Quero ser avaliador') }}
+                                                    </button>
+                                                @else
+                                                    <button class="btn btn-my-success w-100 rounded btn-lg mt-3" disabled>
+                                                        {{ __('Você já se candidatou a avaliador neste evento') }}
+                                                    </button>
+                                                @endif
+                                            @else
+                                                <button class="btn btn-my-success w-50 rounded btn-lg mt-3"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#modalLoginPrompt"
+                                                        data-acao="{{ __('se candidatar a avaliador') }}">
+                                                    {{ __('Quero ser avaliador') }}
+                                                </button>
+                                            @endif
                                     @endif
+
                                 </div>
                             </div>
                         </div>

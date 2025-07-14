@@ -56,9 +56,9 @@
                   <div class="d-flex justify-content-between align-items-center mb-2">
                     <div class="small text-orange d-flex align-items-center gap-1">
                       <img src="{{ asset('img/icons/calendar.png') }}" width="16" alt="Data">
-                      <span class="text-my-secondary">
-                        {{ \Carbon\Carbon::parse($evento->dataFim)->translatedFormat('l, d \d\e F') }}
-                      </span>
+                        <span class="text-my-secondary">
+                            {{\Carbon\Carbon::parse($evento->dataFim)->locale('pt_BR')->isoFormat('dddd, D [de] MMMM [de] YYYY') }}
+                        </span>
                     </div>
                     <a href="{{ route('evento.visualizar', $evento->id) }}"
                        class="btn btn-my-outline-primary rounded-pill btn-sm px-3">
