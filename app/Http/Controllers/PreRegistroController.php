@@ -15,7 +15,9 @@ class PreRegistroController extends Controller
 {
     public function preRegistro()
     {
-        return view('auth.preRegistro');
+        $paises = config('paises');
+
+        return view('auth.preRegistro', compact('paises'));
     }
 
     public function enviarCodigo(Request $request)
