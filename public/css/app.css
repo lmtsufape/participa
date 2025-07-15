@@ -195,3 +195,21 @@
   border: 1px solid #114048ff;
   text-decoration: none;
 }
+
+.btn-associacao {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.btn-associar {
+  color: #4BC76C;
+  background-color: white;
+  padding: 8px 36px;
+  border-radius: 0.25rem;
+  text-decoration: none;
+  font-weight: bold;
+  display: flex;
+  height: auto;
+  align-items: center;
+}

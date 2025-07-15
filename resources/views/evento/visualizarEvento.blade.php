@@ -95,22 +95,28 @@
 
                 @if ($etiquetas->modinscricao == true)
                     <div class="d-flex flex-wrap gap-2">
-                        <button id="btn-inscrevase" class="btn btn-my-success w-60 rounded btn-lg" data-bs-toggle="modal" data-bs-target="#modalInscrever"
-                            @if (($isInscrito && !$InscritoSemCategoria)  || $encerrada) disabled @endif>
-                            @if ($isInscrito)
-                                @if($inscricao->finalizada)
-                                    {{ __('Já inscrito') }}
-                                @elseif($InscritoSemCategoria)
-                                    {{ __('Realize sua inscrição aqui!') }}
-                                @else
-                                    {{ __('Inscrição com pendência de pagamento!') }}
+                        @if ($isInscrito && isset($inscricao) && !$inscricao->finalizada && !$InscritoSemCategoria)
+                            <a href="{{ route('checkout.telaPagamento', $evento) }}" id="btn-inscrevase" class="btn btn-my-success w-60 rounded btn-lg">
+                                {{ __('Inscrição com pendência de pagamento!') }}
+                            </a>
+                        @else
+                            <button id="btn-inscrevase" class="btn btn-my-success w-60 rounded btn-lg"
+                                @if (!$encerrada && !($isInscrito && isset($inscricao) && $inscricao->finalizada))
+                                    data-bs-toggle="modal" data-bs-target="#modalInscrever"
                                 @endif
-                            @elseif($encerrada)
-                                {{ __('Encerradas!') }}
-                            @else
-                                {{ __('Realize sua inscrição aqui!') }}
-                            @endif
-                        </button>
+                                @if ($encerrada || ($isInscrito && isset($inscricao) && $inscricao->finalizada))
+                                    disabled
+                                @endif
+                            >
+                                @if ($isInscrito && isset($inscricao) && $inscricao->finalizada)
+                                    {{ __('Já inscrito') }}
+                                @elseif($encerrada)
+                                    {{ __('Encerradas!') }}
+                                @else
+                                    {{ __('Realize sua inscrição aqui!') }}
+                                @endif
+                            </button>
+                        @endif
                     </div>
                     <br>
 
@@ -169,7 +175,25 @@
                 <strong>Para mais informações, <a href="https://cba.aba-agroecologia.org.br/">clique aqui</a> e acesse o site oficial do 13º CBA.</strong>
             </div>
 
+        </div>
+        <hr class="border-dark">
 
+        <div class="row">
+            <h4 class="text-my-primary">{{ __('Valores das inscrições para o 13º CBA') }}</h4>
+            <div class="col-md-12 overflow-auto text-break" style="word-wrap: break-word; white-space: normal;">
+                <div>
+                    <img src="{{asset('img/tabela_de_valores.jpg')}}" style="width: 700px;">
+                </div>
+                <br>
+                <div class="btn-my-success btn">
+                    <h5>{{ __('Associe-se à ABA-Agroecologia e garanta seu desconto na inscrição!') }}</h5>
+                    <div class="btn-associacao">
+                        <a href="https://associados.aba-agroecologia.org.br/register/solicitation" style="width: 210px;" class="btn-associar">QUERO ME ASSOCIAR <img src="{{asset('img/icons/fora.png')}}" style="width: 30px;"></a>
+                        <a href="https://associados.aba-agroecologia.org.br/login" class="btn-associar">REGULARIZE A SUA ASSOCIAÇÃO <img src="{{asset('img/icons/fora.png')}}" style="width: 30px; margin-left:10px;"></a>
+                    </div>
+                    <br>
+                </div>
+            </div>
         </div>
         <hr class="border-dark">
 
@@ -800,9 +824,22 @@
             <!-- <div class="col-md-2">
                 <img src="" class="" alt="">
             </div> -->
-            <div class=" d-flex flex-column align-items-center">
-                <h4 class="mb-3">{{ $evento->coordenador->name }}</h4>
+            <div class="col-md-12 overflow-auto text-break" style="word-wrap: break-word; white-space: normal;">
+                <div style="text-align: justify; color: #034652;">
+                    <h5 class="text-my-primary mb-0">{{ __('Associação Brasileira de Agroecologia (ABA-Agroecologia)') }}</h5>
+                    Reunimos pessoas físicas das mais diversas áreas do conhecimento e de atuação, que desde 2004 realizam e apoiam ações dedicadas ao fortalecimento das práticas agroecológicas. <a href="https://aba-agroecologia.org.br/sobre-a-aba-agroecologia/sobre-a-aba/" target="_blank">Saiba mais.</a>
+                </div>
+                <br>
             </div>
+            <hr class="border-dark">
+            <h4 class="text-my-primary mb-4">{{ __('Dúvidas sobre o CBA?') }}</h4>
+            <div class="col-md-12 overflow-auto text-break" style="word-wrap: break-word; white-space: normal;">
+                <div style="text-align: justify; color: #034652;">
+                    Quer saber mais sobre hospedagens, alimentação, caravanas, isenções? Tem vontade de propor alguma atividade ou deseja participar de alguma comissão da organização? <a href="https://cba.aba-agroecologia.org.br/perguntas-frequentes/" target="_blank">Acesse a página de perguntas frequentes aqui!</a>
+                </div>
+                <br>
+            </div>
+
              <div class="col-12 d-flex justify-content-center align-items-center gap-2">
                 <a href="mailto:@if($evento->email){{ $evento->email }}@else{{ $evento->coordenador->email }}@endif" class="btn btn-my-secondary rounded-3">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-envelope me-1" viewBox="0 0 16 16">
@@ -822,7 +859,7 @@
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-whatsapp" viewBox="0 0 16 16">
                             <path d="M13.601 2.326A7.85 7.85 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.9 7.9 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.9 7.9 0 0 0 13.6 2.326zM7.994 14.521a6.6 6.6 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.56 6.56 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592m3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.73.73 0 0 0-.529.247c-.182.198-.691.677-.691 1.654s.71 1.916.81 2.049c.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232"/>
                         </svg>
-                        {{ __('Canal de suporte') }}
+                        {{ __('Canal de suporte da plataforma de inscrições') }}
                     </a>
                 @endif
 
