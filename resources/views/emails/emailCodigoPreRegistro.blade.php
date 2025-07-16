@@ -66,7 +66,7 @@
 
                                 <br><br>
 
-                                Abraços,<br>
+                                Atenciosamente,<br>
                                 Plataforma de inscrições e submissões de trabalhos <br>
                                 Participa (UFAPE/LMTS) <br>
                             </p>

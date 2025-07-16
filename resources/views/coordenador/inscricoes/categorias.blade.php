@@ -25,20 +25,17 @@
                                     <div class="modal-content">
                                         <div class="modal-header" style="background-color: #114048ff; color: white;">
                                             <h5 class="modal-title" id="exampleModalLabel">Cadastrar Categoria</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
                                         </div>
                                         <div class="modal-body">
                                             <div class="row justify-content-center">
                                                 <div class="col-sm-12">
-                                                    <h6 class="card-subtitle mb-2 text-muted">Cadastre uma nova categoria para o seu evento</h6>
+                                                    <h6 class="card-subtitle mb-2 text-muted fw-bold">Cadastre uma nova categoria para o seu evento</h6>
                                                     <form method="POST" id="cadastrarmodalidade" action="{{ route('categoria.participante.store') }}">
                                                         @csrf
                                                         <input type="hidden" name="evento_id" value="{{ $evento->id }}">
                                                         <p class="card-text">
                                                         <div class="form-group">
-                                                            <label for="nome" class="col-form-label">{{ __('Nome da Categoria') }}*</label>
+                                                            <label for="nome" class="col-form-label fw-bold required-field">{{ __('Nome da Categoria') }}</label>
                                                             <input id="nome" type="text" class="form-control @error('nome') is-invalid @enderror" name="nome" value="{{ old('nome') }}" required autocomplete="nome" autofocus>
                                                             @error('nome')
                                                             <span class="invalid-feedback" role="alert">
@@ -46,8 +43,9 @@
                                                             </span>
                                                             @enderror
                                                         </div>
+                                                        <br>
                                                         <div class="form-group">
-                                                            <label for="descricao" class="col-form-label">{{ __('Descrição') }}</label>
+                                                            <label for="descricao" class="col-form-label fw-bold">{{ __('Descrição') }}</label>
                                                             <textarea name="descricao" class="ckeditor-texto">{{ old('descricao') }}</textarea>
                                                             @error('descricao')
                                                             <span class="invalid-feedback" role="alert">
@@ -55,9 +53,10 @@
                                                             </span>
                                                             @enderror
                                                         </div>
+                                                        <br>
                                                         <div class="form-group">
                                                             <label for="valor_total"
-                                                                    class="col-form-label">{{ __('Valor da inscrição') }}*</label>
+                                                                    class="col-form-label fw-bold">{{ __('Valor da inscrição') }}*</label>
                                                             <small>(0 para inscrição gratuita)</small>
                                                             <input id="valor_total" type="number" step="0.1" class="form-control @error('valor_total') is-invalid @enderror" name="valor_total" value="0" required autocomplete="valor_total" autofocus>
                                                             @error('valor_total')
@@ -66,8 +65,9 @@
                                                             </span>
                                                             @enderror
                                                         </div>
+                                                        <br>
                                                         <div class="form-group">
-                                                            <label for="limite_inscricao" class="col-form-label">{{ __('Data limite para inscrição') }}</label>
+                                                            <label for="limite_inscricao" class="col-form-label fw-bold">{{ __('Data limite para inscrição') }}</label>
                                                             <input id="limite_inscricao" type="datetime-local" class="form-control @error('limite_inscricao') is-invalid @enderror" name="limite_inscricao" value="{{ old('limite_inscricao') }}" autocomplete="limite_inscricao" autofocus>
                                                             @error('limite_inscricao')
                                                             <span class="invalid-feedback" role="alert">
@@ -108,7 +108,7 @@
                                             </div>
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
                                             <button type="submit" form="cadastrarmodalidade" class="btn btn-primary">
                                                 {{ __('Confirmar') }}
                                             </button>

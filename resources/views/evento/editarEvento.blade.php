@@ -73,19 +73,10 @@
                 <div class="container card shadow">
                     <br>
                     {{-- nome | Participantes | Tipo --}}
-                    <div class="row">
-                        <div class="form-check col-sm-12 form-group">
-                            <div class="form-check col-sm-12 form-group">
-                                <input class="form-check-input" type="checkbox" id="is_multilingual" name="is_multilingual"
-                                 value="1" {{ old('is_multilingual', $evento->is_multilingual ? '1' : '') == '1' ? 'checked' : '' }}>
-                                <label class="form-check-label text-start d-block" for="is_multilingual">{{ __('Evento Multilingue') }}</label>
-                            </div>
-                        </div>
-                    </div>
 
                     <div class="form-group row">
                         <div class="col-md-6">
-                            <label for="nome" class="col-form-label text-start d-block fw-bold mb-3 required-field">{{ __('Nome do evento') }}</label>
+                            <label for="nome" class="col-form-label text-start d-block fw-bold required-field">{{ __('Nome do evento') }}</label>
                             <input id="nome" type="text" class="form-control @error('nome') is-invalid @enderror"
                                 name="nome" value="{{ old('nome', $evento->nome) }}" required autocomplete="nome" autofocus>
                             <div id="erro-nome" class="text-danger mt-1" style="display: none;">
@@ -100,7 +91,7 @@
                         </div>
 
                         <div class="col-md-6">
-                            <label for="email" class="col-form-label text-start d-block fw-bold mb-3 required-field">{{ __('E-mail de contato') }}</label>
+                            <label for="email" class="col-form-label text-start d-block fw-bold required-field">{{ __('E-mail de contato') }}</label>
                             <input class="form-control @error('email') is-invalid @enderror" type="email"
                                 value="{{ old('email', $evento->email) }}" name="email" id="email" required autofocus
                                 autocomplete="email">
@@ -132,9 +123,11 @@
                         @endif
                     </div>
 
+                    <br>
+
                     <div class="form-group row">
                         <div class="col-md-6 multilingual_fields" style="display: none;">
-                            <label for="nome_en" class="col-form-label text-start d-block fw-bold mb-3 required-field">{{ __('Nome em inglês') }}</label>
+                            <label for="nome_en" class="col-form-label text-start d-block fw-bold required-field">{{ __('Nome em inglês') }}</label>
                             <input id="nome_en" type="text" class="form-control @error('nome_en') is-invalid @enderror"
                                 name="nome_en" value="{{ old('nome_en', $evento->nome_en) }}" autocomplete="nome_en" autofocus>
 
@@ -146,7 +139,7 @@
                         </div>
 
                         <div class="col-md-6 multilingual_fields" style="display: none;">
-                            <label for="nome_es" class="col-form-label text-start d-block fw-bold mb-3 required-field">{{ __('Nome em espanhol') }}</label>
+                            <label for="nome_es" class="col-form-label text-start d-block fw-bold required-field">{{ __('Nome em espanhol') }}</label>
                             <input id="nome_es" type="text" class="form-control @error('nome_es') is-invalid @enderror"
                                 name="nome_es" value="{{ old('nome_es', $evento->nome_es) }}" autocomplete="nome_es" autofocus>
                             @error('nome_es')
@@ -157,7 +150,7 @@
 
                     <div class="form-group row">
                         <div class="@if ($eventoPai ?? '') col-md-3 @else col-md-4 @endif">
-                            <label for="tipo" class="col-form-label text-start d-block fw-bold mb-3 required-field">{{ __('Tipo') }}</label>
+                            <label for="tipo" class="col-form-label text-start d-block fw-bold required-field">{{ __('Tipo') }}</label>
                              <select id="tipo" type="text" class="form-control @error('tipo') is-invalid @enderror" name="tipo" required>
                             @if (old('tipo') != null)
                             <option @if(old('tipo')=="Congresso" ) selected @endif value="Congresso">Congresso</option>
@@ -200,7 +193,7 @@
                         </div>
 
                         <div class="@if ($eventoPai ?? '') col-md-3 @else col-md-4 @endif">
-                            <label for="recolhimento" class="col-form-label text-start d-block fw-bold mb-3 required-field">{{ __('Recolhimento') }}</label>
+                            <label for="recolhimento" class="col-form-label text-start d-block fw-bold required-field">{{ __('Recolhimento') }}</label>
                              <select name="recolhimento" id="recolhimento" class="form-control @error('recolhimento') is-invalid @enderror">
                             @if (old('recolhimento') != null)
                             <option @if(old('recolhimento')=="apoiado" ) selected @endif value="apoiado">Apoiado</option>
@@ -220,7 +213,7 @@
                             @enderror
                         </div>
                         <div class="col-md-4">
-                            <label for="instagram" class="col-form-label text-start d-block fw-bold mb-3">{{ __('ID do Instagram') }}</label>
+                            <label for="instagram" class="col-form-label text-start d-block fw-bold">{{ __('ID do Instagram') }}</label>
                             <input class="form-control @error('instagram') is-invalid @enderror" type="text"
                                 value="{{ old('instagram', $evento->instagram) }}" name="instagram" id="instagram" autofocus
                                 autocomplete="instagram">
@@ -232,10 +225,11 @@
                             @enderror
                         </div>
                     </div>
+                    <br>
                     <div class="form-group row">
                         <div class="col-md-12">
                             <!-- link do contato de suporte -->
-                            <label for="contato_suporte" class="col-form-label text-start d-block fw-bold mb-3">{{ __('Link do contato de suporte') }}</label>
+                            <label for="contato_suporte" class="col-form-label text-start d-block fw-bold">{{ __('Link do contato de suporte') }}</label>
                             <input class="form-control @error('contato_suporte') is-invalid @enderror" type="text"
                                 value="{{ old('contato_suporte', $evento->contato_suporte) }}" name="contato_suporte" id="contato_suporte"
                                 autocomplete="contato_suporte">
@@ -246,6 +240,7 @@
                             @enderror
                         </div>
                     </div>
+                    <br>
                     <div class="form-group row">
                         <div class="col-md-6">
                             <div class="custom-control custom-radio custom-control-inline col-form-label">
@@ -260,9 +255,9 @@
                                 <label class="custom-control-label " for="customRadioInline3">{{__('Hibrido')}}</label>
                             </div>
                         </div>
-
-
                     </div>
+
+                    <br>
 
                     <div class="form-group row">
 
@@ -282,11 +277,9 @@
                         @endif
                     </div>
 
-
-
                     <div class="form-group row">
                         <div class="col-md-12">
-                            <label for="descricao" class="fw-bold mb-3 ">{{ __('Descrição:') }}</label>
+                            <label for="descricao" class="fw-bold">{{ __('Descrição:') }}</label>
                             <textarea class="form-control mb-3 @error('descricao') is-invalid @enderror required-field" required
                                 autocomplete="descricao" autofocus id="descricao" name="descricao" rows="8">
                                 @if(old('descricao') != null) {{ old('descricao') }} @else {{$evento->descricao}} @endif</textarea>
@@ -301,9 +294,21 @@
                         </div>
                     </div>
 
+                    <div class="row">
+                        <div class="form-check col-sm-12 form-group">
+                            <div class="form-check col-sm-12 form-group">
+                                <input class="form-check-input" type="checkbox" id="is_multilingual" name="is_multilingual"
+                                 value="1" {{ old('is_multilingual', $evento->is_multilingual ? '1' : '') == '1' ? 'checked' : '' }}>
+                                <label class="form-check-label text-start d-block" for="is_multilingual">{{ __('Evento Multilingue') }}</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <br>
+
                     <div class="form-group row multilingual_fields" style="display: none;">
                         <div class="col-md-12">
-                            <label for="descricao_en" class="fw-bold mb-3 required-field">{{ __('Descrição em inglês') }}</label>
+                            <label for="descricao_en" class="fw-bold required-field">{{ __('Descrição em inglês') }}</label>
                             <textarea class="form-control @error('descricao_en') is-invalid @enderror" autocomplete="descricao_en" autofocus
                                 id="descricao_en" name="descricao_en" rows="8">
                                 @if(old('descricao_en') != null) {{ old('descricao_en') }} @else {{$evento->descricao_en}} @endif</textarea>
@@ -315,9 +320,11 @@
                         </div>
                     </div>
 
+                    <br>
+
                     <div class="form-group row multilingual_fields" style="display: none;">
                         <div class="col-md-12">
-                            <label for="exampleFormControlTextarea1" class="fw-bold mb-3 required-field">{{__('Descrição em espanhol')}}</label>
+                            <label for="exampleFormControlTextarea1" class="fw-bold required-field">{{__('Descrição em espanhol')}}</label>
                             <textarea class="form-control @error('descricao_es') is-invalid @enderror" autocomplete="descricao_es" autofocus
                                 id="descricao_es" name="descricao_es" rows="8">
                                 @if(old('descricao_es') != null){{ old('descricao_en') }} @else {{$evento->descricao_en}} @endif</textarea>
@@ -329,9 +336,11 @@
                         </div>
                     </div>
 
+                    <br>
+
                     <div class="form-group row">
                         <div class="col-md-6">
-                            <label for="fotoEvento" class="fw-bold mb-3">{{ __('Banner (tamanho: 1024 x 425, formato: JPEG, JPG e PNG):') }}</label>
+                            <label for="fotoEvento" class="fw-bold mb-2">{{ __('Banner (tamanho: 1024 x 425, formato: JPEG, JPG e PNG):') }}</label>
                             <div id="imagem-loader" class="imagem-loader">
                                 @if ($evento->fotoEvento != null)
                                         <img id="logo-preview" class="img-fluid" src="{{asset('storage/'.$evento->fotoEvento)}}" alt="">
@@ -375,7 +384,7 @@
 
                     <div class="form-group row multilingual_fields" style="display: none;">
                         <div class="col-md-6">
-                            <label for="fotoEvento_en" class="fw-bold mb-3">{{ __('Banner Inglês') }}</label>
+                            <label for="fotoEvento_en" class="fw-bold mb-1">{{ __('Banner Inglês') }}</label>
                             <div id="imagem-loader-en" class="imagem-loader">
                                 @if ($evento->fotoEvento_en != null)
                                         <img id="logo-preview" class="img-fluid" src="{{asset('storage/'.$evento->fotoEvento_en)}}" alt="">
@@ -396,7 +405,7 @@
                         </div>
 
                         <div class="col-md-6">
-                            <label for="icone_en" class="fw-bold mb-3">{{ __('Ícone inglês') }}</label>
+                            <label for="icone_en" class="fw-bold mb-1">{{ __('Ícone inglês') }}</label>
                             <div id="imagem-loader-icone-en" class="imagem-loader">
                                 @if ($evento->icone_en != null)
                                         <img id="icone-preview" class="img-fluid" src="{{asset('storage/'.$evento->icone_en)}}" alt="">
@@ -420,7 +429,7 @@
 
                     <div class="form-group row multilingual_fields" style="display: none;">
                         <div class="col-md-6">
-                            <label for="fotoEvento_es" class="fw-bold mb-3">{{ __('Banner Espanhol') }}</label>
+                            <label for="fotoEvento_es" class="fw-bold mb-1">{{ __('Banner Espanhol') }}</label>
                             <div id="imagem-loader-es" class="imagem-loader">
                                 @if ($evento->fotoEvento_es != null)
                                         <img id="logo-preview" class="img-fluid" src="{{asset('storage/'.$evento->fotoEvento_es)}}" alt="">
@@ -442,7 +451,7 @@
                         </div>
 
                         <div class="col-md-6">
-                            <label for="icone_es" class="fw-bold mb-3">{{__('Ícone espanhol')}}</label>
+                            <label for="icone_es" class="fw-bold mb-1">{{__('Ícone espanhol')}}</label>
                             <div id="imagem-loader-icone-es" class="imagem-loader">
                                 @if ($evento->icone_es != null)
                                         <img id="icone-preview" class="img-fluid" src="{{asset('storage/'.$evento->icone_es)}}" alt="">
