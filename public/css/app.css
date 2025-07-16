@@ -213,3 +213,23 @@
   height: auto;
   align-items: center;
 }
+
+.btn-associar:hover {
+  background-color: #EEE;
+}
+
+.container-associar {
+  background-color: #4BC76C;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+}
+
+.container-associar:hover {
+  background-color: #4BC76C;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+}

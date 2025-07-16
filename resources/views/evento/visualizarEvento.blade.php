@@ -185,11 +185,11 @@
                     <img src="{{asset('img/tabela_de_valores.jpg')}}" style="width: 700px;">
                 </div>
                 <br>
-                <div class="btn-my-success btn">
+                <div class="container-associar btn" style="cursor: default;">
                     <h5>{{ __('Associe-se à ABA-Agroecologia e garanta seu desconto na inscrição!') }}</h5>
                     <div class="btn-associacao">
-                        <a href="https://associados.aba-agroecologia.org.br/register/solicitation" style="width: 210px;" class="btn-associar">QUERO ME ASSOCIAR <img src="{{asset('img/icons/fora.png')}}" style="width: 30px;"></a>
-                        <a href="https://associados.aba-agroecologia.org.br/login" class="btn-associar">REGULARIZE A SUA ASSOCIAÇÃO <img src="{{asset('img/icons/fora.png')}}" style="width: 30px; margin-left:10px;"></a>
+                        <a href="https://associados.aba-agroecologia.org.br/register/solicitation" target="_blank" style="width: 210px;" class="btn-associar">QUERO ME ASSOCIAR <img src="{{asset('img/icons/fora.png')}}" style="width: 30px;"></a>
+                        <a href="https://associados.aba-agroecologia.org.br/login" class="btn-associar" target="_blank">REGULARIZE A SUA ASSOCIAÇÃO <img src="{{asset('img/icons/fora.png')}}" style="width: 30px; margin-left:10px;"></a>
                     </div>
                     <br>
                 </div>
