@@ -1019,19 +1019,25 @@ class TrabalhoController extends Controller
     public function aprovacaoTrabalho(Request $request)
     {
         $trabalho = Trabalho::find($request->trabalho_id);
-        $mensagem = '';
 
-        if ($request->aprovacao == 'true') {
-            $trabalho->aprovado = true;
-            $mensagem = 'Trabalho aprovado com sucesso!';
-        } elseif ($request->aprovacao == 'false') {
-            $trabalho->aprovado = false;
-            $mensagem = 'Trabalho reprovado com sucesso!';
+        switch ($request->aprovado) {
+            case 'true':
+                $trabalho->update(['aprovado' => true]);
+                $mensagem = 'Trabalho aprovado com sucesso!';
+                break;
+            case 'false':
+                $trabalho->update(['aprovado' => false]);
+                $mensagem = 'Trabalho reprovado com sucesso!';
+                break;
+            case 'null':
+                $trabalho->update(['aprovado' => null]);
+                $mensagem = 'Trabalho liberado para correção com sucesso!';
+
+                break;
+
         }
 
-        $trabalho->update();
-
-        return redirect()->back()->with(['message' => $mensagem, 'class' => 'success']);
+        return redirect()->back()->with(['success' => $mensagem ?? '']);
     }
 
     public function correcaoTrabalho(Request $request)

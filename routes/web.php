@@ -331,7 +331,7 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
         Route::post('/trabalho/{id}/editar', [TrabalhoController::class, 'update'])->name('editar.trabalho');
         Route::get('/trabalho/status/{id}/{status}', [TrabalhoController::class, 'statusTrabalho'])->name('trabalho.status');
         Route::get('/trabalho/encaminhar/{id}/{revisor}', [TrabalhoController::class, 'encaminharTrabalho'])->name('trabalho.encaminhar');
-        Route::post('/trabalho/{id}/aprovar-reprovar', [TrabalhoController::class, 'aprovacaoTrabalho'])->name('trabalho.aprovar-reprovar');
+        Route::post('/trabalho/{id}/aprovar-reprovar', [TrabalhoController::class, 'aprovacaoTrabalho'])->name('trabalho.aprovacao');
         Route::post('/trabalho/{id}/correcao', [TrabalhoController::class, 'correcaoTrabalho'])->name('trabalho.correcao');
         //Atribuição
         Route::get('/atribuir', [AtribuicaoController::class, 'distribuicaoAutomatica'])->name('distribuicao');

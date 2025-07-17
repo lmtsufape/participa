@@ -22,7 +22,7 @@ class Trabalho extends Model
         'titulo', 'autores', 'data', 'modalidadeId', 'areaId', 'autorId', 'eventoId', 'resumo', 'avaliado',
         'campoextra1simples', 'campoextra2simples', 'campoextra3simples', 'campoextra4simples',
         'campoextra5simples', 'campoextra1grande', 'campoextra2grande', 'campoextra3grande',
-        'campoextra4grande', 'campoextra5grande', 'status',
+        'campoextra4grande', 'campoextra5grande', 'status', 'aprovado',
     ];
 
     public function recurso()
