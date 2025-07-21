@@ -724,4 +724,14 @@ class ModalidadeController extends Controller
 
         return abort(404);
     }
+
+    public function reorder(Request $request)
+    {
+        $order = $request->input('order', []);
+        foreach ($order as $item) {
+            Modalidade::where('id', $item['id'])
+                ->update(['ordem' => $item['position']]);
+        }
+        return response()->json(['status' => 'ok']);
+    }
 }
