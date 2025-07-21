@@ -221,28 +221,40 @@
                         <div class="row">
                           <table class="table table-hover table-responsive-lg table-sm">
                             <thead>
-                              <tr>
-                                <th scope="col" class="col-7">Título</th>
-                                <th scope="col" class="col-5">Status</th>
-
-                              </tr>
+                                <tr>
+                                <th scope="col" class="col-4">Título</th>
+                                <th scope="col" class="col-3">Status</th>
+                                <th scope="col" class="col-5">Correções</th>
+                                </tr>
                             </thead>
                             <tbody>
-                              @foreach ($revisorDosTrabalhos->trabalhosAtribuidos()->orderBy('titulo')->get() as $trabalho)
+                                @foreach ($revisorDosTrabalhos->trabalhosAtribuidos()->orderBy('titulo')->get() as $trabalho)
                                 <tr>
-                                  <td>
-                                      <a href="{{route('coord.listarTrabalhos', [ 'eventoId' => $evento->id, 'titulo', 'asc', 'rascunho'])}}#trab{{$trabalho->id}}">{{$trabalho->titulo}}</a></td>
-                                  <td>
+                                    <td>
+                                        <a href="{{route('coord.listarTrabalhos', [ 'eventoId' => $evento->id, 'titulo', 'asc', 'rascunho'])}}#trab{{$trabalho->id}}">{{$trabalho->titulo}}</a>
+                                    </td>
+                                    <td>
                                     @if ($trabalho->avaliado($revisor))
-                                      Avaliado
+                                        Avaliado
                                     @else
-                                      Processando
+                                        Processando
                                     @endif
-                                  </td>
+                                    </td>
+                                    <td>
+                                    @if($trabalho->avaliado == 'corrigido')
+                                        O avaliador corrigiu e aprovou este trabalho
+                                    @elseif($trabalho->avaliado == 'corrigido_parcialmente')
+                                        O avaliador avaliou e encontrou erros no trabalho
+                                    @elseif($trabalho->avaliado == 'nao_corrigido')
+                                        O avaliador fez a avaliação mas o estudante não corrigiu o trabalho
+                                    @else
+                                        Aguardando professor avaliar
+                                    @endif
+                                    </td>
                                 </tr>
-                              @endforeach
+                                @endforeach
                             </tbody>
-                          </table>
+                            </table>
                         </div>
                       </div>
                     @endif
