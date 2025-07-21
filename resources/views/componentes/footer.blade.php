@@ -10,14 +10,14 @@
                             <img src="{{asset('img/logo_ufape.png')}}" style="width: 100px;">
                     </a>
 
-                    <div class="text-center text-md-start list-unstyled small mt-3" style="font-size: 11px;">
+                    <div class="text-center text-md-start list-unstyled small mt-3 " style="font-size: 11px;">
                         <p class="m-0">©2025 | UFAPE - Universidade Federal do Agreste de Pernambuco</p>
                         <p class="m-0">Av. Bom Pastor, s/n - Boa Vista</p>
                         <p class="m-0">- CEP 55292-270, Garanhuns - PE</p>
                     </div>
                 </div>
 
-                <div class="d-flex flex-md-row align-items-center justify-content-center" style="flex: 1;">
+                <div class="d-flex flex-md-row align-items-center justify-content-center" style="flex: 0.2;">
                     <div class=" mt-2 mt-mb-md-0 text-center" style="flex: 0 0 auto; width: auto;">
                         <div class="text-center">
                             <h6 class="fw-bold">{{ __('Desenvolvido por:') }}</h6>
@@ -49,8 +49,8 @@
                     </div>
                 </div>
 
-                <div class="d-flex flex-column flex-md-row align-items-center justify-content-end" style="flex: 1;">
-                    <div class="mt-2 text-center">
+                <div class="d-flex flex-column flex-md-row align-items-center justify-content" style="flex: 0 0 auto; width: auto; margin-top: -15px; margin-left: -20px">
+                    <div class="mt-2 mt-md-0 text-center" style="flex: 0 0 auto; width: auto;">
                         <h6 class="fw-bold mb-3">{{ __('Redes Sociais') }}</h6>
                         <div class="d-flex gap-3 justify-content-center align-items-center">
                             <!-- Email -->
@@ -59,7 +59,7 @@
                             title="Email">
                                 <img src="{{ asset('img/email-icon.png') }}"
                                     alt="Email"
-                                    style="width: 30px; height: 30px;">
+                                    style="width: 25px; height: 25px;">
                             </a>
 
                             <!-- Facebook -->
@@ -68,7 +68,7 @@
                             title="Facebook">
                                 <img src="{{ asset('img/facebook-icon.png') }}"
                                     alt="Facebook"
-                                    style="width: 30px; height: 30px;">
+                                    style="width: 25px; height: 25px;">
                             </a>
 
                             <!-- Instagram -->
@@ -77,7 +77,7 @@
                             title="Instagram">
                                 <img src="{{ asset('img/instagram-icon.png') }}"
                                     alt="Instagram"
-                                    style="width: 30px; height: 30px;">
+                                    style="width: 25px; height: 25px;">
                             </a>
                         </div>
                     </div>

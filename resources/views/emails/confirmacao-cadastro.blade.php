@@ -72,7 +72,7 @@
 
                                 Se tiver qualquer dúvida, estamos à disposição.
 
-                            Abraços,<br>
+                            Atenciosamente,<br>
                                 Plataforma de inscrições e submissões de trabalhos <br>
                                 Participa (UFAPE/LMTS) <br>
                             </p>
