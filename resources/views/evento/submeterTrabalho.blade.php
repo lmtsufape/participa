@@ -160,34 +160,39 @@
 
                                                     <div class="col-sm-6">
                                                         <label for="modalidade" class="col-form-label required-field"><strong>Modalidade</strong></label>
-                                                        <select class="form-control custom-select @error('modalidadeId') is-invalid @enderror" id="modalidade"
-                                                                name="modalidadeId"
-                                                                required>
-                                                            <option value="" disabled selected hidden>
-                                                                Selecione a modalidade
-                                                            </option>
-                                                            {{-- Apenas um teste abaixo --}}
-                                                            @foreach($modalidades as $modalidade)
-                                                                @php
-                                                                    $nomeModalidadeExibir = $modalidade->nome;
 
-                                                                    if (isset($evento) && $evento->is_multilingual) {
-                                                                        if (Session::get('idiomaAtual') === 'en' && !empty($modalidade->nome_en)) {
-                                                                            $nomeModalidadeExibir = $modalidade->nome_en;
-                                                                        } elseif (Session::get('idiomaAtual') === 'es' && !empty($modalidade->nome_es)) {
-                                                                            $nomeModalidadeExibir = $modalidade->nome_es;
+                                                        {{-- campo escondido para enviar o valor mesmo com o select disabled --}}
+                                                        <input type="hidden" name="modalidadeId" value="{{ $modalidade->id }}">
+
+                                                        <select
+                                                            id="modalidade"
+                                                            class="form-control  @error('modalidadeId') is-invalid @enderror"
+                                                            disabled
+                                                        >
+                                                            @foreach($modalidades as $m)
+                                                                @php
+                                                                    $label = $m->nome;
+                                                                    if ($evento->is_multilingual) {
+                                                                        if (Session::get('idiomaAtual') === 'en' && $m->nome_en) {
+                                                                            $label = $m->nome_en;
+                                                                        } elseif (Session::get('idiomaAtual') === 'es' && $m->nome_es) {
+                                                                            $label = $m->nome_es;
                                                                         }
                                                                     }
                                                                 @endphp
-                                                                <option value="{{$modalidade->id}}"
-                                                                        @if(old('modalidadeId') == $modalidade->id) selected @endif>{{$nomeModalidadeExibir}}</option>
+                                                                <option
+                                                                    value="{{ $m->id }}"
+                                                                    {{ $m->id === $modalidade->id ? 'selected' : '' }}
+                                                                >
+                                                                    {{ $label }}
+                                                                </option>
                                                             @endforeach
                                                         </select>
+
                                                         @error('modalidadeId')
-                                                        <span class="invalid-feedback" role="alert"
-                                                            style="overflow: visible; display:block">
-                                                            <strong>{{ $message }}</strong>
-                                                        </span>
+                                                        <span class="invalid-feedback" role="alert">
+            <strong>{{ $message }}</strong>
+        </span>
                                                         @enderror
                                                     </div>
                                                 </div>
@@ -449,29 +454,63 @@
                                                 <div class="row justify-content-center">
                                                     @foreach ($modalidade->midiasExtra as $midia)
                                                         <div class="col-sm-12" style="margin-top: 20px;">
-                                                            <label for="{{$midia->hyphenizeNome()}}"
-                                                                class="col-form-label"><strong>{{$midia->nome}}</strong>
+                                                            <label for="{{ $midia->hyphenizeNome() }}" class="col-form-label">
+                                                                <strong>{{ $midia->nome }}</strong>
                                                             </label>
+
                                                             <div class="custom-file">
-                                                                <input type="file" class="filestyle"
-                                                                    data-placeholder="Nenhum arquivo" data-text="Selecionar"
-                                                                    data-btnClass="btn-primary-lmts" name="{{$midia->hyphenizeNome()}}" required>
+                                                                {{-- label estilizado como botão --}}
+                                                                <label
+                                                                    for="{{ $midia->hyphenizeNome() }}"
+                                                                    class="btn btn-primary btn-padding border"
+                                                                    style="text-decoration:none; border-radius:10px; background-color:#D44100;"
+                                                                    title="Clique aqui para selecionar um arquivo"
+                                                                >
+                                                                    <img
+                                                                        src="{{ asset('img/icons/upload.svg') }}"
+                                                                        class="upload-icon"
+                                                                        alt="upload"
+                                                                        width="24"
+                                                                        style="margin-right:8px; vertical-align:middle;"
+                                                                    >
+                                                                    Selecionar arquivo
+                                                                </label>
+
+                                                                {{-- input escondido --}}
+                                                                <input
+                                                                    type="file"
+                                                                    id="{{ $midia->hyphenizeNome() }}"
+                                                                    name="{{ $midia->hyphenizeNome() }}"
+                                                                    required
+                                                                    style="display:none;"
+                                                                    onchange="document.getElementById('nome-{{ $midia->hyphenizeNome() }}').textContent = this.files[0]?.name || 'Nenhum arquivo selecionado'"
+                                                                >
+
+                                                                {{-- span pra mostrar o nome do arquivo --}}
+                                                                <span
+                                                                    id="nome-{{ $midia->hyphenizeNome() }}"
+                                                                    style="margin-left:10px; vertical-align:middle;"
+                                                                >Nenhum arquivo selecionado</span>
                                                             </div>
-                                                            <small><strong>Extensão de arquivos aceitas:</strong>
+
+                                                            <small>
+                                                                <strong>Extensão de arquivos aceitas:</strong>
                                                                 @foreach ($midia->tiposAceitos() as $item)
                                                                     @if ($loop->first)
-                                                                        <span> .{{$item}}</span>
+                                                                        <span> .{{ $item }}</span>
                                                                     @elseif ($loop->last)
-                                                                        <span> .{{$item}}.</span>
+                                                                        <span> .{{ $item }}.</span>
                                                                     @else
-                                                                        <span> .{{$item}},</span>
+                                                                        <span> .{{ $item }},</span>
                                                                     @endif
-                                                                @endforeach</small>
-                                                            @error($midia->nome)
-                                                            <span class="invalid-feedback" role="alert"
-                                                                style="overflow: visible; display:block">
-                                                                <strong>{{ $message }}</strong>
-                                                            </span>
+                                                                @endforeach
+                                                            </small>
+
+                                                            {{-- corrija para usar o fieldName, não o nome da mídia --}}
+                                                            @error($midia->hyphenizeNome())
+                                                            <span class="invalid-feedback" role="alert" style="overflow: visible; display:block">
+            <strong>{{ $message }}</strong>
+        </span>
                                                             @enderror
                                                         </div>
                                                     @endforeach

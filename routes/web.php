@@ -323,11 +323,12 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
         //Modalidade
         Route::post('/modalidade/criar', [ModalidadeController::class, 'store'])->name('modalidade.store');
         Route::post('/modalidade/{id}/delete', [ModalidadeController::class, 'destroy'])->name('modalidade.destroy');
+        Route::post('modalidades/reorder', [ModalidadeController::class, 'reorder'])->name('modalidades.reorder');
         //Area
         Route::post('/area/criar', [AreaController::class, 'store'])->name('area.store');
         Route::delete('/area/deletar/{id}', [AreaController::class, 'destroy'])->name('area.destroy');
         Route::post('/area/editar/{id}', [AreaController::class, 'update'])->name('area.update');
-
+        Route::post('areas/reorder', [AreaController::class, 'reorder'])->name('areas.reorder');
         //AreaModalidade
         // Route::post(  '/areaModalidade/criar',  [AreaModalidadeController::class, 'store']             )->name('areaModalidade.store');
 
