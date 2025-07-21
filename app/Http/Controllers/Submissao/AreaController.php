@@ -138,4 +138,14 @@ class AreaController extends Controller
 
         return redirect()->back()->with(['success' => 'Área excluida com sucesso!']);
     }
+
+    public function reorder(Request $request)
+    {
+        $order = $request->input('order', []);
+        foreach ($order as $item) {
+            Area::where('id', $item['id'])
+                ->update(['ordem' => $item['position']]);
+        }
+        return response()->json(['status' => 'ok']);
+    }
 }
