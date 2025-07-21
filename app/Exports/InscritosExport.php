@@ -33,7 +33,7 @@ class InscritosExport implements FromCollection, WithHeadings, WithMapping
     {
         $camposBase = [
             '#', 'Status', 'Pagamento Confirmado', 'Nome Completo', 'Nome Social', 'E-mail', 'CPF/CNPJ/Passaporte',
-            'Data de Nascimento', 'Gênero', 'Raça/Cor', 'Comunidade Tradicional', 'LGBTQIA+', 
+            'Data de Nascimento', 'Gênero', 'Raça/Cor', 'Comunidade Tradicional', 'LGBTQIA+',
             'Pessoa Idosa ou com Deficiência', 'Necessidades Especiais', 'Associado à ABA',
             'Instituição', 'Celular', 'País', 'Estado', 'Cidade', 'Bairro', 'Rua', 'Número', 'CEP', 'Complemento',
             'Categoria', 'Valor (R$)',
@@ -58,10 +58,39 @@ class InscritosExport implements FromCollection, WithHeadings, WithMapping
         $valor = $categoria ? number_format($categoria->valor_total, 2, ',', '.') : 'N/A';
         $documento = $user->cpf ?? ($user->cnpj ?? $user->passaporte);
         $genero = ($perfil->genero ?? '') === 'outro' ? $perfil->outroGenero : ucfirst($perfil->genero ?? '');
-        $raca = is_array($perfil->raca ?? []) ? implode(', ', array_map('ucfirst', str_replace('_', ' ', $perfil->raca))) : '';
-        if (str_contains($raca, 'Outra raca')) {
-            $raca = 'Outra: ' . $perfil->outraRaca;
+
+        $racaArray = [];
+        if ($perfil && !empty($perfil->raca)) {
+            if (is_array($perfil->raca)) {
+                $racaArray = $perfil->raca;
+            } else {
+                $jsonDecoded = json_decode($perfil->raca, true);
+                if (json_last_error() === JSON_ERROR_NONE && is_array($jsonDecoded)) {
+                    $racaArray = $jsonDecoded;
+                } else {
+                    $racaArray = [$perfil->raca];
+                }
+            }
         }
+        $raca = implode(', ', array_map(fn($item) => ucfirst(str_replace('_', ' ', $item)), $racaArray));
+        if (str_contains($raca, 'Outra raca')) {
+            $raca = 'Outra: ' . ($perfil->outraRaca ?? '');
+        }
+
+        $necessidadesArray = [];
+        if ($perfil && !empty($perfil->necessidadesEspeciais)) {
+            if (is_array($perfil->necessidadesEspeciais)) {
+                $necessidadesArray = $perfil->necessidadesEspeciais;
+            } else {
+                $jsonDecoded = json_decode($perfil->necessidadesEspeciais, true);
+                if (json_last_error() === JSON_ERROR_NONE && is_array($jsonDecoded)) {
+                    $necessidadesArray = $jsonDecoded;
+                } else {
+                    $necessidadesArray = [$perfil->necessidadesEspeciais];
+                }
+            }
+        }
+        $necessidades = implode(', ', $necessidadesArray);
 
         $valoresBase = [
             $inscricao->id,
@@ -77,7 +106,7 @@ class InscritosExport implements FromCollection, WithHeadings, WithMapping
             ($perfil->comunidadeTradicional ?? false) ? $perfil->nomeComunidadeTradicional : 'Não',
             ($perfil->lgbtqia ?? false) ? 'Sim' : 'Não',
             ($perfil->deficienciaIdoso ?? false) ? 'Sim' : 'Não',
-            is_array($perfil->necessidadesEspeciais ?? []) ? implode(', ', $perfil->necessidadesEspeciais) : '',
+            $necessidades,
             ($perfil->associadoAba ?? false) ? 'Sim' : 'Não',
             $user->instituicao,
             $user->celular,
@@ -92,7 +121,7 @@ class InscritosExport implements FromCollection, WithHeadings, WithMapping
             $categoria->nome ?? 'Não definida',
             $valor,
         ];
-        
+
         $camposExtrasValores = [];
         $camposFormulario = $this->evento->camposFormulario;
         foreach ($camposFormulario as $campo) {
