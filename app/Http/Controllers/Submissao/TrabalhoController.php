@@ -51,10 +51,12 @@ class TrabalhoController extends Controller
     public function index($id, $idModalidade)
     {
         $evento = Evento::find($id);
-        $areas = Area::where('eventoId', $evento->id)->orderBy('nome')->get();
-        $areas = $areas->sortBy('nome', SORT_NATURAL)->values()->all();
-        $modalidades = Modalidade::where('evento_id', $evento->id)->orderBy('nome')->get();
-        $modalidades = $modalidades->sortBy('nome', SORT_NATURAL)->values()->all();
+        $areas = Area::where('eventoId', $evento->id)->orderBy('ordem')->get();
+        $modalidades = Modalidade::where('evento_id', $evento->id)
+            ->where('inicioSubmissao', '<=', Carbon::now())
+            ->where('fimSubmissao', '>=', Carbon::now())
+            ->orderBy('ordem')
+            ->get();
         $formSubTraba = FormSubmTraba::where('eventoId', $evento->id)->first();
         $regra = RegraSubmis::where('modalidadeId', $idModalidade)->first();
         $template = TemplateSubmis::where('modalidadeId', $idModalidade)->first();

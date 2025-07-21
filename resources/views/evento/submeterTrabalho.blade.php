@@ -1040,13 +1040,15 @@
 @section('javascript')
     <script>
         const modalidadesData = @json(
-            array_map(function($m) {
-                return [
-                    'id'           => $m->id,
-                    'maxCoautores' => $m->numMaxCoautores
-                ];
-            }, $modalidades)
-        );
+        $modalidades
+            ->map(fn($m) => [
+                'id'           => $m->id,
+                'maxCoautores' => $m->numMaxCoautores,
+            ])
+            ->values()
+            ->all()
+    );
+
         const modalidadesExtensoes = @json($extensoesPorModalidade);
         document.addEventListener('DOMContentLoaded', function() {
         const selectModalidade = document.getElementById('modalidade');
