@@ -23,7 +23,7 @@ p{
     <div class="row">
         <section class="col-md-6 d-flex flex-column justify-content-center">
             <a class="navbar-brand" href="{{route('index')}}">
-                <img src="{{ asset('/img/logoatualizada.png') }}" alt="logo" width="60%">
+                <img src="{{ asset('/img/logo-novo2.png') }}" alt="logo" width="60%">
             </a>
         </section>
 
