@@ -61,20 +61,14 @@ class TrabalhoController extends Controller
         $regra = RegraSubmis::where('modalidadeId', $idModalidade)->first();
         $template = TemplateSubmis::where('modalidadeId', $idModalidade)->first();
         $ordemCampos = explode(',', $formSubTraba->ordemCampos);
+        $modalidade = Modalidade::find($idModalidade);
+
         array_splice($ordemCampos, 6, 0, 'midiaExtra');
         array_splice($ordemCampos, 5, 0, 'apresentacao');
         $user = Auth::user();
 
         $mytime = Carbon::now('America/Recife');
-        foreach ($modalidades as $key => $modalidade){
-            if (!$modalidade->estaEmPeriodoDeSubmissao()) {
-                if($user->can('isCoordenadorOrCoordCientificaOrCoordEixo', $evento)){
-                    $this->authorize('isCoordenadorOrCoordCientificaOrCoordEixo', $evento);
-                } else {
-                     unset($modalidades[$key]);
-                }
-            }
-        }
+
         // dd($formSubTraba);
         return view('evento.submeterTrabalho', [
             'evento' => $evento,
@@ -93,6 +87,7 @@ class TrabalhoController extends Controller
             'regras' => $regra,
             'templates' => $template,
             'modalidades' => $modalidades,
+            'modalidade' => $modalidade,
         ]);
     }
 
