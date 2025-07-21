@@ -180,7 +180,7 @@ class EventoController extends Controller
 
     public function listarAvaliacoes(Request $request, $column = 'titulo', $direction = 'asc', $status = 'rascunho')
     {
-        $evento = Evento::find($request->eventoId);
+        $evento = Evento::find($request->eventoId ?? session('evento_id')); //Variável do session definida na deleção de avaliação
         $this->authorize('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento);
         $modalidades = Modalidade::where('evento_id', $evento->id)->orderBy('nome')->get();
         $trabalhos = null;

@@ -1300,6 +1300,7 @@ class TrabalhoController extends Controller
             $trabalho->save();
 
             DB::commit();
+            session()->flash('evento_id', $trabalho->eventoId);
 
             return redirect()->route('coord.listarAvaliacoes')->with('success', 'Avaliação deleta com sucesso!');
 
