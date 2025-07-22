@@ -36,10 +36,7 @@
                     @elseif ($evento->categoriasParticipantes()->where('permite_inscricao', true)->exists())
                         <h6>Atenção!</h6>
                         <ul>
-                            <li>Para participar do 13º CBA, você precisa concluir a sua inscrição e realizar o pagamento.</li>
-                            <li>Informações sobre isenções serão divulgadas em breve.</li>
-                            <li>Caso você seja uma pessoa associada à ABA-Agroecologia e não esteja visualizando a sua categoria de associada/o abaixo para fazer a inscrição com desconto, por favor, entre em contato com a organização do evento através do e-mail <a href="mailto:tesouraria@aba-agroecologia.org.br" target="_blank">tesouraria@aba-agroecologia.org.br</a>.</li>
-                            <li>Caso você NÃO seja uma pessoa associada à ABA-Agroecologia e deseja associar-se, <a href="http://associados.aba-agroecologia.org.br/register/solicitation" target="_blank">clique aqui</a>.</li>
+                            <li>Para participar do {{$evento->nome}}, é necessário concluir a inscrição e, caso a modalidade escolhida seja paga, efetuar o pagamento.</li>
                         </ul>
                         <div id="formulario" class="carousel-categorias container">
                             <div>
