@@ -5,6 +5,7 @@
 /storage/app/public
 /vendor
 /storage/app/*
+pr.md
 .env
 .idea
 .env.backup
