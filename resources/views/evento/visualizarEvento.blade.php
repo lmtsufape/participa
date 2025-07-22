@@ -468,7 +468,7 @@
                     <div class="col-md-6">
                         <div class="card">
                             <div class="card-heading bg-my-primary rounded pt-3 pb-1 ps-3">
-                                <h5 class="text-white">{{ __('Áreas Temáticas') }}</h5>
+                                <h5 class="text-white">{{ __('Eixos temáticos') }}</h5>
                             </div>
                             <div class="card-body">
                                 <ul>
