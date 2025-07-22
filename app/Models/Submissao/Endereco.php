@@ -26,4 +26,9 @@ class Endereco extends Model
     {
         return $this->hasOne('App\Models\Submissao\Evento', 'enderecoId');
     }
+
+    public function getEnderecoFormatado()
+    {
+        return "{$this->rua}, {$this->numero}, {$this->bairro}, {$this->cidade} - {$this->uf}, {$this->cep}, {$this->pais}";
+    }
 }
