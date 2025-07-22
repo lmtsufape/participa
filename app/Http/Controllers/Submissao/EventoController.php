@@ -137,7 +137,7 @@ class EventoController extends Controller
         $this->authorize('isCoordenadorOrCoordCientificaOrCoordEixo', $evento);
         // $users = $evento->usuariosDaComissao;
 
-        $areas = Area::where('eventoId', $evento->id)->orderBy('nome')->get();
+        $areas = Area::where('eventoId', $evento->id)->orderBy('ordem')->get();
         $modalidades = Modalidade::where('evento_id', $evento->id)
             ->withCount(['trabalho as trabalhos_count' => function($query) use ($status) {
                 if ($status == 'rascunho') {
@@ -328,8 +328,8 @@ class EventoController extends Controller
         $evento = Evento::find($request->eventoId);
         $this->authorize('isCoordenadorOrCoordCientificaOrCoordEixo', $evento);
         $modalidade = Modalidade::find($request->modalidadeId);
-        $areas = Area::where('eventoId', $evento->id)->orderBy('nome')->get();
-        $areasId = Area::where('eventoId', $evento->id)->select('id')->orderBy('nome')->get();
+        $areas = Area::where('eventoId', $evento->id)->orderBy('ordem')->get();
+        $areasId = Area::where('eventoId', $evento->id)->select('id')->orderBy('ordem')->get();
 
         $trabalhos = null;
 
@@ -415,8 +415,7 @@ class EventoController extends Controller
     {
         $evento = Evento::find($request->eventoId);
         $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
-        $areas = Area::where('eventoId', $evento->id)->orderBy('nome')->get();
-        $areas = $areas->sortBy('nome', SORT_NATURAL)->values()->all();
+        $areas = Area::where('eventoId', $evento->id)->orderBy('ordem')->get();
 
         return view('coordenador.areas.listarAreas', [
             'evento' => $evento,
@@ -769,7 +768,7 @@ class EventoController extends Controller
     {
         $evento = Evento::find($request->eventoId);
         $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
-        $modalidades = Modalidade::where('evento_id', $evento->id)->orderBy('nome')->get();
+        $modalidades = Modalidade::where('evento_id', $evento->id)->orderBy('ordem')->get();
         $areasId = Area::where('eventoId', $evento->id)->select('id')->get();
         // $areaModalidades = AreaModalidade::whereIn('areaId', $areasId)->get();
 
@@ -1536,9 +1535,9 @@ class EventoController extends Controller
             // $trabalhosIdCoautor = Coautor::whereIn('trabalhoId', $trabalhosId)->where('autorId', Auth::user()->id)->select('trabalhoId')->get();
             // $coautorCount = Coautor::whereIn('trabalhoId', $trabalhosId)->where('autorId', Auth::user()->id)->count();
             // $trabalhosCoautor = Trabalho::whereIn('id', $trabalhosIdCoautor)->get();
-            $modalidades = Modalidade::where('evento_id', $evento->id)->get();
-            $modalidades = $modalidades->sortByDesc('nome', SORT_NATURAL)->values()->all();
-            $areas = Area::where('eventoId', $evento->id)->orderBy('nome')->get();
+            $modalidades = Modalidade::where('evento_id', $evento->id)->orderBy('ordem')->get();
+
+            $areas = Area::where('eventoId', $evento->id)->orderBy('ordem')->get();
             $atividades = Atividade::where('eventoId', $id)->get();
             $dataInicial = DB::table('atividades')->join('datas_atividades', 'atividades.id', 'datas_atividades.atividade_id')->select('data')->orderBy('data')->where('eventoId', '=', $id)->first();
 
