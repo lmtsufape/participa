@@ -1281,8 +1281,6 @@ class TrabalhoController extends Controller
         try {
             $trabalho = Trabalho::findOrFail($trabalho_id);
 
-            $trabalho->atribuicoes()->detach($request->revisor_id);
-
             Resposta::where('trabalho_id', $trabalho->id)
                     ->where('revisor_id', $request->revisor_id)->delete();
 
