@@ -34,6 +34,7 @@
                                 <th scope="col">E-mail</th>
                                 <th scope="col" style="text-align:center">Em Andamento</th>
                                 <th scope="col" style="text-align:center">Finalizados</th>
+                                <th scope="col" class="text-center">Correções</th>
                                 <th scope="col" style="text-align:center">Visualizar</th>
                                 <th scope="col" style="text-align:center">Remover</th>
                                 <th scope="col" style="text-align:center">Lembrar</th>
@@ -43,22 +44,27 @@
                             <tbody>
                               @foreach($revisores as $revisor)
                                 <tr>
-                                  <td data-toggle="modal" data-target="#modalEditarRevisor{{$revisor->id}}">{{$revisor->name}}</td>
-                                  <td data-toggle="modal" data-target="#modalEditarRevisor{{$revisor->id}}">{{$revisor->email}}</td>
-                                  <td data-toggle="modal" data-target="#modalEditarRevisor{{$revisor->id}}" style="text-align:center">
-                                    @if($contadores->where('user_id', $revisor->id)->isNotEmpty())
-                                        {{$contadores->where('user_id', $revisor->id)->sum('processando_count')}}
-                                    @else
-                                        0
-                                    @endif
-                                </td>
-                                  <td data-toggle="modal" data-target="#modalEditarRevisor{{$revisor->id}}" style="text-align:center">
-                                    @if($contadores->where('user_id', $revisor->id)->isNotEmpty())
-                                        {{$contadores->where('user_id', $revisor->id)->sum('avaliados_count')}}
-                                    @else
-                                        0
-                                    @endif
-                                </td>
+                                    <td data-toggle="modal" data-target="#modalEditarRevisor{{$revisor->id}}">{{$revisor->name}}</td>
+                                    <td data-toggle="modal" data-target="#modalEditarRevisor{{$revisor->id}}">{{$revisor->email}}</td>
+                                    <td data-toggle="modal" data-target="#modalEditarRevisor{{$revisor->id}}" style="text-align:center">
+                                        @if($contadores->where('user_id', $revisor->id)->isNotEmpty())
+                                            {{$contadores->where('user_id', $revisor->id)->sum('processando_count')}}
+                                        @else
+                                            0
+                                        @endif
+                                    </td>
+                                    <td data-toggle="modal" data-target="#modalEditarRevisor{{$revisor->id}}" style="text-align:center">
+                                        @if($contadores->where('user_id', $revisor->id)->isNotEmpty())
+                                            {{$contadores->where('user_id', $revisor->id)->sum('avaliados_count')}}
+                                        @else
+                                            0
+                                        @endif
+                                    </td>
+                                    <td class="text-center">
+                                        {{ $revisor->revisor->sum(function ($revisor) {
+                                            return $revisor->trabalhosAtribuidos()->whereIn('avaliado', ['corrigido', 'corrigido_parcialmente', 'nao_corrigido'] )->count();
+                                        }) }}
+                                    </td>
                                   <td style="text-align:center">
                                     <a href="#" data-toggle="modal" data-target="#modalRevisor{{$revisor->id}}">
                                       <img src="{{asset('img/icons/eye-regular.svg')}}" style="width:20px">
