@@ -61,12 +61,14 @@
                                         @endif
                                     </td>
                                     <td class="text-center">
-                                        {{ $revisor->revisor->sum(function ($revisor) {
-                                            return $revisor->trabalhosAtribuidos()
-                                                ->whereIn('avaliado', ['corrigido', 'corrigido_parcialmente', 'nao_corrigido'])
-                                                ->distinct('trabalhos.id')
-                                                ->count('trabalhos.id');
-                                        }) }}
+                                        {{ $revisor->revisor
+                                            ->where('evento_id', $evento->id)
+                                            ->sum(function ($revisor) {
+                                                return $revisor->trabalhosAtribuidos()
+                                                    ->whereIn('avaliado', ['corrigido', 'corrigido_parcialmente', 'nao_corrigido'])
+                                                    ->distinct('trabalhos.id')
+                                                    ->count('trabalhos.id');
+                                            }) }}
                                     </td>
                                   <td style="text-align:center">
                                     <a href="#" data-toggle="modal" data-target="#modalRevisor{{$revisor->id}}">
