@@ -34,7 +34,7 @@
                     <tr>
                         <td bgcolor="#004d51" align="center" valign="top" style="padding: 40px 20px 20px 20px; border-radius: 4px 4px 0px 0px; color: #ffffff; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 48px; font-weight: 400; letter-spacing: 4px; line-height: 48px;">
                             <img src="{{ $message->embed(public_path('img/LOGO-RODAPE.png')) }}" width="125" height="120" style="display: block; border: 0px;" />
-                            <h5 class="small" style="font-weight: 400; margin: 2;">Candidatura {{ $status === 'aprovada' ? 'homologada' : 'não homologada' }} </h1>
+                            <h5 class="small" style="font-weight: 400; margin: 2;">Lembrete de avaliação</h1>
                         </td>
                     </tr>
                 </table>
@@ -46,25 +46,36 @@
                     <tr>
                         <td bgcolor="#ffffff" align="left" style="padding: 20px 30px 40px 30px; color: #666666; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;">
                             <p style="margin: 0;">
-                                Olá {{ $user->name }},
+                                Olá {{ $user->name }}!
 
                                 <br> <br>
 
+                                Este e-mail é um lembrete automático sobre trabalhos/atividades que você tem para avaliar no evento <strong>"{{ $evento->nome }}"</strong>.
 
-                                Sua candidatura para atuar como avaliador(a) no <strong>{{ $eixo }}</strong> do "{{ $evento->nome }}"  {{ $status === 'aprovada' ? 'foi homologada' : 'não foi homologada' }}.
                                 <br><br>
-                                @if($status === 'aprovada')
-                                Agradecemos sua disponibilidade!<br><br>
+
+                                
+                                Trabalhos pendentes de avaliação: <br>
+                                <strong>{{ $trabalhos }}</strong> <br><br>
+
+                                ⚠️ Prazo de avaliação: <br>
+                                <strong>{{ date('d/m/Y H:i:s', strtotime($dataLimite)) }}</strong> <br><br>
+
+                                @if($diasRestantes == 1)
+                                <strong>🚨 ATENÇÃO: Resta apenas 1 dia para concluir a avaliação!</strong> <br>
                                 @else
-                                Agradecemos o interesse e esperamos contar com sua participação em futuras oportunidades!<br><br>
-                                @if(!empty($justificativa))
-                                    <strong>Justificativa da não homolagação:</strong><br><br>
-                                    <span>{{ $justificativa }}</span><br><br><br>
+                                <strong>⏰ Restam {{ $diasRestantes }} dias para concluir a avaliação.</strong> <br>
                                 @endif
-                                @endif
+                                <br><br>
+                                Agradecemos de antemão pela sua disponibilidade para colaborar com a realização deste evento.
 
+                                @component('mail::button', ['url' => route('login')])
+                                Acessar sistema
+                                @endcomponent
 
-                                Abraços,<br><br>
+                                <br><br>
+
+                                Abraços,<br>
                                 Plataforma de inscrições e submissões de trabalhos <br>
                                 Participa (UFAPE/LMTS) <br>
                                 Associação Brasileira de Agroecologia (ABA) <br>

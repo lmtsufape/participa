@@ -323,11 +323,12 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
         //Modalidade
         Route::post('/modalidade/criar', [ModalidadeController::class, 'store'])->name('modalidade.store');
         Route::post('/modalidade/{id}/delete', [ModalidadeController::class, 'destroy'])->name('modalidade.destroy');
+        Route::post('modalidades/reorder', [ModalidadeController::class, 'reorder'])->name('modalidades.reorder');
         //Area
         Route::post('/area/criar', [AreaController::class, 'store'])->name('area.store');
         Route::delete('/area/deletar/{id}', [AreaController::class, 'destroy'])->name('area.destroy');
         Route::post('/area/editar/{id}', [AreaController::class, 'update'])->name('area.update');
-
+        Route::post('areas/reorder', [AreaController::class, 'reorder'])->name('areas.reorder');
         //AreaModalidade
         // Route::post(  '/areaModalidade/criar',  [AreaModalidadeController::class, 'store']             )->name('areaModalidade.store');
 
@@ -418,6 +419,7 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
         Route::post('revisores/resposta/editar', [RevisorController::class, 'editarRespostasFormulario'])->name('revisor.editar.respostas');
         Route::post('/reenviaremail/revisor/{id}/{evento_id}', [RevisorController::class, 'reenviarEmailRevisor'])->name('revisor.reenviarEmail');
         Route::put('revisores/correcao/{trabalho_id}', [RevisorController::class, 'verificarCorrecao'])->name('revisor.verificarCorrecao');
+
     });
     // Visualizar trabalhos do usuário
     Route::get('/user/trabalhos', [UserController::class, 'meusTrabalhos'])->name('user.meusTrabalhos');
@@ -511,3 +513,7 @@ Route::get('/cadastro/validacao-cadastro', [PreRegistroController::class, 'preRe
 Route::post('/cadastro/enviar-email-codigo', [PreRegistroController::class, 'enviarCodigo'])->name('enviarCodigo');
 Route::get('/cadastro/inserir-codigo/{id}', [PreRegistroController::class, 'inserirCodigo'])->name('inserirCodigo');
 Route::post('/cadastro/validar-codigo', [PreRegistroController::class, 'verificarCodigo'])->name('verificarCodigo');
+
+Route::get('/avaliador/aceitar/{token}', [AtribuicaoController::class, 'aceitarConvite'])->name('avaliador.aceitar');
+Route::get('/avaliador/recusar/{token}', [AtribuicaoController::class, 'recusarConvite'])->name('avaliador.show_recusar');
+Route::post('/avaliador/recusar/{token}', [AtribuicaoController::class, 'recusarConvite'])->name('avaliador.recusar');

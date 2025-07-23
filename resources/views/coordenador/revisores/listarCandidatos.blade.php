@@ -19,7 +19,7 @@
                         <h6 class="card-subtitle mb-2 text-muted">Lista de candidatos a avaliadores para o evento</h6>
                     </div>
                     <div>
-                        <a href="{{ route('coord.candidatos.exportar', $evento) }}" class="btn btn-primary">Exportar .xlsx</a>
+                        <a href="{{ route('coord.candidatos.exportar', $evento) }}?name={{ request('name') }}&email={{ request('email') }}&axis={{ request('axis') }}" class="btn btn-primary">Exportar .xlsx</a>
                     </div>
                   </div>
                     <form method="GET" action="{{ route('coord.candidatoAvaliador.listarCandidatos', $evento) }}" class="row g-3 mt-2 mb-4">
@@ -107,7 +107,9 @@
                                                 <button class="btn btn-sm btn-danger m-1"
                                                         data-bs-toggle="modal"
                                                         data-bs-target="#confirmRejeitarModal{{ $candidatura->id }}-{{ $index }}">
-                                                    <!-- seu SVG de “X” -->
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16" style="vertical-align: middle;">Add commentMore actions
+                                                        <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
+                                                    </svg>
                                                 </button>
                                             @endif
                                         </div>
@@ -150,17 +152,19 @@
                                                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                                             </div>
                                             <div class="modal-body">
-                                                Tem certeza de que deseja <strong>reprovar</strong> o eixo
-                                                <em>{{ $eixo }}</em> de <em>{{ $candidatura->user->name ?? 'N/A' }}</em>?
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                                <form action="{{ route('coord.candidaturas.rejeitar', $candidatura->id) }}" method="POST" class="d-inline">
+                                                Tem certeza de que deseja <strong>reprovar</strong> a candidatura como avaliador(a) de <em>{{ $candidatura->user->name ?? 'N/A' }}</em> para o eixo
+                                                <em>{{ $eixo }}</em>?
+                                                <form action="{{ route('coord.candidaturas.rejeitar', $candidatura->id) }}" method="POST" class="mt-3">
                                                     @csrf @method('POST')
                                                     <input type="hidden" name="evento_id" value="{{ $evento->id }}">
                                                     <input type="hidden" name="user_id" value="{{ $candidatura->user->id ?? 'N/A'}}">
                                                     <input type="hidden" name="eixo" value="{{ $eixo }}">
-                                                    <button type="submit" class="btn btn-danger">Sim, Reprovar</button>
+                                                    <label for="justificativa-{{ $candidatura->id }}-{{ $index }}" class="form-label">Justificativa (opcional)</label>
+                                                    <textarea class="form-control w-100" name="justificativa" id="justificativa-{{ $candidatura->id }}-{{ $index }}" rows="3" placeholder="Informe uma justificativa"></textarea>
+                                                    <div class="modal-footer d-flex justify-content-between px-0">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                                        <button type="submit" class="btn btn-danger">Sim, Reprovar</button>
+                                                    </div>
                                                 </form>
                                             </div>
                                         </div>
@@ -221,7 +225,7 @@
 
         <div class="row mb-3">
             <div class="col-12">
-                <label class="form-label fw-bold">Eixos temáticos de preferência</label>
+                <label class="form-label fw-bold">Áreas de preferência</label>
                 <ul>
                     @foreach($candidatura->eixos as $eixo)
                         <li>{{$eixo}}</li>
@@ -232,7 +236,7 @@
 
         <div class="row mb-3">
             <div class="col-md-6">
-                <label class="form-label fw-bold">Já avaliou resumos do CBA em outros anos?</label>
+                <label class="form-label fw-bold">Já avaliou resumos em outros anos?</label>
                 <p class="text-capitalize">{{$candidatura->avaliou_antes}}</p>
             </div>
             <div class="col-md-6">

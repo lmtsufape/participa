@@ -12,7 +12,7 @@
     </div>
 
     <div class="row justify-content-center">
-        {{-- table modalidades --}}
+
         <div class="col-sm-6">
             <div class="card">
                 <div class="card-body">
@@ -21,30 +21,48 @@
                     <p class="card-text">
                     <table class="table table-hover table-responsive-lg table-sm">
                         <thead>
-                            <tr>
-                                <th scope="col">Nome</th>
-                                <th scope="col" style="text-align:center">Editar</th>
-                                <th scope="col" style="text-align:center">Excluir</th>
-                            </tr>
+                        <tr>
+                            {{-- coluna vazia para o drag handle --}}
+                            <th style="width:40px;"></th>
+                            <th>Nome</th>
+                            <th class="text-center">Editar</th>
+                            <th class="text-center">Excluir</th>
+                        </tr>
                         </thead>
-                        <tbody>
-                            @foreach($modalidades as $modalidade)
-                            <tr>
-                                <td>{{$modalidade->nome}}</td>
-                                <td style="text-align:center">
-                                    <a href="#" data-bs-toggle="modal" data-bs-target="#modalEditarModalidade{{$modalidade->id}}"><img src="{{asset('img/icons/edit-regular.svg')}}" style="width:20px"></a>
+                        <tbody id="modalidades-tbody">
+                        @foreach($modalidades as $modalidade)
+                            <tr data-id="{{ $modalidade->id }}">
+                                {{-- handle de arrastar --}}
+                                <td class="handle text-center" style="cursor: grab;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="m7 2l6 3.9v2.272l-5-3.25v12.08H6V4.922l-5 3.25V5.9zm9 17.08V7h2v12.08l5-3.25v2.272l-6 3.9l-6-3.9V15.83z"/></svg></td>
+                                {{-- nome --}}
+                                <td>{{ $modalidade->nome }}</td>
+                                {{-- editar --}}
+                                <td class="text-center">
+                                    <a href="#"
+                                       data-bs-toggle="modal"
+                                       data-bs-target="#modalEditarModalidade{{ $modalidade->id }}">
+                                        <img src="{{ asset('img/icons/edit-regular.svg') }}"
+                                             style="width:20px">
+                                    </a>
                                 </td>
-                                <td style="text-align:center">
-                                    <a href="" data-bs-toggle="modal" data-bs-target="#modalExcluirModalidade{{$modalidade->id}}"><img src="{{asset('img/icons/trash-alt-regular.svg')}}" class="icon-card" style="width:20px; height:auto;" alt="Remover" ></a>
+                                {{-- excluir --}}
+                                <td class="text-center">
+                                    <a href="#"
+                                       data-bs-toggle="modal"
+                                       data-bs-target="#modalExcluirModalidade{{ $modalidade->id }}">
+                                        <img src="{{ asset('img/icons/trash-alt-regular.svg') }}"
+                                             style="width:20px; height:auto;"
+                                             alt="Remover">
+                                    </a>
                                 </td>
                             </tr>
-                            @endforeach
+                        @endforeach
                         </tbody>
                     </table>
                     </p>
                 </div>
             </div>
-
         </div>{{-- end table--}}
 
         {{-- table modalidades Área--}}
@@ -167,7 +185,7 @@
                                             </span>
                                             @enderror
                                         </div>
-                                    </div>{{-- end row --}}    
+                                    </div>{{-- end row --}}
                                     <div class="row mt-2"> {{-- Label Row (mt-2 para espaçamento opcional) --}}
                                         <div class="col-sm-12">
                                             <label for="nomeModalidadeEdit_es{{$modalidade->id}}" class="col-form-label font-weight-bold">{{ __('Nome (Espanhol)') }}</label> {{-- Sem '*' se for nullable --}}
@@ -1246,9 +1264,42 @@
     }
 </script>
 @endsection
-@section('javascript')
+@section('script')
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
 @parent
 <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const tbody = document.getElementById('modalidades-tbody');
+
+        Sortable.create(tbody, {
+            handle: '.handle',
+            animation: 150,
+            onEnd: () => {
+                // monta [{id, position}, …]
+                const order = Array.from(tbody.querySelectorAll('tr'))
+                    .map((tr, idx) => ({
+                        id: tr.dataset.id,
+                        position: idx + 1
+                    }));
+
+                fetch("{{ route('modalidades.reorder') }}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({ order })
+                })
+                    .then(r => r.json())
+                    .then(json => {
+                        if (json.status !== 'ok') {
+                            alert('Erro ao salvar a nova ordem de modalidades.');
+                        }
+                    })
+                    .catch(() => alert('Erro ao salvar a nova ordem de modalidades.'));
+            }
+        });
+    });
     function handler(datas) {
         inicial = {};
         maiorId = 0;
