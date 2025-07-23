@@ -33,8 +33,8 @@
                                 <th scope="col">Nome</th>
                                 <th scope="col">E-mail</th>
                                 <th scope="col" style="text-align:center">Em Andamento</th>
-                                <th scope="col" style="text-align:center">Finalizados</th>
-                                <th scope="col" class="text-center">Correções</th>
+                                <th scope="col" style="text-align:center">Avaliados</th>
+                                <th scope="col" class="text-center">Validados</th>
                                 <th scope="col" style="text-align:center">Visualizar</th>
                                 <th scope="col" style="text-align:center">Remover</th>
                                 <th scope="col" style="text-align:center">Lembrar</th>
@@ -62,7 +62,10 @@
                                     </td>
                                     <td class="text-center">
                                         {{ $revisor->revisor->sum(function ($revisor) {
-                                            return $revisor->trabalhosAtribuidos()->whereIn('avaliado', ['corrigido', 'corrigido_parcialmente', 'nao_corrigido'] )->count();
+                                            return $revisor->trabalhosAtribuidos()
+                                                ->whereIn('avaliado', ['corrigido', 'corrigido_parcialmente', 'nao_corrigido'])
+                                                ->distinct('trabalhos.id')
+                                                ->count('trabalhos.id');
                                         }) }}
                                     </td>
                                   <td style="text-align:center">
