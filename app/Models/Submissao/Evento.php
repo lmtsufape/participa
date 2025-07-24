@@ -183,15 +183,28 @@ class Evento extends Model
 
             if ($assoc && ($assoc['allowed'] ?? false)) {
                 $map = [
-                    'Profissional' => 'Associado - Profissional (professoras/es, pesquisadoras/es, consultoras/es etc)',
-                    'Estudante'    => 'Associado - Estudante (Ensino médio, IFs, EFAs, graduação, pós-graduação etc)',
-                    'Agricultor'   => 'Associado - Agricultoras/es, povos e comunidades tradicionais',
-                    'Quilombola'   => 'Associado - Agricultoras/es, povos e comunidades tradicionais',
-                    'Indígena'     => 'Associado - Agriculturas/es, povos e comunidades tradicionais',
-                    'Outras categorias de povos e comunidades tradicionais' => 'Associado - Agricultoras/es, povos e comunidades tradicionais',
+                    'Profissional' => [
+                        'Associado - Profissional (professoras/es, pesquisadoras/es, consultoras/es etc)',
+                        'Associado - Assessora/or Técnico/a (ONGs; empresas públicas de ATER etc)',
+                    ],
+                    'Estudante'      => [
+                        'Associado - Estudante (Ensino médio, IFs, EFAs, graduação, pós-graduação etc)',
+                    ],
+                    'Agricultor'     => [
+                        'Associado - Agricultoras/es, povos e comunidades tradicionais',
+                    ],
+                    'Quilombola'     => [
+                        'Associado - Agricultoras/es, povos e comunidades tradicionais',
+                    ],
+                    'Indígena'       => [
+                        'Associado - Agriculturas/es, povos e comunidades tradicionais',
+                    ],
+                    'Outras categorias de povos e comunidades tradicionais' => [
+                        'Associado - Agricultoras/es, povos e comunidades tradicionais',
+                    ],
                 ];
-                $tipo = $map[$assoc['category']] ?? null;
-                return $baseCats->filter(fn($cat) => $cat->nome == $tipo);
+                $tiposPermitidos = $map[$assoc['category']] ?? [];
+                return $baseCats->whereIn('nome', $tiposPermitidos);
             }
         }
 
