@@ -242,8 +242,8 @@ class ModalidadeController extends Controller
         ];
 
         if($evento->is_multilingual){
-            $rules['nome_en'] . $request->modalidadeEditId = ['required','string'];
-            $rules['nome_es'] . $request->modalidadeEditId = ['required','string'];
+            $rules['nome_en' . $request->modalidadeEditId] = ['required','string'];
+            $rules['nome_es' . $request->modalidadeEditId] = ['required','string'];
         }
 
         $validatedData = $request->validate($rules);
