@@ -436,7 +436,7 @@
                                                                 <strong>Extensão de arquivos aceitas:</strong>
                                                                 <span id="extensoes-aceitas"></span>
                                                                 <br>
-                                                                <span>O tamanho máximo para arquivos de vídeo é de 50 MB. Os demais tipos possuem tamanho máximo de 2 MB.</span>
+                                                                <span>O tamanho máximo para arquivos de vídeo é de 50 MB. Os demais tipos possuem tamanho máximo de 5 MB.</span>
                                                             </small>
 
 
