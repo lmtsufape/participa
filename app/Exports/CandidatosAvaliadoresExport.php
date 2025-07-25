@@ -34,7 +34,7 @@ class CandidatosAvaliadoresExport implements FromCollection, WithHeadings, WithM
             'Link Lattes',
             'Resumo Lattes',
             'Eixo de Preferência',
-            'Já avaliou no CBA?',
+            'Já avaliou?',
             'Disponibilidade de Idiomas',
         ];
     }
@@ -61,7 +61,7 @@ class CandidatosAvaliadoresExport implements FromCollection, WithHeadings, WithM
                 $candidato->link_lattes,
                 $candidato->resumo_lattes,
                 $candidato->area->nome,
-                $candidato->ja_avaliou_cba ? 'Sim' : 'Não',
+                $candidato->ja_avaliou ? 'Sim' : 'Não',
                 $candidato->disponibilidade_idiomas,
             ];
         }

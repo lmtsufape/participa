@@ -18,7 +18,7 @@ class CandidatoAvaliador extends Model
         'area_id',
         'link_lattes',
         'resumo_lattes',
-        'ja_avaliou_cba',
+        'ja_avaliou',
         'disponibilidade_idiomas',
         'aprovado'
     ];
