@@ -375,7 +375,28 @@ class EventoController extends Controller
         $this->authorize('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento);
         $revisores = User::whereHas('revisor', function (Builder $query) use ($evento) {
             $query->where('evento_id', $evento->id);
-        })->orderBy('name')->get();
+        })
+        ->with('revisor.trabalhosAtribuidos.arquivoCorrecao') // eager load
+        ->orderBy('name')
+        ->get()
+        ->each(function ($user) {
+            $totalTrabalhos = 0;
+            $totalArquivos = 0;
+
+            foreach ($user->revisor as $revisor) {
+                $totalTrabalhos += $revisor->trabalhosAtribuidos
+                    ->filter(fn($trabalho) => in_array($trabalho->avaliado, [
+                        'corrigido', 'corrigido_parcialmente', 'nao_corrigido'
+                    ]))->count();
+
+                $totalArquivos += $revisor->trabalhosAtribuidos
+                    ->filter(fn($trabalho) => $trabalho->arquivoCorrecao)->count();
+            }
+
+            $user->total_trabalhos_validados = $totalTrabalhos;
+            $user->total_arquivos_corrigidos = $totalArquivos;
+        });
+
         $contadores = $evento->revisors()->withCount([
             'trabalhosAtribuidos as avaliados_count' => function (Builder $query) {
                 $query->where('parecer', 'avaliado')->orWhere('parecer', 'encaminhado');

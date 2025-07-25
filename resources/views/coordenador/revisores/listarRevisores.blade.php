@@ -61,14 +61,9 @@
                                         @endif
                                     </td>
                                     <td class="text-center">
-                                        {{ $revisor->revisor
-                                            ->where('evento_id', $evento->id)
-                                            ->sum(function ($revisor) {
-                                                return $revisor->trabalhosAtribuidos()
-                                                    ->whereIn('avaliado', ['corrigido', 'corrigido_parcialmente', 'nao_corrigido'])
-                                                    ->distinct('trabalhos.id')
-                                                    ->count('trabalhos.id');
-                                            }) }}
+                                        {{ ($revisor->total_trabalhos_validados == 0 && $revisor->total_arquivos_corrigidos == 0)
+                                            ? '0'
+                                            : $revisor->total_trabalhos_validados . '/' . $revisor->total_arquivos_corrigidos}}
                                     </td>
                                   <td style="text-align:center">
                                     <a href="#" data-toggle="modal" data-target="#modalRevisor{{$revisor->id}}">
