@@ -17,6 +17,7 @@ use App\Models\Submissao\Arquivoextra;
 use App\Models\Submissao\Avaliacao;
 use App\Models\Submissao\Evento;
 use App\Models\Submissao\FormSubmTraba;
+use App\Models\Inscricao\Inscricao;
 use App\Models\Submissao\Modalidade;
 use App\Models\Submissao\Parecer;
 use App\Models\Submissao\RegraSubmis;
@@ -24,6 +25,7 @@ use App\Models\Submissao\Resposta;
 use App\Models\Submissao\TemplateSubmis;
 use App\Models\Submissao\Trabalho;
 use App\Models\Users\Coautor;
+use App\Models\Users\CoordEixoTematico;
 use App\Models\Users\Revisor;
 use App\Models\Users\User;
 use App\Notifications\SubmissaoTrabalhoNotification;
@@ -32,6 +34,7 @@ use Auth;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
@@ -48,20 +51,24 @@ class TrabalhoController extends Controller
     public function index($id, $idModalidade)
     {
         $evento = Evento::find($id);
-        $areas = Area::where('eventoId', $evento->id)->orderBy('nome')->get();
-        $areas = $areas->sortBy('nome', SORT_NATURAL)->values()->all();
+        $areas = Area::where('eventoId', $evento->id)->orderBy('ordem')->get();
+        $modalidades = Modalidade::where('evento_id', $evento->id)
+            ->where('inicioSubmissao', '<=', Carbon::now())
+            ->where('fimSubmissao', '>=', Carbon::now())
+            ->orderBy('ordem')
+            ->get();
         $formSubTraba = FormSubmTraba::where('eventoId', $evento->id)->first();
         $regra = RegraSubmis::where('modalidadeId', $idModalidade)->first();
         $template = TemplateSubmis::where('modalidadeId', $idModalidade)->first();
         $ordemCampos = explode(',', $formSubTraba->ordemCampos);
-        array_splice($ordemCampos, 6, 0, 'midiaExtra');
-        array_splice($ordemCampos, 5, 0, 'apresentacao');
         $modalidade = Modalidade::find($idModalidade);
 
+        array_splice($ordemCampos, 6, 0, 'midiaExtra');
+        array_splice($ordemCampos, 5, 0, 'apresentacao');
+        $user = Auth::user();
+
         $mytime = Carbon::now('America/Recife');
-        if (!$modalidade->estaEmPeriodoDeSubmissao()) {
-            $this->authorize('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento);
-        }
+
         // dd($formSubTraba);
         return view('evento.submeterTrabalho', [
             'evento' => $evento,
@@ -79,6 +86,7 @@ class TrabalhoController extends Controller
             'ordemCampos' => $ordemCampos,
             'regras' => $regra,
             'templates' => $template,
+            'modalidades' => $modalidades,
             'modalidade' => $modalidade,
         ]);
     }
@@ -152,17 +160,30 @@ class TrabalhoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function store(TrabalhoPostRequest $request, $modalidadeId)
+    public function store(TrabalhoPostRequest $request)
     {
         //Obtendo apenas os tipos de extensões selecionadas
 
         try {
             $validatedData = $request->validated();
             $evento = Evento::find($request->eventoId);
-            $modalidade = Modalidade::find($modalidadeId);
-            //   dd($request->all());
+            $modalidade = Modalidade::find($request->modalidadeId);
 
-            if ($this->validarTipoDoArquivo($request->arquivo, $modalidade)) {
+            // Cria uma pré-inscrição se o usuário não estiver inscrito
+            if (!Inscricao::where('user_id', Auth::user()->id)->where('evento_id', $evento->id)->exists()) {
+                if ($evento->eventoInscricoesEncerradas()) {
+                    return redirect()->action([EventoController::class, 'show'], ['id' => $request->evento_id])->with('message', 'Inscrições encerradas.');
+                }
+
+                $inscricao = new Inscricao();
+                $inscricao->user_id = Auth::user()->id;
+                $inscricao->evento_id = $evento->id;
+                $inscricao->categoria_participante_id = null;
+                $inscricao->finalizada = false;
+                $inscricao->save();
+            }
+
+            if ($this->validarTipoDoArquivo($request->file('arquivo'), $modalidade)) {
                 return redirect()->back()->withErrors(['tipoExtensao' => 'Extensão de arquivo enviado é diferente do permitido.
           Verifique no formulário, quais os tipos permitidos.'])->withInput($validatedData);
             }
@@ -403,7 +424,7 @@ class TrabalhoController extends Controller
     {
         $trabalho = Trabalho::find($id);
         $evento = $trabalho->evento;
-        $this->authorize('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento);
+        $this->authorize('isCoordenadorOrCoordCientificaOrCoordEixo', $evento);
         if ($trabalho->status == 'avaliado' && $status == 'rascunho') {
             $trabalho->update(['status' => $status]);
 
@@ -423,7 +444,12 @@ class TrabalhoController extends Controller
     {
         $trabalho = Trabalho::find($id);
         $evento = $trabalho->evento;
-        $this->authorize('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento);
+        if (! Gate::any([
+            'isCoordenadorOrCoordenadorDaComissaoCientifica',
+            'isCoordenadorEixo'
+        ], $evento)) {
+            abort(403, 'Acesso negado');
+        }
         if ($trabalho->getParecerAtribuicao($revisor->user) == 'encaminhado') {
             $trabalho->atribuicoes()->where('revisor_id', $revisor->id)->first()->pivot->update(['parecer' => 'avaliado']);
 
@@ -462,7 +488,7 @@ class TrabalhoController extends Controller
         $trabalho = Trabalho::find($id);
         $modalidades = Modalidade::where('evento_id', $trabalho->eventoId)->get();
         $evento = Evento::find($trabalho->eventoId);
-        $this->authorize('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento);
+        $this->authorize('isCoordenadorOrCoordCientificaOrCoordEixo', $evento);
 
         return view('coordenador.trabalhos.trabalho_edit', compact('trabalho', 'modalidades', 'evento'));
     }
@@ -960,11 +986,7 @@ class TrabalhoController extends Controller
         $usuariosDaComissaoOrganizadora = $evento->usuariosDaComissaoOrganizadora;
 
         if (
-            $evento->coordenadorId == $usuarioLogado->id
-            || $usuariosDaComissaoCientifica->contains($usuarioLogado)
-            || $usuariosDaComissaoOrganizadora->contains($usuarioLogado)
-            || $evento->userIsCoordComissaoCientifica($usuarioLogado)
-            || $evento->userIsCoordComissaoOrganizadora($usuarioLogado)
+            Gate::any(['isUsuarioDaComissao'], $evento)
             || $trabalho->autorId == $usuarioLogado->id
             || $ehCoautor
             || $usuarioLogado->administradors()->exists()
@@ -974,7 +996,7 @@ class TrabalhoController extends Controller
                 return Storage::download($arquivo->nome);
             }
 
-            return abort(404);
+            return redirect()->back()->with('error', 'Arquivo não existe');
         }
 
         return abort(403);

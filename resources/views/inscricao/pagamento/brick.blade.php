@@ -1,14 +1,14 @@
 @extends('layouts.app')
 
 @section('content')
-<div id="paymentBrick_container">
-    <div class="card">
-        <div class="card-body">
-            <p>Comprovante enviado</p>
-            <p>Aguarde confirmação</p>
-            <p>{{$key}}</p>
-        </div>
+    <div class="alert alert-success text-center">
+        <span class="fw-bold text-center" style="font-size: 20px;">
+            Conclua o pagamento para garantir a sua inscrição!
+        </span>
+
     </div>
+
+<div id="paymentBrick_container">
 </div>
 @endsection
 

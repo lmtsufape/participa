@@ -96,7 +96,11 @@ class FormEventoController extends Controller
         if (isset($request->modsubmissao)) {
             $formevento->modsubmissao = $request->modsubmissao;
         }
+        if (isset($request->modavaliacao)) {
+            $formevento->modavaliacao = $request->modavaliacao;
+        }
         $formevento->modinscritonoevento = $request->boolean('modinscritonoevento');
+        $formevento->modinscritonaplataforma = $request->boolean('modinscritonaplataforma');
         if (isset($request->modarquivo)) {
             $evento->modarquivo = $request->modarquivo;
         }

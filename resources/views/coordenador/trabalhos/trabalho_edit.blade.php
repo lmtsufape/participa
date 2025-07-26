@@ -103,13 +103,13 @@
                                         </div>
                                         <div class="col-sm-3">
                                             <a style="color: #d30909;" href="#" onclick="deletarCoautor(this, {{$trabalho->id}}, event)" class="delete pr-2">
-                                                <i class="fas fa-user-times fa-2x"></i>
+                                                <img src="{{asset('img/icons/trash-alt-regular.svg')}}" class="icon-card" width="24" alt="Remover">
                                             </a>
                                             <a href="#" onclick="mover(this.parentElement.parentElement.parentElement, 1, {{$trabalho->id}}, event)">
-                                                <i class="fas fa-arrow-up fa-2x" id="arrow-up" style=""></i>
+                                                <img src="{{asset('img/icons/sobe.png')}}" class="icon-card" width="24" alt="Subir">
                                             </a>
                                             <a href="#" onclick="mover(this.parentElement.parentElement.parentElement, 0, {{$trabalho->id}}, event)">
-                                                <i class="fas fa-arrow-down fa-2x" id="arrow-down" style="margin-top:35px"></i>
+                                                <img src="{{asset('img/icons/desce.png')}}" class="icon-card" width="24" alt="Descer">
                                             </a>
                                         </div>
                                     </div>
@@ -128,13 +128,13 @@
                                     </div>
                                     <div class="col-sm-3">
                                         <a style="color: #d30909;" href="#" onclick="deletarCoautor(this, {{$trabalho->id}}, event)" class="delete pr-2">
-                                            <i class="fas fa-user-times fa-2x"></i>
+                                            <img src="{{asset('img/icons/trash-alt-regular.svg')}}" class="icon-card" width="24" alt="Remover">
                                         </a>
                                         <a href="#" onclick="mover(this.parentElement.parentElement.parentElement, 1, {{$trabalho->id}}, event)">
-                                            <i class="fas fa-arrow-up fa-2x" id="arrow-up" style=""></i>
+                                            <img src="{{asset('img/icons/sobe.png')}}" class="icon-card" width="24" alt="Subir">
                                         </a>
                                         <a href="#" onclick="mover(this.parentElement.parentElement.parentElement, 0, {{$trabalho->id}}, event)">
-                                            <i class="fas fa-arrow-down fa-2x" id="arrow-down" style="margin-top:35px"></i>
+                                            <img src="{{asset('img/icons/desce.png')}}" class="icon-card" width="24" alt="Descer">
                                         </a>
                                     </div>
                                 </div>
@@ -155,13 +155,13 @@
                                         </div>
                                         <div class="col-sm-3">
                                             <a h style="color: #d30909;" href="#" onclick="deletarCoautor(this, {{$trabalho->id}}, event)" class="delete pr-2">
-                                            <i class="fas fa-user-times fa-2x"></i>
+                                            <img src="{{asset('img/icons/trash-alt-regular.svg')}}" class="icon-card" width="24" alt="Remover">
                                             </a>
                                             <a href="#" onclick="mover(this.parentElement.parentElement.parentElement, 1, {{$trabalho->id}}, event)">
-                                            <i class="fas fa-arrow-up fa-2x" id="arrow-up" style=""></i>
+                                            <img src="{{asset('img/icons/sobe.png')}}" class="icon-card" width="24" alt="Subir">
                                             </a>
                                             <a href="#" onclick="mover(this.parentElement.parentElement.parentElement, 0, {{$trabalho->id}}, event)">
-                                            <i class="fas fa-arrow-down fa-2x" id="arrow-down" style="margin-top:35px"></i>
+                                            <img src="{{asset('img/icons/desce.png')}}" class="icon-card" width="24" alt="Descer">
                                             </a>
                                         </div>
                                     </div>

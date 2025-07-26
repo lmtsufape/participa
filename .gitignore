@@ -7,6 +7,7 @@
 /storage/app/*
 pr.md
 .env
+pr.md
 .idea
 .env.backup
 .phpunit.result.cache

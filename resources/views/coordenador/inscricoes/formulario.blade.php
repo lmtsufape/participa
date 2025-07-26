@@ -24,8 +24,8 @@
                             <h5 class="card-title">Campos do formulário</h5>
                             <h6 class="card-subtitle mb-2 text-muted">Campos que o formulário de inscrição vai ter.</h6>
                         </div>
-                        <div class="col-sm-6">
-                            <button id="criarCampo" data-toggle="modal" data-target="#modalCriarCampo" class="btn btn-primary float-md-right">+ Novo campo</button>
+                            <div class="col-12 col-md-6 d-flex justify-content-md-end align-items-start">
+                            <button id="criarCampo" data-bs-toggle="modal" data-bs-target="#modalCriarCampo" class="btn btn-primary">+ Novo campo</button>
                         </div>
                     </div>
                     <p class="card-text">
@@ -56,8 +56,8 @@
                                     @elseif ($campo->tipo == "cpf")
                                     <h6 class="card-subtitle mb-2 text-muted">Campo de CPF</h6>
                                     @endif
-                                    <a href="#" class="card-link button-a btn-excluir" data-toggle="modal" data-target="#modalCampoDelete{{$campo->id}}">Excluir</a>
-                                    <a href="#" class="card-link button-a btn-editar" data-toggle="modal" data-target="#modalCampoEdit{{$campo->id}}">Editar</a>
+                                    <a href="#" class="card-link button-a btn-excluir" data-bs-toggle="modal" data-bs-target="#modalCampoDelete{{$campo->id}}">Excluir</a>
+                                    <a href="#" class="card-link button-a btn-editar" data-bs-toggle="modal" data-bs-target="#modalCampoEdit{{$campo->id}}">Editar</a>
                                 </div>
                             </div>
                         </div>
@@ -80,9 +80,6 @@
         <div class="modal-content">
             <div class="modal-header" style="background-color: #114048ff; color: white;">
                 <h5 class="modal-title" id="modalCriarCampoLabel">Novo campo do formulario</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
-                    <span aria-hidden="true">&times;</span>
-                </button>
             </div>
             <div class="modal-body">
                 <form id="formCriarCampo" action="{{route('campo.formulario.store')}}" method="POST">
@@ -144,7 +141,7 @@
                         <div id="preencherDados" style="display: none;">
                             <div class="row form-group">
                                 <div class="col-sm-12">
-                                    <label for="titulo_do_campo">Titulo do campo*</label>
+                                    <label class="required-field fw-bold" for="titulo_do_campo">Titulo do campo</label>
                                     <input type="text" id="titulo_do_campo" name="titulo_do_campo" class="form-control @error('titulo_do_campo') is-invalid @enderror" required value="{{old('titulo_do_campo')}}">
 
                                     @error('titulo_do_campo')

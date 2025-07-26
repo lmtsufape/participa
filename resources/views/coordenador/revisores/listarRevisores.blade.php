@@ -23,7 +23,7 @@
                           <h6 class="card-subtitle mb-2 text-muted">Avaliadores cadastrados no seu evento</h6>
                         </div>
                         <div class="col-sm-3" style="text-align: right;">
-                          <button class="btn btn-primary" data-toggle="modal" data-target="#modalCadastrarRevisor">+ Cadastrar revisor</button>
+                          <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalCadastrarRevisor">+ Cadastrar Avaliador</button>
                         </div>
                       </div>
                       <p class="card-text">
@@ -66,14 +66,14 @@
                                             : $revisor->total_trabalhos_validados . '/' . $revisor->total_arquivos_corrigidos}}
                                     </td>
                                   <td style="text-align:center">
-                                    <a href="#" data-toggle="modal" data-target="#modalRevisor{{$revisor->id}}">
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#modalRevisor{{$revisor->id}}">
                                       <img src="{{asset('img/icons/eye-regular.svg')}}" style="width:20px">
                                     </a>
                                   </td>
                                   <td style="text-align:center">
                                     <form id="removerRevisor{{$revisor->id}}" action="{{route('remover.revisor', ['id' => $revisor->id, 'evento_id' => $evento->id])}}" method="POST">
                                       @csrf
-                                      <a href="#" data-toggle="modal" data-target="#modalRemoverRevisor{{$revisor->id}}">
+                                      <a href="#" data-bs-toggle="modal" data-bs-target="#modalRemoverRevisor{{$revisor->id}}">
                                         <img src="{{asset('img/icons/user-times-solid.svg')}}" class="icon-card" style="width:25px">
                                       </a>
                                     </form>
@@ -93,7 +93,7 @@
                                   <td style="text-align:center">
                                     <form id="reenviarEmailRevisor{{$revisor->id}}" action="{{route('revisor.reenviarEmail', ['id' => $revisor->id, 'evento_id' => $evento->id])}}" method="POST">
                                       @csrf
-                                      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalReenviarEmailRevisor{{$revisor->id}}">
+                                      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalReenviarEmailRevisor{{$revisor->id}}">
                                         Reenviar cadastro
                                       </button>
                                     </form>
@@ -388,9 +388,6 @@
         <div class="modal-content">
           <div class="modal-header" style="background-color: #114048ff; color: white;">
             <h5 class="modal-title" id="modalCadastrarRevisorLabel">Cadastrar um novo avaliador</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
-              <span aria-hidden="true">&times;</span>
-            </button>
           </div>
           <div class="modal-body">
               <form id="cadastrarRevisorForm" method="POST" action="{{route('revisor.store')}}">
@@ -401,7 +398,7 @@
                         <input type="hidden" name="cadastrarRevisor" value="0">
                         <div class="row">
                             <div class="col-sm-6">
-                                <label for="emailRevisor" class="col-form-label">{{ __('Email do Avaliador') }}</label>
+                                <label for="emailRevisor" class="col-form-label fw-bold">{{ __('Email do Avaliador') }}</label>
                                 <input id="emailRevisor" type="email" class="form-control @error('emailRevisor') is-invalid @enderror" name="emailRevisor" value="{{old('emailRevisor')}}" required autocomplete="emailRevisor" autofocus>
 
                                 @error('emailRevisor')
@@ -413,7 +410,7 @@
                         </div>
                         <div  class="row">
                           <div class="col-sm-6">
-                            <h6 for="areaRevisor" class="col-form-label">{{ __('Selecione as áreas') }}</h6>
+                            <h6 for="areaRevisor" class="col-form-label fw-bold">{{ __('Selecione as áreas') }}</h6>
                             <input type="checkbox" id="btn_marcar_desmarcar_todas_areas" onclick="marcar_desmarcar_todos_checkbox_por_classe(this, 'checkbox_area')">
                             <label for="btn_marcar_desmarcar_todas_areas"><b>Selecionar todas</b></label>
                             @if (old('areas') != null)
@@ -443,7 +440,7 @@
                             @enderror
                           </div>
                           <div class="col-sm-6">
-                              <h6 for="modalidadeRevisor" class="col-form-label">{{ __('Selecione as modalidades') }}</h6>
+                              <h6 for="modalidadeRevisor" class="col-form-label fw-bold">{{ __('Selecione as modalidades') }}</h6>
                               <input type="checkbox" id="btn_marcar_desmarcar_todas_modalidades" onclick="marcar_desmarcar_todos_checkbox_por_classe(this, 'checkbox_modalidade')">
                               <label for="btn_marcar_desmarcar_todas_modalidades"><b>Selecionar todas</b></label>
                               @if (old('modalidades') != null)
@@ -478,7 +475,7 @@
               </form>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
             <button type="submit" class="btn btn-primary" form="cadastrarRevisorForm">{{ __('Finalizar') }}</button>
           </div>
         </div>

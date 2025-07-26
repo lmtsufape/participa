@@ -24,7 +24,7 @@
                             <div class="row justify-content-center">
                                 <div class="col-sm-12">
                                     <label for="titulo"
-                                        class="col-form-label">{{ __('Título') }}</label>
+                                        class="col-form-label fw-bold">{{ __('Título') }}</label>
                                     <input id="titulo"
                                         type="text"
                                         class="form-control @error('titulo') is-invalid @enderror"
@@ -42,7 +42,7 @@
                                 </div>
                                 <div class="col-sm-12">
                                     <label for="link"
-                                        class="col-form-label">{{ __('Link') }}</label>
+                                        class="col-form-label fw-bold">{{ __('Link') }}</label>
                                     <input id="link"
                                         type="text"
                                         class="form-control @error('link') is-invalid @enderror"
@@ -59,7 +59,7 @@
                                 </div>
                                 <div class="col-sm-12">
                                     <label for="arquivo"
-                                        class="col-form-label">{{ __('Arquivo') }}</label>
+                                        class="col-form-label fw-bold">{{ __('Arquivo') }}</label>
                                     <div class="custom-file">
                                         <input type="file"
                                             class="filestyle @error('arquivo') is-invalid @enderror"

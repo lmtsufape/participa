@@ -72,10 +72,6 @@ footer {
     width: 102%;
 }
 
-.navbar{
-    background-color: #114048ff;
-    color: white;
-}
 .navbar img{
     width:20px;
     margin-right: 10px;
@@ -708,10 +704,6 @@ body { top: 0px !important; }
     background-color: #298F7D;
 }
 
-.navbar-dark .navbar-nav .nav-link:hover {
-    color: rgb(255 255 255);
-}
-
 .card-visualizar-evento {
     position: relative;
     margin-left: 15%;
@@ -1080,4 +1072,10 @@ body { top: 0px !important; }
 
 .campos-extras label {
     font-weight: bold;
+}
+
+.required-field::after {
+            content: "*";
+            color: #D44100;
+            margin-left: 2px;
 }

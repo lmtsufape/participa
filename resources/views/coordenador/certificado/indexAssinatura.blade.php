@@ -57,7 +57,7 @@
                                 </a>
                             </div>
                             <div>
-                                <a data-toggle="modal" data-target="#modalStaticDeletarAssinatura_{{$assinatura->id}}" style="color: red; cursor: pointer;">
+                                <a data-bs-toggle="modal" data-bs-target="#modalStaticDeletarAssinatura_{{$assinatura->id}}" style="color: red; cursor: pointer;">
                                     <i class="far fa-trash-alt" style="color: black"></i>&nbsp;&nbsp;Deletar assinatura
                                 </a>
                             </div>

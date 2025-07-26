@@ -4,7 +4,7 @@
 
 <div class="container position-relative">
     	<h2>
-    		{{ Auth()->user()->name }} - Perfil: Administrador
+    		{{ Auth()->user()->name }} - {{ __('Perfil: Administrador') }}
     	</h2>
 
        	<div class="row justify-content-center d-flex align-items-center">

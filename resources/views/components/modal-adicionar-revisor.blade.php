@@ -5,7 +5,7 @@
         <div class="modal-content">
             <div class="modal-header" style="background-color: #114048ff; color: white;">
                 <h5 class="modal-title" id="exampleModalCenterTitle">Trabalho</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close" style="color: white;">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -26,24 +26,24 @@
                         </div>
                     @endif
                     <div class="col-sm-6">
-                        <h5>Título</h5>
+                        <h5>{{ __('Título') }}</h5>
                         <p id="tituloTrabalho">{{ $trabalho->titulo }}</p>
                     </div>
                     <div class="col-sm-6">
-                        <h5>Autores</h5>
+                        <h5>{{ __('Autores') }}</h5>
                         <table class="table">
                             <thead>
                                 <tr>
                                     <th scope="col">E-mail</th>
-                                    <th scope="col">Nome</th>
-                                    <th scope="col">Vinculação</th>
+                                    <th scope="col">{{ __('Nome') }}</th>
+                                    <th scope="col">{{ __('Vinculação') }}</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
                                     <td>{{ $trabalho->autor->email }}</td>
                                     <td>{{ $trabalho->autor->name }}</td>
-                                    <td>Autor</td>
+                                    <td>{{ __('Autor') }}</td>
                                 </tr>
                                 @foreach ($trabalho->coautors as $coautor)
                                     @if ($coautor->user->id != $trabalho->autorId)
@@ -51,7 +51,7 @@
                                             <td>{{ $coautor->user->email }}</td>
                                             <td>{{ $coautor->user->name }}</td>
                                             <td>
-                                                Coautor
+                                                {{ __('Coautor') }}
                                             </td>
                                         </tr>
                                     @endif
@@ -63,7 +63,7 @@
                 @if ($trabalho->resumo != '')
                     <div class="row justify-content-center">
                         <div class="col-sm-12">
-                            <h5>Resumo</h5>
+                            <h5>{{ ('Resumo') }}</h5>
                             <p id="resumoTrabalho">{{ $trabalho->resumo }}</p>
                         </div>
                     </div>
@@ -71,7 +71,7 @@
                 @if (count($trabalho->atribuicoes) > 0)
                     <div class="row justify-content-start">
                         <div class="col-sm-12">
-                            <h5>Avaliadores atribuídos ao trabalho</h5>
+                            <h5>{{ __('Avaliadores atribuídos ao trabalho') }}</h5>
                         </div>
                         @foreach ($trabalho->atribuicoes as $i => $revisor)
                             <div class="col-sm-4">
@@ -88,7 +88,7 @@
                                             <input type="hidden" name="trabalhoId" value="{{ $trabalho->id }}">
                                             <button type="submit" class="btn btn-primary button-prevent-multiple-submits"
                                                 id="removerRevisorTrabalho">
-                                                Remover Avaliador
+                                                {{ ('Remover Avaliador') }}
                                             </button>
                                         </form>
                                     </div>
@@ -99,7 +99,7 @@
                 @endif
                 <div class="row">
                     <div class="col-sm-12">
-                        <h5>Adicionar Avaliador</h5>
+                        <h5>{{ __('Adicionar Avaliador') }}</h5>
                     </div>
                 </div>
                 <form action="{{ route('distribuicaoManual') }}" method="post">
@@ -110,7 +110,7 @@
                         <div class="col-sm-9">
                             <div class="form-group">
                                 <select name="revisorId" class="form-control" id="selectRevisorTrabalho">
-                                    <option value="" disabled selected>-- E-mail do avaliador --</option>
+                                    <option value="" disabled selected>-- {{ __('E-mail do avaliador') }} --</option>
                                     @foreach ($evento->revisors()->where([['modalidadeId', $trabalho->modalidade->id], ['areaId', $trabalho->area->id]])->get() as $revisor)
                                         @if (
                                             !$trabalho->atribuicoes->contains($revisor) &&
@@ -134,7 +134,7 @@
                         <div class="col-sm-3">
                             <button type="submit" class="btn btn-primary button-prevent-multiple-submits"
                                 id="addRevisorTrabalho">
-                                <i class="spinner fa fa-spinner fa-spin" style="display: none;"></i>Adicionar Avaliador
+                                <i class="spinner fa fa-spinner fa-spin" style="display: none;"></i>{{ __('Adicionar Avaliador') }}
                             </button>
                         </div>
                     </div>

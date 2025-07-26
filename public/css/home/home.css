@@ -4,23 +4,13 @@
 }
 
 a{
-    
+
     color: inherit;
 }
 a:hover {
     text-decoration: underline;
     color: inherit;
     cursor: pointer;
-}
-
-.home-section {
-    width: 102vw;
-    height: max-content;
-    min-height: 100vh;
-    background-image: url('/img/fundo-vagalumes.png');
-    background-repeat: no-repeat;
-    background-size: cover;
-    margin: -7px 0 30px 0;
 }
 
 .box-carrousel-primary {

@@ -23,6 +23,7 @@ use App\Notifications\LembreteRevisorCompletarCadastro;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
@@ -101,7 +102,12 @@ class RevisorController extends Controller
 
         $usuario = User::where('email', $request->emailRevisor)->first();
         $evento = Evento::find($request->eventoId);
-        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
+        if (! Gate::any([
+            'isCoordenadorOrCoordenadorDaComissaoCientifica',
+            'isCoordenadorEixo'
+        ], $evento)) {
+            abort(403, 'Acesso negado');
+        }
 
         // dd(count($usuario->revisor()->where('evento_id', $evento->id)->get()));
         if ($usuario == null) {
@@ -439,8 +445,11 @@ class RevisorController extends Controller
 
     public function responde(Request $request)
     {
-        // dd($request->all());
+
         $data = $request->all();
+        if($data['prazo_correcao'] < now()){
+            return redirect()->back()->withErrors(['message' => 'Prazo de correção expirado.']);
+        }
         $evento = Evento::find($data['evento_id']);
         $data['revisor'] = Revisor::find($data['revisor_id']);
         $data['modalidade'] = Modalidade::find($data['modalidade_id']);

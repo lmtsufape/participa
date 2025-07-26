@@ -8,11 +8,13 @@ use App\Mail\EmailConviteRevisor;
 use App\Mail\EmailLembrete;
 use App\Models\Submissao\Area;
 use App\Models\Submissao\Evento;
+use App\Models\Submissao\Modalidade;
 use App\Models\Submissao\Trabalho;
 use App\Models\Users\Revisor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Gate;
 
 class AtribuicaoController extends Controller
 {
@@ -183,6 +185,17 @@ class AtribuicaoController extends Controller
         return redirect()->back()->with(['success' => 'Trabalhos da área '.$area->nome.' distribuidos!']);
     }
 
+    private function atualizarPrazoCorrecaoAtribuicao($trabalhoId)
+    {
+        $modalidadeid = Trabalho::find($trabalhoId)->modalidadeId;
+        $modalidade = Modalidade::find($modalidadeid);
+        $prazoCorrecao = now()->addDays(15);
+        if($prazoCorrecao > $modalidade->fimCorrecao) {
+            $prazoCorrecao = $modalidade->fimCorrecao;
+        }
+        return $prazoCorrecao;
+    }
+
     public function distribuicaoManual(Request $request)
     {
         $validatedData = $request->validate([
@@ -192,7 +205,12 @@ class AtribuicaoController extends Controller
         ]);
 
         $evento = Evento::find($request->eventoId);
-        $this->authorize('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento);
+        if (! Gate::any([
+            'isCoordenadorOrCoordenadorDaComissaoCientifica',
+            'isCoordenadorEixo'
+        ], $evento)) {
+            abort(403, 'Acesso negado');
+        }
 
         $trabalho = Trabalho::find($request->trabalhoId);
         $trabalho->avaliado = 'processando';
@@ -208,7 +226,8 @@ class AtribuicaoController extends Controller
             return redirect()->back()->with(['error' => $revisor->user->name.' não pode ser revisor deste trabalho.'])->withInput($validatedData);
         }
 
-        $revisor->trabalhosAtribuidos()->attach($trabalho->id, ['confirmacao' => false, 'parecer' => 'processando']);
+        $prazo_correcao = $this->atualizarPrazoCorrecaoAtribuicao($trabalho->id);
+        $revisor->trabalhosAtribuidos()->attach($trabalho->id, ['confirmacao' => false, 'parecer' => 'processando', 'prazo_correcao' => $prazo_correcao]);
         $revisor->correcoesEmAndamento = $revisor->correcoesEmAndamento + 1;
         $revisor->save();
 
