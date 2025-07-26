@@ -21,7 +21,8 @@ class CandidatosAvaliadoresExport implements FromCollection, WithHeadings, WithM
     {
         return CandidatoAvaliador::with(['user', 'area'])
             ->where('evento_id', $this->eventoId)
-            ->orderBy('user_id')      // garante que todos os registros de um mesmo usuário venham juntos
+            ->orderBy('area_id')      // agrupa por área antes de ordenar por usuário
+            ->orderBy('user_id')      // depois ordena por user_id dentro da área
             ->get();
     }
 
@@ -33,7 +34,7 @@ class CandidatosAvaliadoresExport implements FromCollection, WithHeadings, WithM
             'Status',
             'Link Lattes',
             'Resumo Lattes',
-            'Eixo de Preferência',
+            'Área de Preferência',
             'Já avaliou?',
             'Disponibilidade de Idiomas',
         ];
