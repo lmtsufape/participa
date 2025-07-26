@@ -4,7 +4,7 @@
             <div class="d-flex flex-wrap text-center p-2" style="gap: 10px;">
                 <div class="mb-md-0 d-flex flex-column flex-md-row align-items-center justify-content-start gap-3" style="flex: 1; text-align: left;">
                     <!--<a class="navbar-brand d-inline-block" href="https://aba-agroecologia.org.br/" target="_blank">
-                        <img src="{{ asset('/img/logoatualizadabranca.png') }}" alt="" style="width: 200px; max-width: 100%;">
+                        <img src="{{ asset('/img/logo-novo.png') }}" alt="" style="width: 200px; max-width: 100%;">
                     </a>-->
                     <a href="http://ufape.edu.br/" target="_blank" style="display: inline-block; line-height: 0;">
                             <img src="{{asset('img/logo_ufape.png')}}" style="width: 100px;">

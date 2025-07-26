@@ -41,7 +41,7 @@ class CandidatoAvaliadorController extends Controller
                     'evento_id' => $eventoId,
                     'link_lattes' => $link_lattes,
                     'resumo_lattes' => $resumo_lattes,
-                    'ja_avaliou_cba' => $jaAvaliou,
+                    'ja_avaliou' => $jaAvaliou,
                     'disponibilidade_idiomas' => $dispIdiomas,
                     'area_id' => $area_id,
                 ]);
@@ -121,7 +121,7 @@ class CandidatoAvaliadorController extends Controller
                     'lattes_link'   => $first->link_lattes,
                     'resumo_lattes' => $first->resumo_lattes,
                     'eixos'         => $group->pluck('area.nome')->toArray(),
-                    'avaliou_antes' => $first->ja_avaliou_cba ? 'sim' : 'nao',
+                    'avaliou_antes' => $first->ja_avaliou ? 'sim' : 'nao',
                     'idiomas'       => explode(',', $first->disponibilidade_idiomas),
                 ];
             })

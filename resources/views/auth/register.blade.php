@@ -429,7 +429,6 @@
     </form>
 </div>
 @include('auth.modal-termo-de-uso')
-@include('auth.modal-termo-de-cessao')
 
 
 @endsection

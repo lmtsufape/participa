@@ -11,7 +11,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Str;
-use App\Services\AssociadoService;
 
 class Evento extends Model
 {
@@ -173,30 +172,7 @@ class Evento extends Model
     }
     public function categoriasPermitidasParaUsuario()
     {
-        $svc = new AssociadoService();
-        $userCpf = auth()->user()->cpf ?? '';
-        $assoc = $svc->fetchByCpf($userCpf);
-
-        $baseCats = $this->categoriasQuePermitemInscricao()->get();
-
-        if ($assoc) {
-
-            if ($assoc && ($assoc['allowed'] ?? false)) {
-                $map = [
-                    'Profissional' => 'Associado - Profissional (professoras/es, pesquisadoras/es, consultoras/es etc)',
-                    'Estudante'    => 'Associado - Estudante (Ensino médio, IFs, EFAs, graduação, pós-graduação etc)',
-                    'Agricultor'   => 'Associado - Agricultoras/es, povos e comunidades tradicionais',
-                    'Quilombola'   => 'Associado - Agricultoras/es, povos e comunidades tradicionais',
-                    'Indígena'     => 'Associado - Agriculturas/es, povos e comunidades tradicionais',
-                    'Outras categorias de povos e comunidades tradicionais' => 'Associado - Agricultoras/es, povos e comunidades tradicionais',
-                ];
-                $tipo = $map[$assoc['category']] ?? null;
-                return $baseCats->filter(fn($cat) => $cat->nome == $tipo);
-            }
-        }
-
-        // não associado: remove categorias que começam com "Associado"
-        return $baseCats->reject(fn($cat) => Str::startsWith($cat->nome, 'Associado'));
+        return $this->categoriasQuePermitemInscricao()->get();
     }
 
     public function camposFormulario()
