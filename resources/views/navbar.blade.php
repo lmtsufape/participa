@@ -5,11 +5,11 @@
     <div class="container">
         @if($incompleto)
             <a class="navbar-brand" href="">
-                <img src="{{ asset('/img/logo-novo.png') }}" alt="" width="210vw">
+                <img src="{{ asset('/img/logo.png') }}" alt="" width="210vw">
             </a>
         @else
             <a class="navbar-brand" href="{{route('index')}}">
-                <img src="{{ asset('/img/logo-novo.png') }}" alt="" width="210vw">
+                <img src="{{ asset('/img/logo.png') }}" alt="" width="210vw">
             </a>
         @endif
 

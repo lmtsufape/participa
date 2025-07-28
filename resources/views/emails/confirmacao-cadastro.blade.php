@@ -43,7 +43,7 @@
                 <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;">
                     <tr>
                         <td bgcolor="#004d51" align="center" valign="top" style="padding: 40px 20px 20px 20px; border-radius: 4px 4px 0px 0px; color: #ffffff; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 48px; font-weight: 400; letter-spacing: 4px; line-height: 48px;">
-                            <img src="{{ $message->embed(public_path('img/logo-novo.png')) }}" width="125" height="120" style="display: block; border: 0px;" />
+                            <img src="{{ $message->embed(public_path('img/logo.png')) }}" width="125" height="120" style="display: block; border: 0px;" />
                             <h5 class="small" style="font-weight: 400; margin: 2;">Cadastro realizado!</h5>
                         </td>
                     </tr>
