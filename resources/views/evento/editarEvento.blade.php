@@ -721,6 +721,86 @@
         CKEDITOR.replaceAll('ckeditor-texto');
         $.fn.modal.Constructor.prototype._enforceFocus = function() {};
     </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // configurações para cada campo: nome do input, id do preview, dimensões máximas
+            const fields = [
+                { name: 'fotoEvento',      previewId: 'logo-preview',      loaderId: 'imagem-loader',          maxW: 1024, maxH: 425, message: 'O banner deve ter o tamanho de 1024×425px.' },
+                { name: 'icone',           previewId: 'icone-preview',     loaderId: 'imagem-loader-icone',   maxW: 600,  maxH: 600, message: 'O ícone deve ter o tamanho de 600×600px.' },
+                { name: 'fotoEvento_en',   previewId: 'logo-preview-en',   loaderId: 'imagem-loader-en',      maxW: 1024, maxH: 425, message: 'O banner (en) deve ter o tamanho de 1024×425px.' },
+                { name: 'icone_en',        previewId: 'icone-preview-en',  loaderId: 'imagem-loader-icone-en', maxW: 600,  maxH: 600, message: 'O ícone (en) deve ter o tamanho de 600×600px.' },
+                { name: 'fotoEvento_es',   previewId: 'logo-preview-es',   loaderId: 'imagem-loader-es',      maxW: 1024, maxH: 425, message: 'O banner (es) deve ter o tamanho de 1024×425px.' },
+                { name: 'icone_es',        previewId: 'icone-preview-es',  loaderId: 'imagem-loader-icone-es', maxW: 600,  maxH: 600, message: 'O ícone (es) deve ter o tamanho de 600×600px.' },
+            ];
+
+            fields.forEach(field => {
+                const input  = document.querySelector(`input[name="${field.name}"]`);
+                const preview= document.getElementById(field.previewId);
+                const loader = document.getElementById(field.loaderId);
+                if (!input || !preview || !loader) return;
+
+                // guardar src padrão para restaurar em caso de erro
+                const defaultSrc = preview.src;
+
+                // clicar no loader abre o filepicker
+                loader.addEventListener('click', () => input.click());
+
+                input.addEventListener('change', function() {
+                    clearError();  // limpa mensagens antigas
+                    const file = this.files[0];
+                    if (!file) return;
+
+                    // checa tipo
+                    if (!['image/jpeg','image/png','image/jpg'].includes(file.type)) {
+                        showError('Formato inválido. Só JPEG, JPG ou PNG.');
+                        reset();
+                        return;
+                    }
+
+                    // lê como DataURL
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const img = new Image();
+                        img.onload = function() {
+                            // checa dimensões
+                            if (img.width > field.maxW || img.height > field.maxH) {
+                                showError(field.message);
+                                reset();
+                            } else {
+                                preview.src = e.target.result;  // mostra o preview
+                            }
+                        };
+                        img.src = e.target.result;
+                    };
+                    reader.readAsDataURL(file);
+
+                    function reset() {
+                        input.value = '';
+                        preview.src = defaultSrc;
+                    }
+
+                    function showError(msg) {
+                        input.classList.add('is-invalid');
+                        const parent = input.closest('.col-md-6');
+                        let err = parent.querySelector('.js-error');
+                        if (!err) {
+                            err = document.createElement('div');
+                            err.className = 'invalid-feedback d-block js-error';
+                            parent.appendChild(err);
+                        }
+                        err.textContent = msg;
+                    }
+
+                    function clearError() {
+                        input.classList.remove('is-invalid');
+                        const parent = input.closest('.col-md-6');
+                        const err = parent.querySelector('.js-error');
+                        if (err) err.remove();
+                    }
+                });
+            });
+        });
+    </script>
 
     <script type="text/javascript">
         $(document).ready(function($) {
