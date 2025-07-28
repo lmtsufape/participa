@@ -18,6 +18,7 @@ use App\Http\Controllers\Inscricao\CategoriaController;
 use App\Http\Controllers\Inscricao\CheckoutController;
 use App\Http\Controllers\Inscricao\InscricaoController;
 use App\Http\Controllers\Inscricao\PromocaoController;
+use App\Http\Controllers\Inscricao\InscricaoPCDController;
 use App\Http\Controllers\Submissao\AreaController;
 use App\Http\Controllers\Submissao\CandidatoAvaliadorController;
 use App\Http\Controllers\Submissao\ArquivoInfoController;
@@ -162,6 +163,15 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
         // rotas do Coordenador de evento
         Route::get('/home/coord', [CoordEventoController::class, 'index'])->name('coord.index');
         Route::get('/home/coord/eventos', [CoordEventoController::class, 'listaEventos'])->name('coord.eventos');
+        // Rota para o usuário enviar a solicitação
+        Route::post('/evento/{evento}/inscricao-pcd', [InscricaoPCDController::class, 'store'])->name('inscricao.pcd.store');
+        // Rotas para o coordenador gerir as solicitações
+        Route::prefix('/coord/evento/')->name('coord.')->group(function () {
+            Route::get('inscricoes-pcd', [InscricaoPCDController::class, 'listar'])->name('inscricoes.pcd.listar');
+            Route::post('/inscricao-pcd/{solicitacao}/aprovar', [InscricaoPCDController::class, 'aprovar'])->name('inscricao.pcd.aprovar');
+            Route::post('/inscricao-pcd/{solicitacao}/rejeitar', [InscricaoPCDController::class, 'rejeitar'])->name('inscricao.pcd.rejeitar');
+            Route::get('/inscricao-pcd/{solicitacao}/download', [InscricaoPCDController::class, 'downloadComprovante'])->name('inscricao.pcd.download');
+        });
         //Coautor
         Route::get('coautor/index', [CoautorController::class, 'index'])->name('coautor.index');
         Route::get('coautor/listarTrabalhos', [CoautorController::class, 'listarTrabalhos'])->name('coautor.listarTrabalhos');

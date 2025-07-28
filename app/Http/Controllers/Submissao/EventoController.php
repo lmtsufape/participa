@@ -15,6 +15,7 @@ use App\Mail\EmailParaUsuarioNaoCadastrado;
 use App\Mail\EventoCriado;
 use App\Models\CandidatoAvaliador;
 use App\Models\Inscricao\Inscricao;
+use App\Models\Inscricao\InscricaoPCD;
 use App\Models\Submissao\Area;
 use App\Models\Submissao\AreaModalidade;
 use App\Models\Submissao\Atividade;
@@ -109,6 +110,10 @@ class EventoController extends Controller
             'candidatosAvaliadores as candidaturas_aprovadas_count' => fn($query) => $query->where('aprovado', true)->select(DB::raw('count(distinct user_id)')),
             'candidatosAvaliadores as candidaturas_pendentes_count' => fn($query) => $query->where('em_analise', true)->select(DB::raw('count(distinct user_id)')),
             'candidatosAvaliadores as candidaturas_rejeitadas_count' => fn($query) => $query->where('aprovado', false)->where('em_analise', false)->select(DB::raw('count(distinct user_id)')),
+            'solicitacoesPCD as solicitacoes_pcd_count' => fn($query) => $query->select(DB::raw('count(distinct user_id)')),
+            'solicitacoesPCD as solicitacoes_pcd_aprovadas_count' => fn($query) => $query->where('status', 'aprovado'),
+            'solicitacoesPCD as solicitacoes_pcd_pendentes_count' => fn($query) => $query->where('status', 'pendente'),
+            'solicitacoesPCD as solicitacoes_pcd_rejeitadas_count' => fn($query) => $query->where('status', 'rejeitado'),
         ]);
 
         $evento->total_arrecadado = $evento->inscricaos()->where('finalizada', true)->with('categoria')->get()->sum(fn($inscricao) => $inscricao->categoria->valor_total ?? 0);

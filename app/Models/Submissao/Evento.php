@@ -5,6 +5,7 @@ namespace App\Models\Submissao;
 use App\Models\Users\CoordEixoTematico;
 use App\Models\Users\User;
 use App\Models\CandidatoAvaliador;
+use App\Models\Inscricao\InscricaoPCD;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -208,8 +209,11 @@ class Evento extends Model
             }
         }
 
-        // não associado: remove categorias que começam com "Associado"
-        return $baseCats->reject(fn($cat) => Str::startsWith($cat->nome, 'Associado'));
+        // não associado: remove categorias que começam com "Associado" ou a categoria "Pessoa com Deficiência (PCD)"
+        return $baseCats->reject(fn($cat) => 
+            Str::startsWith($cat->nome, 'Associado') || 
+            strtolower(trim($cat->nome)) === 'pessoa com deficiência (pcd)'
+        );
     }
 
     public function camposFormulario()
@@ -302,5 +306,10 @@ class Evento extends Model
 
     public function candidatosAvaliadores(){
         return $this->hasMany(CandidatoAvaliador::class, 'evento_id');
+    }
+
+    public function solicitacoesPCD()
+    {
+        return $this->hasMany(\App\Models\Inscricao\InscricaoPCD::class, 'evento_id');
     }
 }

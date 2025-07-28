@@ -48,6 +48,38 @@
                     </div>
                 </div>
             </div>
+            <div class="row justify-content-center">
+              <div class="col-sm-12">
+                  <div class="card">
+                      <div class="card-body">
+                          <h5 class="card-title">Inscrições PCD'S</h5>
+                          <h6 class="card-subtitle mb-2 text-muted">Informações referente às inscrições de pcd's no evento</h6>
+                          <div class="card-text">
+                              <div class="table-responsive text-center">
+                                  <table class="table">
+                                      <thead>
+                                          <tr>
+                                              <th>Total de Inscrições PCD'S</th>
+                                              <th>Aprovados</th>
+                                              <th>Pendentes</th>
+                                              <th>Rejeitados</th>
+                                          </tr>
+                                      </thead>
+                                      <tbody>
+                                          <tr>
+                                              <td>{{ $evento->solicitacoes_pcd_count }}</td>
+                                              <td>{{ $evento->solicitacoes_pcd_aprovadas_count }}</td>
+                                              <td>{{ $evento->solicitacoes_pcd_pendentes_count }}</td>
+                                              <td>{{ $evento->solicitacoes_pcd_rejeitadas_count }}</td>
+                                          </tr>
+                                      </tbody>
+                                  </table>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+            </div>
             @endcan
             <div class="row justify-content-center">
               <div class="col-sm-12">
