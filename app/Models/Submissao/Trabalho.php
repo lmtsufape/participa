@@ -6,6 +6,7 @@ use App\Models\Users\Revisor;
 use App\Models\Users\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
 
 class Trabalho extends Model
 {
@@ -21,7 +22,7 @@ class Trabalho extends Model
         'titulo', 'autores', 'data', 'modalidadeId', 'areaId', 'autorId', 'eventoId', 'resumo', 'avaliado',
         'campoextra1simples', 'campoextra2simples', 'campoextra3simples', 'campoextra4simples',
         'campoextra5simples', 'campoextra1grande', 'campoextra2grande', 'campoextra3grande',
-        'campoextra4grande', 'campoextra5grande', 'status',
+        'campoextra4grande', 'campoextra5grande', 'status', 'aprovado',
     ];
 
     public function recurso()
@@ -71,12 +72,25 @@ class Trabalho extends Model
 
     public function atribuicoes()
     {
-        return $this->belongsToMany('App\Models\Users\Revisor', 'atribuicaos', 'trabalho_id', 'revisor_id')->withPivot('confirmacao', 'parecer')->withTimestamps();
+        return $this->belongsToMany('App\Models\Users\Revisor', 'atribuicaos', 'trabalho_id', 'revisor_id')->withPivot('confirmacao', 'parecer','prazo_correcao')->withTimestamps();
     }
 
     public function evento()
     {
         return $this->belongsTo('App\Models\Submissao\Evento', 'eventoId');
+    }
+
+    public function userRevisorTrabalho(): ?Revisor
+    {
+        $user = Auth::user();
+
+        if (!$user) {
+            return null;
+        }
+
+        return $this->atribuicoes()
+                    ->where('user_id', $user->id)
+                    ->first();
     }
 
     public function avaliacoes()

@@ -5,20 +5,20 @@
     <div id="divListarTrabalhos" style="display: block">
 
       <div class="row ">
-        <div class="col-sm-6">
+        <div class="col-sm-12">
             <h2 class="">Trabalhos da modalidade {{$modalidade->nome}}</h2>
         </div>
 
-        <div class="col-sm-3"></div>
+        {{-- <div class="col-sm-3"></div>
         <div class="col-sm-3">
           <form method="GET" action="{{route('distribuicao')}}">
             <input type="hidden" name="eventoId" value="{{$evento->id}}">
-            <button onclick="event.preventDefault();" data-toggle="modal" data-target="#modalDistribuicaoAutomatica" class="btn btn-primary" style="width:100%">
+            <button onclick="event.preventDefault();" data-bs-toggle="modal" data-bs-target="#modalDistribuicaoAutomatica" class="btn btn-primary" style="width:100%">
               {{ __('Distribuir trabalhos') }}
             </button>
           </form>
 
-        </div>
+        </div> --}}
       </div>
 
     {{-- Tabela Trabalhos --}}
@@ -43,7 +43,7 @@
           <div class="btn-group mb-2" role="group" aria-label="Button group with nested dropdown">
 
             <div class="btn-group" role="group">
-              <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 Opções
               </button>
               <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
@@ -78,6 +78,14 @@
                     <th scope="col">
                         <input type="checkbox" value="1" id="selectAllCheckboxes" onclick="marcarCheckboxes()">
                         <label for="selectAllCheckboxes" style="margin-bottom: 0px;">Selecionar</label>
+                    </th>
+                    <th scope="col">ID
+                      <a href="{{route('coord.listarTrabalhosModalidades',[ 'eventoId' => $evento->id, 'modalidadeId' => $modalidade->id, 'id', 'asc', 'rascunho'])}}">
+                        <i class="fas fa-arrow-alt-circle-up"></i>
+                      </a>
+                      <a href="{{route('coord.listarTrabalhosModalidades',[ 'eventoId' => $evento->id, 'modalidadeId' => $modalidade->id, 'id', 'desc', 'rascunho'])}}">
+                        <i class="fas fa-arrow-alt-circle-down"></i>
+                      </a>
                     </th>
                     <th scope="col">
                       Título
@@ -119,6 +127,7 @@
                     {{--<th scope="col">Data</th>--}}
                     <th scope="col" style="text-align:center">Atribuir</th>
                     <th scope="col" style="text-align:center">Arquivar</th>
+                    <th scope="col" style="text-align:center">Excluir</th>
                     <th scope="col" style="text-align:center">Editar</th>
                   </tr>
                 </thead>
@@ -128,18 +137,19 @@
                   @foreach($trabalhos as $trabalho)
 
                   <tr>
-                      <td style="text-align:center">
-                        <input type="checkbox" aria-label="Checkbox for following text input" name="id[]" value="{{$trabalho->id}}" class="trabalhos">
-                      </td>
+                    <td style="text-align:center">
+                      <input type="checkbox" aria-label="Checkbox for following text input" name="id[]" value="{{$trabalho->id}}" class="trabalhos">
+                    </td>
+                    <td>{{ $trabalho->id }}</td>
                       <td>
                         @if ($trabalho->arquivo && count($trabalho->arquivo) > 0)
                             <a href="{{route('downloadTrabalho', ['id' => $trabalho->id])}}">
-                                <span class="d-inline-block text-truncate" tabindex="0" data-toggle="tooltip" title="{{$trabalho->titulo}}" style="max-width: 150px;">
+                                <span class="d-inline-block text-truncate" tabindex="0" data-bs-toggle="tooltip" title="{{$trabalho->titulo}}" style="max-width: 150px;">
                                     {{$trabalho->titulo}}
                                 </span>
                             </a>
                         @else
-                            <span class="d-inline-block text-truncate" tabindex="0" data-toggle="tooltip" title="{{$trabalho->titulo}}" style="max-width: 150px;">
+                            <span class="d-inline-block text-truncate" tabindex="0" data-bs-toggle="tooltip" title="{{$trabalho->titulo}}" style="max-width: 150px;">
                                 {{$trabalho->titulo}}
                             </span>
                         @endif
@@ -149,7 +159,7 @@
                                 <td>
                                     @if($trabalho->midiasExtra()->where('midia_extra_id', $midia->id)->first() != null)
                                         <a href="{{route('downloadMidiaExtra', ['id' => $trabalho->id, 'id_midia' => $midia->id])}}" >
-                                            <span class="d-inline-block text-truncate" tabindex="0" data-toggle="tooltip" title="{{$midia->nome}}" style="max-width: 150px;">
+                                            <span class="d-inline-block text-truncate" tabindex="0" data-bs-toggle="tooltip" title="{{$midia->nome}}" style="max-width: 150px;">
                                                 <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">
                                             </span>
                                         </a>
@@ -158,7 +168,7 @@
                             @endforeach
                         @endif
                       <td>
-                        <span class="d-inline-block text-truncate" tabindex="0" data-toggle="tooltip" title="{{$trabalho->area->nome}}" style="max-width: 150px;">
+                        <span class="d-inline-block text-truncate" tabindex="0" data-bs-toggle="tooltip" title="{{$trabalho->area->nome}}" style="max-width: 150px;">
                           {{$trabalho->area->nome}}
                         </span>
 
@@ -176,7 +186,7 @@
 
                       </td>--}}
                       <td style="text-align:center">
-                        <a href="#" data-toggle="modal" data-target="#modalTrabalho{{$trabalho->id}}">
+                        <a href="#" data-bs-toggle="modal" data-bs-target="#modalTrabalho{{$trabalho->id}}">
                           <i class="fas fa-file-alt"></i>
                         </a>
 
@@ -191,6 +201,13 @@
                             <a href="{{ route('trabalho.status', [$trabalho->id, 'arquivado'] ) }}" class="btn btn-info" >
                                 <i class="fas fa-archive"></i>
                             </a>
+                        @endif
+                      </td>
+                      <td style="text-align:center">
+                        @if ($trabalho->status == 'arquivado')
+                          <a href="#" data-bs-toggle="modal" data-bs-target="#modalExcluirTrabalho_{{$trabalho->id}}">
+                              <i class="fas fa-trash"></i>
+                          </a>
                         @endif
                       </td>
                         <td style="text-align:center">
@@ -213,7 +230,7 @@
 </div>
 <!-- End Trabalhos -->
 <!-- Modal Trabalho -->
-<div class="modal fade" id="modalDistribuicaoAutomatica" tabindex="-1" role="dialog" aria-labelledby="modalDistribuicaoAutomatica" aria-hidden="true">
+{{-- <div class="modal fade" id="modalDistribuicaoAutomatica" tabindex="-1" role="dialog" aria-labelledby="modalDistribuicaoAutomatica" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header" style="background-color: #114048ff; color: white;">
@@ -259,7 +276,7 @@
                   @enderror
               </div>
 
-          </div>{{-- end row--}}
+          </div>
         </div>
       </form>
       <div class="modal-footer">
@@ -268,11 +285,12 @@
       </div>
     </div>
   </div>
-</div>
+</div> --}}
 
 @foreach ($trabalhos as $trabalho)
     <!-- Modal Trabalho -->
     <x-modal-adicionar-revisor :trabalho="$trabalho" :evento="$evento" />
+    <x-modal-excluir-trabalho :trabalho="$trabalho" />
 @endforeach
 @endsection
 

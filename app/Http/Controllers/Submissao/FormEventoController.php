@@ -71,7 +71,7 @@ class FormEventoController extends Controller
         }
         $formevento->save();
 
-        return redirect()->back()->with(['mensagem' => 'Etiquetas salvas com sucesso!']);
+        return redirect()->back()->with(['success' => 'Etiquetas salvas com sucesso!']);
     }
 
     public function exibirModulo(Request $request, $id)
@@ -96,14 +96,18 @@ class FormEventoController extends Controller
         if (isset($request->modsubmissao)) {
             $formevento->modsubmissao = $request->modsubmissao;
         }
+        if (isset($request->modavaliacao)) {
+            $formevento->modavaliacao = $request->modavaliacao;
+        }
         $formevento->modinscritonoevento = $request->boolean('modinscritonoevento');
+        $formevento->modinscritonaplataforma = $request->boolean('modinscritonaplataforma');
         if (isset($request->modarquivo)) {
             $evento->modarquivo = $request->modarquivo;
         }
         $evento->update();
         $formevento->save();
 
-        return redirect()->back()->with(['mensagem' => 'Módulos em uso salvos com sucesso!']);
+        return redirect()->back()->with(['success' => 'Módulos em uso salvos com sucesso!']);
     }
 
     public function indexModulo($id)

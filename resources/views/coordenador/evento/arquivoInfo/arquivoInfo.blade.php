@@ -10,7 +10,6 @@
         </div>
         <div class="row justify-content-center">
             <div class="col-md-12">
-                @include('componentes.mensagens')
                 <div class="card">
                     <div class="card-body">
                         <div class="row justify-content-between">
@@ -39,8 +38,8 @@
                                         <td>{{ $arquivo->nome }}</td>
                                         <td style="text-align:center">
                                             <a href="#"
-                                                data-toggle="modal"
-                                                data-target="#modalEditarArea{{ $arquivo->id }}"><img
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#modalEditarArea{{ $arquivo->id }}"><img
                                                     src="{{ asset('img/icons/edit-regular.svg') }}"
                                                     style="width:20px"></a>
                                         </td>
@@ -51,8 +50,8 @@
                                                 @csrf
                                                 @method('DELETE')
                                                 <a href="#"
-                                                    data-toggle="modal"
-                                                    data-target="#modalExcluirArea{{ $arquivo->id }}">
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#modalExcluirArea{{ $arquivo->id }}">
                                                     <img src="{{ asset('img/icons/trash-alt-regular.svg') }}"
                                                         class="icon-card"
                                                         alt="">

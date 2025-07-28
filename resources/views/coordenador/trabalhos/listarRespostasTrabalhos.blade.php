@@ -12,7 +12,7 @@
           <div class="btn-group mb-2" role="group" aria-label="Button group with nested dropdown">
 
             <div class="btn-group" role="group">
-              <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 Exportar avaliações .csv
               </button>
               <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
@@ -104,18 +104,18 @@
                   <td>
                     @if ($trabalho->arquivo && count($trabalho->arquivo) > 0)
                         <a href="{{route('downloadTrabalho', ['id' => $trabalho->id])}}">
-                            <span class="d-inline-block text-truncate" class="d-inline-block" tabindex="0" data-toggle="tooltip" title="{{$trabalho->titulo}}" style="max-width: 150px;">
+                            <span class="d-inline-block text-truncate" class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" title="{{$trabalho->titulo}}" style="max-width: 150px;">
                                 {{$trabalho->titulo}}
                             </span>
                         </a>
                     @else
-                        <span class="d-inline-block text-truncate" class="d-inline-block" tabindex="0" data-toggle="tooltip" title="{{$trabalho->titulo}}" style="max-width: 150px;">
+                        <span class="d-inline-block text-truncate" class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" title="{{$trabalho->titulo}}" style="max-width: 150px;">
                             {{$trabalho->titulo}}
                         </span>
                     @endif
                   </td>
                   {{--<td>
-                    <span class="d-inline-block text-truncate" class="d-inline-block" tabindex="0" data-toggle="tooltip" title="{{$trabalho->area->nome}}" style="max-width: 150px;">
+                    <span class="d-inline-block text-truncate" class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" title="{{$trabalho->area->nome}}" style="max-width: 150px;">
                       {{$trabalho->area->nome}}
                     </span>
 

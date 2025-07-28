@@ -16,6 +16,7 @@ use App\Models\Submissao\Endereco;
 use App\Models\Submissao\Evento;
 use App\Notifications\InscricaoAprovada;
 use App\Notifications\InscricaoEvento;
+use App\Notifications\PreInscricao;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -324,11 +325,16 @@ class InscricaoController extends Controller
     {
         auth()->user() != null;
         $evento = Evento::find($request->evento_id);
-        if (Inscricao::where('user_id', auth()->user()->id)->where('evento_id', $evento->id)->exists()) {
+        //"pre inscrição" feita na submissão de trabalhos por um user não inscrito, sem categoria e pagamento
+        $preInscricao = false;
+        if (Inscricao::where('user_id', auth()->user()->id)->where('evento_id', $evento->id)->where('finalizada', true)->exists()) {
             return redirect()->action([EventoController::class, 'show'], ['id' => $request->evento_id])->with('message', 'Inscrição já realizada.');
         }
         if ($evento->eventoInscricoesEncerradas()) {
             return redirect()->action([EventoController::class, 'show'], ['id' => $request->evento_id])->with('message', 'Inscrições encerradas.');
+        }
+        if(Inscricao::where('user_id', auth()->user()->id)->where('evento_id', $evento->id)->where('finalizada', false)->exists()){
+            $preInscricao = true;
         }
         $categoria = CategoriaParticipante::find($request->categoria);
         $possuiFormulario = $evento->possuiFormularioDeInscricao();
@@ -350,16 +356,28 @@ class InscricaoController extends Controller
                     ->with('abrirmodalinscricao', true);
             }
         }
-        $inscricao = new Inscricao();
-        $inscricao->categoria_participante_id = $request->categoria;
-        $inscricao->user_id = auth()->user()->id;
-        $inscricao->evento_id = $request->evento_id;
-        $inscricao->finalizada = false;
-        $inscricao->save();
+        if ($preInscricao){
+            $inscricao = Inscricao::where('user_id', auth()->user()->id)
+                ->where('evento_id', $evento->id)
+                ->first();
+            if ($inscricao != null) {
+                $inscricao->categoria_participante_id = $request->categoria;
+                $inscricao->save();
+            }
+        } else {
+            $inscricao = new Inscricao();
+            $inscricao->categoria_participante_id = $request->categoria;
+            $inscricao->user_id = auth()->user()->id;
+            $inscricao->evento_id = $request->evento_id;
+            $inscricao->finalizada = false;
+            $inscricao->save();
+        }
 
         if ($possuiFormulario) {
             $this->salvarCamposExtras($inscricao, $request, $categoria);
         }
+
+        auth()->user()->notify(new PreInscricao($evento, auth()->user()));
 
         if ($categoria != null && $categoria->valor_total != 0) {
             return redirect()->action([CheckoutController::class, 'telaPagamento'], ['evento' => $request->evento_id]);
@@ -549,7 +567,9 @@ class InscricaoController extends Controller
 
     public function inscreverParticipante(Request $request)
     {
-        $this->authorize('isAdmin', Administrador::class);
+        $evento = Evento::find($request->evento_id);
+
+        $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
 
         if ($request->identificador == 'email') {
             $participante = User::where('email', $request->email)->first();
@@ -562,9 +582,6 @@ class InscricaoController extends Controller
         {
             return redirect(route('inscricao.inscritos', ['evento' => $request->evento_id]))->with(['error_message' => 'Participante informado não possui cadastrado no sistema!']);
         }
-
-
-        $evento = Evento::find($request->evento_id);
 
         if (Inscricao::where('user_id', $participante->id)->where('evento_id', $evento->id)->exists())
         {
@@ -619,5 +636,30 @@ class InscricaoController extends Controller
 
         return redirect(route('inscricao.inscritos', ['evento' => $request->evento_id]))->with(['message' => 'Participante inscrito com sucesso!']);
 
+    }
+
+    public function alterarCategoria(Request $request, Inscricao $inscricao)
+    {
+        if (auth()->user()->id !== $inscricao->user_id) {
+            abort(403, 'Acesso não autorizado.');
+        }
+
+        if ($inscricao->finalizada) {
+            return redirect()->back()->with(['message' => 'Não é possível alterar a categoria de uma inscrição já finalizada.', 'class' => 'danger']);
+        }
+
+        $validator = Validator::make($request->all(), [
+            'categoria' => 'required|exists:categoria_participantes,id',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        $inscricao->categoria_participante_id = $request->categoria;
+        $inscricao->save();
+
+        return redirect()->action([CheckoutController::class, 'telaPagamento'], ['evento' => $inscricao->evento_id])
+                       ->with('message', 'Categoria alterada com sucesso! Prossiga com o pagamento.');
     }
 }

@@ -10,6 +10,7 @@ use App\Models\Submissao\FormEvento;
 use App\Models\Submissao\FormSubmTraba;
 use App\Models\Submissao\Trabalho;
 use App\Models\Users\CoordComissaoCientifica;
+use App\Models\Users\CoordEixoTematico;
 use App\Models\Users\Revisor;
 use App\Models\Users\User;
 use Illuminate\Http\Request;
@@ -118,7 +119,7 @@ class ComissaoController extends Controller
         $revisores = $evento->revisores;
         $users = $evento->usuariosDaComissao;
 
-        return redirect()->back()->with(['mensagem' => 'Membro da comissão cadastrado com sucesso!']);
+        return redirect()->back()->with(['success' => 'Membro da comissão cadastrado com sucesso!']);
     }
 
     public function coordenadorComissao(Request $request)
@@ -141,7 +142,52 @@ class ComissaoController extends Controller
         $removidos = array_diff($idsCoordenadores, $validationData['coordComissaoId']);
         // CoordComissaoCientifica::whereIn('user_id', $removidos)->where('eventos_id', $evento->id)->delete();
 
-        return redirect()->back()->with(['mensagem' => 'Coordenador da comissão científica salvo com sucesso!']);
+        return redirect()->back()->with(['success' => 'Coordenador da comissão científica salvo com sucesso!']);
+    }
+
+    public function coordenadorEixo(Request $request)
+    {
+        // $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
+        $evento = Evento::find($request->evento_id);
+
+        $usuariosDaComissao = $evento->usuariosDaComissao()->pluck('users.id')->toArray();
+
+        foreach ($usuariosDaComissao as $userId) {
+            $coordData = $request->coordenadores[$userId] ?? null;
+
+            if ($coordData && !empty($coordData['ativo'])) {
+                $areasSelecionadas = $coordData['areas'] ?? [];
+
+                CoordEixoTematico::where('evento_id', $request->evento_id)
+                    ->where('user_id', $userId)
+                    ->whereNotIn('area_id', $areasSelecionadas)
+                    ->delete();
+
+                foreach ($areasSelecionadas as $areaId) {
+                    CoordEixoTematico::firstOrCreate([
+                        'user_id' => $userId,
+                        'evento_id' => $request->evento_id,
+                        'area_id' => $areaId,
+                    ]);
+                }
+            } else {
+                CoordEixoTematico::where('evento_id', $request->evento_id)
+                    ->where('user_id', $userId)
+                    ->delete();
+            }
+        }
+
+
+
+        return redirect()->back()->with(['success' => 'Coordenador da comissão científica salvo com sucesso!']);
+    }
+
+    public function indexCoordEixo(){
+
+        $eventos = auth()->user()->eventosComoCoordEixo;
+
+        return view('comissao.coordEixo.index')->with(['eventos' => $eventos]);
+
     }
 
     public function show($id)
@@ -184,6 +230,6 @@ class ComissaoController extends Controller
         CoordComissaoCientifica::where([['user_id', '=', $id], ['eventos_id', '=', $evento->id]])->delete();
         $evento->usuariosDaComissao()->detach($id);
 
-        return redirect()->back()->with(['mensagem' => 'Membro da comissão removido com sucesso!']);
+        return redirect()->back()->with(['success' => 'Membro da comissão removido com sucesso!']);
     }
 }

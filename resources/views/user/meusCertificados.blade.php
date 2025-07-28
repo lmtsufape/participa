@@ -2,13 +2,12 @@
 
 @section('content')
 
-    @include('componentes.mensagens')
     <div class="container  position-relative">
         <div class="row justify-content-center titulo-detalhes">
             <div class="col-sm-12">
                 <div class="row">
                     <div class="col-sm-12">
-                        <h1 class="">Certificados</h1>
+                        <h1 class="">{{ __('Certificados') }}</h1>
                     </div>
                 </div>
             </div>

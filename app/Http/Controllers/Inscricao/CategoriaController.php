@@ -86,7 +86,7 @@ class CategoriaController extends Controller
             }
         }
 
-        return redirect()->back()->with(['mensagem' => 'Categoria criada com sucesso!']);
+        return redirect()->back()->with(['success' => 'Categoria criada com sucesso!']);
     }
 
     /**
@@ -172,7 +172,7 @@ class CategoriaController extends Controller
             }
         }
 
-        return redirect()->back()->with(['mensagem' => 'Categoria de participante atualizada com sucesso!']);
+        return redirect()->back()->with(['success' => 'Categoria de participante atualizada com sucesso!']);
     }
 
     /**
@@ -207,15 +207,15 @@ class CategoriaController extends Controller
         $categoria->valores()->delete();
         $categoria->delete();
 
-        return redirect()->back()->with(['mensagem' => 'Categoria excluida com sucesso!']);
+        return redirect()->back()->with(['success' => 'Categoria excluida com sucesso!']);
     }
 
     public function destroyLink($id)
     {
-        
+
         $linkParaApagar = LinksPagamento::find($id);
         $linkParaApagar->delete();
-        return redirect()->back()->with(['mensagem' => 'Link de pagamento excluido com sucesso!']);
+        return redirect()->back()->with(['success' => 'Link de pagamento excluido com sucesso!']);
     }
 
     public function valorAjax(Request $request)

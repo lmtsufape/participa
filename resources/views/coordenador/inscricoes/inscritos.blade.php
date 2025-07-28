@@ -21,25 +21,20 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-body">
-                    <div class="row justify-content-between">
-                        <div class="col-md-6">
-                            <h5 class="card-title">Inscrições</h5>
-                            <h6 class="card-subtitle mb-2 text-muted">Inscritos no evento {{$evento->nome}}</h6>
-                            <h6 class="card-subtitle mb-2 text-muted">Obs.: ao exportar o arquivo csv, usar o
-                                delimitador , (vírgula) para abrir o arquivo</h6>
-                        </div>
-                        <div class="col-md-6 d-flex justify-content-sm-start justify-content-md-end align-items-center">
-                            <a href="{{route('evento.downloadInscritos', $evento)}}" class="btn btn-primary float-md-right">Exportar .csv</a>
-                        </div>
+                  <div class="row justify-content-between">
+                    <div class="col-md-6">
+                      <h5 class="card-title">Inscrições</h5>
+                      <h6 class="card-subtitle mb-2 text-muted">Inscritos no evento {{$evento->nome}}</h6>
+                      <!--<h6 class="card-subtitle mb-2 text-muted">Obs.: ao exportar o arquivo csv, usar o delimitador , (vírgula) para abrir o arquivo</h6>-->
                     </div>
-
-                    <div class="row justify-content-between">
-                        <div class="col-md-6"></div>
-                        <div class="col-md-6 d-flex justify-content-sm-start justify-content-md-end align-items-center">
-                            <button type="button" class="button-prevent-multiple-submits btn btn-outline-success my-2 my-sm-0 ml-1" data-toggle="modal" data-target="#modal-inscrever-participante">
-                                Inscrever participante
-                            </button>
-                        </div>
+                    <div class="col-md-6 d-flex gap-2 flex-column align-items-end">
+                        <a href="{{route('evento.exportarInscritosXLSX', $evento)}}" class="btn btn-success">Exportar .xlsx</a>
+                        {{-- <a href="{{route('evento.downloadInscritos', $evento)}}" class="btn btn-primary">Exportar .csv</a>--}}
+{{--                        <a href="{{route('evento.downloadInscritosCertifica', $evento)}}" class="btn btn-primary float-md-right mt-2">Exportar XLSX para o Certifica</a>--}}
+                        <button type="button" class="button-prevent-multiple-submits btn btn-outline-success my-2 ml-1" data-bs-toggle="modal" data-bs-target="#modal-inscrever-participante">
+                            Inscrever participante
+                        </button>
+                        </button>
                     </div>
 
                     @include('coordenador.inscricoes.inscrever_participante')
@@ -54,8 +49,9 @@
                                 @endif
                                 <th>Nome</th>
                                 <th>Email</th>
-                                <th>Cidade</th>
-                                <th>Estado</th>
+                                <th>Categoria</th>
+                                <th scope="col">Valor</th>
+                                <th>Status</th>
                                 <th>Aprovada</th>
                                 <th></th>
                             </th>
@@ -63,16 +59,23 @@
                         @foreach ($inscricoes as $inscricao)
                             <tbody>
                                 <th>
-                                    <td data-toggle="modal" data-target="#modal-listar-campos-formulario-{{$inscricao->id}}">{{$loop->iteration}}</td>
+                                    <td data-bs-toggle="modal" data-bs-target="#modal-listar-campos-formulario-{{$inscricao->id}}">{{$loop->iteration}}</td>
                                     @if ($evento->subeventos->count() > 0)
-                                        <td data-toggle="modal" data-target="#modal-listar-campos-formulario-{{$inscricao->id}}">{{$inscricao->evento->nome}}</td>
+                                        <td data-bs-toggle="modal" data-bs-target="#modal-listar-campos-formulario-{{$inscricao->id}}">{{$inscricao->evento->nome}}</td>
                                     @endif
-                                    <td data-toggle="modal" data-target="#modal-listar-campos-formulario-{{$inscricao->id}}">{{$inscricao->user->name}}</td>
-                                    <td data-toggle="modal" data-target="#modal-listar-campos-formulario-{{$inscricao->id}}">{{$inscricao->user->email}}</td>
-                                    <td data-toggle="modal" data-target="#modal-listar-campos-formulario-{{$inscricao->id}}">{{$inscricao->user->endereco ? $inscricao->user->endereco->cidade : 'Endereço não cadastrado'}}</td>
-                                    <td data-toggle="modal" data-target="#modal-listar-campos-formulario-{{$inscricao->id}}">{{$inscricao->user->endereco ? $inscricao->user->endereco->uf : 'Endereço não cadastrado'}}</td>
-                                    <td data-toggle="modal" data-target="#modal-listar-campos-formulario-{{$inscricao->id}}">{{$inscricao->finalizada ? 'Sim' : 'Não'}}</td>
-                                    <td data-toggle="modal" data-target="#modal-listar-campos-formulario-{{$inscricao->id}}"><img src="{{asset('img/icons/eye-regular.svg')}}" alt="" style="width: 14px; fill: #000 !important;"></td>
+                                    <td data-bs-toggle="modal" data-bs-target="#modal-listar-campos-formulario-{{$inscricao->id}}">{{$inscricao->user->name}}</td>
+                                    <td data-bs-toggle="modal" data-bs-target="#modal-listar-campos-formulario-{{$inscricao->id}}">{{$inscricao->user->email}}</td>
+                                    <td data-bs-toggle="modal" data-bs-target="#modal-listar-campos-formulario-{{$inscricao->id}}">{{$inscricao->categoria?->nome ?? 'N/A'}}</td>
+                                    <td data-bs-toggle="modal" data-bs-target="#modal-listar-campos-formulario-{{$inscricao->id}}">R$ {{ $inscricao->categoria ? number_format($inscricao->categoria->valor_total, 2, ',', '.') : 'N/A' }}</td>
+                                    <td data-bs-toggle="modal" data-bs-target="#modal-listar-campos-formulario-{{$inscricao->id}}">
+                                        @if($inscricao->finalizada == true)
+                                            Inscrito
+                                        @else
+                                            Pré-inscrito
+                                        @endif
+                                    </td>
+                                    <td data-bs-toggle="modal" data-bs-target="#modal-listar-campos-formulario-{{$inscricao->id}}">{{$inscricao->finalizada ? 'Sim' : 'Não'}}</td>
+                                    <td data-bs-toggle="modal" data-bs-target="#modal-listar-campos-formulario-{{$inscricao->id}}"><img src="{{asset('img/icons/eye-regular.svg')}}" alt="" style="width: 14px; fill: #000 !important;"></td>
                                 </th>
                             </tbody>
                         @endforeach
@@ -88,17 +91,19 @@
 <div class="modal fade" id="modal-listar-campos-formulario-{{$inscricao->id}}" tabindex="-1" role="dialog" aria-labelledby="#label" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
-            <div class="modal-header" style="background-color: #114048ff; color: white;">
+            <div class="modal-header" style="background-color: #114048ff; color: white; display: flex; justify-content: space-between; align-items: center;">
                 <h5 class="modal-title">Dados do inscrito</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 @if ($inscricao->categoria)
                 <div class="form-group">
                     <label class="text-center">Categoria</label>
-                    <input type="text" class="form-control" value="{{$inscricao->categoria->nome}}" disabled>
+                    <input type="text" class="form-control" value="{{$inscricao->categoria?->nome ?? '–' }}" disabled>
+                    <div class="col-md-4">
+                        <label class="text-center">Valor da Inscrição</label>
+                        <input type="text" class="form-control" value="R$ {{ number_format($inscricao->categoria->valor_total, 2, ',', '.') }}" disabled>
+                    </div>
                 </div>
                 @endif
                 @forelse ($inscricao->camposPreenchidos as $campo)
@@ -177,6 +182,17 @@
                         <label for="">Nome completo</label>
                         <input type="text" class="form-control" value="{{ $inscricao->user->name }}" disabled>
                     </div>
+                    <div class="form-group col-md-6">
+                        <label for="">Nome social</label>
+                        <input type="text" class="form-control" value="{{ $inscricao->user->nomeSocial ?? 'Não informado' }}" disabled>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="">Data de nascimento</label>
+                        <input type="text" class="form-control"
+                               value="{{ $inscricao->user->dataNascimento ? \Carbon\Carbon::parse($inscricao->user->dataNascimento)->format('d/m/Y') : 'não informado' }}"
+                               disabled>
+                    </div>
+
                     <div class="form-group col-md-6">
                         <label for="">
                             @if ($inscricao->user->cpf) CPF
@@ -277,11 +293,11 @@
                     @if ($evento->formEvento->modvalidarinscricao)
                     <form action="{{route('coord.inscricoes.aprovar', ['inscricao' => $inscricao])}}" method="post">
                         @csrf
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
                         <button type="submit" class="btn btn-primary">Aprovar inscrição</button>
                     </form>
                     @else
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
                     @endif
                 </div>
             </div>

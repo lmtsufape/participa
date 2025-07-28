@@ -2,12 +2,15 @@
 
 namespace App\Models\Submissao;
 
+use App\Models\Users\CoordEixoTematico;
 use App\Models\Users\User;
+use App\Models\CandidatoAvaliador;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Str;
 
 class Evento extends Model
 {
@@ -20,7 +23,9 @@ class Evento extends Model
         'nome', 'descricao', 'tipo', 'dataInicio', 'dataFim', 'fotoEvento', 'icone',
         'enderecoId', 'coordenadorId', 'numMaxTrabalhos', 'numMaxCoautores', 'hasResumo',
         'evento_pai_id', 'email', 'data_limite_inscricao',
-        'nome_en', 'descricao_en','fotoEvento_en', 'icone_en', 'is_multilingual',
+        'nome_en', 'descricao_en','fotoEvento_en', 'icone_en',
+        'nome_es', 'descricao_es','fotoEvento_es', 'icone_es',
+        'is_multilingual', 'instagram', 'contato_suporte'
     ];
 
     public function endereco()
@@ -158,12 +163,16 @@ class Evento extends Model
     public function categoriasQuePermitemInscricao()
     {
         return $this->hasMany('App\Models\Inscricao\CategoriaParticipante', 'evento_id')
-            ->orderBy('created_at')
-            ->where('permite_inscricao', true)
-            ->where(function ($query) {
-                $query->whereNull('limite_inscricao')
-                    ->orWhere('limite_inscricao', '>', now());
-            });
+                    ->where('permite_inscricao', true)
+                    ->where(function ($q) {
+                        $q->whereNull('limite_inscricao')
+                          ->orWhere('limite_inscricao', '>', now());
+                    })
+                    ->orderBy('created_at');
+    }
+    public function categoriasPermitidasParaUsuario()
+    {
+        return $this->categoriasQuePermitemInscricao()->get();
     }
 
     public function camposFormulario()
@@ -248,5 +257,13 @@ class Evento extends Model
         }
 
         return $encerrada;
+    }
+
+    public function coordEixosTematicos(){
+        return $this->hasMany(CoordEixoTematico::class);
+    }
+
+    public function candidatosAvaliadores(){
+        return $this->hasMany(CandidatoAvaliador::class, 'evento_id');
     }
 }

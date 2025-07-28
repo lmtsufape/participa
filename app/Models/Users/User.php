@@ -2,21 +2,26 @@
 
 namespace App\Models\Users;
 
+use App\Models\CandidatoAvaliador;
+use App\Models\Submissao\Area;
 use App\Models\Submissao\Atividade;
 use App\Models\Submissao\Certificado;
+use App\Models\Submissao\Evento;
 use App\Notifications\recuperacaoSenha;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-class User extends Authenticatable implements MustVerifyEmail
+class User extends Authenticatable
 {
     use Notifiable;
     use HasFactory;
+    use SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -26,7 +31,7 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $fillable = [
         'name', 'email', 'password', 'cpf','cnpj', 'passaporte', 'instituicao', 'celular',
         'especProfissional', 'enderecoId',
-        'usuarioTemp', 'user_id',
+        'usuarioTemp', 'user_id', 'dataNascimento', 'nomeSocial'
     ];
 
     /**
@@ -45,7 +50,69 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'deleted_at' => 'datetime',
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function (User $user) {
+            if ($user->isForceDeleting()) {
+                $user->inscricaos()->forceDelete();
+                $user->candidatosAvaliadores()->forceDelete();
+            } else {
+                $user->inscricaos()->delete();
+                $user->candidatosAvaliadores()->delete();
+            }
+        });
+
+        static::restoring(function (User $user) {
+            $user->inscricaos()->withTrashed()->restore();
+            $user->candidatosAvaliadores()->withTrashed()->restore();
+        });
+    }
+
+    public function comissaoEvento()
+    {
+        return $this->hasMany(ComissaoEvento::class);
+    }
+
+    public function coautor()
+    {
+        return $this->hasOne(Coautor::class, 'autorId');
+    }
+
+    public function revisor()
+    {
+        return $this->hasMany(Revisor::class);
+    }
+
+    public function participante()
+    {
+        return $this->hasOne(Participante::class);
+    }
+
+    public function administradors()
+    {
+        return $this->hasOne(Administrador::class);
+    }
+
+
+    public function coordComissaoCientifica()
+    {
+        return $this->belongsToMany('App\Models\Submissao\Evento', 'coord_comissao_cientificas', 'user_id', 'eventos_id')->using('App\Models\Users\CoordComissaoCientifica');
+    }
+
+    public function coordComissaoOrganizadora()
+    {
+        return $this->belongsToMany('App\Models\Submissao\Evento', 'coord_comissao_organizadoras', 'user_id', 'eventos_id')->using('App\Models\Users\CoordComissaoOrganizadora');
+    }
+
+    public function candidatosAvaliadores()
+    {
+        return $this->hasMany(CandidatoAvaliador::class, 'user_id');
+    }
 
     public function trabalho()
     {
@@ -81,20 +148,7 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->belongsTo('App\Models\Submissao\Endereco', 'enderecoId');
     }
 
-    public function comissaoEvento()
-    {
-        return $this->hasMany('App\Models\Users\ComissaoEvento');
-    }
 
-    public function coautor()
-    {
-        return $this->hasOne('App\Models\Users\Coautor', 'autorId');
-    }
-
-    public function revisor()
-    {
-        return $this->hasMany('App\Models\Users\Revisor');
-    }
 
     public function revisorWithCounts()
     {
@@ -108,25 +162,7 @@ class User extends Authenticatable implements MustVerifyEmail
         ]);
     }
 
-    public function participante()
-    {
-        return $this->hasOne('App\Models\Users\Participante');
-    }
 
-    public function administradors()
-    {
-        return $this->hasOne('App\Models\Users\Administrador');
-    }
-
-    public function coordComissaoCientifica()
-    {
-        return $this->belongsToMany('App\Models\Submissao\Evento', 'coord_comissao_cientificas', 'user_id', 'eventos_id')->using('App\Models\Users\CoordComissaoCientifica');
-    }
-
-    public function coordComissaoOrganizadora()
-    {
-        return $this->belongsToMany('App\Models\Submissao\Evento', 'coord_comissao_organizadoras', 'user_id', 'eventos_id')->using('App\Models\Users\CoordComissaoOrganizadora');
-    }
 
     public function membroComissaoEvento()
     {
@@ -181,5 +217,33 @@ class User extends Authenticatable implements MustVerifyEmail
     public function atividades()
     {
         return $this->belongsToMany(Atividade::class, 'atividades_user', 'user_id', 'atividade_id');
+    }
+
+    public function coordEixosTematicos(){
+        return $this->hasMany(CoordEixoTematico::class);
+    }
+
+    public function eventosComoCoordEixo()
+    {
+        return $this->hasManyThrough(
+            Evento::class,           // Modelo final (evento)
+            CoordEixoTematico::class,// Modelo intermediário (coord_eixo_tematico)
+            'user_id',               // Chave estrangeira no intermediário que aponta para users.id
+            'id',                    // Chave primária do evento (evento.id) - evento_id está no intermediário
+            'id',                    // Chave primária local no user (users.id)
+            'evento_id'              // Chave no intermediário que aponta para eventos.id
+        );
+    }
+
+    public function areasComoCoordEixoNoEvento($evento_id)
+    {
+        return $this->hasManyThrough(
+            Area::class,
+            CoordEixoTematico::class,
+            'user_id',
+            'id',
+            'id',
+            'area_id'
+        )->where('coordenadores_eixos_tematicos.evento_id', $evento_id);
     }
 }

@@ -2,7 +2,6 @@
 @section('menu')
     <div id="divListarComissoes"
         style="display: block">
-        @include('componentes.mensagens')
         <div class="row">
             <div class="col-sm-12">
                 <h1 class="titulo-detalhes">Listagem dos membros da comissão {{ $comissao->nome }}</h1>
@@ -23,21 +22,21 @@
                                     <div class="col-sm-4"
                                         style="text-align: right;">
                                         <button class="btn btn-primary"
-                                            data-toggle="modal"
-                                            data-target="#modalCadastrarMembro">Cadastrar membro</button>
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#modalCadastrarMembro">Cadastrar membro</button>
                                     </div>
                                     <div class="col-sm-4"
                                         style="text-align: right;">
                                         <button class="btn btn-secondary"
-                                            data-toggle="modal"
-                                            data-target="#modalEditarComissao">Editar comissão</button>
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#modalEditarComissao">Editar comissão</button>
                                     </div>
                                     @can('isCoordenadorOrCoordenadorDasComissoes', $evento)
                                         <div class="col-sm-4"
                                             style="text-align: right;">
                                             <button class="btn btn-danger"
-                                                data-toggle="modal"
-                                                data-target="#modalExcluirComissao">Deletar comissão</button>
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#modalExcluirComissao">Deletar comissão</button>
                                         </div>
                                     @endcan
                                 </div>
@@ -57,12 +56,12 @@
                             <tbody>
                                 @foreach ($comissao->membros as $membro)
                                     <tr>
-                                        <td data-toggle="modal"
-                                            data-target="#modalEditarMembro{{ $membro->id }}">{{ $membro->name }}</td>
-                                        <td data-toggle="modal"
-                                            data-target="#modalEditarMembro{{ $membro->id }}">{{ $membro->email }}</td>
-                                        <td data-toggle="modal"
-                                        data-target="#modalEditarMembro{{ $membro->id }}">@if($membro->pivot->isCoordenador) Coordenador @endif</td>
+                                        <td data-bs-toggle="modal"
+                                            data-bs-target="#modalEditarMembro{{ $membro->id }}">{{ $membro->name }}</td>
+                                        <td data-bs-toggle="modal"
+                                            data-bs-target="#modalEditarMembro{{ $membro->id }}">{{ $membro->email }}</td>
+                                        <td data-bs-toggle="modal"
+                                        data-bs-target="#modalEditarMembro{{ $membro->id }}">@if($membro->pivot->isCoordenador) Coordenador @endif</td>
                                         <td style="text-align:center">
                                             <form id="removerMembro{{ $membro->id }}"
                                                 action="{{ route('coord.tipocomissao.removermembro', ['evento' => $evento, 'comissao' => $comissao]) }}"
@@ -71,8 +70,8 @@
                                                 @method('DELETE')
                                                 <input type="hidden" name="email" value="{{$membro->email}}">
                                                 <a href="#"
-                                                    data-toggle="modal"
-                                                    data-target="#modalRemoverMembro{{ $membro->id }}">
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#modalRemoverMembro{{ $membro->id }}">
                                                     <img src="{{ asset('img/icons/user-times-solid.svg') }}"
                                                         class="icon-card"
                                                         style="width:25px">
