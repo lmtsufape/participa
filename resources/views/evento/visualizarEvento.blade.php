@@ -100,12 +100,22 @@
                                 {{ __('Inscrição com pendência de pagamento!') }}
                             </a>
                         @else
+                            @php
+                                $solicitacaoPCD = null;
+                                if (auth()->check()) {
+                                    $solicitacaoPCD = \App\Models\Inscricao\InscricaoPCD::where('user_id', auth()->id())->where('evento_id', $evento->id)->first();
+                                }
+                            @endphp
+
                             <button id="btn-inscrevase" class="btn btn-my-success w-60 rounded btn-lg"
                                 @if (!$encerrada && !($isInscrito && isset($inscricao) && $inscricao->finalizada))
                                     data-bs-toggle="modal" data-bs-target="#modalInscrever"
                                 @endif
                                 @if ($encerrada || ($isInscrito && isset($inscricao) && $inscricao->finalizada))
                                     disabled
+                                @endif
+                                @if (isset($solicitacaoPCD) && $solicitacaoPCD->status == 'pendente')
+                                    style="display: none;"
                                 @endif
                             >
                                 @if ($isInscrito && isset($inscricao) && $inscricao->finalizada)
@@ -114,6 +124,25 @@
                                     {{ __('Encerradas!') }}
                                 @else
                                     {{ __('Realize sua inscrição aqui!') }}
+                                @endif
+                            </button>
+                            <button class="btn btn-my-success w-60 rounded btn-lg" 
+                                @if (!$encerrada && !($isInscrito && isset($inscricao) && $inscricao->finalizada))
+                                    data-bs-toggle="modal" data-bs-target="#modalInscricaoPCD"
+                                @endif
+                                @if ($encerrada || ($isInscrito && isset($inscricao) && $inscricao->finalizada))
+                                    style="display: none;"
+                                @endif
+                                @if (isset($solicitacaoPCD) && $solicitacaoPCD->status == 'rejeitado')
+                                    disabled
+                                @endif
+                            >
+                                @if (isset($solicitacaoPCD) && $solicitacaoPCD->status == 'rejeitado')
+                                    {{ __('Inscrição PCD rejeitada') }}
+                                @elseif (isset($solicitacaoPCD) && $solicitacaoPCD->status == 'pendente')
+                                    {{ __('Inscrição PCD em análise') }}
+                                @else
+                                    {{ __('Inscrição PCD') }}
                                 @endif
                             </button>
                         @endif
@@ -882,6 +911,7 @@
         @include('evento.modal-submeter-trabalho')
         @include('evento.modal-confirm-inscricao')
         @include('evento.modal-inscricao-avaliador')
+        @include('evento.modal-inscricao-pcd')
 
     </div>
 
