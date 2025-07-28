@@ -1,5 +1,4 @@
 @extends('coordenador.detalhesEvento') @section('menu')
-    @include('componentes.mensagens')
     <div id="divListarRegistros"
         style="display: block">
         <div class="row">
@@ -54,8 +53,8 @@
                                         </td>
                                         <td style="text-align:center">
                                             <a href="#"
-                                                data-toggle="modal"
-                                                data-target="#modalEditarRegistro{{ $registro->id }}">
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#modalEditarRegistro{{ $registro->id }}">
                                                 <img src="{{ asset('img/icons/edit-regular.svg') }}"
                                                     style="width:20px"></a>
                                         </td>
@@ -72,8 +71,8 @@
                                                     name="memoria"
                                                     value="{{ $registro->id }}">
                                                 <a href="#"
-                                                    data-toggle="modal"
-                                                    data-target="#modalExcluirRegistro{{ $registro->id }}">
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#modalExcluirRegistro{{ $registro->id }}">
                                                     <img src="{{ asset('img/icons/trash-alt-regular.svg') }}"
                                                         class="icon-card"
                                                         alt="">

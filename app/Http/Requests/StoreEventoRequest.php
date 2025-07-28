@@ -30,13 +30,17 @@ class StoreEventoRequest extends FormRequest
             'nome_en' => [ 'nullable','string'],
             'descricao' => ['required', 'string'],
             'descricao_en' => ['nullable', 'string'],
+            'nome_es' => ['nullable', 'string'],
+            'descricao_es' => ['nullable', 'string'],
             'tipo' => ['required', 'string'],
             'dataInicio' => ['required', 'date', 'after:yesterday'],
             'dataFim' => ['required', 'date'],
-            'fotoEvento' => ['file', 'mimes:png, jpg,jpeg'],
-            'fotoEvento_en' => ['file', 'mimes:png, jpg,jpeg'],
-            'icone' => ['file', 'mimes:png, jpg,jpeg'],
-            'icone_en' => ['file', 'mimes:png, jpg,jpeg'],
+            'fotoEvento'     => ['required','file','mimes:png,jpg,jpeg','dimensions:max_width=1024,max_height=425'],
+            'fotoEvento_en'  => ['nullable','file','mimes:png,jpg,jpeg','dimensions:max_width=1024,max_height=425'],
+            'fotoEvento_es'  => ['nullable','file','mimes:png,jpg,jpeg','dimensions:max_width=1024,max_height=425'],
+            'icone'          => ['required','file','mimes:png,jpg,jpeg','dimensions:max_width=600,max_height=600'],
+            'icone_en'       => ['nullable','file','mimes:png,jpg,jpeg','dimensions:max_width=600,max_height=600'],
+            'icone_es'       => ['nullable','file','mimes:png,jpg,jpeg','dimensions:max_width=600,max_height=600'],
             'rua' => ['required', 'string'],
             'numero' => ['required', 'string'],
             'bairro' => ['required', 'string'],
@@ -48,6 +52,9 @@ class StoreEventoRequest extends FormRequest
             'email_coordenador' => ['exclude_if:eventoPai,null', 'exclude_if:email_coordenador,null', 'nullable', 'email'],
             'termos' => ['required'],
             'dataLimiteInscricao' => ['nullable', 'date'],
+            'instagram' => ['nullable', 'string'],
+            'contato_suporte' => ['nullable', 'string'],
+
         ];
     }
 
@@ -77,7 +84,7 @@ class StoreEventoRequest extends FormRequest
 
     public function withValidator($validator)
     {
-        $validator->sometimes(['nome_en', 'descricao_en'], 'required|string', function ($input) {
+        $validator->sometimes(['nome_en', 'descricao_en', 'nome_es', 'descricao_es'], 'required|string', function ($input) {
             return filter_var($input->is_multilingual, FILTER_VALIDATE_BOOLEAN);
         });
     }

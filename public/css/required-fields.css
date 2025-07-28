@@ -1,0 +1,6 @@
+
+.required-field::after {
+    content: "*";
+    color: #D44100;
+    margin-left: 2px;
+}

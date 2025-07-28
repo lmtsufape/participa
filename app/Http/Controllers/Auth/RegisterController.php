@@ -9,6 +9,8 @@ use App\Providers\RouteServiceProvider;
 use App\Rules\UniqueCaseInsensitive;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\EmailConfirmacaoCadastro;
 
 class RegisterController extends Controller
 {
@@ -30,7 +32,7 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = RouteServiceProvider::HOME;
+    //protected $redirectTo = RouteServiceProvider::HOME;
 
     /**
      * Create a new controller instance.
@@ -49,10 +51,19 @@ class RegisterController extends Controller
      */
     protected function validator(array $data)
     {
+        // Verifica se existe um usuário não deletado com o mesmo email
+        $userAtivo = User::where('email', strtolower($data['email']))->whereNull('deleted_at')->first();
+        if ($userAtivo) {
+            $messages = ['email.unique' => 'Este email já está cadastrado no sistema.'];
+            return Validator::make($data, ['email' => 'unique:users'], $messages);
+        }
+
         $validations = [
             'name' => ['required', 'string', 'max:255'],
-            'email' => [ 'required', 'string', 'email', 'max:255', new UniqueCaseInsensitive('users', 'email'),],
+            'nomeSocial' => ['nullable', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'dataNascimento' => ['required', 'date', 'before:today'],
             'cpf' => ($data['passaporte'] == null && $data['cnpj'] == null ? ['required', 'cpf'] : 'nullable'),
             'cnpj' => ($data['passaporte'] == null && $data['cpf'] == null ? ['required'] : 'nullable'),
             'passaporte' => ($data['cpf'] == null && $data['cnpj'] == null ? ['required', 'max:10'] : 'nullable'),
@@ -67,7 +78,7 @@ class RegisterController extends Controller
             'cep' => ['required', 'string'],
             'complemento' => ['nullable', 'string'],
         ];
-        if ($data['pais'] == 'outro'){
+        if ($data['pais'] != 'brasil'){
             $validations['uf'] = ['nullable', 'string'];
             $validations['numero'] = ['nullable', 'string'];
             $validations['cep'] = ['nullable', 'string'];
@@ -83,9 +94,59 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+        // Verifica se existe um usuário deletado com o mesmo email
+        $userDeletado = User::withTrashed()->where('email', strtolower($data['email']))->first();
+
+        if ($userDeletado) {
+            // Restaura o user
+            $userDeletado->restore();
+
+            $userDeletado->name = $data['name'];
+            $userDeletado->nomeSocial = $data['nomeSocial'] ?? null;
+            $userDeletado->email = strtolower($data['email']);
+            $userDeletado->dataNascimento = $data['dataNascimento'];
+            $userDeletado->email_verified_at = now();
+            $userDeletado->password = bcrypt($data['password']);
+            $userDeletado->cpf = $data['cpf'];
+            $userDeletado->cnpj = $data['cnpj'];
+            $userDeletado->passaporte = $data['passaporte'];
+            $userDeletado->celular = $data['full_number'];
+            $userDeletado->instituicao = $data['instituicao'];
+
+            if ($data['rua'] != null && $data['cep'] != null) {
+                // Se o usuário já tinha um endereço, atualiza
+                if ($userDeletado->enderecoId) {
+                    $end = Endereco::find($userDeletado->enderecoId);
+                    if ($end) {
+                        $end->fill($data);
+                        $end->save();
+                    } else {
+                        $end = new Endereco($data);
+                        $end->save();
+                        $userDeletado->enderecoId = $end->id;
+                    }
+                } else {
+                    $end = new Endereco($data);
+                    $end->save();
+                    $userDeletado->enderecoId = $end->id;
+                }
+            }
+
+            $userDeletado->save();
+
+            Mail::to($userDeletado->email)->send(new EmailConfirmacaoCadastro($userDeletado));
+
+            app()->setLocale('pt-BR');
+
+            return $userDeletado;
+        }
+
         $user = new User();
         $user->name = $data['name'];
+        $user->nomeSocial = $data['nomeSocial'] ?? null;
         $user->email = strtolower($data['email']);
+        $user->dataNascimento = $data['dataNascimento'];
+        $user->email_verified_at = now();
         $user->password = bcrypt($data['password']);
         $user->cpf = $data['cpf'];
         $user->cnpj = $data['cnpj'];
@@ -99,15 +160,23 @@ class RegisterController extends Controller
             $user->enderecoId = $end->id;
             $user->save();
 
+
+            Mail::to($user->email)->send(new EmailConfirmacaoCadastro($user));
             return $user;
         }
 
         $user->enderecoId = null;
         $user->save();
 
+        Mail::to($user->email)->send(new EmailConfirmacaoCadastro($user));
 
         app()->setLocale('pt-BR');
 
         return $user;
+    }
+
+    protected function redirectTo()
+    {
+        return route('index');
     }
 }

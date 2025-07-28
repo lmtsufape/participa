@@ -35,6 +35,8 @@
                     <div class="card" style="width: 18rem;">
                         @if($evento->is_multilingual && Session::get('idiomaAtual') === 'en' && isset($evento->fotoEvento_en))
                             <img src="{{asset('storage/'.$evento->fotoEvento_en)}}" class="card-img-top" alt="...">
+                        @elseif($evento->is_multilingual && Session::get('idiomaAtual') === 'es' && isset($evento->fotoEvento_es))
+                            <img src="{{asset('storage/'.$evento->fotoEvento_es)}}" class="card-img-top" alt="...">
                         @elseif(isset($evento->fotoEvento))
                             <img src="{{asset('storage/'.$evento->fotoEvento)}}" class="card-img-top" alt="...">
                         @else
@@ -49,6 +51,8 @@
                                                 <a href="{{route('evento.visualizar',['id'=>$evento->id])}}" style="text-decoration: inherit;">
                                                     @if($evento->is_multilingual && Session::get('idiomaAtual') === 'en')
                                                         {{$evento->nome_en}}
+                                                    @elseif($evento->is_multilingual && Session::get('idiomaAtual') === 'es')
+                                                        {{$evento->nome_es}}
                                                     @else
                                                         {{$evento->nome}}
                                                     @endif
@@ -88,13 +92,9 @@
                                 </div>
                                 @can('isCoordenador', $evento)
                                 <div>
-                                    <form id="formExcluirEvento{{$evento->id}}" method="POST" action="{{route('evento.deletar',$evento->id)}}">
-                                        {{ csrf_field() }}
-                                        {{ method_field('DELETE') }}
-                                        <a href="#" data-toggle="modal" data-target="#modalExcluirEvento{{$evento->id}}">
-                                            <i class="far fa-trash-alt" style="color: black"></i>&nbsp;&nbsp;Deletar
-                                        </a>
-                                    </form>
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#modalExcluirEvento{{$evento->id}}">
+                                        <i class="far fa-trash-alt" style="color: black"></i>&nbsp;&nbsp;Deletar
+                                    </a>
                                 </div>
                                 @endcan
                                 @endcan
@@ -103,25 +103,7 @@
 
                     </div>
                     <!-- Modal de exclusão do evento -->
-                    <div class="modal fade" id="modalExcluirEvento{{$evento->id}}" tabindex="-1" role="dialog" aria-labelledby="#label" aria-hidden="true">
-                        <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header" style="background-color: #114048ff; color: white;">
-                            <h5 class="modal-title" id="#label">Confirmação</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                            </div>
-                                <div class="modal-body">
-                                    Tem certeza que deseja excluir esse evento?
-                                </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Não</button>
-                                <button type="submit" class="btn btn-primary" form="formExcluirEvento{{$evento->id}}">Sim</button>
-                            </div>
-                        </div>
-                        </div>
-                    </div>
+                    <x-modal-excluir-evento :evento="$evento"/>
                     <!-- fim do modal -->
                 @endcan
             @endif

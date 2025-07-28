@@ -3,7 +3,6 @@
 @section('menu')
     {{-- Comissão --}}
     <div id="divCadastrarComissao" class="comissao" style="display: block">
-        @include('componentes.mensagens')
         <div class="row">
             <div class="col-sm-12">
                 <h1 class="titulo-detalhes">Cadastrar comissão</h1>
@@ -13,13 +12,13 @@
             <div class="col-sm-5">
                 <div class="card">
                     <div class="card-body">
-                      <h5 class="card-title">Nova comissão</h5>
+                      <h5 class="card-title fw-bold">Nova comissão</h5>
                       <form action="{{route('coord.tipocomissao.store', $evento)}}" method="POST">
                         @csrf
                         <p class="card-text">
                             <div class="row justify-content-center">
                                 <div class="col-sm-12">
-                                    <label for="nome" class="control-label">Nome</label>
+                                    <label for="nome" class="control-label fw-bold">Nome</label>
                                     <input type="text" name="nome" class="form-control @error('nome') is-invalid @enderror" name="nome" value="{{ old('nome') }}" id="nome" placeholder="Nome da comissão" required>
                                     @error('nome')
                                     <span class="invalid-feedback" role="alert">

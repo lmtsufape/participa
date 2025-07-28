@@ -55,7 +55,7 @@
                                         </div>
                                         <div class="col-sm-2">
                                             <div class="btn-group dropright dropdown-options">
-                                                <a id="options" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <a id="options" class="dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                     <div onmouseout="this.children[0].src='{{ asset('/img/icons/ellipsis-v-solid.svg') }}';" onmousemove="this.children[0].src='{{ asset('/img/icons/ellipsis-v-solid-hover.svg')}}';">
                                                         <img src="{{asset('img/icons/ellipsis-v-solid.svg')}}" style="width:8px">
                                                     </div>
@@ -136,9 +136,12 @@
                                 <th scope="col" style="text-align:center">Status</th>
                                 <th scope="col" style="text-align:center">Resumo</th>
                                 <th scope="col" style="text-align:center">Baixar</th>
+
                                 {{-- <th scope="col">Avaliar</th> --}}
-                                <th scope="col" style="text-align:center">Questionário</th>
+                                <th scope="col" style="text-align:center">Avaliação do trabalho</th>
+                                <th scope="col" style="text-align:center">Validação das correções</th>
                                 <th scope="col" style="text-align:center">Atribuído em</th>
+                                <th scope="col" style="text-align:center">Prazo</th>
                                 </tr>
                             </thead>
                             @foreach($trabalhosDoRevisor as $trabalho)
@@ -152,7 +155,7 @@
                                     @endif
                                     <td style="text-align:center">
                                     @if ($trabalho->resumo != null)
-                                        <a class="resumoTrabalho" href="#" data-toggle="modal" onclick="resumoModal({{$trabalho->id}})" data-target="#exampleModalLong"><img src="{{asset('img/icons/resumo.png')}}" style="width:20px"></a>
+                                        <a class="resumoTrabalho" href="#" data-bs-toggle="modal" onclick="resumoModal({{$trabalho->id}})" data-bs-target="#exampleModalLong"><img src="{{asset('img/icons/resumo.png')}}" style="width:20px"></a>
                                     @else
                                         Sem resumo
                                     @endif
@@ -162,10 +165,11 @@
                                         <a href="{{route('downloadTrabalho', ['id' => $trabalho->id])}}"><img src="{{asset('img/icons/file-download-solid-black.svg')}}" style="width:20px"></a>
                                     @endif
                                     </td>
+
                                     @if (!$trabalho->avaliado(auth()->user())){{--avaliacao do revisor aqui--}}
-                                        @if (now() >= $trabalho->modalidade->inicioRevisao && now() <= $trabalho->modalidade->fimRevisao)
+                                        @if (now() >= $trabalho->modalidade->inicioRevisao && now() <= $trabalho->modalidade->fimRevisao && ($trabalho->atribuicoes->first()->pivot->prazo_correcao == null || now() <= $trabalho->atribuicoes->first()->pivot->prazo_correcao))
                                             {{-- <td>
-                                            <a href="#"><img src="{{asset('img/icons/check-solid.svg')}}" style="width:20px" data-toggle="modal" data-target="#modalAvaliarTrabalho{{$trabalho->id}}"></a>
+                                            <a href="#"><img src="{{asset('img/icons/check-solid.svg')}}" style="width:20px" data-bs-toggle="modal" data-bs-target="#modalAvaliarTrabalho{{$trabalho->id}}"></a>
                                             </td> --}}
                                             <td>
                                             <form action="{{route('revisor.responde')}}" method="get">
@@ -174,6 +178,7 @@
                                                 <input type="hidden" name="trabalho_id" value="{{$trabalho->id}}">
                                                 <input type="hidden" name="evento_id" value="{{$eventos[$key]->id}}">
                                                 <input type="hidden" name="modalidade_id" value="{{$trabalho->modalidade->id}}">
+                                                <input type="hidden" name="prazo_correcao" value="{{$trabalho->atribuicoes->first()->pivot->prazo_correcao}}">
                                                 <div class="d-flex justify-content-center">
                                                     <button type="submit" class="btn btn-success">
                                                     Avaliar
@@ -184,7 +189,7 @@
                                         @else
                                             <div class="d-flex justify-content-center">
                                                 <td style="text-align:center">
-                                                    <img src="{{asset('img/icons/check-solid.svg')}}" style="width:20px" title="Avaliação disponível em {{date('d/m/Y',strtotime($trabalho->modalidade->inicioRevisao))}} até {{date('d/m/Y',strtotime($trabalho->modalidade->fimRevisao))}}">
+                                                    <img src="{{asset('img/icons/check-solid.svg')}}" style="width:20px" title="Avaliação disponível em {{date('d/m/Y',strtotime($trabalho->modalidade->inicioRevisao))}} até {{date('d/m/Y',strtotime($trabalho->atribuicoes->first()->pivot->prazo_correcao))}}">
                                                 </td>
                                             </div>
                                         @endif
@@ -193,13 +198,38 @@
                                         <div class="d-flex justify-content-center">
                                             <td style="text-align:center">
                                                 <img src="{{asset('img/icons/check-solid.svg')}}" style="width:20px" title="Trabalho já avaliado">
+                                                <a href="{{route('user.visualizarParecer', ['eventoId' => $trabalho->eventoId, 'modalidadeId' => $trabalho->modalidadeId, 'trabalhoId' => $trabalho->id, 'id' => $trabalho->id, 'revisorId' => $trabalho->userRevisorTrabalho()])}}">
+                                                    <img src="{{asset('img/icons/eye-regular.svg')}}" style="width:20px">
+                                                </a>
                                             </td>
                                         </div>
                                     @endif
-                                    <td style="text-align:center">
-                                        {{date('d/m/Y H:i',strtotime($trabalho->atribuicoes->first()->pivot->created_at))}}
-                                    </td>
-                                </tr>
+                                        <td class="d-flex flex-column align-items-center">
+                                            @if ($trabalho->arquivoCorrecao != null)
+                                                <a href="{{route('downloadCorrecao', ['id' => $trabalho->id])}}"><img src="{{asset('img/icons/file-download-solid-black.svg')}}" style="width:20px"></a>
+
+
+                                                @if(!in_array($trabalho->avaliado, ['corrigido', 'corrigido_parcialmente', 'nao_corrigido']))
+                                                    <a type="button" data-target="#validacaoCorrecaoModal{{$trabalho->id}}" data-toggle="modal" class="btn btn-sm btn-primary mt-2">
+                                                        Fazer validação
+                                                    </a>
+                                                @endif
+
+                                            @endif
+                                        </td>
+                                        <td style="text-align:center">
+                                            {{date('d/m/Y H:i',strtotime($trabalho->atribuicoes->first()->pivot->created_at))}}
+                                        </td>
+
+
+                                        <td style="text-align:center">
+                                            @if ($trabalho->atribuicoes->first()->pivot->prazo_correcao)
+                                                {{ date('d/m/Y H:i', strtotime($trabalho->atribuicoes->first()->pivot->prazo_correcao)) }}
+                                            @endif
+                                        </td>
+
+                                    </tr>
+                                    @include('revisor.validarCorrecao-modal')
                             @endforeach
                             </table>
                         </p>

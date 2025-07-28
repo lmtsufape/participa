@@ -62,7 +62,7 @@
                                 </a>
                             </div>
                             <div>
-                                <a data-toggle="modal" data-target="#modalStaticDuplicarCertificado_{{$certificado->id}}" style="color: #3490dc; cursor: pointer;">
+                                <a data-bs-toggle="modal" data-bs-target="#modalStaticDuplicarCertificado_{{$certificado->id}}" style="color: #3490dc; cursor: pointer;">
                                     <i class="fas fa-copy" style="color: black"></i>&nbsp;&nbsp;Duplicar
                                 </a>
                             </div>
@@ -72,7 +72,7 @@
                                 </a>
                             </div>
                             <div>
-                                <a data-toggle="modal" data-target="#modalStaticDeletarCertificado_{{$certificado->id}}" style="color: red; cursor: pointer;">
+                                <a data-bs-toggle="modal" data-bs-target="#modalStaticDeletarCertificado_{{$certificado->id}}" style="color: red; cursor: pointer;">
                                     <i class="far fa-trash-alt" style="color: black"></i>&nbsp;&nbsp;Deletar certificado
                                 </a>
                             </div>

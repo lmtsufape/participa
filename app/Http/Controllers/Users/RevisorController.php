@@ -23,6 +23,7 @@ use App\Notifications\LembreteRevisorCompletarCadastro;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
@@ -39,7 +40,7 @@ class RevisorController extends Controller
     {
         //eventos em que sou revisor
         $idsEventos = Revisor::where('user_id', auth()->user()->id)->groupBy('evento_id')->select('evento_id')->get();
-        $eventosComoRevisor = Evento::whereIn('id', $idsEventos)->get()->sortBy('nome');
+        $eventosComoRevisor = Evento::whereIn('id', $idsEventos)->orderBy('created_at', 'asc')->get();
         //return view('revisor.index')->with(['eventos' => $eventosComoRevisor]);
         //areas em que sou revirsor
         $revisores = collect();
@@ -101,7 +102,12 @@ class RevisorController extends Controller
 
         $usuario = User::where('email', $request->emailRevisor)->first();
         $evento = Evento::find($request->eventoId);
-        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
+        if (! Gate::any([
+            'isCoordenadorOrCoordenadorDaComissaoCientifica',
+            'isCoordenadorEixo'
+        ], $evento)) {
+            abort(403, 'Acesso negado');
+        }
 
         // dd(count($usuario->revisor()->where('evento_id', $evento->id)->get()));
         if ($usuario == null) {
@@ -144,7 +150,7 @@ class RevisorController extends Controller
             return redirect()->back()->withErrors(['errorRevisor' => 'Esse revisor já está cadastrado para o evento.'])->withInput($validatedData);
         }
 
-        return redirect()->back()->with(['mensagem' => 'Revisor cadastrado com sucesso!']);
+        return redirect()->back()->with(['success' => 'Revisor cadastrado com sucesso!']);
     }
 
     /**
@@ -239,7 +245,7 @@ class RevisorController extends Controller
             }
         }
 
-        return redirect()->back()->with(['mensagem' => 'Revisor salvo com sucesso!']);
+        return redirect()->back()->with(['success' => 'Revisor salvo com sucesso!']);
     }
 
     /**
@@ -267,7 +273,7 @@ class RevisorController extends Controller
             $revisor->delete();
         }
 
-        return redirect()->back()->with(['mensagem' => 'Revisor removido com sucesso!']);
+        return redirect()->back()->with(['success' => 'Revisor removido com sucesso!']);
     }
 
     public function reenviarEmailRevisor($id, $evento_id)
@@ -283,7 +289,7 @@ class RevisorController extends Controller
             $user->password = bcrypt($passwordTemporario);
             $user->save();
 
-            return redirect()->back()->with(['mensagem' => 'E-mail para completar o cadastrado enviado com sucesso!']);
+            return redirect()->back()->with(['success' => 'E-mail para completar o cadastrado enviado com sucesso!']);
         }
 
         return redirect()->back()->withErrors(['errorRevisor' => 'Não é possível reenviar um e-mail para o revisor, pois o mesmo já completou o seu cadastro.']);
@@ -308,7 +314,7 @@ class RevisorController extends Controller
         Mail::to($user->email)
             ->send(new EmailLembrete($user, $request->assunto, ' ', ' ', ' ', $evento, $evento->coordenador));
 
-        return redirect()->back()->with(['mensagem' => 'E-mail de lembrete de revisão enviado para '.$user->email.'.']);
+        return redirect()->back()->with(['success' => 'E-mail de lembrete de revisão enviado para '.$user->email.'.']);
     }
 
     public function enviarEmailTodosRevisores(Request $request)
@@ -344,7 +350,7 @@ class RevisorController extends Controller
             }
         }
 
-        return redirect()->back()->with(['mensagem' => 'E-mails de lembrete enviados!']);
+        return redirect()->back()->with(['success' => 'E-mails de lembrete enviados!']);
     }
 
     public function enviarEmailCadastroTodosRevisores(Evento $evento)
@@ -359,7 +365,7 @@ class RevisorController extends Controller
             $user->notify(new LembreteRevisorCompletarCadastro($evento, auth()->user()));
         }
 
-        return redirect()->back()->with(['mensagem' => 'E-mails de lembrete enviados!']);
+        return redirect()->back()->with(['success' => 'E-mails de lembrete enviados!']);
     }
 
     public function listarRevisores($id)
@@ -399,7 +405,7 @@ class RevisorController extends Controller
         Mail::to($user->email)
             ->send(new EmailConviteRevisor($user, $evento, $subject, $evento->email));
 
-        return redirect()->back()->with(['mensagem' => 'Convite enviado']);
+        return redirect()->back()->with(['success' => 'Convite enviado']);
     }
 
     public function revisoresPorAreaAjax($id)
@@ -439,8 +445,11 @@ class RevisorController extends Controller
 
     public function responde(Request $request)
     {
-        // dd($request->all());
+
         $data = $request->all();
+        if($data['prazo_correcao'] < now()){
+            return redirect()->back()->withErrors(['message' => 'Prazo de correção expirado.']);
+        }
         $evento = Evento::find($data['evento_id']);
         $data['revisor'] = Revisor::find($data['revisor_id']);
         $data['modalidade'] = Modalidade::find($data['modalidade_id']);
@@ -616,5 +625,25 @@ class RevisorController extends Controller
 
             return false;
         }
+    }
+
+    public function verificarCorrecao(Request $request, $trabalho_id){
+        $trabalho = Trabalho::find($trabalho_id);
+        switch ($request->status_correcao) {
+            case 'corrigido':
+                $trabalho->update(['avaliado' => 'corrigido']);
+                // Lógica específica para "completamente"
+                break;
+            case 'corrigido_parcialmente':
+                $trabalho->update(['avaliado' => 'corrigido_parcialmente']);
+                // Lógica específica para "parcialmente"
+                break;
+            case 'nao_corrigido':
+                $trabalho->update(['avaliado' => 'nao_corrigido']);
+                // Lógica específica para "nao"
+                break;
+        }
+
+        return redirect()->back()->with('success', 'Status de trabalho alterado com sucesso');
     }
 }

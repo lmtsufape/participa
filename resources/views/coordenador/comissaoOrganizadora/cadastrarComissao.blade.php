@@ -15,7 +15,7 @@
             <div class="col-sm-5">
                 <div class="card">
                     <div class="card-body">
-                      <h5 class="card-title">Novo Membro</h5>
+                      <h5 class="card-title fw-bold">Novo Membro</h5>
                       <h6 class="card-subtitle mb-2 text-muted">Cadastre um membro para sua Comissão</h6>
                       <form action="{{route('cadastrar.comissaoOrganizadora')}}" method="POST">
                         @csrf
@@ -23,9 +23,9 @@
                         <p class="card-text">
                             <div class="row justify-content-center">
                                 <div class="col-sm-12">
-                                    <label for="emailMembroComissao" class="control-label">E-mail do novo membro</label>
+                                    <label for="emailMembroComissao" class="control-label fw-bold">E-mail do novo membro</label>
                                     <input type="email" name="emailMembroComissao" class="form-control @error('emailMembroComissao') is-invalid @enderror" name="emailMembroComissao" value="{{ old('emailMembroComissao') }}" id="emailMembroComissao" placeholder="E-mail" required>
-                                    
+
                                     @error('emailMembroComissao')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>

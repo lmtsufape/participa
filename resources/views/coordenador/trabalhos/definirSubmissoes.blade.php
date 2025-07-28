@@ -14,7 +14,7 @@
             <div class="col-sm-6">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Definir Submissões do Trabalho</h5>
+                        <h5 class="card-title fw-bold">Definir Submissões do Trabalho</h5>
                         <h6 class="card-subtitle mb-2 text-muted">Informe o número de trabalhos que cada autor poderá enviar e o número de trabalhos em que um usuário poderá ser um coautor</h6>
                         <form method="POST" action="{{route('trabalho.numTrabalhos')}}">
                         @csrf
@@ -23,7 +23,7 @@
 
                             <div class="row justify-content-center">
                                 <div class="col-sm-12">
-                                    <label for="trabalhosPorAutor" class="col-form-label">{{ __('Número de trabalhos por Autor') }}</label>
+                                    <label for="trabalhosPorAutor" class="col-form-label fw-bold">{{ __('Número de trabalhos por Autor') }}</label>
                                     <input id="trabalhosPorAutor" type="text" class="form-control numero @error('trabalhosPorAutor') is-invalid @enderror" name="trabalhosPorAutor" value="@if ($evento->numMaxTrabalhos != null){{$evento->numMaxTrabalhos}}@else{{old('trabalhosPorAutor')}}@endif" required autocomplete="trabalhosPorAutor" autofocus>
 
                                     @error('trabalhosPorAutor')
@@ -35,9 +35,11 @@
 
                             </div>{{-- end row--}}
 
+                            <br>
+
                             <div class="row justify-content-center">
                                 <div class="col-sm-12">
-                                    <label for="numCoautor" class="col-form-label">{{ __('Número de trabalhos como Coautor') }}</label>
+                                    <label for="numCoautor" class="col-form-label fw-bold">{{ __('Número de trabalhos como Coautor') }}</label>
                                     <input id="numCoautor" type="text" class="form-control numero @error('numCoautor') is-invalid @enderror" name="numCoautor" value="@if ($evento->numMaxTrabalhos != null){{$evento->numMaxCoautores}}@else{{old('numCoautor')}}@endif" required autocomplete="numCoautor" autofocus>
 
                                     @error('numCoautor')

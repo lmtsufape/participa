@@ -3,6 +3,7 @@
 namespace App\Policies;
 
 use App\Models\Submissao\Evento;
+use App\Models\Users\CoordEixoTematico;
 use App\Models\Users\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
@@ -58,9 +59,7 @@ class EventoPolicy
 
     public function isRevisor(User $user, Evento $evento)
     {
-        $usuariosRevisores = $evento->revisors()->distinct()->pluck('user_id');
-
-        return in_array($user->id, $usuariosRevisores);
+        return $evento->revisors()->where('user_id', $user->id)->exists();
     }
 
     public function isRevisorComAtribuicao(User $user)
@@ -118,6 +117,28 @@ class EventoPolicy
     {
         return $this->isCoordenadorDeOutrasComissoes($user, $evento)
             || $this->isCoordenadorOrCoordenadorDasComissoes($user, $evento);
+    }
+
+    public function isUsuarioDaComissao(User $user, Evento $evento){
+        return $this->isCoordenadorOrCoordenadorDasComissoesOrIsCoordenadorDeOutrasComissoes($user, $evento) ||
+                $this->isCoordenadorEixo($user, $evento) || $this->isMembro($user, $evento);
+    }
+
+    public function isCoordenadorOrCoordCientificaOrCoordEixo(User $user, Evento $evento)
+    {
+        return $this->isCoordenador($user, $evento) ||
+                $this->isCoordenadorDaComissaoCientifica($user, $evento) ||
+                $this->isCoordenadorEixo($user,$evento);
+    }
+
+    public function isCoordenadorEixo(User $user, Evento $evento){
+        return CoordEixoTematico::where('user_id', $user->id)->where('evento_id', $evento->id)->exists();
+    }
+
+    public function isMembro(User $user, Evento $evento){
+
+        return $evento->usuariosDaComissao()->where('user_id', $user->id)->exists() ||
+                $evento->usuariosDaComissaoOrganizadora()->where('user_id', $user->id)->exists();
     }
 
     public function isCoordenadorOrComissaoOrRevisorComAtribuicao(User $user, Evento $evento)

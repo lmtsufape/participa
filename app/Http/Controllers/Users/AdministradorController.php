@@ -242,16 +242,6 @@ class AdministradorController extends Controller
         return redirect()->route('admin.users')->with(['message' => 'Atualizado com sucesso!']);
     }
 
-    public function deleteUser($id)
-    {
-        // dd($request->all());
-        $this->authorize('isAdmin', Administrador::class);
-        $user = User::doesntHave('administradors')->find($id);
-        $user->delete();
-
-        return redirect()->route('admin.users')->with(['message' => 'Deletado com sucesso!']);
-    }
-
     public function search(Request $request)
     {
         $this->authorize('isAdmin', Administrador::class);

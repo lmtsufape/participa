@@ -41,14 +41,24 @@ class AreaController extends Controller
 
         $validatedData = $request->validate([
             'nome' => 'required|string',
+            'resumo' => 'nullable|string',
+            'nome_en' => 'nullable|string',
+            'resumo_en' => 'nullable|string',
+            'nome_es' => 'nullable|string',
+            'resumo_es' => 'nullable|string',
         ]);
 
         Area::create([
             'nome' => $request->nome,
+            'resumo' => $request->resumo,
+            'nome_en' => $request->nome_en,
+            'resumo_en' => $request->resumo_en,
+            'nome_es' => $request->nome_es,
+            'resumo_es' => $request->resumo_es,
             'eventoId' => $request->eventoId,
         ]);
 
-        return redirect()->back()->with(['mensagem' => 'Área cadastrada com sucesso!']);
+        return redirect()->back()->with(['success' => 'Área cadastrada com sucesso!']);
     }
 
     /**
@@ -83,6 +93,11 @@ class AreaController extends Controller
     {
         $validatedData = $request->validate([
             'nome_da_área' => 'required',
+            'resumo' => 'nullable|string',
+            'nome_en' => 'nullable|string',
+            'resumo_en' => 'nullable|string',
+            'nome_es' => 'nullable|string',
+            'resumo_es' => 'nullable|string',
         ]);
 
         $area = Area::find($id);
@@ -90,9 +105,14 @@ class AreaController extends Controller
         $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
 
         $area->nome = $request->input('nome_da_área');
+        $area->resumo = $request->input('resumo', null);
+        $area->nome_en = $request->input('nome_da_área_en', null);
+        $area->resumo_en = $request->input('resumo_en', null);
+        $area->nome_es = $request->input('nome_da_área_es', null);
+        $area->resumo_es = $request->input('resumo_es', null);
         $area->update();
 
-        return redirect()->back()->with(['mensagem' => 'Área atualizada com sucesso!']);
+        return redirect()->back()->with(['success' => 'Área atualizada com sucesso!']);
     }
 
     /**
@@ -116,6 +136,16 @@ class AreaController extends Controller
 
         $area->delete();
 
-        return redirect()->back()->with(['mensagem' => 'Área excluida com sucesso!']);
+        return redirect()->back()->with(['success' => 'Área excluida com sucesso!']);
+    }
+
+    public function reorder(Request $request)
+    {
+        $order = $request->input('order', []);
+        foreach ($order as $item) {
+            Area::where('id', $item['id'])
+                ->update(['ordem' => $item['position']]);
+        }
+        return response()->json(['status' => 'ok']);
     }
 }

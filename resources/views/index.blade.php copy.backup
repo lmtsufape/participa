@@ -7,9 +7,9 @@
         <div class="col-sm-12">
             <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
                 <ol class="carousel-indicators">
-                  <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
-                  <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
-                  <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+                  <li data-bs-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+                  <li data-bs-target="#carouselExampleIndicators" data-slide-to="1"></li>
+                  <li data-bs-target="#carouselExampleIndicators" data-slide-to="2"></li>
                 </ol>
                 <div class="carousel-inner">
                   <div class="carousel-item active">
@@ -68,12 +68,12 @@
       <div id="descSistema" class="col-sm-12">
         <div class="texto">
           <h1>Nome do sistema</h1>
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-            Sed facilisis nisl non lorem tincidunt ultricies. 
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+            Sed facilisis nisl non lorem tincidunt ultricies.
             Maecenas ullamcorper, justo at egestas congue,
              magna est egestas elit, id sollicitudin ipsum lacus non nibh.
-              Mauris eu dui elit. Mauris eget enim tempor, ullamcorper sem sed, 
-              porttitor turpis. Phasellus ut sem mi. Aliquam dignissim ligula sit 
+              Mauris eu dui elit. Mauris eget enim tempor, ullamcorper sem sed,
+              porttitor turpis. Phasellus ut sem mi. Aliquam dignissim ligula sit
               amet dui dapibus posuere. Maecenas in lorem sem.</p>
 
         </div>
@@ -96,12 +96,12 @@
 
                   <h1>Módulo 1</h1>
                   <p>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-                    Sed facilisis nisl non lorem tincidunt ultricies. 
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                    Sed facilisis nisl non lorem tincidunt ultricies.
                     Maecenas ullamcorper, justo at egestas congue,
                     magna est egestas elit, id sollicitudin ipsum lacus non nibh.
-                    Mauris eu dui elit. Mauris eget enim tempor, ullamcorper sem sed, 
-                    porttitor turpis. Phasellus ut sem mi. Aliquam dignissim ligula sit 
+                    Mauris eu dui elit. Mauris eget enim tempor, ullamcorper sem sed,
+                    porttitor turpis. Phasellus ut sem mi. Aliquam dignissim ligula sit
                     amet dui dapibus posuere. Maecenas in lorem sem.
                   </p>
                 </div>
@@ -114,7 +114,7 @@
     <div class="row justify-content-center">
       <div id="divModulo2" class="col-sm-12">
         <div class="row justify-content-center rowModulo">
-            
+
           {{-- imagem --}}
           <div class="col-sm-4 imagemModuloCelular">
             <div class="row justify-content-center">
@@ -123,19 +123,19 @@
               </div>
             </div>
           </div>
-          
+
           {{-- Texto --}}
           <div class="col-sm-8 textoModuloR">
             <div class="row justify-content-center">
 
               <h1>Módulo 2</h1>
               <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-                Sed facilisis nisl non lorem tincidunt ultricies. 
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                Sed facilisis nisl non lorem tincidunt ultricies.
                 Maecenas ullamcorper, justo at egestas congue,
                 magna est egestas elit, id sollicitudin ipsum lacus non nibh.
-                Mauris eu dui elit. Mauris eget enim tempor, ullamcorper sem sed, 
-                porttitor turpis. Phasellus ut sem mi. Aliquam dignissim ligula sit 
+                Mauris eu dui elit. Mauris eget enim tempor, ullamcorper sem sed,
+                porttitor turpis. Phasellus ut sem mi. Aliquam dignissim ligula sit
                 amet dui dapibus posuere. Maecenas in lorem sem.
               </p>
             </div>
@@ -150,7 +150,7 @@
             </div>
           </div>
 
-            
+
         </div>
       </div>
     </div>
@@ -171,12 +171,12 @@
 
               <h1>Módulo 3</h1>
               <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-                Sed facilisis nisl non lorem tincidunt ultricies. 
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                Sed facilisis nisl non lorem tincidunt ultricies.
                 Maecenas ullamcorper, justo at egestas congue,
                 magna est egestas elit, id sollicitudin ipsum lacus non nibh.
-                Mauris eu dui elit. Mauris eget enim tempor, ullamcorper sem sed, 
-                porttitor turpis. Phasellus ut sem mi. Aliquam dignissim ligula sit 
+                Mauris eu dui elit. Mauris eget enim tempor, ullamcorper sem sed,
+                porttitor turpis. Phasellus ut sem mi. Aliquam dignissim ligula sit
                 amet dui dapibus posuere. Maecenas in lorem sem.
               </p>
             </div>
@@ -184,22 +184,22 @@
         </div>
     </div>
 </div>
-    
-        
+
+
 </div>
 
 @endsection
 
 @section('javascript')
 <script type="application/javascript">
-  
- 
-  
+
+
+
   $(function(){
 
     // Função que leva para div específica ao clicar no botão
     autoScroll();
-    
+
   });
 
 

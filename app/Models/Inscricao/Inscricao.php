@@ -3,12 +3,17 @@
 namespace App\Models\Inscricao;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Inscricao extends Model
 {
+    use softDeletes;
     protected $fillable = [
         'user_id', 'evento_id', 'pagamento_id', 'promocao_id', 'cupom_desconto_id', 'finalizada',
     ];
+
+
+    protected array $dates = ['deleted_at'];
 
     public function evento()
     {
@@ -48,8 +53,8 @@ class Inscricao extends Model
     public function podeSubmeterTrabalho()
     {
         if ($this->categoria()->exists()) {
-            return $this->finalizada && $this->categoria->permite_submissao;
+            return $this->categoria->permite_submissao;
         }
-        return $this->finalizada;
+        return false;
     }
 }

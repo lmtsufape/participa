@@ -19,7 +19,7 @@
                             <h6 class="card-subtitle mb-2 text-muted">Categorias cadastradas no seu evento</h6>
                         </div>
                         <div class="col-md-6 d-flex justify-content-sm-start justify-content-md-end align-items-center">
-                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
                                 Cadastrar categoria
                             </button>
                             <!-- Modal criar categoria -->
@@ -35,13 +35,13 @@
                                         <div class="modal-body">
                                             <div class="row justify-content-center">
                                                 <div class="col-sm-12">
-                                                    <h6 class="card-subtitle mb-2 text-muted">Cadastre uma nova categoria para o seu evento</h6>
+                                                    <h6 class="card-subtitle mb-2 text-muted fw-bold">Cadastre uma nova categoria para o seu evento</h6>
                                                     <form method="POST" id="cadastrarmodalidade" action="{{ route('categoria.participante.store') }}">
                                                         @csrf
                                                         <input type="hidden" name="evento_id" value="{{ $evento->id }}">
                                                         <p class="card-text">
                                                         <div class="form-group">
-                                                            <label for="nome" class="col-form-label">{{ __('Nome da Categoria') }}*</label>
+                                                            <label for="nome" class="col-form-label fw-bold required-field">{{ __('Nome da Categoria') }}</label>
                                                             <input id="nome" type="text" class="form-control @error('nome') is-invalid @enderror" name="nome" value="{{ old('nome') }}" required autocomplete="nome" autofocus>
                                                             @error('nome')
                                                             <span class="invalid-feedback" role="alert">
@@ -49,8 +49,9 @@
                                                             </span>
                                                             @enderror
                                                         </div>
+                                                        <br>
                                                         <div class="form-group">
-                                                            <label for="descricao" class="col-form-label">{{ __('Descrição') }}</label>
+                                                            <label for="descricao" class="col-form-label fw-bold">{{ __('Descrição') }}</label>
                                                             <textarea name="descricao" class="ckeditor-texto">{{ old('descricao') }}</textarea>
                                                             @error('descricao')
                                                             <span class="invalid-feedback" role="alert">
@@ -58,28 +59,21 @@
                                                             </span>
                                                             @enderror
                                                         </div>
+                                                        <br>
                                                         <div class="form-group">
-                                                            {{-- <label for="valor_total"
-                                                                    class="col-form-label">{{ __('Valor da inscrição') }}*</label>
-                                                            <small>(0 para inscrição gratuita)</small> --}}
-                                                            <input id="valor_total" type="hidden" step="0.1" class="form-control @error('valor_total') is-invalid @enderror" name="valor_total" value="0" required autocomplete="valor_total" autofocus>
+                                                            <label for="valor_total"
+                                                                    class="col-form-label fw-bold">{{ __('Valor da inscrição') }}*</label>
+                                                            <small>(0 para inscrição gratuita)</small>
+                                                            <input id="valor_total" type="number" step="0.1" class="form-control @error('valor_total') is-invalid @enderror" name="valor_total" value="0" required autocomplete="valor_total" autofocus>
                                                             @error('valor_total')
                                                             <span class="invalid-feedback" role="alert">
                                                                 <strong>{{ $message }}</strong>
                                                             </span>
                                                             @enderror
                                                         </div>
-                                                        <!-- <div class="form-group">
-                                                            <label for="link" class="col-form-label">{{ __('Link') }}*</label>
-                                                            <input id="link" type="text" class="form-control @error('link') is-invalid @enderror" name="link" value="{{ old('link') }}" required autocomplete="link" autofocus>
-                                                            @error('link')
-                                                            <span class="invalid-feedback" role="alert">
-                                                                <strong>{{ $message }}</strong>
-                                                            </span>
-                                                            @enderror
-                                                        </div> -->
+                                                        <br>
                                                         <div class="form-group">
-                                                            <label for="limite_inscricao" class="col-form-label">{{ __('Data limite para inscrição') }}</label>
+                                                            <label for="limite_inscricao" class="col-form-label fw-bold">{{ __('Data limite para inscrição') }}</label>
                                                             <input id="limite_inscricao" type="datetime-local" class="form-control @error('limite_inscricao') is-invalid @enderror" name="limite_inscricao" value="{{ old('limite_inscricao') }}" autocomplete="limite_inscricao" autofocus>
                                                             @error('limite_inscricao')
                                                             <span class="invalid-feedback" role="alert">
@@ -128,7 +122,7 @@
                                             </div>
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
                                             <button type="submit" form="cadastrarmodalidade" class="btn btn-primary">
                                                 {{ __('Confirmar') }}
                                             </button>
@@ -160,14 +154,14 @@
                                     <td>{{ $categoria->permite_inscricao ? "Sim" : "Não" }}</td>
                                     <td>{{ $categoria->limite_inscricao?->format('d/m/Y H:i')}}</td>
                                     <td style="text-align:center">
-                                        <a href="#" data-toggle="modal" data-target="#modalEditarCategoria{{ $categoria->id }}"><img src="{{ asset('img/icons/edit-regular.svg') }}" style="width:20px"></a>
+                                        <a href="#" data-bs-toggle="modal" data-bs-target="#modalEditarCategoria{{ $categoria->id }}"><img src="{{ asset('img/icons/edit-regular.svg') }}" style="width:20px"></a>
                                     </td>
                                     <td style="text-align:center">
                                         <form id="formExcluirCategoria{{ $categoria->id }}" action="{{ route('categoria.participante.destroy', $categoria->id) }}" method="POST">
                                             @csrf
                                             @method('DELETE')
-                                            <a href="#" data-toggle="modal" data-target="#modalExcluirCategoria{{ $categoria->id }}">
-                                                <img src="{{ asset('img/icons/trash-alt-regular.svg') }}" class="icon-card" alt="">
+                                            <a href="#" data-bs-toggle="modal" data-bs-target="#modalExcluirCategoria{{ $categoria->id }}">
+                                                <img src="{{ asset('img/icons/trash-alt-regular.svg') }}" class="icon-card" style="width:20px; height:auto;" alt="">
                                             </a>
                                         </form>
                                     </td>
@@ -291,6 +285,15 @@
 
 
                         </div>
+                    <div class="form-group" style="margin-top: 20px; margin-bottom: 20px;">
+                        <label for="valor_total_edit_{{ $categoria->id }}">Valor*</label>
+                        <input id="valor_total_edit_{{ $categoria->id }}" type="number" step="0.01" min="0" class="form-control @error('valor_total_'.$categoria->id) is-invalid @enderror" name="valor_total_{{ $categoria->id }}" value="{{ old('valor_total_'.$categoria->id, $categoria->valor_total) }}" required>
+                        <small>(0 para inscrição gratuita)</small>
+                        @error('valor_total_'.$categoria->id)
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                        @enderror
                     </div>
 
                     @endif
@@ -308,8 +311,8 @@
 
 
                     <div class="form-group" style="margin-top: 20px; margin-bottom: 20px;">
-                        <label for="limite_inscricao_">Valor*</label>
-                        <input id="limite_inscricao_" type="datetime-local" class="form-control @error('limite_inscricao_') is-invalid @enderror" name="limite_inscricao_{{ $categoria->id }}" value="{{ old('limite_inscricao_'.$categoria->id, $categoria->limite_inscricao) }}">
+                        <label for="limite_inscricao_edit_{{ $categoria->id }}">Data limite de inscrição</label>
+                        <input id="limite_inscricao_edit_{{ $categoria->id }}" type="datetime-local" class="form-control @error('limite_inscricao_'.$categoria->id) is-invalid @enderror" name="limite_inscricao_{{ $categoria->id }}" value="{{ old('limite_inscricao_'.$categoria->id, $categoria->limite_inscricao ? \Carbon\Carbon::parse($categoria->limite_inscricao)->format('Y-m-d\TH:i') : '') }}">
                         @error('limite_inscricao_'.$categoria->id)
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>

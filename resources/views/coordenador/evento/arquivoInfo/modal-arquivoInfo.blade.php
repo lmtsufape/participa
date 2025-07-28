@@ -1,8 +1,8 @@
 <!-- Button trigger modal -->
 <button type="button"
     class="btn btn-primary"
-    data-toggle="modal"
-    data-target="#exampleModal">
+    data-bs-toggle="modal"
+    data-bs-target="#exampleModal">
     Adicionar arquivo
 </button>
 
@@ -17,12 +17,6 @@
             <div class="modal-header">
                 <h5 class="modal-title"
                     id="exampleModalLabel">Adicionar arquivo</h5>
-                <button type="button"
-                    class="close"
-                    data-dismiss="modal"
-                    aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
             </div>
             <div class="modal-body">
                 <div class="row justify-content-center">
@@ -40,7 +34,7 @@
                             <div class="row justify-content-center">
                                 <div class="col-sm-12">
                                     <label for="nome"
-                                        class="col-form-label">{{ __('Nome do arquivo') }}</label>
+                                        class="col-form-label fw-bold">{{ __('Nome do arquivo') }}</label>
                                     <input id="nome"
                                         type="text"
                                         class="form-control @error('nome') is-invalid @enderror"
@@ -52,7 +46,7 @@
                                 </div>
                                 <div class="col-sm-12">
                                     <label for="arquivo"
-                                        class="col-form-label">{{ __('Arquivo') }}</label>
+                                        class="col-form-label fw-bold">{{ __('Arquivo') }}</label>
                                     <input id="arquivo"
                                         type="file"
                                         class="form-control @error('arquivo') is-invalid @enderror"
@@ -66,9 +60,9 @@
                             <div class="modal-footer">
                                 <button type="button"
                                     class="btn btn-secondary"
-                                    data-dismiss="modal">Fechar</button>
+                                    data-bs-dismiss="modal">Fechar</button>
                                 <button type="submit"
-                                    class="btn btn-primary">
+                                    class="btn btn-primary" id="btnSalvarPdf" disabled>
                                     {{ __('Finalizar') }}
                                 </button>
                             </div>
@@ -79,3 +73,108 @@
         </div>
     </div>
 </div>
+
+<script type="text/javascript">
+document.addEventListener('DOMContentLoaded', function() {
+    // IDs corretos que correspondem ao HTML
+    const fileInput = document.getElementById('arquivo');
+    const nomeInput = document.getElementById('nome');
+    const btnSalvar = document.getElementById('btnSalvarPdf');
+    const modal = document.getElementById('exampleModal');
+
+    // Função para validar formulário completo
+    function validarFormulario() {
+        const arquivo = fileInput.files[0];
+        const nome = nomeInput.value.trim();
+
+        // Verifica se ambos os campos estão preenchidos
+        const isValid = arquivo && nome.length > 0;
+
+        // Habilita/desabilita botão
+        btnSalvar.disabled = !isValid;
+
+        return isValid;
+    }
+
+    // Função para validar arquivo especificamente
+    function validarArquivo() {
+        const arquivo = fileInput.files[0];
+
+        if (arquivo) {
+            fileInput.classList.remove('is-invalid');
+            fileInput.classList.add('is-valid');
+            mostrarFeedback(`✅ Arquivo selecionado: ${arquivo.name}`, 'success', 'arquivo-feedback');
+        } else {
+            fileInput.classList.remove('is-valid');
+            fileInput.classList.add('is-invalid');
+            mostrarFeedback('❌ Selecione um arquivo', 'error', 'arquivo-feedback');
+        }
+
+        validarFormulario();
+    }
+
+    // Função para validar nome
+    function validarNome() {
+        const nome = nomeInput.value.trim();
+
+        if (nome.length > 0) {
+            nomeInput.classList.remove('is-invalid');
+            nomeInput.classList.add('is-valid');
+            removerFeedback('nome-feedback');
+        } else {
+            nomeInput.classList.remove('is-valid');
+            nomeInput.classList.add('is-invalid');
+            mostrarFeedback('❌ Digite um nome para o arquivo', 'error', 'nome-feedback');
+        }
+
+        validarFormulario();
+    }
+
+    // Função para mostrar feedback
+    function mostrarFeedback(mensagem, tipo, feedbackId) {
+        removerFeedback(feedbackId);
+
+        const feedback = document.createElement('div');
+        feedback.id = feedbackId;
+        feedback.className = `mt-2 text-${tipo === 'success' ? 'success' : 'danger'} small`;
+        feedback.innerHTML = `<i class="fas fa-${tipo === 'success' ? 'check-circle' : 'exclamation-triangle'}"></i> ${mensagem}`;
+
+        if (feedbackId === 'arquivo-feedback') {
+            fileInput.parentNode.appendChild(feedback);
+        } else {
+            nomeInput.parentNode.appendChild(feedback);
+        }
+    }
+
+    // Função para remover feedback
+    function removerFeedback(feedbackId) {
+        const feedback = document.getElementById(feedbackId);
+        if (feedback) feedback.remove();
+    }
+
+    // Event listeners
+    fileInput.addEventListener('change', validarArquivo);
+    nomeInput.addEventListener('input', validarNome);
+    nomeInput.addEventListener('blur', validarNome);
+
+    // Resetar modal quando abrir
+    modal.addEventListener('show.bs.modal', function() {
+        fileInput.value = '';
+        nomeInput.value = '';
+        btnSalvar.disabled = true;
+        fileInput.classList.remove('is-valid', 'is-invalid');
+        nomeInput.classList.remove('is-valid', 'is-invalid');
+        removerFeedback('arquivo-feedback');
+        removerFeedback('nome-feedback');
+    });
+
+    // Validação antes do submit
+    modal.querySelector('form').addEventListener('submit', function(e) {
+        if (!validarFormulario()) {
+            e.preventDefault();
+            alert('⚠️ Por favor, preencha todos os campos obrigatórios!');
+            return false;
+        }
+    });
+});
+</script>

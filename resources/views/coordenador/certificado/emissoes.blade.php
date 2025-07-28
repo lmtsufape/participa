@@ -15,8 +15,8 @@
                         name="eventoId"
                         value="{{ $evento->id }}">
                     <button onclick="event.preventDefault();"
-                        data-toggle="modal"
-                        data-target="#modalDistribuicaoAutomatica"
+                        data-bs-toggle="modal"
+                        data-bs-target="#modalDistribuicaoAutomatica"
                         class="btn btn-primary"
                         style="width:100%">
                         {{ __('Distribuir trabalhos') }}
@@ -142,7 +142,7 @@
                                               </div>
                                             </div>
                                           </div>
-                                        <a href="#" data-toggle="modal" data-target="#modalDeletarEmissao{{$usuario->pivot->id}}"
+                                        <a href="#" data-bs-toggle="modal" data-bs-target="#modalDeletarEmissao{{$usuario->pivot->id}}"
                                             class="text-reset d-flex justify-content-center">
                                             <i class="fas fa-archive"></i>
                                         </a>

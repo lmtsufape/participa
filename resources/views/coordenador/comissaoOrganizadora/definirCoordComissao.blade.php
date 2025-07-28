@@ -36,7 +36,7 @@
                             </p>
                             <div class="row justify-content-center">
                                 <div class="col-md-12">
-                                    <button type="submit" class="btn btn-primary" style="width:100%">
+                                    <button id="submitButton" type="submit" class="btn btn-primary" style="width:100%">
                                         {{ __('Definir Coordenador') }}
                                     </button>
                                 </div>
@@ -49,3 +49,32 @@
     </div>{{-- End Cord Comissão --}}
 
 @endsection
+
+@push('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const checkboxes = document.querySelectorAll('input[name="coordComissaoId[]"]');
+            const submitBtn  = document.getElementById('submitButton');
+
+            function toggleSubmit() {
+                // habilita se houver pelo menos um checkbox marcado
+                const anyChecked = Array.from(checkboxes).some(cb => cb.checked);
+                submitBtn.disabled = !anyChecked;
+            }
+
+            // observe mudanças
+            checkboxes.forEach(cb => {
+                cb.addEventListener('change', toggleSubmit);
+
+                // opcional: mostrar/ocultar a área temática junto
+                const container = cb.closest('.card').querySelector('.area-select-container');
+                cb.addEventListener('change', () => {
+                    container.classList.toggle('d-none', !cb.checked);
+                });
+            });
+
+            // estado inicial (caso haja old values)
+            toggleSubmit();
+        });
+    </script>
+@endpush
