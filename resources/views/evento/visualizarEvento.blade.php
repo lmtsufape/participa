@@ -13,7 +13,7 @@
             $bannerPath =
                 $evento->is_multilingual && Session::get('idiomaAtual') === 'en' && $evento->fotoEvento_en
                     ? $evento->fotoEvento_en
-                    : $evento->icone;
+                    : $evento->fotoEvento;
         @endphp
         <div class="row my-5">
             <div class="col-md-7">
