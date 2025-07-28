@@ -1067,7 +1067,7 @@ class TrabalhoController extends Controller
             }
 
             $validatedData = $request->validate([
-                'arquivoCorrecao' => ['required', 'file', 'max:2048'],
+                'arquivoCorrecao' => ['required', 'file', 'max:5120'],
             ]);
 
             $arquivoCorrecao = $trabalho->arquivoCorrecao()->first();
