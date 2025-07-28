@@ -504,7 +504,7 @@ class RevisorController extends Controller
             }
 
             $validatedData = $request->validate([
-                'arquivo' => ['required', 'file', 'max:2048'],
+                'arquivo' => ['required', 'file', 'max:5120'],
             ]);
         }
 
@@ -555,7 +555,7 @@ class RevisorController extends Controller
         }
 
         $coordenador = User::find($evento->coordenadorId);
-        
+
         $coordenadoresEixo = \App\Models\Users\CoordEixoTematico::where('evento_id', $evento_id)
             ->where('area_id', $trabalho->areaId)
             ->with('user')
@@ -586,7 +586,7 @@ class RevisorController extends Controller
             }
 
             $request->validate([
-                'arquivoAvaliacao' => ['required', 'file', 'max:2048'],
+                'arquivoAvaliacao' => ['required', 'file', 'max:5120'],
             ]);
         }
         $opcaoCont = 0;
