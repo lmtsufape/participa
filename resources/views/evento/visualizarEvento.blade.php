@@ -1,4 +1,39 @@
 @extends('layouts.app')
+@section('css')
+<style>
+        .link-pill {
+            display: flex;
+            align-items: center;
+            background-color: #ffffff;
+            border-radius: 8px;
+            padding: 12px 20px;
+            margin-bottom: 1rem;
+            text-decoration: none;
+            color: #212529; /* Cor de texto padrão (preto/cinza escuro) */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: box-shadow 0.2s ease-in-out, transform 0.2s ease-in-out;
+        }
+
+        .link-pill:hover {
+            text-decoration: none; /* Garante que não haverá sublinhado no hover */
+            color: #212529;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px); /* Efeito sutil de elevação */
+        }
+
+        .link-pill .icon-attachment {
+            width: 20px;
+            height: 20px;
+            margin-right: 15px; /* Espaço entre o ícone e o texto */
+        }
+
+        /* Ajuste o espaçamento do título */
+        #info_adicionais h4 {
+            margin-bottom: 1.5rem !important;
+        }
+    </style>
+
+    @endsection
 @section('content')
     @if(session('message'))
         <div class="alert alert-{{ session('class', 'info') }} alert-dismissible fade show text-center" role="alert">
@@ -268,8 +303,9 @@
 
         @if($temSubmissao || $temAreas)
             <div id="submissao_trabalho" class="row py-4">
-                <h4 class="text-my-primary">{{ __('Submeta seu trabalho') }}</h4>
-
+                @if($periodoSubmissao)
+                    <h4 class="text-my-primary">{{ __('Submeta seu trabalho') }}</h4>
+                @endif
                 {{-- coluna de Modalidades --}}
                 @if($temSubmissao)
                     <div class="col-md-6">
@@ -532,99 +568,46 @@
                     || ($evento->pdf_arquivo && $evento->modarquivo)
                     || $evento->arquivoInfos->isNotEmpty()
                 )
-                    <div class="col-md-6">
-                        <h4 class="text-my-primary">{{ __('Informações adicionais') }}</h4>
+                    <div class="col-md-6 mb-4 mb-md-0">
+                        <h4 class="text-my-primary mb-3">{{ __('Informações adicionais') }}</h4>
 
+                        {{-- Link para Programação em PDF --}}
                         @if ($evento->exibir_pdf && $etiquetas->modprogramacao && $evento->pdf_programacao)
-                            <div class="form-row mb-3 justify-content-center">
-                                <div class="col-sm-3 text-center">
-                                    <img class="icon-programacao"
-                                        src="{{ asset('img/icons/Icon awesome-file-pdf.svg') }}"
-                                        alt="PDF programação">
-                                </div>
-                                <div class="col-sm-8 d-flex align-items-center">
-                                    <a href="{{ asset('storage/' . $evento->pdf_programacao) }}"
-                                    target="_blank"
-                                    class="titulo">
-                                        {{ $etiquetas->etiquetamoduloprogramacao }}
-                                    </a>
-                                </div>
-                            </div>
+                            <a href="{{ asset('storage/' . $evento->pdf_programacao) }}" target="_blank" class="link-pill">
+                                <img src="{{ asset('img/icons/icon-paperclip-teal.svg') }}" alt="Anexo" class="icon-attachment">
+                                <span>{{ $etiquetas->etiquetamoduloprogramacao }}</span>
+                            </a>
                         @endif
 
+                        {{-- Link para Arquivo em PDF --}}
                         @if ($evento->pdf_arquivo && $evento->modarquivo)
-                            <div class="form-row mb-3 justify-content-center">
-                                <div class="col-sm-3 text-center">
-                                    <img class="icon-programacao"
-                                        src="{{ asset('img/icons/Icon awesome-file-pdf.svg') }}"
-                                        alt="PDF arquivo">
-                                </div>
-                                <div class="col-sm-8 d-flex align-items-center">
-                                    <a href="{{ asset('storage/' . $evento->pdf_arquivo) }}"
-                                    target="_blank"
-                                    class="titulo">
-                                        {{ $etiquetas->etiquetaarquivo }}
-                                    </a>
-                                </div>
-                            </div>
+                            <a href="{{ asset('storage/' . $evento->pdf_arquivo) }}" target="_blank" class="link-pill">
+                                <img src="{{ asset('img/icons/icon-paperclip-teal.svg') }}" alt="Anexo" class="icon-attachment">
+                                <span>{{ $etiquetas->etiquetaarquivo }}</span>
+                            </a>
                         @endif
 
+                        {{-- Links para Arquivos de Informações Adicionais --}}
                         @foreach ($evento->arquivoInfos as $arquivo)
-                            <div class="form-row mb-3 justify-content-center">
-                                <div class="col-sm-3 text-center">
-                                    <img class="icon-programacao"
-                                        src="{{ asset('img/icons/Icon awesome-file-pdf.svg') }}"
-                                        alt="Info extra">
-                                </div>
-                                <div class="col-sm-8 d-flex align-items-center">
-                                    <a href="{{ asset('storage/' . $arquivo->path) }}"
-                                    target="_blank"
-                                    class="titulo">
-                                        {{ $arquivo->nome }}
-                                    </a>
-                                </div>
-                            </div>
+                            <a href="{{ asset('storage/' . $arquivo->path) }}" target="_blank" class="link-pill">
+                                <img src="{{ asset('img/icons/icon-paperclip-teal.svg') }}" alt="Anexo" class="icon-attachment">
+                                <span>{{ $arquivo->nome }}</span>
+                            </a>
                         @endforeach
                     </div>
                 @endif
 
                 @if($evento->memorias->isNotEmpty())
                     <div class="col-md-6">
-                        <h4 class="text-my-primary">{{ __('Memórias') }}</h4>
+                        <h4 class="text-my-primary mb-3">{{ __('Memórias') }}</h4>
 
-                        <div class="row mb-3">
-                            <div class="col-12">
-                                <div class="card sombra-card w-100">
-                                    <div class="card-body">
-                                        @foreach ($evento->memorias as $memoria)
-                                            <div class="form-row mb-3 justify-content-center">
-                                                <div class="col-sm-3 d-flex justify-content-center align-items-center">
-                                                    <img class="icon-programacao"
-                                                        src="{{ asset('img/icons/' . ($memoria->arquivo ? 'Icon awesome-file-pdf.svg' : 'link-solid.svg')) }}"
-                                                        alt="">
-                                                </div>
-                                                <div class="col-sm-8 d-flex align-items-center">
-                                                    @if ($memoria->arquivo)
-                                                        <a href="{{ asset('storage/' . $memoria->arquivo) }}"
-                                                        target="_blank"
-                                                        class="titulo">
-                                                            {{ $memoria->titulo }}
-                                                        </a>
-                                                    @else
-                                                        <a href="{{ $memoria->link }}"
-                                                        target="_blank"
-                                                        class="titulo">
-                                                            {{ $memoria->titulo }}
-                                                        </a>
-                                                    @endif
-                                                </div>
-                                            </div>
-                                        @endforeach
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
+                        {{-- Links de Memórias --}}
+                        @foreach ($evento->memorias as $memoria)
+                            <a href="{{ $memoria->arquivo ? asset('storage/' . $memoria->arquivo) : $memoria->link }}" target="_blank" class="link-pill">
+                                <img src="{{ asset('img/icons/icon-paperclip-teal.svg') }}" alt="Anexo" class="icon-attachment">
+                                <span>{{ $memoria->titulo }}</span>
+                            </a>
+                        @endforeach
                     </div>
                 @endif
 
