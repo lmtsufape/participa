@@ -74,7 +74,7 @@
                                                     data-bs-toggle="modal"
                                                     data-bs-target="#modalExcluirRegistro{{ $registro->id }}">
                                                     <img src="{{ asset('img/icons/trash-alt-regular.svg') }}"
-                                                        class="icon-card"
+                                                         style="width:20px"
                                                         alt="">
                                                 </a>
                                             </form>
