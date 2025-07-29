@@ -19,7 +19,7 @@
         @endif
 
         <!-- Row trabalhos -->
-        @can('isCoordenador', $evento) 
+        @can('isCoordenador', $evento)
         <div class="row justify-content-center">
           <div class="col-sm-8">
             <div class="card">
@@ -34,6 +34,8 @@
                                         <th>Inscrições</th>
                                         <th>Validadas</th>
                                         <th>Total Recebido</th>
+                                        <th>Total Taxas</th>
+                                        <th>Total Disponível</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -41,6 +43,8 @@
                                         <td>{{$evento->inscricaos_count}}</td>
                                         <td>{{$evento->inscricoes_validadas_count}}</td>
                                         <td>R$ {{number_format($evento->total_arrecadado ?? 0, 2, ',', '.')}}</td>
+                                        <td>R$ {{number_format($evento->total_taxas ?? 0, 2, ',', '.')}}</td>
+                                        <td>R$ {{number_format($evento->total_disponivel ?? 0, 2, ',', '.')}}</td>
                                     </tr>
                                 </tbody>
                             </table>

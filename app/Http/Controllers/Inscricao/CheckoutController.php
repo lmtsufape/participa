@@ -197,6 +197,11 @@ class CheckoutController extends Controller
             case "payment":
                 $payment = $client->get($contents["data"]["id"]);
                 $pagamento = Pagamento::where('codigo', $contents["data"]["id"])->first();
+
+                $gross       = data_get($payment, 'transaction_amount', 0);
+                $netReceived = data_get($payment, 'transaction_details.net_received_amount', 0);
+                $pagamento->taxa = round($gross - $netReceived, 2);
+
                 if ($payment->status == 'approved') {
                     $inscricao = $pagamento->inscricao;
                     $inscricao->finalizada = true;
