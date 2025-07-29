@@ -445,14 +445,13 @@ class EventoController extends Controller
         $revisores = User::whereHas('revisor', function (Builder $query) use ($evento) {
             $query->where('evento_id', $evento->id);
         })
-        ->with('revisor.trabalhosAtribuidos.arquivoCorrecao') // eager load
-        ->orderBy('name')
+        ->with('revisor.trabalhosAtribuidos.arquivoCorrecao')
         ->get()
-        ->each(function ($user) {
+        ->each(function ($user) use ($evento) {
             $totalTrabalhos = 0;
             $totalArquivos = 0;
 
-            foreach ($user->revisor as $revisor) {
+            foreach ($user->revisor->where('evento_id', $evento->id) as $revisor) {
                 $totalTrabalhos += $revisor->trabalhosAtribuidos
                     ->filter(fn($trabalho) => in_array($trabalho->avaliado, [
                         'corrigido', 'corrigido_parcialmente', 'nao_corrigido'
@@ -1523,6 +1522,17 @@ class EventoController extends Controller
         if (!$evento) {
             return abort(404);
         }
+
+        $agora = now();
+        $periodoSubmissao = $evento->modalidades->some(function ($modalidade) use ($agora) {
+            if (is_null($modalidade->inicioSubmissao) || is_null($modalidade->fimSubmissao)) {
+                return false;
+            }
+            $inicio = \Carbon\Carbon::parse($modalidade->inicioSubmissao);
+            $fim = \Carbon\Carbon::parse($modalidade->fimSubmissao);
+
+            return $agora->between($inicio, $fim);
+        });
         $enderecoMap  = urlencode($evento->endereco->getEnderecoFormatado());
         $encerrada = $evento->eventoInscricoesEncerradas();
         $datas = DB::table('atividades')
@@ -1542,7 +1552,6 @@ class EventoController extends Controller
         ->with('datasAtividade')
         ->get();
         $atividadesAgrupadas = $atividades->groupBy('data');
-
         $dataInicio = Carbon::parse($evento->dataInicio);
         $dataFim    = Carbon::parse($evento->dataFim);
         if (auth()->user()) {
@@ -1596,7 +1605,7 @@ class EventoController extends Controller
             // dd($evento->categoriasParticipantes()->where('permite_inscricao', true)->get());
             // dd($etiquetas);
 
-            return view('evento.visualizarEvento', compact('evento', 'hasFile', 'mytime', 'etiquetas', 'modalidades', 'formSubTraba', 'atividades', 'atividadesAgrupadas', 'dataInicial', 'datas', 'isInscrito', 'inscricao', 'subeventos', 'encerrada', 'links', 'areas', 'dataInicio','dataFim', 'jaCandidatou', 'InscritoSemCategoria', 'enderecoMap'));
+            return view('evento.visualizarEvento', compact('evento', 'hasFile', 'mytime', 'etiquetas', 'modalidades', 'formSubTraba', 'atividades', 'atividadesAgrupadas', 'dataInicial', 'datas', 'isInscrito', 'inscricao', 'subeventos', 'encerrada', 'links', 'areas', 'dataInicio','dataFim', 'jaCandidatou', 'InscritoSemCategoria', 'enderecoMap', 'periodoSubmissao'));
         } else {
             $subeventos = Evento::where('deletado', false)->where('publicado', true)->where('evento_pai_id', $id)->get();
             $hasTrabalho = false;
@@ -1619,7 +1628,7 @@ class EventoController extends Controller
             }
 
 
-            return view('evento.visualizarEvento', compact('evento', 'trabalhos', 'trabalhosCoautor', 'hasTrabalho', 'hasTrabalhoCoautor', 'hasFile', 'datas', 'mytime', 'etiquetas', 'formSubTraba', 'atividadesAgrupadas', 'atividades', 'dataInicial', 'modalidades', 'isInscrito', 'subeventos', 'encerrada', 'areas', 'dataInicio', 'dataFim', 'enderecoMap'));
+            return view('evento.visualizarEvento', compact('evento', 'trabalhos', 'trabalhosCoautor', 'hasTrabalho', 'hasTrabalhoCoautor', 'hasFile', 'datas', 'mytime', 'etiquetas', 'formSubTraba', 'atividadesAgrupadas', 'atividades', 'dataInicial', 'modalidades', 'isInscrito', 'subeventos', 'encerrada', 'areas', 'dataInicio', 'dataFim', 'enderecoMap', 'periodoSubmissao'));
         }
     }
 
