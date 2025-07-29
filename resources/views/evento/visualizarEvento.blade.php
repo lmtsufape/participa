@@ -127,6 +127,7 @@
                                 @endif
                             </button>
                             <button class="btn btn-my-success w-60 rounded btn-lg" 
+                                style="display: none;"
                                 @if (!$encerrada && !($isInscrito && isset($inscricao) && $inscricao->finalizada))
                                     data-bs-toggle="modal" data-bs-target="#modalInscricaoPCD"
                                 @endif
@@ -136,6 +137,7 @@
                                 @if (isset($solicitacaoPCD) && $solicitacaoPCD->status == 'rejeitado')
                                     disabled
                                 @endif
+
                             >
                                 @if (isset($solicitacaoPCD) && $solicitacaoPCD->status == 'rejeitado')
                                     {{ __('Inscrição PCD rejeitada') }}
