@@ -53,7 +53,7 @@
                                                     data-bs-toggle="modal"
                                                     data-bs-target="#modalExcluirArea{{ $arquivo->id }}">
                                                     <img src="{{ asset('img/icons/trash-alt-regular.svg') }}"
-                                                        class="icon-card"
+                                                        style="width: 20px"
                                                         alt="">
                                                 </a>
                                             </form>
