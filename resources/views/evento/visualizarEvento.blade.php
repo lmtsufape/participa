@@ -96,7 +96,7 @@
                 @if ($etiquetas->modinscricao)
                     <div class="d-flex flex-wrap gap-2">
                         <button id="btn-inscrevase" class="btn btn-my-success w-60 rounded btn-lg" data-bs-toggle="modal" data-bs-target="#modalInscrever"
-                            @if (($isInscrito && !$InscritoSemCategoria)  || $encerrada) disabled @endif>
+                            @if (($isInscrito && !$InscritoSemCategoria)  || $encerrada || (isset($inscricao) && $inscricao->finalizada)) disabled @endif>
                             @if ($isInscrito)
                                 @if($inscricao->finalizada)
                                     {{ __('Já inscrito') }}
