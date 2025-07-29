@@ -446,14 +446,13 @@ class EventoController extends Controller
         $revisores = User::whereHas('revisor', function (Builder $query) use ($evento) {
             $query->where('evento_id', $evento->id);
         })
-        ->with('revisor.trabalhosAtribuidos.arquivoCorrecao') // eager load
-        ->orderBy('name')
+        ->with('revisor.trabalhosAtribuidos.arquivoCorrecao')
         ->get()
-        ->each(function ($user) {
+        ->each(function ($user) use ($evento) {
             $totalTrabalhos = 0;
             $totalArquivos = 0;
 
-            foreach ($user->revisor as $revisor) {
+            foreach ($user->revisor->where('evento_id', $evento->id) as $revisor) {
                 $totalTrabalhos += $revisor->trabalhosAtribuidos
                     ->filter(fn($trabalho) => in_array($trabalho->avaliado, [
                         'corrigido', 'corrigido_parcialmente', 'nao_corrigido'
