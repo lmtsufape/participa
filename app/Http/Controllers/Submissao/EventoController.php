@@ -1996,7 +1996,7 @@ class EventoController extends Controller
             ->whereNull('evento_pai_id');
 
         if ($request->filled('busca')) {
-            $query->where('nome', 'ilike', '%' . $request->busca . '%');
+            $query->where('nome', 'like', '%' . $request->busca . '%');
         }
 
         if ($request->filled('ordenar')) {
@@ -2027,7 +2027,7 @@ class EventoController extends Controller
             ->whereNull('evento_pai_id');
 
         if ($request->filled('busca')) {
-            $query->where('nome', 'ilike', '%' . $request->busca . '%');
+            $query->where('nome', 'like', '%' . $request->busca . '%');
         }
 
         if ($request->filled('ordenar')) {

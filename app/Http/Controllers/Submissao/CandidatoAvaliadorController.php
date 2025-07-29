@@ -69,13 +69,12 @@ class CandidatoAvaliadorController extends Controller
     {
         $evento = Evento::findOrFail($eventoId);
 
-        $query = CandidatoAvaliador::select(DB::raw(
-            'DISTINCT ON (user_id, evento_id, area_id) candidatos_avaliadores.*'
-        ))->with(['user','area'])->where('evento_id', $evento->id)
-            ->orderBy('user_id')
-            ->orderBy('evento_id')
-            ->orderBy('area_id')
-            ->orderBy('id');
+        $subQuery = CandidatoAvaliador::select(DB::raw('MIN(id) as id'))
+            ->where('evento_id', $evento->id)
+            ->groupBy('user_id', 'evento_id', 'area_id');
+
+        $query = CandidatoAvaliador::whereIn('id', $subQuery)
+            ->with(['user', 'area']);
 
         $allAxes = CandidatoAvaliador::where('evento_id', $evento->id)
             ->with('area')

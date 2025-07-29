@@ -45,7 +45,7 @@ class HomeController extends Controller
             });
 
             if ($request->filled('busca')) {
-                $eventos->where('nome', 'ilike', '%' . $request->busca . '%');
+                $eventos->where('nome', 'like', '%' . $request->busca . '%');
             }
 
             if ($request->filled('ordenar')) {
