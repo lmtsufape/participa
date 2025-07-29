@@ -72,7 +72,7 @@
                                     @endphp
 
                                     <div class="card-title text-justify">
-                                        <h3>{{ Str::limit($titulo, 30, '...') }}</h3>
+                                        <h5>{{ Str::limit($titulo, 60, '...') }}</h5>
                                         <p>{{ Str::limit($descricao, 100, '...') }}</p>
                                     </div>
 
