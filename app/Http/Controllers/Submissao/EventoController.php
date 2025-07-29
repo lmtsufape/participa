@@ -113,6 +113,9 @@ class EventoController extends Controller
 
         $evento->total_arrecadado = $evento->inscricaos()->where('finalizada', true)->with('categoria')->get()->sum(fn($inscricao) => $inscricao->categoria->valor_total ?? 0);
 
+        $evento->total_taxas = $evento->inscricaos()->where('finalizada', true)->with('pagamento')->get()->sum(fn($inscricao) => $inscricao->pagamento->taxa ?? 0);
+        $evento->total_disponivel = $evento->total_arrecadado - $evento->total_taxas;
+
         return view('coordenador.informacoes', [
             'evento' => $evento,
         ]);
