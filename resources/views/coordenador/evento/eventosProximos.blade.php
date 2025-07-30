@@ -49,8 +49,8 @@
                         :icone="$evento->fotoEvento ? null : $evento->icone"
                         :fotoEvento="$evento->fotoEvento"
                         :nome="$evento->nome"
-                        :dataInicioFormatada="\Carbon\Carbon::parse($evento->dataInicio)->translatedFormat('l, d \d\e F')"
-                        :dataFimFormatada="\Carbon\Carbon::parse($evento->dataFim)->translatedFormat('l, d \d\e F')"
+                        :dataInicioFormatada="\Carbon\Carbon::parse($evento->dataInicio)->translatedFormat('l, d \d\e F \d\e Y')"
+                        :dataFimFormatada="\Carbon\Carbon::parse($evento->dataFim)->translatedFormat('l, d \d\e F \d\e Y')"
                         :descricao="Str::limit(strip_tags($evento->descricao ?? ''), 120)"
                         :link="route('evento.visualizar', ['id' => $evento->id])"
                     />
