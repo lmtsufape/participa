@@ -19,9 +19,11 @@
                 <div class="row px-5 ">
                     @foreach ($palestrantesChunk as $palestrante)
                         <div class="col-md-3">
+                            @if ($palestrante->fotoPalestrante)
+                                <img src="{{ asset('storage/' . $palestrante->fotoPalestrante) }}" class="img-thumbnail" alt="Foto de {{ $palestrante->nome }}">
+                            @else
                                 <img src="{{ asset('/img/capa-evento.png') }}" class="img-thumbnail" alt="Foto do palestrante">
-
-
+                            @endif
                         </div>
                     @endforeach
                 </div>
