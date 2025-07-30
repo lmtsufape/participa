@@ -9,7 +9,7 @@ use Illuminate\Queue\SerializesModels;
 use App\Models\Users\User;
 use App\Models\Submissao\Evento;
 
-class SolicitacaoPCDRejeitada extends Mailable
+class SolicitacaoPCDAprovada extends Mailable
 {
     use Queueable, SerializesModels;
 
