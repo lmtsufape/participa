@@ -8,12 +8,12 @@
             <form action="{{ route('inscricao.pcd.store', $evento) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body">
-                    <p>Para solicitar sua inscrição como Pessoa com Deficiência (PCD), por favor, anexe um documento comprobatório (laudo, identificação, carteira PCD, etc.).</p>
+                    <p>Para solicitar sua comprovação como Pessoa com Deficiência (PCD), por favor, anexe um documento comprobatório (laudo, identificação, carteira PCD, etc.).</p>
                     <p>O arquivo deve ser no formato PDF, JPG, JPEG ou PNG e ter no máximo 5MB.</p>
                     
                     {{-- Verifica se o usuário já tem uma inscrição ou solicitação para desabilitar o formulário --}}
                     @if(auth()->check() && (auth()->user()->inscricaos()->where('evento_id', $evento->id)->exists() || \App\Models\Inscricao\InscricaoPCD::where('user_id', auth()->id())->where('evento_id', $evento->id)->exists()))
-                        <div class="alert alert-warning">Você já possui uma inscrição ou solicitação para este evento.</div>
+                        <div class="alert alert-warning">Você já possui solicitação para este evento.</div>
                     @else
                         <div class="mb-3">
                             <label for="comprovante" class="form-label">Anexar Comprovante</label>

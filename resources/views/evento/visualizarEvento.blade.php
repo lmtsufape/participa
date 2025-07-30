@@ -127,24 +127,25 @@
                                 @endif
                             </button>
                             <button class="btn btn-my-success w-60 rounded btn-lg" 
-                                style="display: none;"
                                 @if (!$encerrada && !($isInscrito && isset($inscricao) && $inscricao->finalizada))
                                     data-bs-toggle="modal" data-bs-target="#modalInscricaoPCD"
                                 @endif
                                 @if ($encerrada || ($isInscrito && isset($inscricao) && $inscricao->finalizada))
                                     style="display: none;"
                                 @endif
-                                @if (isset($solicitacaoPCD) && $solicitacaoPCD->status == 'rejeitado')
+                                @if (isset($solicitacaoPCD) && $solicitacaoPCD->status == 'rejeitado' || isset($solicitacaoPCD) && $solicitacaoPCD->status == 'aprovado')
                                     disabled
                                 @endif
 
                             >
                                 @if (isset($solicitacaoPCD) && $solicitacaoPCD->status == 'rejeitado')
-                                    {{ __('Inscrição PCD rejeitada') }}
+                                    {{ __('Solicitação como PCD rejeitada') }}
                                 @elseif (isset($solicitacaoPCD) && $solicitacaoPCD->status == 'pendente')
-                                    {{ __('Inscrição PCD em análise') }}
+                                    {{ __('Solicitação como PCD em análise') }}
+                                @elseif (isset($solicitacaoPCD) && $solicitacaoPCD->status == 'aprovado')
+                                    {{ __('Solicitação como PCD aprovada') }}
                                 @else
-                                    {{ __('Inscrição PCD') }}
+                                    {{ __('Solicitação como PCD') }}
                                 @endif
                             </button>
                         @endif
