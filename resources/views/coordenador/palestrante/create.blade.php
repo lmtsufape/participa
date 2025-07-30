@@ -1,108 +1,87 @@
 @extends('coordenador.detalhesEvento')
 
 @section('menu')
+    <style>
+        /* ... */
+        .imagem-loader {
+            cursor: pointer;
+            border: 2px dashed #ccc;
+            padding: 5px;
+            border-radius: 5px;
+            transition: border-color 0.3s;
+            display: inline-block;
+            vertical-align: top;
+            align-items: center;
+            justify-content: center;
+        }
+        .imagem-loader:hover {
+            border-color: #007bff;
+        }
+    </style>
+
     <div id="divCadastrarPalestra" class="comissao" style="display: block">
-        <div id="divCadastrarAssinatura" class="comissao">
-            <div class="row">
-                <div class="col-12">
-                    <h1 class="titulo-detalhes">Cadastrar Palestras</h1>
-                    <h6 class="card-subtitle mb-2 text-muted">Cadastre uma nova palestra para certificação</h6>
-                </div>
+        <div class="row">
+            <div class="col-12">
+                <h1 class="titulo-detalhes">Cadastrar Palestras</h1>
+                <h6 class="card-subtitle mb-2 text-muted">Cadastre uma nova palestra para certificação</h6>
             </div>
         </div>
 
         <div class="row justify-content-center">
             <div class="col-12">
                 <form id="formNovaPalestra"
-                    method="POST"
-                    action="{{ route('coord.palestrantes.store') }}">
+                      method="POST"
+                      action="{{ route('coord.palestrantes.store') }}"
+                      enctype="multipart/form-data">
                     @csrf
                     <div class="container-fluid">
                         <div class="row form-group">
-                            <input type="hidden"
-                                name="eventoId"
-                                value="{{ $evento->id }}">
+                            <input type="hidden" name="eventoId" value="{{ $evento->id }}">
                             <div class="col-12 col-md-6">
                                 <label class="required-field" for="titulo">Título:</label>
-                                <input class="form-control @error('título') is-invalid @enderror"
-                                    type="text"
-                                    name="titulo"
-                                    id="titulo"
-                                    value="{{ old('titulo') }}"
-                                    placeholder="Nova palestra"
-                                    required>
-
-                                @error('título')
-                                    <span class="invalid-feedback"
-                                        role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
+                                <input class="form-control @error('titulo') is-invalid @enderror"
+                                       type="text" name="titulo" id="titulo" value="{{ old('titulo') }}"
+                                       placeholder="Nova palestra" required>
+                                @error('titulo')
+                                <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
                                 @enderror
                             </div>
                         </div>
                         <hr>
-                        <button id="buttonFecharDadosAdicionais"
-                            type="button"
-                            class="btn btn-primary mb-3"
-                            style="background-color: white; color: rgb(41, 109, 211); border-color: rgb(50, 132, 255); @if (old('vagas') != null || old('valor') != null || old('carga_horaria') != null || old('palavrasChaves') != null || old('nomePalestrante') != null || old('emailPalestrante') != null) display: block; @else display: none; @endif"
-                            onclick="fecharDadosAdicionais(0)">-Fechar dados opcionais</button>
-                        <div id="palestrantesDeUmaPalestra">
-                            <div class="row form-group">
-                                <div class="col-12">
-                                    <h5>Palestrante</h5>
-                                    <br>
-                                    <div class="row">
-                                        <div class="col-12 col-md-6 mb-3">
-                                            <label class="required-field" for="nome">Nome:</label>
-                                            <input
-                                                class="form-control apenasLetras @error('nomeDoPalestrante[]') is-invalid @enderror"
-                                                type="text"
-                                                name="nomeDoPalestrante[]"
-                                                id="nome"
-                                                value="{{ old('nomeDoPalestrante[]') }}"
-                                                placeholder="Nome do palestrante">
 
-                                            @error('nomeDoPalestrante[]')
-                                                <span class="invalid-feedback"
-                                                    role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                            @enderror
+
+                        <div id="palestrantes-container">
+                            <div class="palestrante-bloco" id="bloco_palestrante_1">
+                                <div class="row">
+                                    <div class="col-12"><h5>Palestrante 1</h5></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12 col-md-6 mb-3">
+                                        <label class="required-field" for="nomeDoPalestrante_1">Nome:</label>
+                                        <input class="form-control" type="text" name="nomeDoPalestrante[]" id="nomeDoPalestrante_1" placeholder="Nome do palestrante" required>
+                                    </div>
+                                    <div class="col-12 col-md-6 mb-3">
+                                        <label class="required-field" for="emailDoPalestrante_1">E-mail:</label>
+                                        <input class="form-control" type="email" name="emailDoPalestrante[]" id="emailDoPalestrante_1" placeholder="E-mail do palestrante" required>
+                                    </div>
+                                    <div class="col-12 col-md-6 mb-3">
+                                        <label for="fotoPalestrante_1" class="fw-bold mb-1 d-block">Foto (Opcional - 760x360px):</label>
+                                        <div class="imagem-loader">
+                                            <img id="preview_1" class="img-fluid" src="{{ asset('/img/nova_imagem.PNG') }}" alt="Clique para enviar uma imagem" style="max-width: 360px;", >
                                         </div>
-                                        <div class="col-12 col-md-6 mb-3">
-                                            <label class="required-field" for="email">E-mail:</label>
-                                            <input
-                                                class="form-control @error('emailDoPalestrante[]') is-invalid @enderror"
-                                                type="email"
-                                                name="emailDoPalestrante[]"
-                                                id="email"
-                                                value="{{ old('emailDoPalestrante[]') }}"
-                                                placeholder="E-mail do palestrante">
-
-                                            @error('emailDoPalestrante[]')
-                                                <span class="invalid-feedback"
-                                                    role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                            @enderror
+                                        <div style="display: none;">
+                                            <input type="file" name="fotoPalestrante[]" id="fotoPalestrante_1" accept="image/jpeg, image/png">
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <br>
-                        <button id="buttonNovoPalestrante"
-                            class="btn btn-primary mb-3"
-                            type="button"
-                            onclick="adicionarPalestrante(0)">+Adicionar palestrante</button>
+                        <button id="buttonNovoPalestrante" class="btn btn-primary mb-3" type="button">+Adicionar palestrante</button>
                     </div>
                     <div class="modal-footer">
-                        <button type="button"
-                            class="btn btn-secondary me-2"
-                            data-dismiss="modal">Fechar</button>
-                        <button id="submitNovaPalestra"
-                            type="submit"
-                            class="btn btn-primary">Salvar</button>
+                        <button type="button" class="btn btn-secondary me-2" data-dismiss="modal">Fechar</button>
+                        <button type="submit" class="btn btn-primary">Salvar</button>
                     </div>
                 </form>
             </div>
@@ -113,67 +92,127 @@
 @section('javascript')
     @parent
     <script>
-        var contadorPalestrantes = 1;
+        document.addEventListener('DOMContentLoaded', function() {
+            const container = document.getElementById('palestrantes-container');
+            let contadorPalestrantes = 1;
 
-        function adicionarPalestrante(id) {
-            contadorPalestrantes++;
-            if (id == 0) {
-                $('#palestrantesDeUmaPalestra').append(
-                    "<div id='novoPalestrantePalestra" + contadorPalestrantes + "' class='row form-group'>" +
-                    "<div class='col-12'>" +
-                    "<h5>Palestrante</h5>" +
-                    "<div class='row'>" +
-                    "<div class='col-12 col-md-5 mb-3'>" +
-                    "<label for='nome'>Nome:</label>" +
-                    "<input class='form-control apenasLetras' type='text' name='nomeDoPalestrante[]' id='nome'  value='{{ old('nomePalestrante') }}' placeholder='Nome do palestrante'>" +
-                    "</div>" +
-                    "<div class='col-12 col-md-5 mb-3'>" +
-                    "<label for='email'>E-mail:</label>" +
-                    "<input class='form-control' type='email' name='emailDoPalestrante[]' id='email' value='{{ old('emailPalestrante') }}' placeholder='E-mail do palestrante'>" +
-                    "</div>" +
-                    "<div class='col-12 col-md-2 d-flex justify-content-center justify-content-md-end align-items-end mb-3'>" +
-                    "<button type='button' onclick='removerPalestranteNovaPalestra(" + contadorPalestrantes +
-                    ")' class='btn btn-outline-danger btn-sm' title='Remover palestrante'><img src='{{ asset('/img/icons/user-times-solid.svg') }}' width='20px' height='auto' alt='remover palestrante'></button>" +
-                    "</div>" +
-                    "</div>" +
-                    "</div>" +
-                    "</div>"
-                )
-            } else if (id > 0) {
-                $('#palestrantesDeUmaPalestra' + id).append(
-                    "<div id='novoPalestrantePalestra" + contadorPalestrantes + "' class='row form-group'>" +
-                    "<div class='col-12'>" +
-                    "<h5>Palestrante</h5>" +
-                    "<div class='row'>" +
-                    "<input type='hidden' name='idPalestrante[]' value='0'>" +
-                    "<div class='col-12 col-md-5 mb-3'>" +
-                    "<label for='nome'>Nome:</label>" +
-                    "<input class='form-control apenasLetras' type='text' name='nomeDoPalestrante[]' id='nome'  value='{{ old('nomePalestrante') }}' placeholder='Nome do palestrante'>" +
-                    "</div>" +
-                    "<div class='col-12 col-md-5 mb-3'>" +
-                    "<label for='email'>E-mail:</label>" +
-                    "<input class='form-control' type='email' name='emailDoPalestrante[]' id='email' value='{{ old('emailPalestrante') }}' placeholder='E-mail do palestrante'>" +
-                    "</div>" +
-                    "<div class='col-12 col-md-2 d-flex justify-content-center justify-content-md-end align-items-end mb-3'>" +
-                    "<button type='button' onclick='removerPalestranteNovaPalestra(" + contadorPalestrantes +
-                    ")' class='btn btn-outline-danger btn-sm' title='Remover palestrante'><img src='{{ asset('/img/icons/user-times-solid.svg') }}' width='20px' height='auto' alt='remover palestrante'></button>" +
-                    "</div>" +
-                    "</div>" +
-                    "</div>" +
-                    "</div>"
-                )
+            document.getElementById('buttonNovoPalestrante').addEventListener('click', function() {
+                contadorPalestrantes++;
+                const novoBloco = document.createElement('div');
+                novoBloco.className = 'palestrante-bloco mt-4 pt-4 border-top';
+                novoBloco.id = `bloco_palestrante_${contadorPalestrantes}`;
+
+                novoBloco.innerHTML = `
+                    <div class="row">
+                        <div class="col-11"><h5>Palestrante ${contadorPalestrantes}</h5></div>
+                        <div class="col-1 text-end">
+                            <button type="button" class="btn btn-outline-danger btn-sm remover-palestrante" title="Remover palestrante">&times;</button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 col-md-6 mb-3">
+                            <label class="required-field" for="nomeDoPalestrante_${contadorPalestrantes}">Nome:</label>
+                            <input class="form-control" type="text" name="nomeDoPalestrante[]" id="nomeDoPalestrante_${contadorPalestrantes}" placeholder="Nome do palestrante" required>
+                        </div>
+                        <div class="col-12 col-md-6 mb-3">
+                            <label class="required-field" for="emailDoPalestrante_${contadorPalestrantes}">E-mail:</label>
+                            <input class="form-control" type="email" name="emailDoPalestrante[]" id="emailDoPalestrante_${contadorPalestrantes}" placeholder="E-mail do palestrante" required>
+                        </div>
+                        <div class="col-12 col-md-6 mb-3">
+                            <label for="fotoPalestrante_${contadorPalestrantes}" class="fw-bold mb-1 d-block">Foto (Opcional - 760x360px):</label>
+                            <div class="imagem-loader">
+                                <img id="preview_${contadorPalestrantes}" class="img-fluid" src="{{ asset('/img/nova_imagem.PNG') }}" alt="Clique para enviar uma imagem" style="max-width: 360px">
+                            </div>
+                            <div style="display: none;">
+                                <input type="file" name="fotoPalestrante[]" id="fotoPalestrante_${contadorPalestrantes}" accept="image/jpeg, image/png">
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(novoBloco);
+            });
+
+
+            container.addEventListener('click', function(event) {
+
+                const loader = event.target.closest('.imagem-loader');
+                if (loader) {
+                    const inputWrapper = loader.nextElementSibling;
+                    const fileInput = inputWrapper.querySelector('input[type="file"]');
+                    if (fileInput) {
+                        fileInput.click();
+                    }
+                }
+
+                // Se o clique foi no botão de remover
+                if (event.target.classList.contains('remover-palestrante')) {
+                    event.target.closest('.palestrante-bloco').remove();
+                }
+            });
+
+            container.addEventListener('change', function(event) {
+
+                if (event.target.matches('input[name="fotoPalestrante[]"]')) {
+                    processarImagem(event.target);
+                }
+            });
+
+
+            function processarImagem(input) {
+                const idNumero = input.id.split('_').pop();
+                const preview = document.getElementById(`preview_${idNumero}`);
+                const defaultSrc = "{{ asset('/img/nova_imagem.PNG') }}";
+                const parentCol = input.closest('.col-md-6');
+
+                const file = input.files[0];
+                limparErro(parentCol);
+
+                if (!file) {
+                    return;
+                }
+
+
+                if (!['image/jpeg', 'image/png'].includes(file.type)) {
+                    mostrarErro(parentCol, 'Formato inválido. Use JPEG ou PNG.');
+                    input.value = '';
+                    return;
+                }
+
+
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = new Image();
+                    img.onload = function() {
+                        if (this.width !== 760 || this.height !== 360) {
+                            mostrarErro(parentCol, 'A imagem deve ter exatamente 760x360 pixels.');
+                            input.value = '';
+                            preview.src = defaultSrc;
+                        } else {
+
+                            preview.src = e.target.result;
+                        }
+                    };
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
             }
-        }
 
-        //Função que remove o palestrante
-        function removerPalestranteNovaPalestra(id) {
-            contadorPalestrantes--;
-            $("#novoPalestrantePalestra" + id).remove();
-        }
+            function mostrarErro(container, mensagem) {
+                let errorDiv = container.querySelector('.js-error');
+                if (!errorDiv) {
+                    errorDiv = document.createElement('div');
+                    errorDiv.className = 'invalid-feedback d-block js-error';
+                    container.appendChild(errorDiv);
+                }
+                errorDiv.textContent = mensagem;
+            }
 
-        //Remover palestrante existente de editar palestra
-        function removerPalestrantePalestra(id) {
-            $("#palestrantePalestra" + id).remove();
-        }
+            function limparErro(container) {
+                const errorDiv = container.querySelector('.js-error');
+                if (errorDiv) {
+                    errorDiv.remove();
+                }
+            }
+        });
     </script>
 @endsection

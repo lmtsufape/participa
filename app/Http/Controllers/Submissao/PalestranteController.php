@@ -9,6 +9,8 @@ use App\Models\Submissao\Evento;
 use App\Models\Submissao\Palestra;
 use App\Models\Submissao\Palestrante;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
 
 class PalestranteController extends Controller
@@ -36,13 +38,32 @@ class PalestranteController extends Controller
         $titulo = $validated['titulo'];
         $nomes = $validated['nomeDoPalestrante'];
         $emails = $validated['emailDoPalestrante'];
-        $palestra = Palestra::create(['titulo' => $titulo, 'evento_id' => $validated['eventoId']]);
+        $fotos = $request->file('fotoPalestrante');
+        $palestra = Palestra::create([
+            'titulo' => $titulo,
+            'evento_id' => $validated['eventoId']
+        ]);
+
         foreach ($nomes as $index => $nome) {
-            Palestrante::create(['nome' => $nome, 'email' => $emails[$index], 'palestra_id' => $palestra->id]);
+            $palestrante = Palestrante::create([
+                'nome' => $nome,
+                'email' => $emails[$index],
+                'palestra_id' => $palestra->id,
+            ]);
+
+            if (isset($fotos[$index])) {
+                $file = $fotos[$index];
+                $nomeUnico = Str::uuid() . '.' . $file->getClientOriginalExtension();
+                $caminho = 'palestrantes/' . $palestrante->id;
+                $caminhoCompleto = $file->storeAs($caminho, $nomeUnico, 'public');
+                $palestrante->fotoPalestrante = $caminhoCompleto;
+                $palestrante->save();
+            }
         }
 
         return redirect()->route('coord.palestrantes.index', ['eventoId' => $validated['eventoId']]);
     }
+
 
     public function exportar(Evento $evento)
     {
@@ -58,42 +79,72 @@ class PalestranteController extends Controller
         $palestra = Palestra::find($request->idPalestra);
         $palestra->titulo = $request->titulo;
         $palestra->save();
-        $palestrantesCadastrados = $palestra->palestrantes()->pluck('id')->all();
-        Palestrante::destroy(array_diff($palestrantesCadastrados, $request->idPalestrante));
 
-        // if: tem palestrantes para atualizar
-        if ($request->idPalestrante != null && count($request->idPalestrante) > 0) {
-            for ($i = 0; $i < count($palestrantesCadastrados); $i++) {
-                if (in_array($palestrantesCadastrados[$i], $request->idPalestrante)) {
-                    $key = array_search($palestrantesCadastrados[$i], $request->idPalestrante);
-                    $palestrante = Palestrante::find($palestrantesCadastrados[$i]);
-                    $palestrante->nome = $request->nomeDoPalestrante[$key];
-                    $palestrante->email = $request->emailDoPalestrante[$key];
-                    $palestrante->save();
+
+        // --- 1. LÓGICA PARA REMOVER PALESTRANTES E SUAS FOTOS ---
+        $palestrantesCadastradosIDs = $palestra->palestrantes()->pluck('id')->all();
+        $palestrantesEnviadosIDs = $request->idPalestrante ?? [];
+        $idsParaDeletar = array_diff($palestrantesCadastradosIDs, $palestrantesEnviadosIDs);
+        if (!empty($idsParaDeletar)) {
+            $palestrantesParaDeletar = Palestrante::findMany($idsParaDeletar);
+            foreach ($palestrantesParaDeletar as $palestrante) {
+                if ($palestrante->fotoPalestrante) {
+                    Storage::disk('public')->delete($palestrante->fotoPalestrante);
                 }
             }
-            for ($i = 0; $i < count($request->idPalestrante); $i++) {
-                if ($request->idPalestrante[$i] == 0) {
-                    $palestrante = new Palestrante();
-                    $palestrante->nome = $request->nomeDoPalestrante[$i];
-                    $palestrante->email = $request->emailDoPalestrante[$i];
-                    $palestrante->palestra_id = $palestra->id;
-                    $palestrante->save();
-                }
-            }
-            // else: só cadastrar novos palestrantes, não tem nenhum para atualizar
-        } else {
-            if ($request->nomeDoPalestrante != null) {
-                for ($i = 0; $i < count($request->nomeDoPalestrante); $i++) {
-                    $palestrante = new Palestrante();
-                    $palestrante->nome = $request->nomeDoPalestrante[$i];
-                    $palestrante->email = $request->emailDoPalestrante[$i];
-                    $palestrante->palestra_id = $palestra->id;
-                    $palestrante->save();
+            Palestrante::destroy($idsParaDeletar);
+        }
+
+        // --- 2. LÓGICA PARA ATUALIZAR PALESTRANTES EXISTENTES ---
+        if ($request->idPalestrante != null) {
+            foreach ($request->idPalestrante as $index => $id) {
+                if ($id > 0) {
+                    $palestrante = Palestrante::find($id);
+                    if ($palestrante) {
+                        $palestrante->nome = $request->nomeDoPalestrante[$index];
+                        $palestrante->email = $request->emailDoPalestrante[$index];
+
+                        if ($request->hasFile("fotoPalestrante.{$id}")) {
+                            // Apaga a foto antiga se existir
+                            if ($palestrante->fotoPalestrante) {
+                                Storage::disk('public')->delete($palestrante->fotoPalestrante);
+                            }
+                            $file = $request->file("fotoPalestrante.{$id}");
+                            $nomeUnico = Str::uuid() . '.' . $file->getClientOriginalExtension();
+                            $caminho = 'palestrantes/' . $palestrante->id;
+                            $caminhoCompleto = $file->storeAs($caminho, $nomeUnico, 'public');
+                            $palestrante->fotoPalestrante = $caminhoCompleto;
+                        }
+                        $palestrante->save();
+                    }
                 }
             }
         }
 
+        // --- 3. LÓGICA PARA ADICIONAR NOVOS PALESTRANTES ---
+        $novoPalestranteFileIndex = 0;
+        $novasFotos = $request->file('fotoPalestrante.0');
+        if ($request->nomeDoPalestrante != null) {
+            foreach ($request->nomeDoPalestrante as $index => $nome) {
+                if (!isset($request->idPalestrante[$index]) || $request->idPalestrante[$index] == 0) {
+                    $novoPalestrante = Palestrante::create([
+                        'nome' => $nome,
+                        'email' => $request->emailDoPalestrante[$index],
+                        'palestra_id' => $palestra->id,
+                    ]);
+
+                    if (isset($novasFotos[$novoPalestranteFileIndex])) {
+                        $file = $novasFotos[$novoPalestranteFileIndex];
+                        $nomeUnico = Str::uuid() . '.' . $file->getClientOriginalExtension();
+                        $caminho = 'palestrantes/' . $novoPalestrante->id;
+                        $caminhoCompleto = $file->storeAs($caminho, $nomeUnico, 'public');
+                        $novoPalestrante->fotoPalestrante = $caminhoCompleto;
+                        $novoPalestrante->save();
+                    }
+                    $novoPalestranteFileIndex++;
+                }
+            }
+        }
         return redirect()->route('coord.palestrantes.index', ['eventoId' => $request->eventoId]);
     }
 
@@ -101,7 +152,13 @@ class PalestranteController extends Controller
     {
         $evento = $palestra->evento;
         $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
-        Palestrante::destroy($palestra->palestrantes()->pluck('id'));
+
+        foreach ($palestra->palestrantes as $palestrante) {
+            if ($palestrante->fotoPalestrante) {
+                Storage::disk('public')->delete($palestrante->fotoPalestrante);
+            }
+        }
+
         $palestra->delete();
 
         return redirect()->route('coord.palestrantes.index', ['eventoId' => $evento->id]);

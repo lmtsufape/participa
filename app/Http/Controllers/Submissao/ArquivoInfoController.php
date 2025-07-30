@@ -7,6 +7,7 @@ use App\Http\Requests\StoreArquivoInfoRequest;
 use App\Http\Requests\UpdateArquivoInfoRequest;
 use App\Models\Submissao\ArquivoInfo;
 use App\Models\Submissao\Evento;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class ArquivoInfoController extends Controller
@@ -53,5 +54,15 @@ class ArquivoInfoController extends Controller
         $arquivoInfo->save();
 
         return redirect()->back()->with(['success' => 'Arquivo atualizado com sucesso!']);
+    }
+
+    public function reorder(Request $request)
+    {
+        foreach ($request->input('order', []) as $item) {
+            ArquivoInfo::where('id', $item['id'])
+                ->update(['order' => $item['position']]);
+        }
+
+        return response()->json(['status' => 'ok']);
     }
 }

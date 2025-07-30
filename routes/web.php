@@ -227,6 +227,7 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
             Route::post('/{evento}/memoria', [MemoriaController::class, 'store'])->name('memoria.store');
             Route::put('/{evento}/memoria/{memoria}', [MemoriaController::class, 'update'])->name('memoria.update');
             Route::delete('/memoria', [MemoriaController::class, 'destroy'])->name('memoria.destroy');
+            Route::post('memoria/reorder', [MemoriaController::class, 'reorder'])->name('memoria.reorder');
 
             // Route::get('revisores/{id}/disponiveis', [RevisorController::class, 'listarRevisores'])->name('adicionarRevisores');
 
@@ -311,6 +312,7 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
             Route::post('{evento}/arquivos', [ArquivoInfoController::class, 'store'])->name('arquivos-adicionais.store');
             Route::delete('{arquivoInfo}/arquivos', [ArquivoInfoController::class, 'delete'])->name('arquivos-adicionais.delete');
             Route::put('{arquivoInfo}/arquivos', [ArquivoInfoController::class, 'update'])->name('arquivos-adicionais.update');
+            Route::post('arquivoInfo/reorder', [ArquivoInfoController::class, 'reorder'])->name('arquivos-adicionais.reorder');
 
         });
         //Evento

@@ -45,7 +45,7 @@ class Evento extends Model
 
     public function arquivoInfos()
     {
-        return $this->hasMany('App\Models\Submissao\ArquivoInfo', 'evento_id');
+        return $this->hasMany(ArquivoInfo::class)->orderBy('order');;
     }
 
     public function modalidades()
@@ -217,7 +217,7 @@ class Evento extends Model
 
     public function memorias()
     {
-        return $this->hasMany('App\Models\Submissao\Memoria');
+        return $this->hasMany('App\Models\Submissao\Memoria')->orderBy('ordem');
     }
 
     public function inscritos()
