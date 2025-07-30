@@ -174,6 +174,11 @@ class Evento extends Model
     }
     public function categoriasPermitidasParaUsuario()
     {
+        $solicitacaoPCD = InscricaoPCD::where('user_id', auth()->id())
+                                      ->where('evento_id', $this->id)
+                                      ->where('status', 'aprovado')
+                                      ->first();
+        $isPCDAprovado = $solicitacaoPCD !== null;
         $svc = new AssociadoService();
         $userCpf = auth()->user()->cpf ?? '';
         $assoc = $svc->fetchByCpf($userCpf);
@@ -181,35 +186,71 @@ class Evento extends Model
         $baseCats = $this->categoriasQuePermitemInscricao()->get();
 
         if ($assoc) {
-
             if ($assoc && ($assoc['allowed'] ?? false)) {
-                $map = [
-                    'Profissional' => [
-                        'Associado - Profissional (professoras/es, pesquisadoras/es, consultoras/es etc)',
-                        'Associado - Assessora/or Técnico/a (ONGs; empresas públicas de ATER etc)',
-                    ],
-                    'Estudante'      => [
-                        'Associado - Estudante (Ensino médio, IFs, EFAs, graduação, pós-graduação etc)',
-                    ],
-                    'Agricultor'     => [
-                        'Associado - Agricultoras/es, povos e comunidades tradicionais',
-                    ],
-                    'Quilombola'     => [
-                        'Associado - Agricultoras/es, povos e comunidades tradicionais',
-                    ],
-                    'Indígena'       => [
-                        'Associado - Agriculturas/es, povos e comunidades tradicionais',
-                    ],
-                    'Outras categorias de povos e comunidades tradicionais' => [
-                        'Associado - Agricultoras/es, povos e comunidades tradicionais',
-                    ],
-                ];
+                if($isPCDAprovado) {
+                    $map = [
+                        'Profissional' => [
+                            'Associado - Profissional (professoras/es, pesquisadoras/es, consultoras/es etc)',
+                            'Associado - Assessora/or Técnico/a (ONGs; empresas públicas de ATER etc)',
+                            'Associado - Pessoa com Deficiência (PCD)',
+                        ],
+                        'Estudante'      => [
+                            'Associado - Estudante (Ensino médio, IFs, EFAs, graduação, pós-graduação etc)',
+                            'Associado - Pessoa com Deficiência (PCD)',
+                        ],
+                        'Agricultor'     => [
+                            'Associado - Agricultoras/es, povos e comunidades tradicionais',
+                            'Associado - Pessoa com Deficiência (PCD)',
+                        ],
+                        'Quilombola'     => [
+                            'Associado - Agricultoras/es, povos e comunidades tradicionais',
+                            'Associado - Pessoa com Deficiência (PCD)',
+                        ],
+                        'Indígena'       => [
+                            'Associado - Agriculturas/es, povos e comunidades tradicionais',
+                            'Associado - Pessoa com Deficiência (PCD)',
+                        ],
+                        'Outras categorias de povos e comunidades tradicionais' => [
+                            'Associado - Agricultoras/es, povos e comunidades tradicionais',
+                            'Associado - Pessoa com Deficiência (PCD)',
+                        ],
+                    ];
+                } else {
+                    $map = [
+                        'Profissional' => [
+                            'Associado - Profissional (professoras/es, pesquisadoras/es, consultoras/es etc)',
+                            'Associado - Assessora/or Técnico/a (ONGs; empresas públicas de ATER etc)',
+                        ],
+                        'Estudante'      => [
+                            'Associado - Estudante (Ensino médio, IFs, EFAs, graduação, pós-graduação etc)',
+                        ],
+                        'Agricultor'     => [
+                            'Associado - Agricultoras/es, povos e comunidades tradicionais',
+                        ],
+                        'Quilombola'     => [
+                            'Associado - Agricultoras/es, povos e comunidades tradicionais',
+                        ],
+                        'Indígena'       => [
+                            'Associado - Agriculturas/es, povos e comunidades tradicionais',
+                        ],
+                        'Outras categorias de povos e comunidades tradicionais' => [
+                            'Associado - Agricultoras/es, povos e comunidades tradicionais',
+                        ],
+                    ];
+                }
                 $tiposPermitidos = $map[$assoc['category']] ?? [];
                 return $baseCats->whereIn('nome', $tiposPermitidos);
             }
         }
+        
+        // Mostra APENAS a categoria "Pessoa com Deficiência (PCD)"
+        if ($isPCDAprovado) {
+            return $baseCats->filter(fn($cat) => 
+                strtolower(trim($cat->nome)) === 'pessoa com deficiência (pcd)'
+            );
+        }
 
-        // não associado: remove categorias que começam com "Associado" ou a categoria "Pessoa com Deficiência (PCD)"
+         // não associado: remove categorias que começam com "Associado" ou a categoria "Pessoa com Deficiência (PCD)"
         return $baseCats->reject(fn($cat) => 
             Str::startsWith($cat->nome, 'Associado') || 
             strtolower(trim($cat->nome)) === 'pessoa com deficiência (pcd)'

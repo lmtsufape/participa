@@ -50,31 +50,8 @@ class InscricaoPCDController extends Controller
     {
         $evento = $solicitacao->evento;
         $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
-
-        $todasCategorias = $evento->categoriasParticipantes;
-
-        $categoriaPCD = null;
-        foreach ($todasCategorias as $categoria) {
-            if (strtolower(trim($categoria->nome)) === 'pessoa com deficiência (pcd)') {
-                $categoriaPCD = $categoria;
-                break;
-            }
-        }
-
-        if (!$categoriaPCD) {
-            return redirect()->back()->with([
-                'message' => 'ERRO CRÍTICO: A categoria "Pessoa com Deficiência (PCD)" não foi encontrada. Verifique o nome na base de dados.', 
-                'class' => 'danger'
-            ]);
-        }
         
         $solicitacao->update(['status' => 'aprovado']);
-
-        $solicitacao->user->inscricaos()->create([
-            'evento_id' => $evento->id,
-            'categoria_participante_id' => $categoriaPCD->id,
-            'finalizada' => true,
-        ]);
 
         return redirect()->back()->with(['message' => 'Solicitação aprovada e inscrição criada com sucesso.']);
     }
