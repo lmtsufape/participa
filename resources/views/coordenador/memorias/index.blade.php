@@ -1,6 +1,5 @@
 @extends('coordenador.detalhesEvento') @section('menu')
-    <div id="divListarRegistros"
-        style="display: block">
+    <div id="divListarRegistros" style="display: block">
         <div class="row">
             <div class="col-sm-12">
                 <h1 class="titulo-detalhes">Listar Registros</h1>
@@ -10,77 +9,59 @@
             <div class="col-sm-12">
                 <div class="card">
                     <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-9">
-                                <h5 class="card-title">Registros</h5>
-                            </div>
-                            <div class="col-md-3 justify-content-end">
-                                <div class="d-flex justify-content-end">
-                                    <a href="{{ route('coord.memoria.create', $evento) }}"
-                                        class="btn btn-primary">
-                                        Adicionar registro
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                        <h6 class="card-subtitle mb-2 text-muted">Registros adicionados no seu evento</h6>
+                        {{-- ... Seu cabeçalho do card ... --}}
+
                         <p class="card-text">
                         <table class="table table-hover table-responsive-lg table-sm">
                             <thead>
-                                <tr>
-                                    <th scope="col">Título</th>
-                                    <th scope="col">Link</th>
-                                    <th scope="col">Arquivo</th>
-                                    <th scope="col"
-                                        style="text-align:center">Editar</th>
-                                    <th scope="col"
-                                        style="text-align:center">Remover</th>
-                                </tr>
+                            <tr>
+                                {{-- NOVO: Coluna para o handle de arrastar --}}
+                                <th scope="col" style="width:40px;"></th>
+                                <th scope="col">Título</th>
+                                <th scope="col">Link</th>
+                                <th scope="col">Arquivo</th>
+                                <th scope="col" style="text-align:center">Editar</th>
+                                <th scope="col" style="text-align:center">Remover</th>
+                            </tr>
                             </thead>
-                            <tbody>
-                                @foreach ($registros as $registro)
-                                    <tr>
-                                        <td>{{ $registro->titulo }}</td>
-                                        <td>
-                                            @if ($registro->link)
-                                                <a href="{{ $registro->link }}">link</a>
-                                            @endif
-                                        </td>
-                                        <td>
-                                            @if ($registro->arquivo)
-                                                <a href="/storage/{{ $registro->arquivo }}">arquivo</a>
-                                            @endif
-                                        </td>
-                                        <td style="text-align:center">
-                                            <a href="#"
-                                                data-bs-toggle="modal"
-                                                data-bs-target="#modalEditarRegistro{{ $registro->id }}">
-                                                <img src="{{ asset('img/icons/edit-regular.svg') }}"
-                                                    style="width:20px"></a>
-                                        </td>
-                                        <td style="text-align:center">
-                                            <form id="formExcluirRegistro{{ $registro->id }}"
-                                                method="POST"
-                                                action="{{ route('coord.memoria.destroy', $registro->id) }}">
-                                                @csrf
-                                                @method('DELETE')
-                                                <input type="hidden"
-                                                    name="evento"
-                                                    value="{{ $evento->id }}">
-                                                <input type="hidden"
-                                                    name="memoria"
-                                                    value="{{ $registro->id }}">
-                                                <a href="#"
-                                                    data-bs-toggle="modal"
-                                                    data-bs-target="#modalExcluirRegistro{{ $registro->id }}">
-                                                    <img src="{{ asset('img/icons/trash-alt-regular.svg') }}"
-                                                         style="width:20px"
-                                                        alt="">
-                                                </a>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                @endforeach
+                            {{-- NOVO: ID adicionado ao tbody --}}
+                            <tbody id="memoria-tbody">
+                            @foreach ($registros as $registro)
+                                {{-- NOVO: data-id adicionado ao <tr> --}}
+                                <tr data-id="{{ $registro->id }}">
+                                    {{-- NOVO: Célula (td) com o ícone de arrastar --}}
+                                    <td class="handle text-center" style="cursor: grab;">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="m7 2l6 3.9v2.272l-5-3.25v12.08H6V4.922l-5 3.25V5.9zm9 17.08V7h2v12.08l5-3.25v2.272l-6 3.9l-6-3.9V15.83z"/></svg>
+                                    </td>
+                                    <td>{{ $registro->titulo }}</td>
+                                    <td>
+                                        @if ($registro->link)
+                                            <a href="{{ $registro->link }}" target="_blank">link</a>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if ($registro->arquivo)
+                                            <a href="{{ asset('storage/' . $registro->arquivo) }}" target="_blank">arquivo</a>
+                                        @endif
+                                    </td>
+                                    <td style="text-align:center">
+                                        <a href="#" data-bs-toggle="modal" data-bs-target="#modalEditarRegistro{{ $registro->id }}">
+                                            <img src="{{ asset('img/icons/edit-regular.svg') }}" style="width:20px">
+                                        </a>
+                                    </td>
+                                    <td style="text-align:center">
+                                        <form id="formExcluirRegistro{{ $registro->id }}" method="POST" action="{{ route('coord.memoria.destroy', $registro->id) }}">
+                                            @csrf
+                                            @method('DELETE')
+                                            <input type="hidden" name="evento" value="{{ $evento->id }}">
+                                            <input type="hidden" name="memoria" value="{{ $registro->id }}">
+                                            <a href="#" data-bs-toggle="modal" data-bs-target="#modalExcluirRegistro{{ $registro->id }}">
+                                                <img src="{{ asset('img/icons/trash-alt-regular.svg') }}" style="width:20px" alt="">
+                                            </a>
+                                        </form>
+                                    </td>
+                                </tr>
+                            @endforeach
                             </tbody>
                         </table>
                         </p>
@@ -228,4 +209,59 @@
             </div>
         </div>
     @endforeach
+@endsection
+
+@section('javascript')
+    @parent
+    {{-- 1. Importa a biblioteca SortableJS --}}
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const tbody = document.getElementById('memoria-tbody');
+
+            if (tbody) {
+                Sortable.create(tbody, {
+                    handle: '.handle',      // O arrastar só funciona ao clicar no ícone
+                    animation: 150,         // Animação suave
+                    onEnd: () => {          // Função chamada ao soltar um item
+
+                        // Monta o array com a nova ordem: [{id, position}, ...]
+                        const order = Array.from(tbody.querySelectorAll('tr'))
+                            .map((tr, idx) => ({
+                                id: tr.dataset.id,
+                                position: idx + 1
+                            }));
+
+                        // Envia a nova ordem para o backend via AJAX
+                        fetch("{{ route('coord.memoria.reorder') }}", {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            },
+                            body: JSON.stringify({ order }) // A variável 'order' é enviada no corpo
+                        })
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error('Falha na comunicação com o servidor.');
+                                }
+                                return response.json();
+                            })
+                            .then(data => {
+                                if (data.status !== 'ok') {
+                                    console.error('O servidor retornou um erro:', data);
+                                    alert('Ocorreu um erro ao salvar a nova ordem dos registros.');
+                                }
+                                // Opcional: Adicionar uma notificação de sucesso
+                            })
+                            .catch(error => {
+                                console.error('Erro no fetch:', error);
+                                alert('Ocorreu um erro de comunicação ao salvar a nova ordem.');
+                            });
+                    }
+                });
+            }
+        });
+    </script>
 @endsection
