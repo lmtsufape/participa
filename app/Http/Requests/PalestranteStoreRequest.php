@@ -33,6 +33,7 @@ class PalestranteStoreRequest extends FormRequest
             'nomeDoPalestrante.*' => ['required', 'string', 'min:10'],
             'emailDoPalestrante' => ['array', 'min:1'],
             'emailDoPalestrante.*' => ['required', 'email'],
+            'fotoPalestrante.*'     => ['nullable','file','mimes:png,jpg,jpeg','dimensions:max_width=760,max_height=360'],
         ];
     }
 

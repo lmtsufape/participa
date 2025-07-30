@@ -579,31 +579,16 @@ class EventoController extends Controller
     public function exportTrabalhos(Evento $evento)
     {
         $this->authorize('isCoordenadorOrCoordCientificaOrCoordEixo', $evento);
-        $trabalhos = Trabalho::where('eventoId', $evento->id)
-            ->get()->map(function ($trabalho) {
-                return [
-                    $trabalho->area->nome,
-                    $trabalho->modalidade->nome,
-                    $trabalho->titulo,
-                    $trabalho->autor->name,
-                    $trabalho->autor->cpf,
-                    $trabalho->autor->email,
-                    $trabalho->autor->celular,
-                    $this->coautoresToString($trabalho, 'nome'),
-                    $this->coautoresToString($trabalho, 'cpf'),
-                    $this->coautoresToString($trabalho, 'email'),
-                    $this->coautoresToString($trabalho, 'celular'),
-                ];
-            })->collect();
 
-        $nome = $this->somenteLetrasNumeros($evento->nome);
+        $trabalhosPorArea = Trabalho::where('eventoId', $evento->id)
+            ->with(['area', 'modalidade', 'autor', 'coautors.user'])
+            ->get()
+            ->groupBy('area.nome');
 
-        return (new TrabalhosExport($trabalhos))
-            ->download($nome . ' - Trabalhos.xlsx', \Maatwebsite\Excel\Excel::XLSX,
-                [
-                    'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-                ]
-            );
+        $nomeArquivo = preg_replace('/[^A-Za-z0-9\-]/', '', $evento->nome) . ' - Trabalhos.xlsx';
+
+        return (new TrabalhosExport($trabalhosPorArea))->download($nomeArquivo);
+
     }
 
     public function exportTrabalhosCertifica(Evento $evento, Request $request)
