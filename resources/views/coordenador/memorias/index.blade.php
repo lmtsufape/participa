@@ -9,13 +9,11 @@
             <div class="col-sm-12">
                 <div class="card">
                     <div class="card-body">
-                        {{-- ... Seu cabeçalho do card ... --}}
 
                         <p class="card-text">
                         <table class="table table-hover table-responsive-lg table-sm">
                             <thead>
                             <tr>
-                                {{-- NOVO: Coluna para o handle de arrastar --}}
                                 <th scope="col" style="width:40px;"></th>
                                 <th scope="col">Título</th>
                                 <th scope="col">Link</th>
@@ -24,12 +22,9 @@
                                 <th scope="col" style="text-align:center">Remover</th>
                             </tr>
                             </thead>
-                            {{-- NOVO: ID adicionado ao tbody --}}
                             <tbody id="memoria-tbody">
                             @foreach ($registros as $registro)
-                                {{-- NOVO: data-id adicionado ao <tr> --}}
                                 <tr data-id="{{ $registro->id }}">
-                                    {{-- NOVO: Célula (td) com o ícone de arrastar --}}
                                     <td class="handle text-center" style="cursor: grab;">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="m7 2l6 3.9v2.272l-5-3.25v12.08H6V4.922l-5 3.25V5.9zm9 17.08V7h2v12.08l5-3.25v2.272l-6 3.9l-6-3.9V15.83z"/></svg>
                                     </td>
@@ -71,7 +66,6 @@
         </div>
     </div>
     @foreach ($registros as $registro)
-        <!-- Modal de editar área -->
         <div class="modal fade"
             id="modalEditarRegistro{{ $registro->id }}"
             tabindex="-1"
@@ -174,7 +168,6 @@
                 </div>
             </div>
         </div>
-        <!-- Modal de exclusão da área -->
         <div class="modal fade"
             id="modalExcluirRegistro{{ $registro->id }}"
             tabindex="-1"
@@ -213,7 +206,6 @@
 
 @section('javascript')
     @parent
-    {{-- 1. Importa a biblioteca SortableJS --}}
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
 
     <script>
@@ -222,25 +214,25 @@
 
             if (tbody) {
                 Sortable.create(tbody, {
-                    handle: '.handle',      // O arrastar só funciona ao clicar no ícone
-                    animation: 150,         // Animação suave
-                    onEnd: () => {          // Função chamada ao soltar um item
+                    handle: '.handle',
+                    animation: 150,
+                    onEnd: () => {
 
-                        // Monta o array com a nova ordem: [{id, position}, ...]
+
                         const order = Array.from(tbody.querySelectorAll('tr'))
                             .map((tr, idx) => ({
                                 id: tr.dataset.id,
                                 position: idx + 1
                             }));
 
-                        // Envia a nova ordem para o backend via AJAX
+
                         fetch("{{ route('coord.memoria.reorder') }}", {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
                                 'X-CSRF-TOKEN': '{{ csrf_token() }}'
                             },
-                            body: JSON.stringify({ order }) // A variável 'order' é enviada no corpo
+                            body: JSON.stringify({ order })
                         })
                             .then(response => {
                                 if (!response.ok) {
@@ -253,7 +245,7 @@
                                     console.error('O servidor retornou um erro:', data);
                                     alert('Ocorreu um erro ao salvar a nova ordem dos registros.');
                                 }
-                                // Opcional: Adicionar uma notificação de sucesso
+
                             })
                             .catch(error => {
                                 console.error('Erro no fetch:', error);
