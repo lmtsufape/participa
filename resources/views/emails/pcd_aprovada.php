@@ -36,7 +36,7 @@
                             style="padding: 40px 20px 20px 20px; border-radius: 4px 4px 0px 0px; color: #ffffff; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 48px; font-weight: 400; letter-spacing: 4px; line-height: 48px;">
                             <img src="{{ $message->embed(public_path('img/LOGO-RODAPE.png')) }}" width="125"
                                 height="120" style="display: block; border: 0px;" />
-                            <h5 class="small" style="font-weight: 400; margin: 2;">Solicitação como PCD Rejeitada</h1>
+                            <h5 class="small" style="font-weight: 400; margin: 2;">Solicitação como PCD Aprovada</h1>
                         </td>
                     </tr>
                 </table>
@@ -53,13 +53,13 @@
 
                                 <br> <br>
 
-                                Informamos que a sua solicitação como Pessoa com Deficiência (PCD) iInfelizmente foi <strong>rejeitada</strong> pela coordenação do evento.
+                                Informamos que a sua solicitação como Pessoa com Deficiência (PCD) foi <strong>aprovada</strong> pela coordenação do evento.
                                
                                 <br><br>
 
                                 <strong>Próximos Passos:</strong><br>
                                 Recomendamos que você:<br>
-                                1. Realize sua inscrição como não sendo PCD.<br>
+                                1. Realize sua inscrição clicando no botão do evento "Realize aqui Sua inscrição!", e escolha a categoria PCD.<br>
                                 2. Ou entre em contato com a equipe de suporte para tirar dúvidas.<br>
 
                                 <br><br>

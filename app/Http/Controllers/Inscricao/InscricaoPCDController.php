@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\SolicitacaoPCDRejeitada;
+use App\Mail\SolicitacaoPCDAprovada;
 
 class InscricaoPCDController extends Controller
 {
@@ -52,6 +53,8 @@ class InscricaoPCDController extends Controller
         $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
         
         $solicitacao->update(['status' => 'aprovado']);
+
+        Mail::to($solicitacao->user->email)->send(new SolicitacaoPCDAprovada($solicitacao->user, $solicitacao->evento));
 
         return redirect()->back()->with(['message' => 'Solicitação aprovada e inscrição criada com sucesso.']);
     }
