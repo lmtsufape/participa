@@ -410,6 +410,12 @@
                                             <span>{{ __('Todos os trabalhos') }}</span>
                                         </a>
                                     </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link d-flex align-items-center gap-2"
+                                            href="{{ route('coord.listarTrabalhosPorEixo', ['eventoId' => $evento->id, 'titulo', 'asc', 'rascunho']) }}">
+                                            <span>{{ __('Filtrar trabalhos por eixo') }}</span>
+                                        </a>
+                                    </li>
                                     @foreach ($evento->modalidades()->get() as $modalidade)
                                         <li class="nav-item">
                                             <a class="nav-link d-flex align-items-center gap-2"
