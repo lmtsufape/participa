@@ -991,17 +991,22 @@ class EventoController extends Controller
                 //Verificação de alteração em múltipla escolha já existente
                 if ($data['tipo'][$key] == 'radio') {
                     //dd($request->tituloRadio);
-                    foreach ($request->tituloRadio['row' . $key] as $i => $titulo) {
-                        $opcoes->first()->titulo = $titulo;
-                        //Verificação de marcação da resposta da múltipla escolha
-                        if (isset($request->checkbox[$opcoes->first()->id])) {
-                            $opcoes->first()->check = true;
-                        } else {
-                            $opcoes->first()->check = false;
-                        }
+                    $rowKey = 'row' . $key;
+                    if (isset($request->tituloRadio[$rowKey])) {
+                        foreach ($request->tituloRadio[$rowKey] as $i => $titulo) {
+                            if ($opcoes->count() > 0) {
+                                $opcoes->first()->titulo = $titulo;
+                                //Verificação de marcação da resposta da múltipla escolha
+                                if (isset($request->checkbox[$opcoes->first()->id])) {
+                                    $opcoes->first()->check = true;
+                                } else {
+                                    $opcoes->first()->check = false;
+                                }
 
-                        $opcoes->first()->update();
-                        $opcoes->shift();
+                                $opcoes->first()->update();
+                                $opcoes->shift();
+                            }
+                        }
                     }
                 }
 
@@ -1038,17 +1043,19 @@ class EventoController extends Controller
                         $paragrafo = new Paragrafo();
                         $resposta->paragrafo()->save($paragrafo);
                     } elseif ($data['tipo'][$i] == 'checkbox') {
-                    $listResposta = (isset($data['tituloCheckoxMarc']) && is_array($data['tituloCheckoxMarc'])) ? array_shift($data['tituloCheckoxMarc']) : [];
-                    $opcoesArray = (isset($data['tituloCheckox']) && is_array($data['tituloCheckox'])) ? array_shift($data['tituloCheckox']) : [];
-                    if (is_array($opcoesArray)) {
-                        foreach ($opcoesArray as $key => $titulo) {
-                            $resposta->opcoes()->create([
-                                'titulo' => $titulo,
-                                'tipo' => 'radio',
-                                'check' => $listResposta[$key] ?? false,
-                            ]);
+                        $listResposta = (isset($data['tituloCheckoxMarc']) && is_array($data['tituloCheckoxMarc'])) ? array_shift($data['tituloCheckoxMarc']) : [];
+                        $opcoesArray = (isset($data['tituloCheckox']) && is_array($data['tituloCheckox'])) ? array_shift($data['tituloCheckox']) : [];
+                        if (is_array($opcoesArray)) {
+                            foreach ($opcoesArray as $key => $titulo) {
+                                if (!empty($titulo)) {
+                                    $resposta->opcoes()->create([
+                                        'titulo' => $titulo,
+                                        'tipo' => 'radio',
+                                        'check' => $listResposta[$key] ?? false,
+                                    ]);
+                                }
+                            }
                         }
-                    }
                     }
                 }
             }
