@@ -48,27 +48,22 @@ class EnviarLembretesRevisoresJob implements ShouldQueue
         $enviados = 0;
 
         foreach ($trabalhosPendentes as $trabalho) {
-            Log::info('Processando trabalho', ['id' => $trabalho->id, 'titulo' => $trabalho->titulo]);
+
             foreach ($trabalho->atribuicoes as $atribuicao) {
-                Log::info('Verificando atribuição', ['revisor_id' => $atribuicao->id, 'parecer' => $atribuicao->pivot->parecer]);
                 if ($atribuicao->pivot->parecer === 'avaliado') {
-                    Log::info('Atribuição já avaliada, pulando.', ['revisor_id' => $atribuicao->id]);
                     continue;
                 }
 
                 $prazo = Carbon::parse($atribuicao->pivot->prazo_correcao);
                 $dias  = now()->diffInDays($prazo, false);
-                Log::info('Dias restantes para o prazo', ['dias' => $dias, 'prazo' => $prazo->toDateString()]);
 
                 // Envia lembretes a cada 5 dias (1, 5, 10, 15 dias antes do prazo)
                 if ($dias > 0 && ($dias % 5 === 0 || $dias === 1)) {
-                    Log::info('Condição para envio de lembrete atendida.', ['dias' => $dias]);
                     $revisor = $atribuicao;
                     $user = $revisor->user;
 
                     $chave = "{$user->id}_" . now()->toDateString();
                     if ($revisoresNotificados->contains($chave)) {
-                        Log::info('Revisor já notificado hoje.', ['user_id' => $user->id]);
                         continue;
                     }
 
@@ -83,7 +78,6 @@ class EnviarLembretesRevisoresJob implements ShouldQueue
                                   ->where('prazo_correcao', '>', now());
                         })->get();
 
-                    Log::info('Trabalhos pendentes para o revisor recuperados.', ['total' => $trabalhosPendentesRevisor->count(), 'revisor_id' => $revisor->id]);
 
                     foreach ($trabalhosPendentesRevisor as $trabPendente) {
                         $atribuicaoPendente = $trabPendente->atribuicoes()
@@ -93,13 +87,11 @@ class EnviarLembretesRevisoresJob implements ShouldQueue
                         if ($atribuicaoPendente) {
                             $trabsMail = $trabsMail . $trabPendente->titulo . ', ';
                             $dataLimite = $atribuicaoPendente->pivot->prazo_correcao;
-                            Log::info('Adicionando trabalho ao lembrete.', ['trabalho_id' => $trabPendente->id, 'titulo' => $trabPendente->titulo]);
                         }
                     }
 
                     if (!empty($trabsMail)) {
                         $trabsMail = rtrim($trabsMail, ', ');
-                        Log::info('Preparando envio de email.', ['email' => $user->email, 'trabalhos' => $trabsMail, 'data_limite' => $dataLimite]);
                         try {
                             Mail::to($user->email)
                                 ->send(new EmailLembretePrazoAvaliacao(
@@ -114,7 +106,6 @@ class EnviarLembretesRevisoresJob implements ShouldQueue
 
                             $revisoresNotificados->push($chave);
                             $enviados++;
-                            Log::info("Lembrete enviado com sucesso.", ['email' => $user->email, 'dias_restantes' => $dias]);
                         } catch (\Throwable $e) {
                             Log::error("Falha ao enviar lembrete.", ['email' => $user->email, 'erro' => $e->getMessage()]);
                         }
@@ -122,7 +113,6 @@ class EnviarLembretesRevisoresJob implements ShouldQueue
                         Log::info('Nenhum trabalho pendente para enviar no lembrete.', ['user_id' => $user->id]);
                     }
                 } else {
-                    Log::info('Condição para envio de lembrete NÃO atendida.', ['dias' => $dias]);
                 }
             }
         }
