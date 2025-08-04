@@ -146,7 +146,6 @@ class EventoController extends Controller
 
         $areas = Area::where('eventoId', $evento->id)->orderBy('ordem')->get();
 
-        // Subquery para o filtro de status, para ser reutilizada
         $statusFilter = function ($query) use ($status) {
             if ($status == 'rascunho') {
                 $query->where('status', '!=', 'arquivado');
@@ -159,33 +158,33 @@ class EventoController extends Controller
             }
         };
 
-        // Carregar todas as modalidades com contadores eficientes
         $modalidades = Modalidade::where('evento_id', $evento->id)
             ->withCount(['trabalho as trabalhos_count' => $statusFilter])
             ->orderBy('nome')->get();
 
-        // ===== INÍCIO DA QUERY PRINCIPAL OTIMIZADA =====
+        // ===== INÍCIO DA OTIMIZAÇÃO DE MEMÓRIA =====
         $query = Trabalho::where('eventoId', $evento->id)
-            ->with([ // Eager loading para evitar N+1
-                'area',
-                'modalidade',
-                'autor',
-                'coautors.user',
-                'arquivo',
-                'midiasExtra.midia_extra'
+            ->with([ 
+                // Selecionando apenas as colunas necessárias para reduzir o uso de memória
+                'area:id,nome',
+                'modalidade:id,nome',
+                'autor:id,name',
+                'coautors.user:id,name,cpf', // Adicionado CPF para a lógica de coautores
+                'arquivo:id,trabalho_id', // Apenas o ID para verificar existência
+                'midiasExtra:id,trabalho_id,midia_extra_id',
+                'midiasExtra.midia_extra:id,nome'
             ])
-            ->withCount([ // Contagens eficientes com withCount
+            ->withCount([
                 'atribuicoes',
                 'respostas as quantidade_avaliacoes' => function ($q) {
                     $q->select(DB::raw('count(distinct revisor_id)'));
                 }
             ])
-            ->withExists('arquivo as tem_arquivo'); // Verificação de existência eficiente
+            ->withExists('arquivo as tem_arquivo');
+        // ===== FIM DA OTIMIZAÇÃO DE MEMÓRIA =====
 
-        // Aplica o mesmo filtro de status da contagem
         $query->where($statusFilter);
 
-        // Aplicar ordenação
         if ($column == 'autor') {
             $query->orderBy(User::select('name')->whereColumn('autorId', 'users.id'), $direction);
         } elseif ($column == 'areaId') {
@@ -194,7 +193,6 @@ class EventoController extends Controller
             $query->orderBy($column, $direction);
         }
 
-        // Verificar se é coordenador de eixo
         $user_logado = auth()->user();
         if (
             $user_logado->eventosComoCoordEixo()->pluck('eventos.id')->contains($evento->id) &&
@@ -205,14 +203,9 @@ class EventoController extends Controller
             $query->whereIn('areaId', $areasCoordEixo);
         }
 
-        // Aplicar paginação
         $trabalhos = $query->paginate(50)->withQueryString();
-        // ===== FIM DA QUERY PRINCIPAL OTIMIZADA =====
 
-
-        // Processamento pós-query (em memória, sem novas queries)
         $coautoresSemCpfPorTrabalho = collect();
-        $trabalhos->load('coautors.user'); // Garante que a relação está carregada
         foreach ($trabalhos as $trabalho) {
             $coautoresSemCpf = $trabalho->coautors->filter(function($coautor) {
                 return optional($coautor->user)->cpf === null || optional($coautor->user)->cpf === '';
@@ -223,11 +216,9 @@ class EventoController extends Controller
             }
         }
         
-        // Agrupar trabalhos por modalidade para a view
         $trabalhosPorModalidade = $trabalhos->groupBy('modalidadeId');
         foreach ($modalidades as $modalidade) {
             $trabalhosDaModalidade = $trabalhosPorModalidade->get($modalidade->id, collect());
-            // Prepara a verificação de midias extras para a view
             foreach ($trabalhosDaModalidade as $trabalho) {
                 $trabalho->midias_extra_verificadas = $trabalho->midiasExtra->keyBy('midia_extra_id');
             }
@@ -238,7 +229,7 @@ class EventoController extends Controller
             'evento' => $evento,
             'areas' => $areas,
             'modalidades' => $modalidades,
-            'trabalhos' => $trabalhos, // Coleção paginada para os links de paginação
+            'trabalhos' => $trabalhos,
             'agora' => now(),
             'status' => $status,
             'coautoresSemCpfPorTrabalho' => $coautoresSemCpfPorTrabalho,
@@ -261,7 +252,6 @@ class EventoController extends Controller
             ]);
         }
         
-        // Subquery para o filtro de status, para ser reutilizada
         $statusFilter = function ($query) use ($status) {
             if ($status == 'rascunho') {
                 $query->where('status', '!=', 'arquivado');
@@ -274,12 +264,17 @@ class EventoController extends Controller
             }
         };
 
-        // ===== INÍCIO DA QUERY PRINCIPAL OTIMIZADA =====
+        // ===== INÍCIO DA OTIMIZAÇÃO DE MEMÓRIA =====
         $query = Trabalho::where('eventoId', $evento->id)
-            ->where('areaId', $eixoSelecionado) // Filtro principal por eixo
+            ->where('areaId', $eixoSelecionado)
             ->with([
-                'area', 'modalidade', 'autor', 'coautors.user',
-                'arquivo', 'midiasExtra.midia_extra'
+                'area:id,nome',
+                'modalidade:id,nome',
+                'autor:id,name',
+                'coautors.user:id,name,cpf',
+                'arquivo:id,trabalho_id',
+                'midiasExtra:id,trabalho_id,midia_extra_id',
+                'midiasExtra.midia_extra:id,nome'
             ])
             ->withCount([
                 'atribuicoes',
@@ -288,17 +283,16 @@ class EventoController extends Controller
                 }
             ])
             ->withExists('arquivo as tem_arquivo');
+        // ===== FIM DA OTIMIZAÇÃO DE MEMÓRIA =====
 
         $query->where($statusFilter);
 
-        // Ordenação
         if ($column == 'autor') {
             $query->orderBy(User::select('name')->whereColumn('autorId', 'users.id'), $direction);
         } else {
             $query->orderBy($column, $direction);
         }
         
-        // Filtro para coordenador de eixo (reforço da autorização)
         $user_logado = auth()->user();
         if (
             $user_logado->eventosComoCoordEixo()->pluck('eventos.id')->contains($evento->id) &&
@@ -310,9 +304,7 @@ class EventoController extends Controller
         }
         
         $trabalhos = $query->paginate(50)->withQueryString();
-        // ===== FIM DA QUERY PRINCIPAL OTIMIZADA =====
         
-        // Carregar modalidades com contadores eficientes para o eixo selecionado
         $modalidades = Modalidade::where('evento_id', $evento->id)
             ->whereHas('trabalho', function ($q) use ($eixoSelecionado, $statusFilter) {
                 $q->where('areaId', $eixoSelecionado)->where($statusFilter);
@@ -322,9 +314,7 @@ class EventoController extends Controller
             }])
             ->orderBy('nome')->get();
         
-        // Processamento pós-query
         $coautoresSemCpfPorTrabalho = collect();
-        $trabalhos->load('coautors.user');
         foreach ($trabalhos as $trabalho) {
             $coautoresSemCpf = $trabalho->coautors->filter(function($coautor) {
                 return optional($coautor->user)->cpf === null || optional($coautor->user)->cpf === '';
@@ -334,7 +324,6 @@ class EventoController extends Controller
             }
         }
         
-        // Agrupar trabalhos por modalidade
         $trabalhosPorModalidade = $trabalhos->groupBy('modalidadeId');
         foreach ($modalidades as $modalidade) {
             $trabalhosDaModalidade = $trabalhosPorModalidade->get($modalidade->id, collect());
@@ -350,7 +339,6 @@ class EventoController extends Controller
             'eixoSelecionado' => $eixoSelecionado, 'trabalhos' => $trabalhos,
         ]);
     }
-
     public function listarAvaliacoes(Request $request, $column = 'titulo', $direction = 'asc', $status = 'rascunho')
     {
         $evento = Evento::find($request->eventoId);
@@ -457,11 +445,16 @@ class EventoController extends Controller
         $modalidade = Modalidade::find($request->modalidadeId);
         $areas = Area::where('eventoId', $evento->id)->orderBy('ordem')->get();
 
-        // ===== INÍCIO DA QUERY PRINCIPAL OTIMIZADA =====
+        // ===== INÍCIO DA OTIMIZAÇÃO DE MEMÓRIA =====
         $query = Trabalho::where('modalidadeId', $request->modalidadeId)
             ->with([
-                'area', 'modalidade', 'autor', 'coautors.user',
-                'arquivo', 'midiasExtra.midia_extra'
+                'area:id,nome',
+                'modalidade:id,nome',
+                'autor:id,name',
+                'coautors.user:id,name',
+                'arquivo:id,trabalho_id',
+                'midiasExtra:id,trabalho_id,midia_extra_id',
+                'midiasExtra.midia_extra:id,nome'
             ])
             ->withCount([
                 'atribuicoes',
@@ -470,15 +463,14 @@ class EventoController extends Controller
                 }
             ])
             ->withExists('arquivo as tem_arquivo');
+        // ===== FIM DA OTIMIZAÇÃO DE MEMÓRIA =====
 
-        // Aplicar filtros de status
         if ($status == 'rascunho') {
             $query->where('status', '!=', 'arquivado');
         } else {
             $query->where('status', $status);
         }
 
-        // Aplicar ordenação
         if ($column == 'autor') {
             $query->orderBy(User::select('name')->whereColumn('autorId', 'users.id'), $direction);
         } elseif ($column == 'areaId') {
@@ -487,7 +479,6 @@ class EventoController extends Controller
             $query->orderBy($column, $direction);
         }
 
-        // Verificar se é coordenador de eixo
         $user_logado = auth()->user();
         if (
             $user_logado->eventosComoCoordEixo()->pluck('eventos.id')->contains($evento->id) &&
@@ -499,9 +490,7 @@ class EventoController extends Controller
         }
 
         $trabalhos = $query->paginate(50)->withQueryString();
-        // ===== FIM DA QUERY PRINCIPAL OTIMIZADA =====
 
-        // Processamento pós-query para a view
         foreach ($trabalhos as $trabalho) {
             $trabalho->midias_extra_verificadas = $trabalho->midiasExtra->keyBy('midia_extra_id');
         }
