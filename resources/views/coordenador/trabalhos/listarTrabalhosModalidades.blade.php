@@ -142,7 +142,7 @@
                     </td>
                     <td>{{ $trabalho->id }}</td>
                       <td>
-                        @if ($trabalho->arquivo && count($trabalho->arquivo) > 0)
+                        @if ($trabalho->tem_arquivo)
                             <a href="{{route('downloadTrabalho', ['id' => $trabalho->id])}}">
                                 <span class="d-inline-block text-truncate" tabindex="0" data-bs-toggle="tooltip" title="{{$trabalho->titulo}}" style="max-width: 150px;">
                                     {{$trabalho->titulo}}
@@ -157,7 +157,7 @@
                         @if ($modalidade->midiasExtra)
                             @foreach ($modalidade->midiasExtra as $midia)
                                 <td>
-                                    @if($trabalho->midiasExtra()->where('midia_extra_id', $midia->id)->first() != null)
+                                    @if(isset($trabalho->midias_extra_verificadas[$midia->id]))
                                         <a href="{{route('downloadMidiaExtra', ['id' => $trabalho->id, 'id_midia' => $midia->id])}}" >
                                             <span class="d-inline-block text-truncate" tabindex="0" data-bs-toggle="tooltip" title="{{$midia->nome}}" style="max-width: 150px;">
                                                 <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">
@@ -178,9 +178,9 @@
                         <td>{{$trabalho->tipo_apresentacao}}</td>
                       @endif
                       <td>
-                        {{count($trabalho->atribuicoes)}}
+                        {{ $trabalho->atribuicoes_count }}
                       </td>
-                      <td>{{$trabalho->getQuantidadeAvaliacoes()}}</td>
+                      <td>{{$trabalho->quantidade_avaliacoes}}</td>
                       {{--<td>
                         {{ date("d/m/Y H:i", strtotime($trabalho->created_at) ) }}
 
@@ -292,6 +292,23 @@
     <x-modal-adicionar-revisor :trabalho="$trabalho" :evento="$evento" />
     <x-modal-excluir-trabalho :trabalho="$trabalho" />
 @endforeach
+
+{{-- Paginação --}}
+@if($trabalhos->hasPages())
+    <div class="row justify-content-center mt-4">
+        <div class="col-sm-12">
+            <div class="d-flex justify-content-center">
+                {{ $trabalhos->appends([
+                    'eventoId' => $evento->id,
+                    'modalidadeId' => $modalidade->id,
+                    'column' => request('column', 'titulo'),
+                    'direction' => request('direction', 'asc'),
+                    'status' => request('status', 'arquivado')
+                ])->links() }}
+            </div>
+        </div>
+    </div>
+@endif
 @endsection
 
 @section('javascript')
