@@ -31,7 +31,7 @@
           <div class="card">
             <div class="card-body">
               <h5 class="card-title">Filtrar por Eixo</h5>
-              <form method="GET" action="{{ route('coord.listarTrabalhosPorEixo', ['eventoId' => $evento->id, 'titulo', 'asc', $status]) }}">
+              <form method="GET" action="{{ route('coord.listarTrabalhosPorEixo', ['titulo', 'asc', $status]) }}">
 
                 <input type="hidden" name="eventoId" value="{{ $evento->id }}">
                 <div class="row">
@@ -65,16 +65,16 @@
                 Opções
             </button>
             <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                <a class="dropdown-item" href="{{route('coord.listarTrabalhosPorEixo',[ 'eventoId' => $evento->id, 'titulo', 'asc', 'rascunho']) }}{{ $eixoSelecionado ? '?eixo_id=' . $eixoSelecionado : '' }}">
+                <a class="dropdown-item" href="{{route('coord.listarTrabalhosPorEixo',[ 'titulo', 'asc', 'rascunho']) }}?eventoId={{ $evento->id }}{{ $eixoSelecionado ? '&eixo_id=' . $eixoSelecionado : '' }}">
                     Todos
                 </a>
-                <a class="dropdown-item" href="{{route('coord.listarTrabalhosPorEixo',[ 'eventoId' => $evento->id, 'titulo', 'asc', 'arquivado']) }}{{ $eixoSelecionado ? '?eixo_id=' . $eixoSelecionado : '' }}">
+                <a class="dropdown-item" href="{{route('coord.listarTrabalhosPorEixo',[ 'titulo', 'asc', 'arquivado']) }}?eventoId={{ $evento->id }}{{ $eixoSelecionado ? '&eixo_id=' . $eixoSelecionado : '' }}">
                     Arquivados
                 </a>
-                <a class="dropdown-item" href="{{route('coord.listarTrabalhosPorEixo',[ 'eventoId' => $evento->id, 'titulo', 'asc', 'no_revisor']) }}{{ $eixoSelecionado ? '?eixo_id=' . $eixoSelecionado : '' }}">
+                <a class="dropdown-item" href="{{route('coord.listarTrabalhosPorEixo',[ 'titulo', 'asc', 'no_revisor']) }}?eventoId={{ $evento->id }}{{ $eixoSelecionado ? '&eixo_id=' . $eixoSelecionado : '' }}">
                     Sem avaliador
                 </a>
-                <a class="dropdown-item" href="{{route('coord.listarTrabalhosPorEixo',[ 'eventoId' => $evento->id, 'titulo', 'asc', 'with_revisor']) }}{{ $eixoSelecionado ? '?eixo_id=' . $eixoSelecionado : '' }}">
+                <a class="dropdown-item" href="{{route('coord.listarTrabalhosPorEixo',[ 'titulo', 'asc', 'with_revisor']) }}?eventoId={{ $evento->id }}{{ $eixoSelecionado ? '&eixo_id=' . $eixoSelecionado : '' }}">
                     Com avaliador
                 </a>
                 <a class="dropdown-item disabled" href="#" >
@@ -138,37 +138,37 @@
                                             <tr>
                                                 <th class="col-md-1">
                                                     ID
-                                                    <a href="{{route('coord.listarTrabalhosPorEixo',[ 'eventoId' => $evento->id, 'id', 'asc', $status]) }}{{ $eixoSelecionado ? '?eixo_id=' . $eixoSelecionado : '' }}">
+                                                    <a href="{{route('coord.listarTrabalhosPorEixo',[ 'id', 'asc', $status]) }}?eventoId={{ $evento->id }}{{ $eixoSelecionado ? '&eixo_id=' . $eixoSelecionado : '' }}">
                                                         <img class="" src="{{asset('img/icons/sobe.png')}}" style="width:10px">
                                                     </a>
-                                                    <a href="{{route('coord.listarTrabalhosPorEixo',[ 'eventoId' => $evento->id, 'id', 'desc', $status]) }}{{ $eixoSelecionado ? '?eixo_id=' . $eixoSelecionado : '' }}">
+                                                    <a href="{{route('coord.listarTrabalhosPorEixo',[ 'id', 'desc', $status]) }}?eventoId={{ $evento->id }}{{ $eixoSelecionado ? '&eixo_id=' . $eixoSelecionado : '' }}">
                                                         <img class="" src="{{asset('img/icons/desce.png')}}" style="width:10px">
                                                     </a>
                                                 </th>
                                                 <th scope="col">
                                                     Título
-                                                    <a href="{{route('coord.listarTrabalhosPorEixo',[ 'eventoId' => $evento->id, 'titulo', 'asc', $status]) }}{{ $eixoSelecionado ? '?eixo_id=' . $eixoSelecionado : '' }}">
+                                                    <a href="{{route('coord.listarTrabalhosPorEixo',[ 'titulo', 'asc', $status]) }}?eventoId={{ $evento->id }}{{ $eixoSelecionado ? '&eixo_id=' . $eixoSelecionado : '' }}">
                                                         <img class="" src="{{asset('img/icons/sobe.png')}}" style="width:10px">
                                                     </a>
-                                                    <a href="{{route('coord.listarTrabalhosPorEixo',[ 'eventoId' => $evento->id, 'titulo', 'desc', $status]) }}{{ $eixoSelecionado ? '?eixo_id=' . $eixoSelecionado : '' }}">
+                                                    <a href="{{route('coord.listarTrabalhosPorEixo',[ 'titulo', 'desc', $status]) }}?eventoId={{ $evento->id }}{{ $eixoSelecionado ? '&eixo_id=' . $eixoSelecionado : '' }}">
                                                         <img class="" src="{{asset('img/icons/desce.png')}}" style="width:10px">
                                                     </a>
                                                 </th>
                                                 <th scope="col">
                                                     Área
-                                                    <a href="{{route('coord.listarTrabalhosPorEixo',[ 'eventoId' => $evento->id, 'areaId', 'asc', $status]) }}{{ $eixoSelecionado ? '?eixo_id=' . $eixoSelecionado : '' }}">
+                                                    <a href="{{route('coord.listarTrabalhosPorEixo',[ 'areaId', 'asc', $status]) }}?eventoId={{ $evento->id }}{{ $eixoSelecionado ? '&eixo_id=' . $eixoSelecionado : '' }}">
                                                         <img class="" src="{{asset('img/icons/sobe.png')}}" style="width:10px">
                                                     </a>
-                                                    <a href="{{route('coord.listarTrabalhosPorEixo',[ 'eventoId' => $evento->id, 'areaId', 'desc', $status]) }}{{ $eixoSelecionado ? '?eixo_id=' . $eixoSelecionado : '' }}">
+                                                    <a href="{{route('coord.listarTrabalhosPorEixo',[ 'areaId', 'desc', $status]) }}?eventoId={{ $evento->id }}{{ $eixoSelecionado ? '&eixo_id=' . $eixoSelecionado : '' }}">
                                                         <img class="" src="{{asset('img/icons/desce.png')}}" style="width:10px">
                                                     </a>
                                                 </th>
                                                 <th scope="col">
                                                     Autor
-                                                    <a href="{{route('coord.listarTrabalhosPorEixo',[ 'eventoId' => $evento->id, 'autor', 'asc', $status]) }}{{ $eixoSelecionado ? '?eixo_id=' . $eixoSelecionado : '' }}">
+                                                    <a href="{{route('coord.listarTrabalhosPorEixo',[ 'autor', 'asc', $status]) }}?eventoId={{ $evento->id }}{{ $eixoSelecionado ? '&eixo_id=' . $eixoSelecionado : '' }}">
                                                         <img class="" src="{{asset('img/icons/sobe.png')}}" style="width:10px">
                                                     </a>
-                                                    <a href="{{route('coord.listarTrabalhosPorEixo',[ 'eventoId' => $evento->id, 'autor', 'desc', $status]) }}{{ $eixoSelecionado ? '?eixo_id=' . $eixoSelecionado : '' }}">
+                                                    <a href="{{route('coord.listarTrabalhosPorEixo',[ 'autor', 'desc', $status]) }}?eventoId={{ $evento->id }}{{ $eixoSelecionado ? '&eixo_id=' . $eixoSelecionado : '' }}">
                                                         <img class="" src="{{asset('img/icons/desce.png')}}" style="width:10px">
                                                     </a>
                                                 </th>
@@ -182,10 +182,10 @@
                                                 <th scope="col">Avaliações</th>
                                                 <th scope="col">
                                                     Data
-                                                    <a href="{{route('coord.listarTrabalhosPorEixo',[ 'eventoId' => $evento->id, 'created_at', 'asc', $status]) }}{{ $eixoSelecionado ? '?eixo_id=' . $eixoSelecionado : '' }}">
+                                                    <a href="{{route('coord.listarTrabalhosPorEixo',[ 'created_at', 'asc', $status]) }}?eventoId={{ $evento->id }}{{ $eixoSelecionado ? '&eixo_id=' . $eixoSelecionado : '' }}">
                                                         <img class="" src="{{asset('img/icons/sobe.png')}}" style="width:10px">
                                                     </a>
-                                                    <a href="{{route('coord.listarTrabalhosPorEixo',[ 'eventoId' => $evento->id, 'created_at', 'desc', $status]) }}{{ $eixoSelecionado ? '?eixo_id=' . $eixoSelecionado : '' }}">
+                                                    <a href="{{route('coord.listarTrabalhosPorEixo',[ 'created_at', 'desc', $status]) }}?eventoId={{ $evento->id }}{{ $eixoSelecionado ? '&eixo_id=' . $eixoSelecionado : '' }}">
                                                         <img class="" src="{{asset('img/icons/desce.png')}}" style="width:10px">
                                                     </a>
                                                 </th>
