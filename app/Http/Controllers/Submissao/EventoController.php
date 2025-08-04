@@ -139,7 +139,7 @@ class EventoController extends Controller
         ]);
     }
 
-    public function listarTrabalhos(Request $request, $column = 'titulo', $direction = 'asc', $status = 'rascunho')
+   public function listarTrabalhos(Request $request, $column = 'titulo', $direction = 'asc', $status = 'rascunho')
     {
         $evento = Evento::find($request->eventoId);
         $this->authorize('isCoordenadorOrCoordCientificaOrCoordEixo', $evento);
@@ -161,27 +161,25 @@ class EventoController extends Controller
         $modalidades = Modalidade::where('evento_id', $evento->id)
             ->withCount(['trabalho as trabalhos_count' => $statusFilter])
             ->orderBy('nome')->get();
-
-        // ===== INÍCIO DA OTIMIZAÇÃO DE MEMÓRIA =====
+        
+        // ===== CORREÇÃO FINAL: Removida seleção de colunas em midiasExtra =====
         $query = Trabalho::where('eventoId', $evento->id)
-            ->with([ 
-                // Selecionando apenas as colunas necessárias para reduzir o uso de memória
+            ->with([
                 'area:id,nome',
                 'modalidade:id,nome',
                 'autor:id,name',
-                'coautors.user:id,name,cpf', // Adicionado CPF para a lógica de coautores
-                'arquivo:id,trabalho_id', // Apenas o ID para verificar existência
-                'midiasExtra:id,trabalho_id,midia_extra_id',
+                'coautors:id,trabalhoId,autorId',
+                'coautors.user:id,name,cpf',
+                'arquivo:id,trabalhoId',
+                // CORRIGIDO: Deixando o Eloquent lidar com a relação 'belongsToMany' complexa
+                'midiasExtra', 
                 'midiasExtra.midia_extra:id,nome'
             ])
-            ->withCount([
-                'atribuicoes',
-                'respostas as quantidade_avaliacoes' => function ($q) {
-                    $q->select(DB::raw('count(distinct revisor_id)'));
-                }
-            ])
+            ->withCount(['atribuicoes', 'respostas as quantidade_avaliacoes' => function ($q) {
+                $q->select(DB::raw('count(distinct revisor_id)'));
+            }])
             ->withExists('arquivo as tem_arquivo');
-        // ===== FIM DA OTIMIZAÇÃO DE MEMÓRIA =====
+        // ===== FIM DA CORREÇÃO =====
 
         $query->where($statusFilter);
 
@@ -204,13 +202,12 @@ class EventoController extends Controller
         }
 
         $trabalhos = $query->paginate(50)->withQueryString();
-
+        
         $coautoresSemCpfPorTrabalho = collect();
         foreach ($trabalhos as $trabalho) {
             $coautoresSemCpf = $trabalho->coautors->filter(function($coautor) {
                 return optional($coautor->user)->cpf === null || optional($coautor->user)->cpf === '';
             });
-
             if ($coautoresSemCpf->isNotEmpty()) {
                 $coautoresSemCpfPorTrabalho->put($trabalho->titulo, $coautoresSemCpf);
             }
@@ -226,21 +223,17 @@ class EventoController extends Controller
         }
 
         return view('coordenador.trabalhos.listarTrabalhos', [
-            'evento' => $evento,
-            'areas' => $areas,
-            'modalidades' => $modalidades,
-            'trabalhos' => $trabalhos,
-            'agora' => now(),
-            'status' => $status,
+            'evento' => $evento, 'areas' => $areas, 'modalidades' => $modalidades,
+            'trabalhos' => $trabalhos, 'agora' => now(), 'status' => $status,
             'coautoresSemCpfPorTrabalho' => $coautoresSemCpfPorTrabalho,
         ]);
     }
+
 
     public function listarTrabalhosPorEixo(Request $request, $column = 'titulo', $direction = 'asc', $status = 'rascunho')
     {
         $evento = Evento::find($request->eventoId);
         $this->authorize('isCoordenadorOrCoordCientificaOrCoordEixo', $evento);
-
         $areas = Area::where('eventoId', $evento->id)->orderBy('ordem')->get();
         $eixoSelecionado = $request->get('eixo_id');
         
@@ -264,26 +257,22 @@ class EventoController extends Controller
             }
         };
 
-        // ===== INÍCIO DA OTIMIZAÇÃO DE MEMÓRIA =====
+        // ===== CORREÇÃO FINAL: Removida seleção de colunas em midiasExtra =====
         $query = Trabalho::where('eventoId', $evento->id)
             ->where('areaId', $eixoSelecionado)
             ->with([
-                'area:id,nome',
-                'modalidade:id,nome',
-                'autor:id,name',
+                'area:id,nome', 'modalidade:id,nome', 'autor:id,name',
+                'coautors:id,trabalhoId,autorId',
                 'coautors.user:id,name,cpf',
-                'arquivo:id,trabalho_id',
-                'midiasExtra:id,trabalho_id,midia_extra_id',
+                'arquivo:id,trabalhoId',
+                'midiasExtra',
                 'midiasExtra.midia_extra:id,nome'
             ])
-            ->withCount([
-                'atribuicoes',
-                'respostas as quantidade_avaliacoes' => function ($q) {
-                    $q->select(DB::raw('count(distinct revisor_id)'));
-                }
-            ])
+            ->withCount(['atribuicoes', 'respostas as quantidade_avaliacoes' => function ($q) {
+                $q->select(DB::raw('count(distinct revisor_id)'));
+            }])
             ->withExists('arquivo as tem_arquivo');
-        // ===== FIM DA OTIMIZAÇÃO DE MEMÓRIA =====
+        // ===== FIM DA CORREÇÃO =====
 
         $query->where($statusFilter);
 
@@ -308,11 +297,9 @@ class EventoController extends Controller
         $modalidades = Modalidade::where('evento_id', $evento->id)
             ->whereHas('trabalho', function ($q) use ($eixoSelecionado, $statusFilter) {
                 $q->where('areaId', $eixoSelecionado)->where($statusFilter);
-            })
-            ->withCount(['trabalho as trabalhos_count' => function($q) use ($eixoSelecionado, $statusFilter) {
+            })->withCount(['trabalho as trabalhos_count' => function($q) use ($eixoSelecionado, $statusFilter) {
                 $q->where('areaId', $eixoSelecionado)->where($statusFilter);
-            }])
-            ->orderBy('nome')->get();
+            }])->orderBy('nome')->get();
         
         $coautoresSemCpfPorTrabalho = collect();
         foreach ($trabalhos as $trabalho) {
@@ -339,6 +326,7 @@ class EventoController extends Controller
             'eixoSelecionado' => $eixoSelecionado, 'trabalhos' => $trabalhos,
         ]);
     }
+
     public function listarAvaliacoes(Request $request, $column = 'titulo', $direction = 'asc', $status = 'rascunho')
     {
         $evento = Evento::find($request->eventoId);
@@ -445,25 +433,21 @@ class EventoController extends Controller
         $modalidade = Modalidade::find($request->modalidadeId);
         $areas = Area::where('eventoId', $evento->id)->orderBy('ordem')->get();
 
-        // ===== INÍCIO DA OTIMIZAÇÃO DE MEMÓRIA =====
+        // ===== CORREÇÃO FINAL: Removida seleção de colunas em midiasExtra =====
         $query = Trabalho::where('modalidadeId', $request->modalidadeId)
             ->with([
-                'area:id,nome',
-                'modalidade:id,nome',
-                'autor:id,name',
+                'area:id,nome', 'modalidade:id,nome', 'autor:id,name',
+                'coautors:id,trabalhoId,autorId',
                 'coautors.user:id,name',
-                'arquivo:id,trabalho_id',
-                'midiasExtra:id,trabalho_id,midia_extra_id',
+                'arquivo:id,trabalhoId',
+                'midiasExtra',
                 'midiasExtra.midia_extra:id,nome'
             ])
-            ->withCount([
-                'atribuicoes',
-                'respostas as quantidade_avaliacoes' => function ($q) {
-                    $q->select(DB::raw('count(distinct revisor_id)'));
-                }
-            ])
+            ->withCount(['atribuicoes', 'respostas as quantidade_avaliacoes' => function ($q) {
+                $q->select(DB::raw('count(distinct revisor_id)'));
+            }])
             ->withExists('arquivo as tem_arquivo');
-        // ===== FIM DA OTIMIZAÇÃO DE MEMÓRIA =====
+        // ===== FIM DA CORREÇÃO =====
 
         if ($status == 'rascunho') {
             $query->where('status', '!=', 'arquivado');
@@ -496,14 +480,10 @@ class EventoController extends Controller
         }
 
         return view('coordenador.trabalhos.listarTrabalhosModalidades', [
-            'evento' => $evento,
-            'areas' => $areas,
-            'trabalhos' => $trabalhos,
-            'agora' => now(),
-            'modalidade' => $modalidade,
+            'evento' => $evento, 'areas' => $areas, 'trabalhos' => $trabalhos,
+            'agora' => now(), 'modalidade' => $modalidade,
         ]);
     }
-
 
     public function cadastrarComissao(Request $request)
     {
