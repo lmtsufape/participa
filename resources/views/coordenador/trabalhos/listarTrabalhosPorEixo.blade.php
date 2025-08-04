@@ -29,7 +29,7 @@
                 </form>
             </div>
         </div>
-        
+
         @if($eixoSelecionado)
             {{-- Filtro de Status --}}
             <div class="btn-group mb-2" role="group">
@@ -126,8 +126,8 @@
                     </div>
                 @endif
             @endforeach
-            
-            @if($trabalhos && $trabalhos->total() == 0)
+
+            @if($trabalhos && $trabalhos->count() == 0)
                  <div class="alert alert-info" role="alert">Nenhum trabalho encontrado para este eixo com os filtros aplicados.</div>
             @endif
 
@@ -135,19 +135,19 @@
             <div class="alert alert-info" role="alert">Selecione um eixo para visualizar os trabalhos.</div>
         @endif
 
-        @if($trabalhos)
+        @if($trabalhos && $trabalhos->isNotEmpty())
             @foreach ($trabalhos as $trabalho)
                 <x-modal-adicionar-revisor :trabalho="$trabalho" :evento="$evento" />
                 <x-modal-excluir-trabalho :trabalho="$trabalho" />
             @endforeach
 
-            @if($trabalhos->hasPages())
+            @if(method_exists($trabalhos, 'hasPages') && $trabalhos->hasPages())
                 <div class="d-flex justify-content-center mt-4">
                     {{ $trabalhos->links() }}
                 </div>
             @endif
         @endif
-        
+
     </div>
 @endsection
 

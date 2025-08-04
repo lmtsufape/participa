@@ -161,8 +161,7 @@ class EventoController extends Controller
         $modalidades = Modalidade::where('evento_id', $evento->id)
             ->withCount(['trabalho as trabalhos_count' => $statusFilter])
             ->orderBy('nome')->get();
-        
-        // ===== CORREÇÃO FINAL: Removida seleção de colunas em midiasExtra =====
+
         $query = Trabalho::where('eventoId', $evento->id)
             ->with([
                 'area:id,nome',
@@ -171,15 +170,13 @@ class EventoController extends Controller
                 'coautors:id,trabalhoId,autorId',
                 'coautors.user:id,name,cpf',
                 'arquivo:id,trabalhoId',
-                // CORRIGIDO: Deixando o Eloquent lidar com a relação 'belongsToMany' complexa
-                'midiasExtra', 
-                'midiasExtra.midia_extra:id,nome'
+                'midiasExtra:id,nome,modalidade_id',
+                'midiasExtra.modalidade:id,nome'
             ])
             ->withCount(['atribuicoes', 'respostas as quantidade_avaliacoes' => function ($q) {
                 $q->select(DB::raw('count(distinct revisor_id)'));
             }])
             ->withExists('arquivo as tem_arquivo');
-        // ===== FIM DA CORREÇÃO =====
 
         $query->where($statusFilter);
 
@@ -201,8 +198,9 @@ class EventoController extends Controller
             $query->whereIn('areaId', $areasCoordEixo);
         }
 
-        $trabalhos = $query->simplePaginate(10)->withQueryString();
-        
+        // OTIMIZAÇÃO: Usando chunk para evitar problemas de memória
+        $trabalhos = $query->simplePaginate(50)->withQueryString();
+
         $coautoresSemCpfPorTrabalho = collect();
         foreach ($trabalhos as $trabalho) {
             $coautoresSemCpf = $trabalho->coautors->filter(function($coautor) {
@@ -212,12 +210,17 @@ class EventoController extends Controller
                 $coautoresSemCpfPorTrabalho->put($trabalho->titulo, $coautoresSemCpf);
             }
         }
-        
+
         $trabalhosPorModalidade = $trabalhos->groupBy('modalidadeId');
         foreach ($modalidades as $modalidade) {
             $trabalhosDaModalidade = $trabalhosPorModalidade->get($modalidade->id, collect());
             foreach ($trabalhosDaModalidade as $trabalho) {
-                $trabalho->midias_extra_verificadas = $trabalho->midiasExtra->keyBy('midia_extra_id');
+                try {
+                    $trabalho->midias_extra_verificadas = $trabalho->midiasExtra->keyBy('id');
+                } catch (\Exception $e) {
+                    \Log::warning("Erro ao processar midiasExtra para trabalho {$trabalho->id}: " . $e->getMessage());
+                    $trabalho->midias_extra_verificadas = collect();
+                }
             }
             $modalidade->trabalho = $trabalhosDaModalidade;
         }
@@ -236,7 +239,7 @@ class EventoController extends Controller
         $this->authorize('isCoordenadorOrCoordCientificaOrCoordEixo', $evento);
         $areas = Area::where('eventoId', $evento->id)->orderBy('ordem')->get();
         $eixoSelecionado = $request->get('eixo_id');
-        
+
         if (!$eixoSelecionado) {
             return view('coordenador.trabalhos.listarTrabalhosPorEixo', [
                 'evento' => $evento, 'areas' => $areas, 'modalidades' => collect(),
@@ -244,7 +247,7 @@ class EventoController extends Controller
                 'eixoSelecionado' => null, 'trabalhos' => null,
             ]);
         }
-        
+
         $statusFilter = function ($query) use ($status) {
             if ($status == 'rascunho') {
                 $query->where('status', '!=', 'arquivado');
@@ -257,7 +260,6 @@ class EventoController extends Controller
             }
         };
 
-        // ===== CORREÇÃO FINAL: Removida seleção de colunas em midiasExtra =====
         $query = Trabalho::where('eventoId', $evento->id)
             ->where('areaId', $eixoSelecionado)
             ->with([
@@ -265,14 +267,13 @@ class EventoController extends Controller
                 'coautors:id,trabalhoId,autorId',
                 'coautors.user:id,name,cpf',
                 'arquivo:id,trabalhoId',
-                'midiasExtra',
-                'midiasExtra.midia_extra:id,nome'
+                'midiasExtra:id,nome,modalidade_id',
+                'midiasExtra.modalidade:id,nome'
             ])
             ->withCount(['atribuicoes', 'respostas as quantidade_avaliacoes' => function ($q) {
                 $q->select(DB::raw('count(distinct revisor_id)'));
             }])
             ->withExists('arquivo as tem_arquivo');
-        // ===== FIM DA CORREÇÃO =====
 
         $query->where($statusFilter);
 
@@ -281,7 +282,7 @@ class EventoController extends Controller
         } else {
             $query->orderBy($column, $direction);
         }
-        
+
         $user_logado = auth()->user();
         if (
             $user_logado->eventosComoCoordEixo()->pluck('eventos.id')->contains($evento->id) &&
@@ -291,16 +292,16 @@ class EventoController extends Controller
             $areasCoordEixo = auth()->user()->areasComoCoordEixoNoEvento($evento->id)->pluck('areas.id');
             $query->whereIn('areaId', $areasCoordEixo);
         }
-        
-        $trabalhos = $query->simplePaginate(10)->withQueryString();
-        
+
+        $trabalhos = $query->simplePaginate(50)->withQueryString();
+
         $modalidades = Modalidade::where('evento_id', $evento->id)
             ->whereHas('trabalho', function ($q) use ($eixoSelecionado, $statusFilter) {
                 $q->where('areaId', $eixoSelecionado)->where($statusFilter);
             })->withCount(['trabalho as trabalhos_count' => function($q) use ($eixoSelecionado, $statusFilter) {
                 $q->where('areaId', $eixoSelecionado)->where($statusFilter);
             }])->orderBy('nome')->get();
-        
+
         $coautoresSemCpfPorTrabalho = collect();
         foreach ($trabalhos as $trabalho) {
             $coautoresSemCpf = $trabalho->coautors->filter(function($coautor) {
@@ -310,12 +311,17 @@ class EventoController extends Controller
                 $coautoresSemCpfPorTrabalho->put($trabalho->titulo, $coautoresSemCpf);
             }
         }
-        
+
         $trabalhosPorModalidade = $trabalhos->groupBy('modalidadeId');
         foreach ($modalidades as $modalidade) {
             $trabalhosDaModalidade = $trabalhosPorModalidade->get($modalidade->id, collect());
             foreach ($trabalhosDaModalidade as $trabalho) {
-                $trabalho->midias_extra_verificadas = $trabalho->midiasExtra->keyBy('midia_extra_id');
+                try {
+                    $trabalho->midias_extra_verificadas = $trabalho->midiasExtra->keyBy('id');
+                } catch (\Exception $e) {
+                    \Log::warning("Erro ao processar midiasExtra para trabalho {$trabalho->id}: " . $e->getMessage());
+                    $trabalho->midias_extra_verificadas = collect();
+                }
             }
             $modalidade->trabalho = $trabalhosDaModalidade;
         }
@@ -476,7 +482,12 @@ class EventoController extends Controller
         $trabalhos = $query->simplePaginate(10)->withQueryString();
 
         foreach ($trabalhos as $trabalho) {
-            $trabalho->midias_extra_verificadas = $trabalho->midiasExtra->keyBy('midia_extra_id');
+            try {
+                $trabalho->midias_extra_verificadas = $trabalho->midiasExtra->keyBy('id');
+            } catch (\Exception $e) {
+                \Log::warning("Erro ao processar midiasExtra para trabalho {$trabalho->id}: " . $e->getMessage());
+                $trabalho->midias_extra_verificadas = collect();
+            }
         }
 
         return view('coordenador.trabalhos.listarTrabalhosModalidades', [
