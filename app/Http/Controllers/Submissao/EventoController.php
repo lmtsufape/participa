@@ -201,7 +201,7 @@ class EventoController extends Controller
             $query->whereIn('areaId', $areasCoordEixo);
         }
 
-        $trabalhos = $query->paginate(50)->withQueryString();
+        $trabalhos = $query->simplePaginate(50)->withQueryString();
         
         $coautoresSemCpfPorTrabalho = collect();
         foreach ($trabalhos as $trabalho) {
@@ -292,7 +292,7 @@ class EventoController extends Controller
             $query->whereIn('areaId', $areasCoordEixo);
         }
         
-        $trabalhos = $query->paginate(50)->withQueryString();
+        $trabalhos = $query->simplePaginate(50)->withQueryString();
         
         $modalidades = Modalidade::where('evento_id', $evento->id)
             ->whereHas('trabalho', function ($q) use ($eixoSelecionado, $statusFilter) {
@@ -473,7 +473,7 @@ class EventoController extends Controller
             $query->whereIn('areaId', $areasCoordEixo);
         }
 
-        $trabalhos = $query->paginate(50)->withQueryString();
+        $trabalhos = $query->simplePaginate(50)->withQueryString();
 
         foreach ($trabalhos as $trabalho) {
             $trabalho->midias_extra_verificadas = $trabalho->midiasExtra->keyBy('midia_extra_id');
