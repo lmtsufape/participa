@@ -285,6 +285,123 @@ class EventoController extends Controller
         ]);
     }
 
+        public function listarTrabalhosPorEixo(Request $request, $column = 'titulo', $direction = 'asc', $status = 'rascunho')
+    {
+
+        $evento = Evento::find($request->eventoId);
+        $this->authorize('isCoordenadorOrCoordCientificaOrCoordEixo', $evento);
+
+        $areas = Area::where('eventoId', $evento->id)->orderBy('ordem')->get();
+        $eixoSelecionado = $request->get('eixo_id');
+
+        // Se nenhum eixo foi selecionado, retorna apenas as áreas sem carregar trabalhos
+        if (!$eixoSelecionado) {
+            return view('coordenador.trabalhos.listarTrabalhosPorEixo', [
+                'evento' => $evento,
+                'areas' => $areas,
+                'modalidades' => collect(),
+                'agora' => now(),
+                'status' => $status,
+                'coautoresSemCpfPorTrabalho' => collect(),
+                'eixoSelecionado' => null,
+            ]);
+        }
+
+        $modalidades = Modalidade::where('evento_id', $evento->id)
+            ->withCount(['trabalho as trabalhos_count' => function($query) use ($status, $eixoSelecionado) {
+                if ($status == 'rascunho') {
+                    $query->where('status', '!=', 'arquivado');
+                } elseif ($status == 'with_revisor') {
+                    $query->has('atribuicoes')
+                        ->where('status', '!=', 'arquivado');
+                } elseif ($status == 'no_revisor') {
+                    $query->doesntHave('atribuicoes')
+                        ->where('status', '!=', 'arquivado');
+                } else {
+                    $query->where('status', $status);
+                }
+
+                if ($eixoSelecionado) {
+                    $query->where('areaId', $eixoSelecionado);
+                }
+            }])
+            ->with(['trabalho' => function ($query) use ($column, $direction, $status, $eixoSelecionado) {
+                if ($column == 'autor') {
+                    $query->orderBy(
+                        User::select('name')
+                            ->whereColumn('autorId', 'users.id')
+                    , $direction);
+                } elseif ($column == 'areaId') {
+                    $query->orderBy(
+                        Area::select('nome')
+                            ->whereColumn('areaId', 'areas.id')
+                    , $direction);
+                } else {
+                    $query->orderBy($column, $direction);
+                }
+                if ($status == 'rascunho') {
+                    $query->where('status', '!=', 'arquivado');
+                } elseif ($status == 'with_revisor') {
+                    $query->has('atribuicoes')
+                        ->where('status', '!=', 'arquivado');
+                } elseif ($status == 'no_revisor') {
+                    $query->doesntHave('atribuicoes')
+                        ->where('status', '!=', 'arquivado');
+                } else {
+                    $query->where('status', $status);
+                }
+
+                if ($eixoSelecionado) {
+                    $query->where('areaId', $eixoSelecionado);
+                }
+
+                $query->with(['area', 'modalidade']);
+            }])
+            ->orderBy('nome')->get();
+
+        $coautoresSemCpfPorTrabalho = collect();
+
+        foreach ($evento->trabalhos as $trabalho) {
+            $coautoresSemCpf = $trabalho->coautors()->whereHas('user', function($user) {
+                return $user->whereNull('cpf')->orWhere('cpf', '');
+            })->with('user')->get();
+
+            if ($coautoresSemCpf->isNotEmpty()) {
+                $coautoresSemCpfPorTrabalho->put($trabalho->titulo, $coautoresSemCpf);
+            }
+        }
+
+        $user_logado = auth()->user();
+
+        if (
+            $user_logado->eventosComoCoordEixo()->pluck('eventos.id')->contains($evento->id) &&
+            !$user_logado->administradors &&
+            !$user_logado->coordComissaoCientifica()->where('eventos_id', $evento->id)->exists()
+        ) {
+
+            $areasCoordEixo = auth()->user()
+            ->areasComoCoordEixoNoEvento($evento->id)
+            ->pluck('areas.id');
+            foreach ($modalidades as $modalidade) {
+                if ($modalidade->trabalho) {
+                    $modalidade->setRelation('trabalho',
+                    $modalidade->trabalho->whereIn('areaId', $areasCoordEixo));
+                    $modalidade->trabalhos_count = count($modalidade->trabalho);
+                }
+            }
+        }
+
+        return view('coordenador.trabalhos.listarTrabalhosPorEixo', [
+            'evento' => $evento,
+            'areas' => $areas,
+            'modalidades' => $modalidades,
+            'agora' => now(),
+            'status' => $status,
+            'coautoresSemCpfPorTrabalho' => $coautoresSemCpfPorTrabalho,
+            'eixoSelecionado' => $eixoSelecionado,
+        ]);
+    }
+
     public function listarAvaliacoes(Request $request, $column = 'titulo', $direction = 'asc', $status = 'rascunho')
     {
         $evento = Evento::find($request->eventoId);
@@ -1088,17 +1205,22 @@ class EventoController extends Controller
                 //Verificação de alteração em múltipla escolha já existente
                 if ($data['tipo'][$key] == 'radio') {
                     //dd($request->tituloRadio);
-                    foreach ($request->tituloRadio['row' . $key] as $i => $titulo) {
-                        $opcoes->first()->titulo = $titulo;
-                        //Verificação de marcação da resposta da múltipla escolha
-                        if (isset($request->checkbox[$opcoes->first()->id])) {
-                            $opcoes->first()->check = true;
-                        } else {
-                            $opcoes->first()->check = false;
-                        }
+                    $rowKey = 'row' . $key;
+                    if (isset($request->tituloRadio[$rowKey])) {
+                        foreach ($request->tituloRadio[$rowKey] as $i => $titulo) {
+                            if ($opcoes->count() > 0) {
+                                $opcoes->first()->titulo = $titulo;
+                                //Verificação de marcação da resposta da múltipla escolha
+                                if (isset($request->checkbox[$opcoes->first()->id])) {
+                                    $opcoes->first()->check = true;
+                                } else {
+                                    $opcoes->first()->check = false;
+                                }
 
-                        $opcoes->first()->update();
-                        $opcoes->shift();
+                                $opcoes->first()->update();
+                                $opcoes->shift();
+                            }
+                        }
                     }
                 }
 
@@ -1135,17 +1257,19 @@ class EventoController extends Controller
                         $paragrafo = new Paragrafo();
                         $resposta->paragrafo()->save($paragrafo);
                     } elseif ($data['tipo'][$i] == 'checkbox') {
-                    $listResposta = (isset($data['tituloCheckoxMarc']) && is_array($data['tituloCheckoxMarc'])) ? array_shift($data['tituloCheckoxMarc']) : [];
-                    $opcoesArray = (isset($data['tituloCheckox']) && is_array($data['tituloCheckox'])) ? array_shift($data['tituloCheckox']) : [];
-                    if (is_array($opcoesArray)) {
-                        foreach ($opcoesArray as $key => $titulo) {
-                            $resposta->opcoes()->create([
-                                'titulo' => $titulo,
-                                'tipo' => 'radio',
-                                'check' => $listResposta[$key] ?? false,
-                            ]);
+                        $listResposta = (isset($data['tituloCheckoxMarc']) && is_array($data['tituloCheckoxMarc'])) ? array_shift($data['tituloCheckoxMarc']) : [];
+                        $opcoesArray = (isset($data['tituloCheckox']) && is_array($data['tituloCheckox'])) ? array_shift($data['tituloCheckox']) : [];
+                        if (is_array($opcoesArray)) {
+                            foreach ($opcoesArray as $key => $titulo) {
+                                if (!empty($titulo)) {
+                                    $resposta->opcoes()->create([
+                                        'titulo' => $titulo,
+                                        'tipo' => 'radio',
+                                        'check' => $listResposta[$key] ?? false,
+                                    ]);
+                                }
+                            }
                         }
-                    }
                     }
                 }
             }
