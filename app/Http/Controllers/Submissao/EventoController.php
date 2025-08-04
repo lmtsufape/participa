@@ -145,62 +145,51 @@ class EventoController extends Controller
         $this->authorize('isCoordenadorOrCoordCientificaOrCoordEixo', $evento);
 
         $areas = Area::where('eventoId', $evento->id)->orderBy('ordem')->get();
-        
-        // Carregar todas as modalidades com contadores
+
+        // Subquery para o filtro de status, para ser reutilizada
+        $statusFilter = function ($query) use ($status) {
+            if ($status == 'rascunho') {
+                $query->where('status', '!=', 'arquivado');
+            } elseif ($status == 'with_revisor') {
+                $query->has('atribuicoes')->where('status', '!=', 'arquivado');
+            } elseif ($status == 'no_revisor') {
+                $query->doesntHave('atribuicoes')->where('status', '!=', 'arquivado');
+            } else {
+                $query->where('status', $status);
+            }
+        };
+
+        // Carregar todas as modalidades com contadores eficientes
         $modalidades = Modalidade::where('evento_id', $evento->id)
-            ->withCount(['trabalho as trabalhos_count' => function($query) use ($status) {
-                if ($status == 'rascunho') {
-                    $query->where('status', '!=', 'arquivado');
-                } elseif ($status == 'with_revisor') {
-                    $query->has('atribuicoes')
-                        ->where('status', '!=', 'arquivado');
-                } elseif ($status == 'no_revisor') {
-                    $query->doesntHave('atribuicoes')
-                        ->where('status', '!=', 'arquivado');
-                } else {
-                    $query->where('status', $status);
-                }
-            }])
+            ->withCount(['trabalho as trabalhos_count' => $statusFilter])
             ->orderBy('nome')->get();
 
-        // Carregar todos os trabalhos com relacionamentos necessários
+        // ===== INÍCIO DA QUERY PRINCIPAL OTIMIZADA =====
         $query = Trabalho::where('eventoId', $evento->id)
-            ->with([
-                'area', 
-                'modalidade', 
-                'autor', 
+            ->with([ // Eager loading para evitar N+1
+                'area',
+                'modalidade',
+                'autor',
                 'coautors.user',
-                'atribuicoes',
-                'pareceres',
                 'arquivo',
-                'midiasExtra',
                 'midiasExtra.midia_extra'
-            ]);
+            ])
+            ->withCount([ // Contagens eficientes com withCount
+                'atribuicoes',
+                'respostas as quantidade_avaliacoes' => function ($q) {
+                    $q->select(DB::raw('count(distinct revisor_id)'));
+                }
+            ])
+            ->withExists('arquivo as tem_arquivo'); // Verificação de existência eficiente
 
-        // Aplicar filtros de status
-        if ($status == 'rascunho') {
-            $query->where('status', '!=', 'arquivado');
-        } elseif ($status == 'with_revisor') {
-            $query->has('atribuicoes')
-                ->where('status', '!=', 'arquivado');
-        } elseif ($status == 'no_revisor') {
-            $query->doesntHave('atribuicoes')
-                ->where('status', '!=', 'arquivado');
-        } else {
-            $query->where('status', $status);
-        }
+        // Aplica o mesmo filtro de status da contagem
+        $query->where($statusFilter);
 
         // Aplicar ordenação
         if ($column == 'autor') {
-            $query->orderBy(
-                User::select('name')
-                    ->whereColumn('autorId', 'users.id')
-            , $direction);
+            $query->orderBy(User::select('name')->whereColumn('autorId', 'users.id'), $direction);
         } elseif ($column == 'areaId') {
-            $query->orderBy(
-                Area::select('nome')
-                    ->whereColumn('areaId', 'areas.id')
-            , $direction);
+            $query->orderBy(Area::select('nome')->whereColumn('areaId', 'areas.id'), $direction);
         } else {
             $query->orderBy($column, $direction);
         }
@@ -212,243 +201,153 @@ class EventoController extends Controller
             !$user_logado->administradors &&
             !$user_logado->coordComissaoCientifica()->where('eventos_id', $evento->id)->exists()
         ) {
-            $areasCoordEixo = auth()->user()
-                ->areasComoCoordEixoNoEvento($evento->id)
-                ->pluck('areas.id');
+            $areasCoordEixo = auth()->user()->areasComoCoordEixoNoEvento($evento->id)->pluck('areas.id');
             $query->whereIn('areaId', $areasCoordEixo);
         }
 
-        // Aplicar paginação de 50 em 50
-        $trabalhos = $query->paginate(50);
+        // Aplicar paginação
+        $trabalhos = $query->paginate(50)->withQueryString();
+        // ===== FIM DA QUERY PRINCIPAL OTIMIZADA =====
 
-        // Carregar coautores sem CPF
+
+        // Processamento pós-query (em memória, sem novas queries)
         $coautoresSemCpfPorTrabalho = collect();
+        $trabalhos->load('coautors.user'); // Garante que a relação está carregada
         foreach ($trabalhos as $trabalho) {
-            $coautoresSemCpf = $trabalho->coautors()->whereHas('user', function($user) {
-                return $user->whereNull('cpf')->orWhere('cpf', '');
-            })->with('user')->get();
+            $coautoresSemCpf = $trabalho->coautors->filter(function($coautor) {
+                return optional($coautor->user)->cpf === null || optional($coautor->user)->cpf === '';
+            });
 
             if ($coautoresSemCpf->isNotEmpty()) {
                 $coautoresSemCpfPorTrabalho->put($trabalho->titulo, $coautoresSemCpf);
             }
         }
-
-        // Pré-carregar contadores e relacionamentos para evitar N+1 queries
-        foreach ($trabalhos as $trabalho) {
-            // Contador de atribuições já está carregado via with()
-            $trabalho->atribuicoes_count = $trabalho->atribuicoes->count();
-            
-            // Verificar se tem arquivo
-            $trabalho->tem_arquivo = $trabalho->arquivo && $trabalho->arquivo->count() > 0;
-            
-            // Calcular quantidade de avaliações
-            $trabalho->quantidade_avaliacoes = $trabalho->atribuicoes->map(function ($revisor) use ($trabalho) {
-                $revisorModel = \App\Models\Users\Revisor::where([
-                    ['user_id', $revisor->user_id], 
-                    ['areaId', $trabalho->areaId],
-                    ['modalidadeId', $trabalho->modalidadeId]
-                ])->first();
-
-                if ($revisorModel == null) {
-                    return false;
-                }
-
-                return \App\Models\Submissao\Resposta::where([
-                    ['trabalho_id', $trabalho->id], 
-                    ['revisor_id', $revisorModel->id]
-                ])->exists();
-            })->filter()->count();
-            
-            // Verificar mídias extras para cada trabalho
-            $trabalho->midias_extra_verificadas = [];
-            foreach ($trabalho->midiasExtra as $midiaExtra) {
-                $trabalho->midias_extra_verificadas[$midiaExtra->midia_extra_id] = true;
-            }
-        }
-
+        
         // Agrupar trabalhos por modalidade para a view
         $trabalhosPorModalidade = $trabalhos->groupBy('modalidadeId');
-        
         foreach ($modalidades as $modalidade) {
-            $modalidade->trabalho = $trabalhosPorModalidade->get($modalidade->id, collect());
-            $modalidade->trabalhos_count = $modalidade->trabalho->count();
+            $trabalhosDaModalidade = $trabalhosPorModalidade->get($modalidade->id, collect());
+            // Prepara a verificação de midias extras para a view
+            foreach ($trabalhosDaModalidade as $trabalho) {
+                $trabalho->midias_extra_verificadas = $trabalho->midiasExtra->keyBy('midia_extra_id');
+            }
+            $modalidade->trabalho = $trabalhosDaModalidade;
         }
 
         return view('coordenador.trabalhos.listarTrabalhos', [
             'evento' => $evento,
             'areas' => $areas,
             'modalidades' => $modalidades,
-            'trabalhos' => $trabalhos,
+            'trabalhos' => $trabalhos, // Coleção paginada para os links de paginação
             'agora' => now(),
             'status' => $status,
             'coautoresSemCpfPorTrabalho' => $coautoresSemCpfPorTrabalho,
         ]);
     }
 
-        public function listarTrabalhosPorEixo(Request $request, $column = 'titulo', $direction = 'asc', $status = 'rascunho')
+    public function listarTrabalhosPorEixo(Request $request, $column = 'titulo', $direction = 'asc', $status = 'rascunho')
     {
         $evento = Evento::find($request->eventoId);
         $this->authorize('isCoordenadorOrCoordCientificaOrCoordEixo', $evento);
 
         $areas = Area::where('eventoId', $evento->id)->orderBy('ordem')->get();
         $eixoSelecionado = $request->get('eixo_id');
-
-        // Se nenhum eixo foi selecionado, retorna apenas as áreas sem carregar trabalhos
+        
         if (!$eixoSelecionado) {
             return view('coordenador.trabalhos.listarTrabalhosPorEixo', [
-                'evento' => $evento,
-                'areas' => $areas,
-                'modalidades' => collect(),
-                'agora' => now(),
-                'status' => $status,
-                'coautoresSemCpfPorTrabalho' => collect(),
-                'eixoSelecionado' => null,
-                'trabalhos' => null,
+                'evento' => $evento, 'areas' => $areas, 'modalidades' => collect(),
+                'agora' => now(), 'status' => $status, 'coautoresSemCpfPorTrabalho' => collect(),
+                'eixoSelecionado' => null, 'trabalhos' => null,
             ]);
         }
+        
+        // Subquery para o filtro de status, para ser reutilizada
+        $statusFilter = function ($query) use ($status) {
+            if ($status == 'rascunho') {
+                $query->where('status', '!=', 'arquivado');
+            } elseif ($status == 'with_revisor') {
+                $query->has('atribuicoes')->where('status', '!=', 'arquivado');
+            } elseif ($status == 'no_revisor') {
+                $query->doesntHave('atribuicoes')->where('status', '!=', 'arquivado');
+            } else {
+                $query->where('status', $status);
+            }
+        };
 
-        // Carregar todos os trabalhos com relacionamentos necessários
+        // ===== INÍCIO DA QUERY PRINCIPAL OTIMIZADA =====
         $query = Trabalho::where('eventoId', $evento->id)
-            ->where('areaId', $eixoSelecionado)
+            ->where('areaId', $eixoSelecionado) // Filtro principal por eixo
             ->with([
-                'area', 
-                'modalidade', 
-                'autor', 
-                'coautors.user',
+                'area', 'modalidade', 'autor', 'coautors.user',
+                'arquivo', 'midiasExtra.midia_extra'
+            ])
+            ->withCount([
                 'atribuicoes',
-                'pareceres',
-                'arquivo',
-                'midiasExtra',
-                'midiasExtra.midia_extra'
-            ]);
+                'respostas as quantidade_avaliacoes' => function ($q) {
+                    $q->select(DB::raw('count(distinct revisor_id)'));
+                }
+            ])
+            ->withExists('arquivo as tem_arquivo');
 
-        // Aplicar filtros de status
-        if ($status == 'rascunho') {
-            $query->where('status', '!=', 'arquivado');
-        } elseif ($status == 'with_revisor') {
-            $query->has('atribuicoes')
-                ->where('status', '!=', 'arquivado');
-        } elseif ($status == 'no_revisor') {
-            $query->doesntHave('atribuicoes')
-                ->where('status', '!=', 'arquivado');
-        } else {
-            $query->where('status', $status);
-        }
+        $query->where($statusFilter);
 
-        // Aplicar ordenação
+        // Ordenação
         if ($column == 'autor') {
-            $query->orderBy(
-                User::select('name')
-                    ->whereColumn('autorId', 'users.id')
-            , $direction);
-        } elseif ($column == 'areaId') {
-            $query->orderBy(
-                Area::select('nome')
-                    ->whereColumn('areaId', 'areas.id')
-            , $direction);
+            $query->orderBy(User::select('name')->whereColumn('autorId', 'users.id'), $direction);
         } else {
             $query->orderBy($column, $direction);
         }
-
-        // Verificar se é coordenador de eixo
+        
+        // Filtro para coordenador de eixo (reforço da autorização)
         $user_logado = auth()->user();
         if (
             $user_logado->eventosComoCoordEixo()->pluck('eventos.id')->contains($evento->id) &&
             !$user_logado->administradors &&
             !$user_logado->coordComissaoCientifica()->where('eventos_id', $evento->id)->exists()
         ) {
-            $areasCoordEixo = auth()->user()
-                ->areasComoCoordEixoNoEvento($evento->id)
-                ->pluck('areas.id');
+            $areasCoordEixo = auth()->user()->areasComoCoordEixoNoEvento($evento->id)->pluck('areas.id');
             $query->whereIn('areaId', $areasCoordEixo);
         }
-
-        // Aplicar paginação de 50 em 50
-        $trabalhos = $query->paginate(50);
-
-        // Carregar coautores sem CPF
+        
+        $trabalhos = $query->paginate(50)->withQueryString();
+        // ===== FIM DA QUERY PRINCIPAL OTIMIZADA =====
+        
+        // Carregar modalidades com contadores eficientes para o eixo selecionado
+        $modalidades = Modalidade::where('evento_id', $evento->id)
+            ->whereHas('trabalho', function ($q) use ($eixoSelecionado, $statusFilter) {
+                $q->where('areaId', $eixoSelecionado)->where($statusFilter);
+            })
+            ->withCount(['trabalho as trabalhos_count' => function($q) use ($eixoSelecionado, $statusFilter) {
+                $q->where('areaId', $eixoSelecionado)->where($statusFilter);
+            }])
+            ->orderBy('nome')->get();
+        
+        // Processamento pós-query
         $coautoresSemCpfPorTrabalho = collect();
+        $trabalhos->load('coautors.user');
         foreach ($trabalhos as $trabalho) {
-            $coautoresSemCpf = $trabalho->coautors()->whereHas('user', function($user) {
-                return $user->whereNull('cpf')->orWhere('cpf', '');
-            })->with('user')->get();
-
+            $coautoresSemCpf = $trabalho->coautors->filter(function($coautor) {
+                return optional($coautor->user)->cpf === null || optional($coautor->user)->cpf === '';
+            });
             if ($coautoresSemCpf->isNotEmpty()) {
                 $coautoresSemCpfPorTrabalho->put($trabalho->titulo, $coautoresSemCpf);
             }
         }
-
-        // Pré-carregar contadores e relacionamentos para evitar N+1 queries
-        foreach ($trabalhos as $trabalho) {
-            // Contador de atribuições já está carregado via with()
-            $trabalho->atribuicoes_count = $trabalho->atribuicoes->count();
-            
-            // Verificar se tem arquivo
-            $trabalho->tem_arquivo = $trabalho->arquivo && $trabalho->arquivo->count() > 0;
-            
-            // Calcular quantidade de avaliações
-            $trabalho->quantidade_avaliacoes = $trabalho->atribuicoes->map(function ($revisor) use ($trabalho) {
-                $revisorModel = \App\Models\Users\Revisor::where([
-                    ['user_id', $revisor->user_id], 
-                    ['areaId', $trabalho->areaId],
-                    ['modalidadeId', $trabalho->modalidadeId]
-                ])->first();
-
-                if ($revisorModel == null) {
-                    return false;
-                }
-
-                return \App\Models\Submissao\Resposta::where([
-                    ['trabalho_id', $trabalho->id], 
-                    ['revisor_id', $revisorModel->id]
-                ])->exists();
-            })->filter()->count();
-            
-            // Verificar mídias extras para cada trabalho
-            $trabalho->midias_extra_verificadas = [];
-            foreach ($trabalho->midiasExtra as $midiaExtra) {
-                $trabalho->midias_extra_verificadas[$midiaExtra->midia_extra_id] = true;
-            }
-        }
-
-        // Agrupar trabalhos por modalidade para a view
-        $trabalhosPorModalidade = $trabalhos->groupBy('modalidadeId');
         
-        // Carregar modalidades com contadores
-        $modalidades = Modalidade::where('evento_id', $evento->id)
-            ->withCount(['trabalho as trabalhos_count' => function($query) use ($status, $eixoSelecionado) {
-                if ($status == 'rascunho') {
-                    $query->where('status', '!=', 'arquivado');
-                } elseif ($status == 'with_revisor') {
-                    $query->has('atribuicoes')
-                        ->where('status', '!=', 'arquivado');
-                } elseif ($status == 'no_revisor') {
-                    $query->doesntHave('atribuicoes')
-                        ->where('status', '!=', 'arquivado');
-                } else {
-                    $query->where('status', $status);
-                }
-
-                if ($eixoSelecionado) {
-                    $query->where('areaId', $eixoSelecionado);
-                }
-            }])
-            ->orderBy('nome')->get();
-
+        // Agrupar trabalhos por modalidade
+        $trabalhosPorModalidade = $trabalhos->groupBy('modalidadeId');
         foreach ($modalidades as $modalidade) {
-            $modalidade->trabalho = $trabalhosPorModalidade->get($modalidade->id, collect());
-            $modalidade->trabalhos_count = $modalidade->trabalho->count();
+            $trabalhosDaModalidade = $trabalhosPorModalidade->get($modalidade->id, collect());
+            foreach ($trabalhosDaModalidade as $trabalho) {
+                $trabalho->midias_extra_verificadas = $trabalho->midiasExtra->keyBy('midia_extra_id');
+            }
+            $modalidade->trabalho = $trabalhosDaModalidade;
         }
 
         return view('coordenador.trabalhos.listarTrabalhosPorEixo', [
-            'evento' => $evento,
-            'areas' => $areas,
-            'modalidades' => $modalidades,
-            'agora' => now(),
-            'status' => $status,
-            'coautoresSemCpfPorTrabalho' => $coautoresSemCpfPorTrabalho,
-            'eixoSelecionado' => $eixoSelecionado,
-            'trabalhos' => $trabalhos,
+            'evento' => $evento, 'areas' => $areas, 'modalidades' => $modalidades,
+            'agora' => now(), 'status' => $status, 'coautoresSemCpfPorTrabalho' => $coautoresSemCpfPorTrabalho,
+            'eixoSelecionado' => $eixoSelecionado, 'trabalhos' => $trabalhos,
         ]);
     }
 
@@ -557,22 +456,20 @@ class EventoController extends Controller
         $this->authorize('isCoordenadorOrCoordCientificaOrCoordEixo', $evento);
         $modalidade = Modalidade::find($request->modalidadeId);
         $areas = Area::where('eventoId', $evento->id)->orderBy('ordem')->get();
-        $areasId = Area::where('eventoId', $evento->id)->select('id')->orderBy('ordem')->get();
 
-        // Carregar todos os trabalhos com relacionamentos necessários
+        // ===== INÍCIO DA QUERY PRINCIPAL OTIMIZADA =====
         $query = Trabalho::where('modalidadeId', $request->modalidadeId)
-            ->whereIn('areaId', $areasId)
             ->with([
-                'area', 
-                'modalidade', 
-                'autor', 
-                'coautors.user',
+                'area', 'modalidade', 'autor', 'coautors.user',
+                'arquivo', 'midiasExtra.midia_extra'
+            ])
+            ->withCount([
                 'atribuicoes',
-                'pareceres',
-                'arquivo',
-                'midiasExtra',
-                'midiasExtra.midia_extra'
-            ]);
+                'respostas as quantidade_avaliacoes' => function ($q) {
+                    $q->select(DB::raw('count(distinct revisor_id)'));
+                }
+            ])
+            ->withExists('arquivo as tem_arquivo');
 
         // Aplicar filtros de status
         if ($status == 'rascunho') {
@@ -583,15 +480,9 @@ class EventoController extends Controller
 
         // Aplicar ordenação
         if ($column == 'autor') {
-            $query->orderBy(
-                User::select('name')
-                    ->whereColumn('autorId', 'users.id')
-            , $direction);
+            $query->orderBy(User::select('name')->whereColumn('autorId', 'users.id'), $direction);
         } elseif ($column == 'areaId') {
-            $query->orderBy(
-                Area::select('nome')
-                    ->whereColumn('areaId', 'areas.id')
-            , $direction);
+            $query->orderBy(Area::select('nome')->whereColumn('areaId', 'areas.id'), $direction);
         } else {
             $query->orderBy($column, $direction);
         }
@@ -603,46 +494,16 @@ class EventoController extends Controller
             !$user_logado->administradors &&
             !$user_logado->coordComissaoCientifica()->where('eventos_id', $evento->id)->exists()
         ) {
-            $areasCoordEixo = auth()->user()
-                ->areasComoCoordEixoNoEvento($evento->id)
-                ->pluck('areas.id');
+            $areasCoordEixo = auth()->user()->areasComoCoordEixoNoEvento($evento->id)->pluck('areas.id');
             $query->whereIn('areaId', $areasCoordEixo);
         }
 
-        // Aplicar paginação de 50 em 50
-        $trabalhos = $query->paginate(50);
+        $trabalhos = $query->paginate(50)->withQueryString();
+        // ===== FIM DA QUERY PRINCIPAL OTIMIZADA =====
 
-        // Pré-carregar contadores e relacionamentos para evitar N+1 queries
+        // Processamento pós-query para a view
         foreach ($trabalhos as $trabalho) {
-            // Contador de atribuições já está carregado via with()
-            $trabalho->atribuicoes_count = $trabalho->atribuicoes->count();
-            
-            // Verificar se tem arquivo
-            $trabalho->tem_arquivo = $trabalho->arquivo && $trabalho->arquivo->count() > 0;
-            
-            // Calcular quantidade de avaliações
-            $trabalho->quantidade_avaliacoes = $trabalho->atribuicoes->map(function ($revisor) use ($trabalho) {
-                $revisorModel = \App\Models\Users\Revisor::where([
-                    ['user_id', $revisor->user_id], 
-                    ['areaId', $trabalho->areaId],
-                    ['modalidadeId', $trabalho->modalidadeId]
-                ])->first();
-
-                if ($revisorModel == null) {
-                    return false;
-                }
-
-                return \App\Models\Submissao\Resposta::where([
-                    ['trabalho_id', $trabalho->id], 
-                    ['revisor_id', $revisorModel->id]
-                ])->exists();
-            })->filter()->count();
-            
-            // Verificar mídias extras para cada trabalho
-            $trabalho->midias_extra_verificadas = [];
-            foreach ($trabalho->midiasExtra as $midiaExtra) {
-                $trabalho->midias_extra_verificadas[$midiaExtra->midia_extra_id] = true;
-            }
+            $trabalho->midias_extra_verificadas = $trabalho->midiasExtra->keyBy('midia_extra_id');
         }
 
         return view('coordenador.trabalhos.listarTrabalhosModalidades', [
@@ -653,6 +514,7 @@ class EventoController extends Controller
             'modalidade' => $modalidade,
         ]);
     }
+
 
     public function cadastrarComissao(Request $request)
     {
