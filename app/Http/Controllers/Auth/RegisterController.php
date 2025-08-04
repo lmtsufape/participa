@@ -67,7 +67,7 @@ class RegisterController extends Controller
             'cnpj' => ($data['passaporte'] == null && $data['cpf'] == null ? ['required'] : 'nullable'),
             'passaporte' => ($data['cpf'] == null && $data['cnpj'] == null ? ['required', 'max:10'] : 'nullable'),
             'celular' => ['required', 'string', 'max:20'],
-            'instituicao' => ['required', 'string', 'max:255'],
+            'instituicao' => ['required', 'string', 'max:255', 'regex:/^[A-Za-zÀ-ÿ0-9\s\-\.\(\)\[\]\{\}\/\\,;&@#$%*+=|<>!?~`\'"]+$/'],
             'pais' => ['required', 'string', 'max:255'],
             'rua' => ['required', 'string', 'max:255'],
             'numero' => ['required', 'string'],
@@ -90,7 +90,11 @@ class RegisterController extends Controller
             $validations['cep'] = ['nullable', 'string'];
         }
 
-        return Validator::make($data, $validations);
+        $messages = [
+            'instituicao.regex' => 'O campo instituição contém caracteres não permitidos. Use apenas letras, números, espaços e símbolos comuns.',
+        ];
+
+        return Validator::make($data, $validations, $messages);
     }
 
     /**

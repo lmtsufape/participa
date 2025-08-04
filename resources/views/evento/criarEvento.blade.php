@@ -696,10 +696,7 @@
             $(".apenasLetras").mask("#", {
                 maxlength: false,
                 translation: {
-                    '#': {
-                        pattern: /[A-zÀ-ÿ ]/,
-                        recursive: true
-                    }
+                    '#': {pattern: /[A-zÀ-ÿ0-9\s\-\.\(\)\[\]\{\}\/\\,;&@#$%*+=|<>!?~`'"]/, recursive: true}
                 }
             });
             /*$('#numero').mask('#', {

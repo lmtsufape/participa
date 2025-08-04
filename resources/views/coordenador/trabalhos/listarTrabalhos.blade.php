@@ -189,7 +189,7 @@
                                                         </td> --}}
                                                         <td>{{ $trabalho->id }}</td>
                                                         <td>
-                                                            @if ($trabalho->arquivo && count($trabalho->arquivo) > 0)
+                                                            @if ($trabalho->tem_arquivo)
                                                                 <a href="{{route('downloadTrabalho', ['id' => $trabalho->id])}}">
                                                                     <span class="d-inline-block" class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" title="{{$trabalho->titulo}}">
                                                                         {{$trabalho->titulo}}
@@ -210,7 +210,7 @@
                                                         <td>{{$trabalho->autor->name}}</td>
                                                         @foreach ($modalidade->midiasExtra as $midia)
                                                             <td>
-                                                                @if($trabalho->midiasExtra()->where('midia_extra_id', $midia->id)->first() != null)
+                                                                @if(isset($trabalho->midias_extra_verificadas[$midia->id]))
                                                                     <a href="{{route('downloadMidiaExtra', ['id' => $trabalho->id, 'id_midia' => $midia->id])}}">
                                                                         <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" title="{{$midia->nome}}" style="max-width: 150px;">
                                                                             <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">
@@ -223,9 +223,9 @@
                                                             <td>{{$trabalho->tipo_apresentacao}}</td>
                                                         @endif
                                                         <td>
-                                                            {{ $trabalho->atribuicoes()->count() }}
+                                                            {{ $trabalho->atribuicoes_count }}
                                                         </td>
-                                                        <td>{{ $trabalho->getQuantidadeAvaliacoes() }}</td>
+                                                        <td>{{ $trabalho->quantidade_avaliacoes }}</td>
                                                         <td>{{ date("d/m/Y H:i", strtotime($trabalho->created_at)) }}</td>
                                                         <td style="text-align:center">
                                                             <a href="#" data-bs-toggle="modal" data-bs-target="#modalTrabalho{{$trabalho->id}}">
@@ -341,6 +341,22 @@
         <x-modal-excluir-trabalho :trabalho="$trabalho" />
     @endforeach
 @endforeach
+
+{{-- Paginação --}}
+@if($trabalhos->hasPages())
+    <div class="row justify-content-center mt-4">
+        <div class="col-sm-12">
+            <div class="d-flex justify-content-center">
+                {{ $trabalhos->appends([
+                    'eventoId' => $evento->id,
+                    'column' => request('column', 'titulo'),
+                    'direction' => request('direction', 'asc'),
+                    'status' => request('status', 'rascunho')
+                ])->links() }}
+            </div>
+        </div>
+    </div>
+@endif
 
 @include('coordenador.trabalhos.export_certifica_modal', compact('evento'))
 @endsection

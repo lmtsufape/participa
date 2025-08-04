@@ -316,6 +316,23 @@
     @endforeach
 @endif
 
+{{-- Paginação --}}
+@if($eixoSelecionado && $trabalhos && $trabalhos->hasPages())
+    <div class="row justify-content-center mt-4">
+        <div class="col-sm-12">
+            <div class="d-flex justify-content-center">
+                {{ $trabalhos->appends([
+                    'eventoId' => $evento->id,
+                    'column' => request('column', 'titulo'),
+                    'direction' => request('direction', 'asc'),
+                    'status' => request('status', 'rascunho'),
+                    'eixo_id' => $eixoSelecionado
+                ])->links() }}
+            </div>
+        </div>
+    </div>
+@endif
+
 @include('coordenador.trabalhos.export_certifica_modal', compact('evento'))
 @endsection
 

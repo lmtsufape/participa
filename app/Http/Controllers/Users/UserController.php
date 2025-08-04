@@ -77,7 +77,7 @@ class UserController extends Controller
             'cnpj' => ($request->passaporte == null && $request->cpf == null ? ['bail', 'required'] : 'nullable'),
             'passaporte' => ($request->cpf == null && $request->cnpj == null ? ['bail', 'required', 'max:10'] : ['nullable']),
             'celular' => '|string|max:20',
-            'instituicao' => 'required|string| max:255',
+            'instituicao' => 'required|string|max:255|regex:/^[A-Za-zÀ-ÿ0-9\s\-\.\(\)\[\]\{\}\/\\,;&@#$%*+=|<>!?~`\'"]+$/',
             'rua' => 'required|string|max:255',
             'numero' => 'required|string',
             'bairro' => 'required|string|max:255',
