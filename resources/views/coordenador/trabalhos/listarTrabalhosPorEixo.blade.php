@@ -101,7 +101,7 @@
                                                         @can('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento)
                                                         <td style="text-align:center">
                                                              @if ($trabalho->status == 'arquivado')
-                                                                <a href="{{ route('trabalho.status', [$trabalho->id, 'rascunho']) }}"><i class="fas fa-folder-open"></i></a>
+                                                                <a href="{{ route('trabalho.status', [$trabalho->id, 'rascunho']) }}"><img src="{{ asset('img/icons/archive.png') }}" width="20" alt="Desarquivar"></a>
                                                             @else
                                                                 <a href="{{ route('trabalho.status', [$trabalho->id, 'arquivado'] ) }}"><img src="{{ asset('img/icons/archive.png') }}" width="20" alt="Arquivar"></a>
                                                             @endif
