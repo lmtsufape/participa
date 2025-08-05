@@ -117,7 +117,7 @@
                                                     @can('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento)
                                                         <td style="text-align:center">
                                                             @if ($trabalho->status == 'arquivado')
-                                                                <a href="{{ route('trabalho.status', [$trabalho->id, 'rascunho']) }}" title="Desarquivar"><i class="fas fa-folder-open"></i></a>
+                                                                <a href="{{ route('trabalho.status', [$trabalho->id, 'rascunho']) }}" title="Desarquivar"><img src="{{ asset('img/icons/archive.png') }}" width="20" alt="Arquivar"></i></a>
                                                             @else
                                                                 <a href="{{ route('trabalho.status', [$trabalho->id, 'arquivado']) }}" title="Arquivar"><img src="{{ asset('img/icons/archive.png') }}" width="20" alt="Arquivar"></a>
                                                             @endif
@@ -153,7 +153,7 @@
                 {{ $trabalhos->links() }}
             </div>
         @endif
-        
+
         @include('coordenador.trabalhos.export_certifica_modal', compact('evento'))
     </div>
 @endsection
