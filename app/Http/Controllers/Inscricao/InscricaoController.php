@@ -642,7 +642,7 @@ class InscricaoController extends Controller
         if ($inscricao->finalizada) {
             return redirect()->back()->with(['message' => 'Não é possível alterar a categoria de uma inscrição já finalizada.', 'class' => 'danger']);
         }
-        
+
         $validator = Validator::make($request->all(), [
             'categoria' => 'required|exists:categoria_participantes,id',
         ]);
@@ -657,4 +657,24 @@ class InscricaoController extends Controller
         return redirect()->action([CheckoutController::class, 'telaPagamento'], ['evento' => $inscricao->evento_id])
                        ->with('message', 'Categoria alterada com sucesso! Prossiga com o pagamento.');
     }
+    public function validarRecibo($codigo)
+    {
+        $inscricao = Inscricao::where('codigo_validacao', $codigo)->first();
+
+        if (!$inscricao) {
+            return view('validacao.recibo_invalido');
+        }
+
+        $data = [
+            'nome' => $inscricao->user->name,
+            'valor' => $inscricao->pagamento ? $inscricao->pagamento->valor : 0,
+            'data' => $inscricao->created_at,
+            'codigo_validacao' => $inscricao->codigo_validacao,
+            'evento' => $inscricao->evento->nome ?? 'Evento',
+            'categoria' => $inscricao->categoria->nome ?? 'Categoria',
+        ];
+
+        return view('validacao.recibo_valido', $data);
+    }
+
 }
