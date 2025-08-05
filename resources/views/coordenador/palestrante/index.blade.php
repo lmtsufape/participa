@@ -109,8 +109,8 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
                         <button type="submit"
-                            class="btn btn-primary"
-                            onclick="editarPalestra({{ $palestra->id }})">Salvar</button>
+                                class="btn btn-primary"
+                                form="formEdidarPalestra{{ $palestra->id }}">Salvar</button>
                     </div>
                 </div>
             </div>
@@ -333,7 +333,6 @@
 @section('javascript')
     @parent
     <style>
-        /* Seus estilos .imagem-loader permanecem os mesmos */
         .imagem-loader {
             cursor: pointer;
             border: 2px dashed #ccc;
@@ -349,14 +348,17 @@
     </style>
 
     <script>
-
-        let contadorNovosPalestrantes = {{ count($palestra->palestrantes ?? []) }}; // Inicia o contador corretamente
+        // Variáveis e funções globais que precisam ser acessadas pelo onclick do HTML
+        let contadorNovosPalestrantes = 0;
         const placeholderUrl = "{{ asset('/img/nova_imagem.PNG') }}";
 
         function adicionarPalestrante(palestraId) {
             contadorNovosPalestrantes++;
-            const containerSelector = `#palestrantesDeUmaPalestra${palestraId}`;
+            // Esta função permanece a mesma, pois já usa jQuery e funciona bem
+            const containerSelector = `#palestrantesDeUmaPalestra${palestraId > 0 ? palestraId : ''}`;
             const novoIdSufixo = `novo_${contadorNovosPalestrantes}`;
+            const isEdicao = palestraId > 0;
+            const nomeInputFoto = isEdicao ? `fotoPalestrante[0][]` : `foto_palestrante[]`;
 
             const novoBlocoHtml = `
                 <div class="palestrante-bloco" id="palestrantePalestra_${novoIdSufixo}">
@@ -367,7 +369,7 @@
                             <button type="button" class="btn btn-outline-danger btn-sm remover-palestrante" title="Remover palestrante">&times;</button>
                         </div>
                     </div>
-                    <input type="hidden" name="idPalestrante[]" value="0">
+                    ${isEdicao ? '<input type="hidden" name="idPalestrante[]" value="0">' : ''}
                     <div class="row">
                         <div class="col-12 col-md-6 mb-3">
                             <label class="required-field" for="nomeDoPalestrante_${novoIdSufixo}">Nome:</label>
@@ -383,7 +385,7 @@
                                 <img id="preview_${novoIdSufixo}" class="img-fluid" src="${placeholderUrl}" alt="Clique para enviar uma imagem" style="max-width: 150px;">
                             </div>
                             <div style="display: none;">
-                                <input type="file" name="fotoPalestrante[0][]" id="foto_palestrante_${novoIdSufixo}" accept="image/jpeg, image/png">
+                                <input type="file" name="${nomeInputFoto}" id="foto_palestrante_${novoIdSufixo}" accept="image/jpeg, image/png">
                             </div>
                         </div>
                     </div>
@@ -391,44 +393,101 @@
             $(containerSelector).append(novoBlocoHtml);
         }
 
+        // Envolvemos toda a lógica de "listeners" no document.ready do jQuery
+        $(document).ready(function() {
 
-        document.addEventListener('DOMContentLoaded', function() {
+            // Listener de clique para remover, usando delegação de eventos do jQuery
+            $(document).on('click', '.remover-palestrante', function() {
+                $(this).closest('.palestrante-bloco').remove();
+            });
 
-            document.body.addEventListener('click', function(event) {
+            // Listener de clique para o loader da imagem
+            $(document).on('click', '.imagem-loader', function() {
+                $(this).next('div').find('input[type="file"]').click();
+            });
 
-                const loader = event.target.closest('.imagem-loader');
-                if (loader) {
 
-                    loader.nextElementSibling.querySelector('input[type="file"]').click();
-                    return;
+            $(document).on('change', 'input[type="file"][name^="foto"]', function() {
+                processarImagem(this);
+            });
+
+            $(document).on('submit', 'form[id^="formEdidarPalestra"], form[id="formNovaPalestra"]', function(event) {
+                const form = this;
+                let isFormValid = true;
+
+                // ATUALIZADO: Verifica se existe pelo menos um palestrante
+                if ($(form).find('.palestrante-bloco').length < 1) {
+                    alert('É necessário adicionar pelo menos um palestrante.');
+                    isFormValid = false;
+                } else {
+                    // Valida cada campo de texto individualmente
+                    $(form).find('input[name="nomeDoPalestrante[]"], input[name="emailDoPalestrante[]"]').each(function() {
+                        if (!validarCampoTexto(this)) {
+                            isFormValid = false;
+                        }
+                    });
                 }
 
-
-                const removeButton = event.target.closest('.remover-palestrante');
-                if (removeButton) {
-                    removeButton.closest('.palestrante-bloco').remove();
+                if (!isFormValid) {
+                    event.preventDefault(); // Impede o envio do formulário
+                    // Opcional: focar no primeiro campo com erro
                 }
             });
 
 
-            document.body.addEventListener('change', function(event) {
-                if (event.target.matches('input[type="file"][name^="fotoPalestrante"]')) {
-                    processarImagem(event.target);
-                }
+            $(document).on('input', 'input[name="nomeDoPalestrante[]"], input[name="emailDoPalestrante[]"]', function() {
+                validarCampoTexto(this);
             });
+
         });
 
+        // --- Funções de Validação e Exibição de Erro ---
+        function validarCampoTexto(input) {
+            const $input = $(input);
+            let ehValido = true;
+            let mensagemErro = '';
+            const valor = $input.val().trim();
 
+            if ($input.attr('name') === 'nomeDoPalestrante[]') {
+                if (valor === '') {
+                    ehValido = false;
+                    mensagemErro = 'O campo nome é obrigatório.';
+                } else if (valor.length < 10) { // ATUALIZADO: Adicionada verificação de mínimo de 10 caracteres
+                    ehValido = false;
+                    mensagemErro = 'O nome deve ter no mínimo 10 caracteres.';
+                }
+            } else if ($input.attr('name') === 'emailDoPalestrante[]') {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (valor === '') {
+                    ehValido = false;
+                    mensagemErro = 'O campo e-mail é obrigatório.';
+                } else if (!emailRegex.test(valor)) {
+                    ehValido = false;
+                    mensagemErro = 'Por favor, insira um endereço de e-mail válido.';
+                }
+            }
+
+            if (!ehValido) {
+                mostrarErroDeTexto($input, mensagemErro);
+                return false;
+            } else {
+                limparErroDeTexto($input);
+                return true;
+            }
+        }
+
+        // --- FUNÇÃO DE PROCESSAR IMAGEM (ATUALIZADA) ---
         function processarImagem(input) {
-            const parentCol = input.closest('.col-md-6');
-            if (!parentCol) return; // Sai se não encontrar o container
-            const preview = parentCol.querySelector('.imagem-loader img');
+            const parentCol = $(input).closest('.col-md-6');
+            if (!parentCol.length) return;
+            const preview = parentCol.find('.imagem-loader img')[0];
 
             const placeholderWidth = '150px';
             const finalPreviewWidth = '360px';
-
             const file = input.files[0];
-            limparErro(parentCol);
+
+            // Limpa qualquer erro anterior desta área
+            limparErroDeImagem(parentCol);
 
             if (!file) {
                 preview.src = placeholderUrl;
@@ -437,7 +496,7 @@
             }
 
             if (!['image/jpeg', 'image/png'].includes(file.type)) {
-                mostrarErro(parentCol, 'Formato inválido. Use JPEG ou PNG.');
+                mostrarErroDeImagem(parentCol, 'Formato inválido. Use JPEG ou PNG.');
                 input.value = '';
                 return;
             }
@@ -446,12 +505,14 @@
             reader.onload = function(e) {
                 const img = new Image();
                 img.onload = function() {
-                    if (this.width !== 760 || this.height !== 360) {
-                        mostrarErro(parentCol, 'A imagem deve ter exatamente 760x360 pixels.');
-                        input.value = '';
+                    // A CONDIÇÃO CORRETA PARA TAMANHO MÁXIMO
+                    if (this.width > 760 || this.height > 360) {
+                        mostrarErroDeImagem(parentCol, 'A imagem deve ter no máximo 760x360 pixels.');
+                        input.value = ''; // Limpa o input de arquivo
                         preview.src = placeholderUrl;
                         preview.style.maxWidth = placeholderWidth;
                     } else {
+                        // Se o tamanho for válido, mostra o preview
                         preview.src = e.target.result;
                         preview.style.maxWidth = finalPreviewWidth;
                     }
@@ -461,28 +522,49 @@
             reader.readAsDataURL(file);
         }
 
-        function mostrarErro(container, mensagem) {
-            limparErro(container);
+        function mostrarErroDeImagem(container, mensagem) {
+            limparErroDeImagem(container); // Garante que não haja erros duplicados
             let errorDiv = document.createElement('div');
             errorDiv.className = 'invalid-feedback d-block js-error';
             errorDiv.textContent = mensagem;
-            container.querySelector('input[type="file"]').parentElement.insertAdjacentElement('afterend', errorDiv);
+            // Adiciona a div de erro após o container da imagem
+            $(container).find('.imagem-loader').parent().append(errorDiv);
         }
 
-        function limparErro(container) {
+        function limparErroDeImagem(container) {
             if (container) {
-                const errorDiv = container.querySelector('.js-error');
-                if (errorDiv) errorDiv.remove();
+                const errorDiv = container.find('.js-error');
+                if (errorDiv.length) {
+                    errorDiv.remove();
+                }
             }
         }
 
-        // Funções que você já tinha para os modais
-        function editarPalestra(id) {
-            document.getElementById('formEdidarPalestra' + id).submit();
+        function mostrarErroDeTexto($input, mensagem) {
+            limparErroDeTexto($input); // Remove erros antigos
+            $input.addClass('is-invalid');
+            const $errorSpan = $('<span></span>')
+                .addClass('invalid-feedback')
+                .attr('role', 'alert')
+                .html(`<strong>${mensagem}</strong>`);
+            $input.after($errorSpan);
         }
 
+        function limparErroDeTexto($input) {
+            $input.removeClass('is-invalid');
+            if ($input.next().hasClass('invalid-feedback')) {
+                $input.next().remove();
+            }
+        }
+
+
+        // Funções antigas que você ainda precisa
+        function editarPalestra(id) {
+            $(`#formEdidarPalestra${id}`).submit();
+        }
         function removerPalestrantePalestra(id) {
             $(`#palestrantePalestra${id}`).remove();
         }
+
     </script>
 @endsection
