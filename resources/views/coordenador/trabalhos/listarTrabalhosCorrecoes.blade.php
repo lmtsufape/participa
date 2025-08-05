@@ -177,7 +177,7 @@
 
                                                 <td style="text-align:center">
                                                     <a href="#" data-bs-toggle="modal" data-bs-target="#modalCorrecaoTrabalho_{{$trabalho->id}}" style="color:#114048ff">
-                                                        <i class="fas fa-edit"></i>
+                                                        <img src="{{ asset('img/icons/edit-regular.svg') }}" width="20" alt="Editar">
                                                     </a>
 
                                                 </td>
