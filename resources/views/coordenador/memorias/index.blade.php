@@ -79,13 +79,7 @@
                         style="background-color: #114048ff; color: white;">
                         <h5 class="modal-title"
                             id="#label">Editar registro {{ $registro->nome }}</h5>
-                        <button type="button"
-                            class="close"
-                            data-dismiss="modal"
-                            aria-label="Close"
-                            style="color: white;">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+
                     </div>
                     <div class="modal-body">
                         <form method="POST"
@@ -158,9 +152,7 @@
                         </form>
                     </div>
                     <div class="modal-footer">
-                        <button type="button"
-                            class="btn btn-secondary"
-                            data-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                         <button type="submit"
                             class="btn btn-primary"
                             form="formEditarRegistro{{ $registro->id }}">Atualizar</button>
@@ -181,19 +173,11 @@
                         style="background-color: #114048ff; color: white;">
                         <h5 class="modal-title"
                             id="#label">Confirmação</h5>
-                        <button type="button"
-                            class="close"
-                            data-dismiss="modal"
-                            aria-label="Close"
-                            style="color: white;">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body"> Tem certeza que deseja excluir esse registro? </div>
                     <div class="modal-footer">
-                        <button type="button"
-                            class="btn btn-secondary"
-                            data-dismiss="modal">Não</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Não</button>
                         <button type="submit"
                             class="btn btn-primary"
                             form="formExcluirRegistro{{ $registro->id }}">Sim</button>
