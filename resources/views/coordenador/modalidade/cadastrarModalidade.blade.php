@@ -102,7 +102,10 @@
                                 </div>
                                 <br>
                                 <div class="form-group col-sm-6">
-                                    <label for="fimCorrecao" class="col-form-label fw-bold">{{ __('Fim da Correção') }} <i data-bs-toggle="tooltip" data-placement="top" title="Opcional" class="fas fa-exclamation-circle"></i></label>
+                                    <label for="fimCorrecao" class="col-form-label fw-bold">
+                                        {{ __('Fim da Correção') }}
+                                        <i class="bi bi-info-circle"></i>
+                                    </label>
                                     <input id="fimCorrecao" type="datetime-local" class="form-control @error('fimCorrecao') is-invalid @enderror" name="fimCorrecao" value="{{ old('fimCorrecao') }}" autocomplete="fimCorrecao" autofocus>
                                     @error('fimCorrecao')
                                     <span class="invalid-feedback" role="alert">
@@ -127,7 +130,10 @@
                                 </div>
                                 <br>
                                 <div class="form-group col-sm-6">
-                                    <label for="fimValidacao" class="col-form-label fw-bold">{{ __('Fim da Validação') }} <i data-bs-toggle="tooltip" data-placement="top" title="Opcional" class="fas fa-exclamation-circle"></i></label>
+                                    <label for="fimValidacao" class="col-form-label fw-bold">
+                                        {{ __('Fim da Validação') }}
+                                        <i data-bs-toggle="tooltip" data-placement="top" title="Opcional" i class="bi bi-info-circle"></i>
+                                    </label>
                                     <input id="fimValidacao" type="datetime-local" class="form-control @error('fimValidacao') is-invalid @enderror" name="fimValidacao" value="{{ old('fimValidacao') }}" autocomplete="fimValidacao" autofocus>
                                     @error('fimValidacao')
                                     <span class="invalid-feedback" role="alert">
@@ -303,7 +309,7 @@
                                     </div>
                                 </template>
                             </div>
-                            <div x-data="{arquivo: '{{old('arquivo')}}' == '1'}">
+                            <div x-data="{arquivo: '{{old('arquivo')}}' == 'on', submissaoUnica: '{{old('submissaoUnica')}}' == 'on'}">
                                 <div class="form-group">
                                     <div class="form-check">
                                         <input class="form-check-input incluirarquivo @error('arquivo') is-invalid @enderror" id="arquivocheck" x-model="arquivo" type="checkbox" name="arquivo" value="1">
@@ -513,20 +519,14 @@
                                     </div>
                                 </template>
 
-                                <div x-data="{arquivo: '{{old('arquivo')}}' == 'on'}">
+                                <div x-data="{arquivo: '{{old('arquivo')}}' == 'on', submissaoUnica: '{{old('submissaoUnica')}}' == 'on'}">
                                     <div class="form-group">
                                         <div class="form-check">
-                                            <input class="form-check-input" id="submissocheck" x-model="submissaoUnica" type="checkbox" name="submissaoUnica" value="on">
+                                            <input class="form-check-input" id="submissaoUnicacheck" x-model="submissaoUnica" type="checkbox" name="submissaoUnica" value="on">
                                             <label class="form-check-label fw-bold" for="submissaoUnicacheck">
-
                                                 {{ __('Habilitar submissão única para avaliação') }}
                                             </label>
                                         </div>
-                                        @error('submissaoUnica')
-                                        <div class="invalid-feedback d-flex mt-0" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </div>
-                                        @enderror
                                     </div>
                                 </div>
 
@@ -572,6 +572,8 @@
                                     </span>
                                     @enderror
                                 </div>
+
+                                <br>
 
                                 <div x-data="construct()">
                                     <div class="d-flex justify-content-end">
@@ -743,6 +745,9 @@
                                             </div>
                                         </template>
                                     </div>
+
+                                    <br>
+
                                     </>
                                     <div class="row justify-content-center">
                                         <div class="col-md-12">
