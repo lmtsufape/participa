@@ -509,19 +509,6 @@ Route::get('/demo', function () {
     return new App\Mail\UserWelcome();
 });
 
-Route::get('/teste-email-recibo', function () {
-    // Criar um pré-registro de teste
-    $preRegistro = new \App\Models\PreRegistro();
-    $preRegistro->nome = 'João Silva Teste';
-    $preRegistro->email = 'teste@exemplo.com';
-    $preRegistro->codigo = '123456';
-
-    // Enviar email com recibo anexado
-    \Mail::to('teste@exemplo.com')->send(new \App\Mail\EmailCodigoPreRegistro($preRegistro));
-
-    return 'Email de teste com recibo enviado!';
-});
-
 Route::get('/home', [HomeController::class, 'home'])->name('home')->middleware('verified', 'isTemp');
 
 Route::namespace('Submissao')->group(function () {
