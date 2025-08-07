@@ -447,7 +447,7 @@ class EventoController extends Controller
                 'coautors.user:id,name',
                 'arquivo:id,trabalhoId',
                 'midiasExtra',
-                'midiasExtra.midia_extra:id,nome'
+                'midiasExtra.modalidade:id,nome'
             ])
             ->withCount(['atribuicoes', 'respostas as quantidade_avaliacoes' => function ($q) {
                 $q->select(DB::raw('count(distinct revisor_id)'));
