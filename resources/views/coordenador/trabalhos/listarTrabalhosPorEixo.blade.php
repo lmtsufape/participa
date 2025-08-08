@@ -67,7 +67,6 @@
                                                     <th>Data</th>
                                                     <th>Atribuir</th>
                                                     <th>Arquivar</th>
-                                                    <th>Excluir</th>
                                                     <th>Editar</th>
                                                 </tr>
                                             </thead>
@@ -101,11 +100,6 @@
                                                                 <a href="{{ route('trabalho.status', [$trabalho->id, 'rascunho']) }}"><img src="{{ asset('img/icons/archive.png') }}" width="20" alt="Desarquivar"></a>
                                                             @else
                                                                 <a href="{{ route('trabalho.status', [$trabalho->id, 'arquivado'] ) }}"><img src="{{ asset('img/icons/archive.png') }}" width="20" alt="Arquivar"></a>
-                                                            @endif
-                                                        </td>
-                                                        <td style="text-align:center">
-                                                            @if ($trabalho->status == 'arquivado')
-                                                                <a href="#" data-bs-toggle="modal" data-bs-target="#modalExcluirTrabalho_{{ $trabalho->id }}"><img src="{{ asset('img/icons/lixo.png') }}" width="20" alt="Excluir"></a>
                                                             @endif
                                                         </td>
                                                         <td style="text-align:center">
