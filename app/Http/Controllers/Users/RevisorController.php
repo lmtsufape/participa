@@ -558,16 +558,22 @@ class RevisorController extends Controller
 
         $coordenadoresEixo = \App\Models\Users\CoordEixoTematico::where('evento_id', $evento_id)
             ->where('area_id', $trabalho->areaId)
-            ->with('user')
+            ->with(['user' => fn($q) => $q->select('id', 'name', 'email')])
             ->get()
-            ->pluck('user');
+            ->pluck('user')
+            ->filter(fn($u) => $u && !empty($u->email))
+            ->unique('id');
 
-        // Enviar para o coordenador do evento
-        Mail::to($coordenador->email)->send(new EmailNotificacaoTrabalhoAvaliado($coordenador, $trabalho->autor, $evento->nome, $trabalho, $revisor));
 
-        // Enviar para cada coordenador de eixo
-        foreach ($coordenadoresEixo as $coordEixo) {
-            Mail::to($coordEixo->email)->send(new EmailNotificacaoTrabalhoAvaliado($coordEixo, $trabalho->autor, $evento->nome, $trabalho, $revisor));
+        if ($coordenador?->email) {
+            Mail::to($coordenador->email)->send(
+                new EmailNotificacaoTrabalhoAvaliado($coordenador, $trabalho->autor, $evento->nome, $trabalho, $revisor)
+            );
+        }
+        foreach ($coordenadoresEixo as $coordUser) {
+            Mail::to($coordUser->email)->send(
+                new EmailNotificacaoTrabalhoAvaliado($coordUser, $trabalho->autor, $evento->nome, $trabalho, $revisor)
+            );
         }
 
         return redirect()->route('revisor.index')->with(['message' => 'Avaliação enviada com sucesso.']);
