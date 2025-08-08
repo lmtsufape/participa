@@ -48,8 +48,8 @@
                     Opções de Filtro: {{ request('status', 'rascunho') == 'rascunho' ? 'Todos' : 'Arquivados' }}
                 </button>
                 <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                    <a class="dropdown-item" href="{{ route('coord.listarTrabalhosModalidades', ['eventoId' => $evento->id, 'modalidadeId' => $modalidade->id, 'status' => 'rascunho']) }}">Todos</a>
-                    <a class="dropdown-item" href="{{ route('coord.listarTrabalhosModalidades', ['eventoId' => $evento->id, 'modalidadeId' => $modalidade->id, 'status' => 'arquivado']) }}">Arquivados</a>
+                    <a class="dropdown-item" href="{{ route('coord.listarTrabalhosModalidades', ['eventoId' => $evento->id, 'modalidadeId' => $modalidade->id, 'column' => request('column', 'titulo'), 'direction' => request('direction', 'asc'), 'status' => 'rascunho']) }}">Todos</a>
+                    <a class="dropdown-item" href="{{ route('coord.listarTrabalhosModalidades', ['eventoId' => $evento->id, 'modalidadeId' => $modalidade->id, 'column' => request('column', 'titulo'), 'direction' => request('direction', 'asc'), 'status' => 'arquivado']) }}">Arquivados</a>
                 </div>
             </div>
         </div>
