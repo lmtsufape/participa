@@ -24,6 +24,10 @@
                 <form method="GET" action="{{ route('coord.listarTrabalhosModalidades') }}">
                     <input type="hidden" name="eventoId" value="{{ $evento->id }}">
                     <input type="hidden" name="modalidadeId" value="{{ $modalidade->id }}">
+                    <input type="hidden" name="column" value="{{ request('column', 'titulo') }}">
+                    <input type="hidden" name="direction" value="{{ request('direction', 'asc') }}">
+                    <input type="hidden" name="status" value="{{ request('status', 'rascunho') }}">
+
                     <div class="row">
                         <div class="col-md-10">
                             <label for="titulo" class="form-label">Buscar por Título</label>
