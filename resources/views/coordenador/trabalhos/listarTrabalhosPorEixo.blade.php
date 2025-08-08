@@ -37,10 +37,10 @@
                     Opções de Filtro: {{ ucfirst(str_replace('_', ' ', $status)) }}
                 </button>
                 <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                    <a class="dropdown-item" href="{{ route('coord.listarTrabalhosPorEixo', ['status' => 'rascunho']) }}?eixo_id={{$eixoSelecionado}}&eventoId={{$evento->id}}">Todos</a>
-                    <a class="dropdown-item" href="{{ route('coord.listarTrabalhosPorEixo', ['status' => 'arquivado']) }}?eixo_id={{$eixoSelecionado}}&eventoId={{$evento->id}}">Arquivados</a>
-                    <a class="dropdown-item" href="{{ route('coord.listarTrabalhosPorEixo', ['status' => 'no_revisor']) }}?eixo_id={{$eixoSelecionado}}&eventoId={{$evento->id}}">Sem avaliador</a>
-                    <a class="dropdown-item" href="{{ route('coord.listarTrabalhosPorEixo', ['status' => 'with_revisor']) }}?eixo_id={{$eixoSelecionado}}&eventoId={{$evento->id}}">Com avaliador</a>
+                    <a class="dropdown-item" href="{{ route('coord.listarTrabalhosPorEixo', ['column' => 'titulo', 'direction' => 'asc', 'status' => 'rascunho']) }}?eixo_id={{ $eixoSelecionado }}&eventoId={{ $evento->id }}">Todos</a>
+                    <a class="dropdown-item" href="{{ route('coord.listarTrabalhosPorEixo', ['column' => 'titulo', 'direction' => 'asc', 'status' => 'arquivado']) }}?eixo_id={{ $eixoSelecionado }}&eventoId={{ $evento->id }}">Arquivados</a>
+                    <a class="dropdown-item" href="{{ route('coord.listarTrabalhosPorEixo', ['column' => 'titulo', 'direction' => 'asc', 'status' => 'no_revisor']) }}?eixo_id={{ $eixoSelecionado }}&eventoId={{ $evento->id }}">Sem avaliador</a>
+                    <a class="dropdown-item" href="{{ route('coord.listarTrabalhosPorEixo', ['column' => 'titulo', 'direction' => 'asc', 'status' => 'with_revisor']) }}?eixo_id={{ $eixoSelecionado }}&eventoId={{ $evento->id }}">Com avaliador</a>
                 </div>
             </div>
 
