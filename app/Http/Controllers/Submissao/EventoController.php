@@ -180,6 +180,10 @@ class EventoController extends Controller
 
         $query->where($statusFilter);
 
+        if ($request->has('titulo') && $request->titulo != '') {
+            $query->where('titulo', 'ilike', '%' . $request->titulo . '%');
+        }
+
         if ($column == 'autor') {
             $query->orderBy(User::select('name')->whereColumn('autorId', 'users.id'), $direction);
         } elseif ($column == 'areaId') {
@@ -274,6 +278,10 @@ class EventoController extends Controller
                 $q->select(DB::raw('count(distinct revisor_id)'));
             }])
             ->withExists('arquivo as tem_arquivo');
+
+        if ($request->has('titulo') && $request->titulo != '') {
+            $query->where('titulo', 'ilike', '%' . $request->titulo . '%');
+        }
 
         $query->where($statusFilter);
 
@@ -439,7 +447,6 @@ class EventoController extends Controller
         $modalidade = Modalidade::find($request->modalidadeId);
         $areas = Area::where('eventoId', $evento->id)->orderBy('ordem')->get();
 
-        // ===== CORREÇÃO FINAL: Removida seleção de colunas em midiasExtra =====
         $query = Trabalho::where('modalidadeId', $request->modalidadeId)
             ->with([
                 'area:id,nome', 'modalidade:id,nome', 'autor:id,name',
@@ -453,7 +460,10 @@ class EventoController extends Controller
                 $q->select(DB::raw('count(distinct revisor_id)'));
             }])
             ->withExists('arquivo as tem_arquivo');
-        // ===== FIM DA CORREÇÃO =====
+
+        if ($request->has('titulo') && $request->titulo != '') {
+            $query->where('titulo', 'ilike', '%' . $request->titulo . '%');
+        }
 
         if ($status == 'rascunho') {
             $query->where('status', '!=', 'arquivado');

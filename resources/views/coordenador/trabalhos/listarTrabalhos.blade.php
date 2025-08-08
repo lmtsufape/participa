@@ -49,6 +49,23 @@
             </div>
         @endif
 
+        <div class="card mb-3">
+            <div class="card-body">
+                <form method="GET" action="{{ route('coord.listarTrabalhos') }}">
+                    <input type="hidden" name="eventoId" value="{{ $evento->id }}">
+                    <div class="row">
+                        <div class="col-md-10">
+                            <label for="titulo" class="form-label">Buscar por Título</label>
+                            <input type="text" class="form-control" name="titulo" value="{{ request('titulo') }}" placeholder="Digite o título do trabalho...">
+                        </div>
+                        <div class="col-md-2 d-flex align-items-end">
+                            <button type="submit" class="btn btn-primary w-100">Buscar</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
         @foreach ($modalidades as $modalidade)
             @if ($modalidade->trabalhos_count > 0)
                 <div class="row justify-content-center">

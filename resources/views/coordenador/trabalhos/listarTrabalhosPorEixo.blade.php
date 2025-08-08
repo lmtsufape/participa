@@ -29,6 +29,23 @@
                 </form>
             </div>
         </div>
+        <div class="card mb-3">
+            <div class="card-body">
+                <form method="GET" action="{{ route('coord.listarTrabalhosPorEixo') }}">
+                    <input type="hidden" name="eventoId" value="{{ $evento->id }}">
+                    <input type="hidden" name="eixo_id" value="{{ $eixoSelecionado }}">
+                    <div class="row">
+                        <div class="col-md-10">
+                            <label for="titulo" class="form-label">Buscar por Título</label>
+                            <input type="text" class="form-control" name="titulo" value="{{ request('titulo') }}" placeholder="Digite o título do trabalho...">
+                        </div>
+                        <div class="col-md-2 d-flex align-items-end">
+                            <button type="submit" class="btn btn-primary w-100">Buscar</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
 
         @if($eixoSelecionado)
             {{-- Filtro de Status --}}

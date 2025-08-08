@@ -19,6 +19,24 @@
             </div>
         @endif
 
+        <div class="card mb-3">
+            <div class="card-body">
+                <form method="GET" action="{{ route('coord.listarTrabalhosModalidades') }}">
+                    <input type="hidden" name="eventoId" value="{{ $evento->id }}">
+                    <input type="hidden" name="modalidadeId" value="{{ $modalidade->id }}">
+                    <div class="row">
+                        <div class="col-md-10">
+                            <label for="titulo" class="form-label">Buscar por Título</label>
+                            <input type="text" class="form-control" name="titulo" value="{{ request('titulo') }}" placeholder="Digite o título do trabalho...">
+                        </div>
+                        <div class="col-md-2 d-flex align-items-end">
+                            <button type="submit" class="btn btn-primary w-100">Buscar</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
         {{-- Filtro de Status --}}
         <div class="btn-group mb-2" role="group" aria-label="Button group with nested dropdown">
             <div class="btn-group" role="group">
