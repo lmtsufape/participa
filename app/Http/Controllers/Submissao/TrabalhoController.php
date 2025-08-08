@@ -213,21 +213,45 @@ class TrabalhoController extends Controller
                 return redirect()->back()->withErrors(['numeroMax' => 'Número máximo de trabalhos permitidos atingido.'])->withInput($validatedData);
             }
 
-            if ($request->emailCoautor != null) {
-                foreach ($request->emailCoautor as $key => $value) {
-                    if ($value == $autor->email) {
-                    } else {
-                        $userCoautor = User::where('email', $value)->first();
-                        if ($userCoautor == null) {
-                            $passwordTemporario = Str::random(8);
+            if ($request->has('nomeCoautor')) {
+                $total = count($request->nomeCoautor);
+                for ($key = 1; $key < $total; $key++) {
+                    $value = $request->emailCoautor[$key] ?? null;
+                    $nome = $request->nomeCoautor[$key];
+                    $cadastrado = $request->coautorCadastrado[$key] ?? 'sim';
+                    $vinculo = $request->vinculoCoautor[$key] ?? null;
+
+                    if ($cadastrado === 'sim') {
+                        if ($value && $value !== $autor->email) {
+                            $userCoautor = User::where('email', $value)->first();
+                            if ($userCoautor == null) {
+                                $passwordTemporario = Str::random(8);
+                                $coord = User::find($evento->coordenadorId);
+                                Mail::to($value)->send(new EmailParaUsuarioNaoCadastrado(Auth()->user()->name, '  ', 'Coautor', $evento->nome, $passwordTemporario, $value, $coord));
+                                $userCoautor = User::create([
+                                    'email' => $value,
+                                    'password' => bcrypt($passwordTemporario),
+                                    'usuarioTemp' => true,
+                                    'name' => $nome ?? '',
+                                ]);
+                            }
+                        } else {
+                            continue;
+                        }
+                    } else { 
+                        $passwordTemporario = Str::random(8);
+                        $userCoautor = User::create([
+                            'email' => $value ?: null,
+                            'password' => bcrypt($passwordTemporario),
+                            'usuarioTemp' => true,
+                            'name' => $nome,
+                        ]);
+                        if ($value) {
                             $coord = User::find($evento->coordenadorId);
                             Mail::to($value)->send(new EmailParaUsuarioNaoCadastrado(Auth()->user()->name, '  ', 'Coautor', $evento->nome, $passwordTemporario, $value, $coord));
-                            $usuario = User::create([
-                                'email' => $value,
-                                'password' => bcrypt($passwordTemporario),
-                                'usuarioTemp' => true,
-                                'name' => $request->nomeCoautor[$key],
-                            ]);
+                        }
+                        if ($vinculo) {
+                            PerfilIdentitario::firstOrCreate(['userId' => $userCoautor->id], ['vinculoInstitucional' => $vinculo]);
                         }
                     }
                 }
@@ -318,21 +342,29 @@ class TrabalhoController extends Controller
             $trabalho->save();
             // dd($trabalho->id);
 
-            if ($request->emailCoautor != null) {
-                foreach (array_unique($request->emailCoautor) as $key => $value) {
-                    if ($value == $autor->email) {
-                    } else {
+            // Associar coautores ao trabalho (usar emails quando houver, senão procurar por nome recém-criado)
+            if ($request->has('nomeCoautor')) {
+                $total = count($request->nomeCoautor);
+                for ($key = 1; $key < $total; $key++) {
+                    $value = $request->emailCoautor[$key] ?? null;
+                    $nome = $request->nomeCoautor[$key] ?? null;
+                    $userCoautor = null;
+                    if ($value) {
+                        if ($value == $autor->email) { continue; }
                         $userCoautor = User::where('email', $value)->first();
+                    } else if ($nome) {
+                        $userCoautor = User::where('name', $nome)->latest()->first();
+                    }
+                    if ($userCoautor) {
                         $coauntor = $userCoautor->coautor;
                         if ($coauntor == null) {
                             $coauntor = Coautor::create([
                                 'ordem' => $key,
                                 'autorId' => $userCoautor->id,
-                                // 'trabalhoId'  => $trabalho->id,
                                 'eventos_id' => $evento->id,
                             ]);
                         }
-                        $coauntor->trabalhos()->attach($trabalho);
+                        $coauntor->trabalhos()->syncWithoutDetaching([$trabalho->id]);
                     }
                 }
             }
