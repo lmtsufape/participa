@@ -37,7 +37,7 @@ class EnviarLembretesRevisoresJob implements ShouldQueue
         Log::info('Job EnviarLembretesRevisoresJob iniciado.');
 
         $trabalhosPendentes = Trabalho::whereHas('atribuicoes', function ($q) {
-            $q->where('parecer', '!=', 'avaliado')
+            $q->where('parecer', 'processando')
               ->whereNotNull('prazo_correcao')
               ->where('prazo_correcao', '>', now());
         })->with(['atribuicoes.user', 'evento'])->get();
@@ -50,7 +50,7 @@ class EnviarLembretesRevisoresJob implements ShouldQueue
         foreach ($trabalhosPendentes as $trabalho) {
 
             foreach ($trabalho->atribuicoes as $atribuicao) {
-                if ($atribuicao->pivot->parecer === 'avaliado') {
+                if ($atribuicao->pivot->parecer !== 'processando') {
                     continue;
                 }
 
@@ -73,7 +73,7 @@ class EnviarLembretesRevisoresJob implements ShouldQueue
                     $trabalhosPendentesRevisor = $trabalho->evento->trabalhos()
                         ->whereHas('atribuicoes', function ($query) use ($revisor) {
                             $query->where('revisor_id', $revisor->id)
-                                  ->where('parecer', '!=', 'avaliado')
+                                  ->where('parecer', 'processando')
                                   ->whereNotNull('prazo_correcao')
                                   ->where('prazo_correcao', '>', now());
                         })->get();
