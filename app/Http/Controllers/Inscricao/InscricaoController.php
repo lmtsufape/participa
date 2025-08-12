@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Users\User;
 use App\Models\Users\Administrador;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class InscricaoController extends Controller
 {
@@ -704,6 +705,43 @@ class InscricaoController extends Controller
         ];
 
         return view('validacao.recibo_valido', $data);
+    }
+
+    public function recibo(Inscricao $inscricao)
+    {
+        if (auth()->id() !== $inscricao->user_id) {
+            abort(403, 'Acesso não autorizado.');
+        }
+
+        if (! $inscricao->pagamento || $inscricao->pagamento->status !== 'approved') {
+            return redirect()->back()->with(['error_message' => 'Recibo disponível apenas para inscrições pagas.']);
+        }
+
+        if (!$inscricao->codigo_validacao) {
+            $inscricao->codigo_validacao = $this->gerarCodigoValidacaoUnico();
+            $inscricao->save();
+        }
+
+        $data = [
+            'nome' => $inscricao->user->name,
+            'valor' => $inscricao->pagamento ? $inscricao->pagamento->valor : 0,
+            'data' => now(),
+            'codigo_validacao' => $inscricao->codigo_validacao,
+        ];
+
+        $pdf = Pdf::loadView('inscricao.recibo_pdf', $data)
+            ->setPaper('a4', 'portrait');
+
+        return $pdf->download("recibo-{$inscricao->id}.pdf");
+    }
+
+    private function gerarCodigoValidacaoUnico(): string
+    {
+        do {
+            $codigo = strtoupper(substr(md5(uniqid()), 0, 16));
+        } while (Inscricao::where('codigo_validacao', $codigo)->exists());
+
+        return $codigo;
     }
 
 }

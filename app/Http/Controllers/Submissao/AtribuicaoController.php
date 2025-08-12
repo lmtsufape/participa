@@ -192,7 +192,7 @@ class AtribuicaoController extends Controller
     {
         $modalidadeid = Trabalho::find($trabalhoId)->modalidadeId;
         $modalidade = Modalidade::find($modalidadeid);
-        $prazoCorrecao = now()->addDays(15);
+        $prazoCorrecao = now()->addDays(10);
         if($prazoCorrecao > $modalidade->fimRevisao) {
             $prazoCorrecao = $modalidade->fimRevisao;
         }

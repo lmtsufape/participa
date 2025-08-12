@@ -55,36 +55,41 @@
                                                     Trabalho
                                                     <a
                                                         href="{{ route('coord.listarAvaliacoes', ['eventoId' => $evento->id, 'titulo', 'asc']) }}">
-                                                        <i class="fas fa-arrow-alt-circle-up"></i>
+                                                        <img src="{{ asset('img/icons/sobe.png') }}" alt="Ordenar crescente" style="width: 16px; height: 16px;">
                                                     </a>
                                                     <a
                                                         href="{{ route('coord.listarAvaliacoes', ['eventoId' => $evento->id, 'titulo', 'desc']) }}">
-                                                        <i class="fas fa-arrow-alt-circle-down"></i>
+                                                        <img src="{{ asset('img/icons/desce.png') }}" alt="Ordenar decrescente" style="width: 16px; height: 16px;">
                                                     </a>
                                                 </th>
                                                 <th scope="col">
                                                     Autor
                                                     <a
                                                         href="{{ route('coord.listarAvaliacoes', ['eventoId' => $evento->id, 'autor', 'asc']) }}">
-                                                        <i class="fas fa-arrow-alt-circle-up"></i>
+                                                        <img src="{{ asset('img/icons/sobe.png') }}" alt="Ordenar crescente" style="width: 16px; height: 16px;">
                                                     </a>
                                                     <a
                                                         href="{{ route('coord.listarAvaliacoes', ['eventoId' => $evento->id, 'autor', 'desc']) }}">
-                                                        <i class="fas fa-arrow-alt-circle-down"></i>
+                                                        <img src="{{ asset('img/icons/desce.png') }}" alt="Ordenar decrescente" style="width: 16px; height: 16px;">
                                                     </a>
                                                 </th>
                                                 <th scope="col">
                                                     Área
                                                     <a
                                                         href="{{ route('coord.listarAvaliacoes', ['eventoId' => $evento->id, 'area', 'asc']) }}">
-                                                        <i class="fas fa-arrow-alt-circle-up"></i>
+                                                        <img src="{{ asset('img/icons/sobe.png') }}" alt="Ordenar crescente" style="width: 16px; height: 16px;">
                                                     </a>
                                                     <a
                                                         href="{{ route('coord.listarAvaliacoes', ['eventoId' => $evento->id, 'area', 'desc']) }}">
-                                                        <i class="fas fa-arrow-alt-circle-down"></i>
+                                                        <img src="{{ asset('img/icons/desce.png') }}" alt="Ordenar decrescente" style="width: 16px; height: 16px;">
                                                     </a>
                                                 </th>
                                                 <th scope="col">Avaliador(es)</th>
+                                                <th scope="col" class="text-center">
+                                                    Data da atribuição
+                                                    <a href="{{ route('coord.listarAvaliacoes', ['eventoId' => $evento->id, 'data_atribuicao', 'asc']) }}"></a>
+                                                    <a href="{{ route('coord.listarAvaliacoes', ['eventoId' => $evento->id, 'data_atribuicao', 'desc']) }}"></a>
+                                                </th>
                                                 <th scope="col">Status</th>
                                                 <th scope="col" style="text-align:center">Parecer</th>
                                                 <th scope="col" class="text-center">Encaminhado para o autor</th>
@@ -117,6 +122,12 @@
                                                 <td>
                                                     @foreach ($trabalho->atribuicoes as $revisor)
                                                         {{ $revisor->user->name }}
+                                                        <br>
+                                                    @endforeach
+                                                </td>
+                                                <td class="text-center">
+                                                    @foreach ($trabalho->atribuicoes as $revisor)
+                                                        {{ \Carbon\Carbon::parse($revisor->pivot->created_at)->format('d/m/Y H:i') }}
                                                         <br>
                                                     @endforeach
                                                 </td>
