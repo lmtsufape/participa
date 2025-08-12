@@ -165,9 +165,7 @@
 
                                 @php
                                     $temComprovantes = Auth::user()->inscricaos()
-                                        ->whereHas('pagamento', function($query) {
-                                            $query->where('status', 'approved');
-                                        })
+                                        ->where('finalizada', true)
                                         ->exists();
                                 @endphp
                                 
