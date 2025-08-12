@@ -684,8 +684,8 @@ class InscricaoController extends Controller
             abort(403, 'Acesso não autorizado.');
         }
 
-        if (! $inscricao->pagamento || $inscricao->pagamento->status !== 'approved') {
-            return redirect()->back()->with(['error_message' => 'Recibo disponível apenas para inscrições pagas.']);
+        if (! $inscricao->finalizada) {
+            return redirect()->back()->with(['error_message' => 'Recibo disponível apenas para inscrições finalizadas.']);
         }
 
         if (!$inscricao->codigo_validacao) {
