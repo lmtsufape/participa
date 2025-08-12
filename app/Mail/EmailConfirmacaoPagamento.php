@@ -29,39 +29,14 @@ class EmailConfirmacaoPagamento extends Mailable
 
     public function build()
     {
-        if (!$this->inscricao->codigo_validacao) {
-            $this->inscricao->codigo_validacao = $this->gerarCodigoValidacao();
-            $this->inscricao->save();
-        }
-
-        $data = [
-            'nome' => $this->inscricao->user->name,
-            'valor' => $this->inscricao->pagamento ? $this->inscricao->pagamento->valor : 0,
-            'data' => now(),
-            'codigo_validacao' => $this->inscricao->codigo_validacao,
-        ];
-
-        $pdf = Pdf::loadView('inscricao.recibo_pdf', $data)
-                ->setPaper('a4', 'portrait');
-
-        $email = $this
+        return $this
             ->to($this->email)
             ->subject('Confirmação de Pagamento - ' . $this->evento->nome)
             ->markdown('emails.emailConfirmacaoPagamento', [
                 'user' => $this->user,
                 'evento' => $this->evento,
                 'inscricao' => $this->inscricao
-            ]);
-
-        try {
-            $email->attachData($pdf->output(), "recibo-{$this->inscricao->id}.pdf", [
-                'mime' => 'application/pdf',
-            ]);
-        } catch (\Exception $e) {
-            \Log::error('Erro ao gerar PDF do recibo: ' . $e->getMessage());
-        }
-
-        return $email;
+        ]);
     }
 
     private function gerarCodigoValidacao()
