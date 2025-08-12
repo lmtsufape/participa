@@ -268,6 +268,39 @@ class UserController extends Controller
 
     }
 
+    public function meusComprovantes(Request $request){
+        $user = Auth::user();
+
+        $eventos = Evento::whereHas('inscricaos', function($query) use ($user) {
+                $query->where('user_id', $user->id)
+                      ->whereHas('pagamento', function($subQuery) {
+                          $subQuery->where('status', 'approved');
+                      });
+            });
+
+        if ($request->filled('busca')) {
+            $eventos->where('nome', 'ilike', '%' . $request->busca . '%');
+        }
+
+        if ($request->filled('ordenar')) {
+            switch ($request->ordenar) {
+                case 'nome':
+                    $eventos->orderBy('nome');
+                    break;
+                case 'data':
+                default:
+                    $eventos->orderBy('dataFim', 'desc');
+                    break;
+            }
+        } else {
+            $eventos->orderBy('dataFim', 'desc');
+        }
+
+        $eventos = $eventos->paginate(9);
+
+        return view('user.meusComprovantes', ['eventos' => $eventos]);
+    }
+
     public function destroy($user_id)
     {
         $user = User::doesntHave('administradors')->findOrFail($user_id);

@@ -163,6 +163,21 @@
                                     </ul>
                                 </li>
 
+                                @php
+                                    $temComprovantes = Auth::user()->inscricaos()
+                                        ->whereHas('pagamento', function($query) {
+                                            $query->where('status', 'approved');
+                                        })
+                                        ->exists();
+                                @endphp
+                                
+                                @if($temComprovantes)
+                                    <a class="dropdown-item" href="{{ route('comprovantes') }}">
+                                        <img src="{{asset('img/icons/cash-payment-solid.svg')}}"  width="22px"  alt="">
+                                        {{ __('Meus Comprovantes') }}
+                                    </a>
+                                @endif
+
                                 {{-- Link Trabalhos --}}
                                 @if (
                                     (Auth::user()->trabalho()->where('status', '!=', 'arquivado')->exists() ||

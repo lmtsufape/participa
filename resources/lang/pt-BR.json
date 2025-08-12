@@ -45,6 +45,9 @@
   "Whoops!": "Ops!",
     "Visualizar eventos passados":"Visualizar eventos passados",
   "usuarioInscritoNoEvento": "O usuário com e-mail :input precisa estar inscrito no evento",
-  "usuarioCadastradoNaPlataforma": "O usuário com e-mail :input precisa estar cadastrado na plataforma"
+  "usuarioCadastradoNaPlataforma": "O usuário com e-mail :input precisa estar cadastrado na plataforma",
+  "Meus Comprovantes": "Meus Comprovantes",
+  "Você ainda não possui comprovantes de inscrição.": "Você ainda não possui comprovantes de inscrição.",
+  "Os comprovantes ficarão disponíveis após a confirmação do pagamento das suas inscrições em eventos.": "Os comprovantes ficarão disponíveis após a confirmação do pagamento das suas inscrições em eventos."
 
 }
