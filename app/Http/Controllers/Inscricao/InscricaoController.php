@@ -680,9 +680,8 @@ class InscricaoController extends Controller
 
     public function recibo(Inscricao $inscricao)
     {
-        if (auth()->id() !== $inscricao->user_id) {
-            abort(403, 'Acesso não autorizado.');
-        }
+        try{
+
 
         if (! $inscricao->finalizada) {
             return redirect()->back()->with(['error_message' => 'Recibo disponível apenas para inscrições finalizadas.']);
@@ -691,6 +690,7 @@ class InscricaoController extends Controller
         if (!$inscricao->codigo_validacao) {
             $inscricao->codigo_validacao = $this->gerarCodigoValidacaoUnico();
             $inscricao->save();
+
         }
 
         $data = [
@@ -700,10 +700,19 @@ class InscricaoController extends Controller
             'codigo_validacao' => $inscricao->codigo_validacao,
         ];
 
+
         $pdf = Pdf::loadView('inscricao.recibo_pdf', $data)
             ->setPaper('a4', 'portrait');
 
         return $pdf->download("recibo-{$inscricao->id}.pdf");
+    } catch (\Throwable $e) {
+        \Log::error('Erro ao gerar recibo', [
+            'inscricao_id' => $inscricao->id ?? null,
+            'exception' => $e->getMessage(),
+            'trace' => $e->getTraceAsString(),
+        ]);
+        return redirect()->back()->with(['error_message' => 'Erro ao gerar recibo.']);
+    }
     }
 
     private function gerarCodigoValidacaoUnico(): string

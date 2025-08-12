@@ -111,7 +111,6 @@
         A <span class="strong">Associação Brasileira de Agroecologia</span> declara, para os devidos fins,
         que recebeu de <span class="strong">{{ $nome }}</span> o valor de
         <span class="strong">R$ {{ number_format($valor, 2, ',', '.') }}</span>
-        ({{ ucfirst(\NumberFormatter::create('pt_BR', \NumberFormatter::SPELLOUT)->format($valor)) }} reais),
         referente à taxa de inscrição no 13º Congresso Brasileiro de Agroecologia.
       </div>
 
