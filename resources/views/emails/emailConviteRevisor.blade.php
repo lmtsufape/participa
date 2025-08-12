@@ -55,6 +55,11 @@
 
                                 Você foi convidado(a) pelo evento "{{ $evento->nome }}" para atuar como avaliador(a) ou
                                 parecerista de atividades.
+                                
+                                @if(!empty($info))
+                                <br><br>
+                                <strong>Trabalho:</strong> {{ $info }}
+                                @endif
 
                                 <br> <br>
                                 Caso tenha disponibilidade, clique nos botões de Aceitar convite ou Rejeitar convite, ao
