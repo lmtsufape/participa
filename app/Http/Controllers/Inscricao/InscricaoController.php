@@ -351,6 +351,35 @@ class InscricaoController extends Controller
                     ->with('abrirmodalinscricao', true);
             }
         }
+
+        $categoriasInscricaoAutomatica = [
+            'Associado - Agricultoras/es, povos e comunidades tradicionais',
+            'Associado - Pessoa com Deficiência (PCD)',
+        ];
+
+        if (in_array($categoria->nome, $categoriasInscricaoAutomatica)) {
+            if ($preInscricao){
+                $inscricao = Inscricao::where('user_id', auth()->user()->id)->where('evento_id', $evento->id)->first();
+                $inscricao->categoria_participante_id = $request->categoria;
+            } else {
+                $inscricao = new Inscricao();
+                $inscricao->user_id = auth()->user()->id;
+                $inscricao->evento_id = $request->evento_id;
+                $inscricao->categoria_participante_id = $request->categoria;
+            }
+
+            $inscricao->finalizada = true;
+            $inscricao->save();
+
+            if ($possuiFormulario) {
+                $this->salvarCamposExtras($inscricao, $request, $categoria);
+            }
+
+            auth()->user()->notify(new InscricaoEvento($evento));
+            
+            return redirect()->action([EventoController::class, 'show'], ['id' => $request->evento_id])->with('message', 'Inscrição realizada com sucesso!');
+        }
+
         if ($preInscricao){
             $inscricao = Inscricao::where('user_id', auth()->user()->id)
                 ->where('evento_id', $evento->id)
