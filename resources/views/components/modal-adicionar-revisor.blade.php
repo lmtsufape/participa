@@ -101,6 +101,13 @@
                                             <strong class="{{ $statusClass }}">{{ $status }}</strong>
                                         </p>
 
+                                        @if(isset($pivot->created_at))
+                                            <p class="card-text">
+                                                <strong>{{ __('Atribuído em') }}:</strong>
+                                                {{ \Carbon\Carbon::parse($pivot->created_at)->format('d/m/Y H:i') }}
+                                            </p>
+                                        @endif
+
                                         <form action="{{ route('atribuicao.delete', ['id' => $revisor->id]) }}" method="post">
                                             @csrf
                                             <input type="hidden" name="eventoId" value="{{ $evento->id }}">
