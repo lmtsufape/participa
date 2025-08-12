@@ -132,6 +132,7 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
     Route::get('meusCertificados', [CertificadoController::class, 'listarCertificados'])->name('meusCertificados');
     Route::get('/home-user', [HomeController::class, 'index'])->name('home.user');
     Route::get('/participante',[UserController::class, 'areaParticipante'])->name('participante');
+    Route::get('/comprovantes',[UserController::class, 'meusComprovantes'])->name('comprovantes');
     Route::namespace('Users')->group(function () {
 
         Route::get('meusCertificados', [UserController::class, 'meusCertificados'])->name('meusCertificados');
@@ -466,6 +467,7 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
     Route::post('inscricoes/editar-campo/{id}', [CampoFormularioController::class, 'update'])->name('campo.edit');
     Route::post('/inscricoes/inscreverParticipante', [InscricaoController::class, 'inscreverParticipante'])->name('inscricao.inscreverParticipante');
     Route::put('/inscricoes/{inscricao}/alterar-categoria', [InscricaoController::class, 'alterarCategoria'])->name('inscricao.alterarCategoria');
+    Route::get('/inscricoes/{inscricao}/recibo', [InscricaoController::class, 'recibo'])->name('inscricao.recibo');
     Route::get('/validar/recibo/{codigo}', [InscricaoController::class, 'validarRecibo'])->name('validar.recibo');
 
     // Checkout
