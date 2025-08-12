@@ -53,6 +53,7 @@
                                 <th scope="col">Valor</th>
                                 <th>Status</th>
                                 <th>Aprovada</th>
+                                <th>Recibo</th>
                                 <th></th>
                             </th>
                         </thead>
@@ -76,6 +77,15 @@
                                     </td>
                                     <td data-bs-toggle="modal" data-bs-target="#modal-listar-campos-formulario-{{$inscricao->id}}">{{$inscricao->finalizada ? 'Sim' : 'Não'}}</td>
                                     <td data-bs-toggle="modal" data-bs-target="#modal-listar-campos-formulario-{{$inscricao->id}}"><img src="{{asset('img/icons/eye-regular.svg')}}" alt="" style="width: 14px; fill: #000 !important;"></td>
+                                    <td>
+                                        <div class="d-flex gap-1">
+                                            @if($inscricao->finalizada)
+                                                <a href="{{ route('inscricao.recibo', ['inscricao' => $inscricao->id]) }}" class="btn btn-sm btn-success" title="Gerar recibo">
+                                                    <img src="{{asset('img/icons/file-pdf-solid.svg')}}" alt="Gerar recibo" style="width: 14px;">
+                                                </a>
+                                            @endif
+                                        </div>
+                                    </td>
                                 </th>
                             </tbody>
                         @endforeach
