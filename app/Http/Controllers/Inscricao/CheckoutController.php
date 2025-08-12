@@ -199,35 +199,43 @@ class CheckoutController extends Controller
                 $pagamento = Pagamento::where('codigo', $contents["data"]["id"])->first();
 
                 $fee = 0.0;
+
                 try {
                     $paymentArr = json_decode(json_encode($payment), true) ?: [];
+                    $gross  = (float) data_get($paymentArr, 'transaction_amount', 0);
+                    $status = (string) data_get($paymentArr, 'status', '');
 
-                    $gross = (float) data_get($paymentArr, 'transaction_amount', 0);
+                    $fee = null;
 
-                    foreach ((array) data_get($paymentArr, 'fee_details', []) as $fd) {
-                        if (($fd['fee_payer'] ?? null) === 'collector') {
-                            $fee += (float) ($fd['amount'] ?? 0);
+                    if (in_array($status, ['approved', 'accredited'], true)) {
+                        $netReceivedRaw = data_get($paymentArr, 'transaction_details.net_received_amount');
+                        if ($netReceivedRaw !== null) {
+                            $fee = max(0.0, $gross - (float) $netReceivedRaw);
                         }
                     }
 
-                    if ($fee <= 0) {
-                        $netReceived = (float) data_get($paymentArr, 'transaction_details.net_received_amount', 0);
-                        $fee = max(0.0, $gross - $netReceived);
-                    }
+                    if ($fee === null) {
+                        $fee = 0.0;
+                        foreach ((array) data_get($paymentArr, 'fee_details', []) as $fd) {
+                            if (($fd['fee_payer'] ?? null) === 'collector'
+                                && ($fd['type'] ?? null) === 'mercadopago_fee') {
+                                $fee += (float) ($fd['amount'] ?? 0);
+                            }
+                        }
 
-                    if ($fee <= 0) {
-                        foreach ((array) data_get($paymentArr, 'charges_details', []) as $ch) {
-                            if (($ch['type'] ?? null) === 'fee' && ($ch['name'] ?? null) === 'mercadopago_fee') {
-                                $original = (float) data_get($ch, 'amounts.original', 0);
-                                $refunded = (float) data_get($ch, 'amounts.refunded', 0);
-                                $fee += max(0.0, $original - $refunded);
+                        if ($fee <= 0) {
+                            foreach ((array) data_get($paymentArr, 'charges_details', []) as $ch) {
+                                if (($ch['type'] ?? null) === 'fee'
+                                    && ($ch['name'] ?? null) === 'mercadopago_fee') {
+                                    $original = (float) data_get($ch, 'amounts.original', 0);
+                                    $refunded = (float) data_get($ch, 'amounts.refunded', 0);
+                                    $fee += max(0.0, $original - $refunded);
+                                }
                             }
                         }
                     }
 
-                    if ($pagamento) {
-                        $pagamento->taxa = round($fee, 2);
-                    }
+                    $pagamento->taxa = round((float) $fee, 2);
                 } catch (\Throwable $e) {
 
                     logger()->warning('Falha ao calcular taxa MP', [
