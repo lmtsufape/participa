@@ -198,9 +198,43 @@ class CheckoutController extends Controller
                 $payment = $client->get($contents["data"]["id"]);
                 $pagamento = Pagamento::where('codigo', $contents["data"]["id"])->first();
 
-                $gross       = data_get($payment, 'transaction_amount', 0);
-                $netReceived = data_get($payment, 'transaction_details.net_received_amount', 0);
-                $pagamento->taxa = round($gross - $netReceived, 2);
+                $fee = 0.0;
+                try {
+                    $paymentArr = json_decode(json_encode($payment), true) ?: [];
+
+                    $gross = (float) data_get($paymentArr, 'transaction_amount', 0);
+
+                    foreach ((array) data_get($paymentArr, 'fee_details', []) as $fd) {
+                        if (($fd['fee_payer'] ?? null) === 'collector') {
+                            $fee += (float) ($fd['amount'] ?? 0);
+                        }
+                    }
+
+                    if ($fee <= 0) {
+                        $netReceived = (float) data_get($paymentArr, 'transaction_details.net_received_amount', 0);
+                        $fee = max(0.0, $gross - $netReceived);
+                    }
+
+                    if ($fee <= 0) {
+                        foreach ((array) data_get($paymentArr, 'charges_details', []) as $ch) {
+                            if (($ch['type'] ?? null) === 'fee' && ($ch['name'] ?? null) === 'mercadopago_fee') {
+                                $original = (float) data_get($ch, 'amounts.original', 0);
+                                $refunded = (float) data_get($ch, 'amounts.refunded', 0);
+                                $fee += max(0.0, $original - $refunded);
+                            }
+                        }
+                    }
+
+                    if ($pagamento) {
+                        $pagamento->taxa = round($fee, 2);
+                    }
+                } catch (\Throwable $e) {
+
+                    logger()->warning('Falha ao calcular taxa MP', [
+                        'payment_id' => $contents["data"]["id"] ?? null,
+                        'error'      => $e->getMessage(),
+                    ]);
+                }
 
                 if ($payment->status == 'approved') {
                     $inscricao = $pagamento->inscricao;
