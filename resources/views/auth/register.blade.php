@@ -31,6 +31,17 @@
             color: #D44100;
             margin-left: 2px;
         }
+
+        .checkbox-termos {
+            transform: scale(1.3);
+            margin-right: 10px;
+            accent-color: #034652;
+        }
+
+        .label-termos {
+            font-weight: 500;
+            color: #333;
+        }
     </style>
 
     @if(session('sucesso'))
@@ -405,12 +416,13 @@
                 @endif
             </div>
 
-                <div class="mb-3">
-                    <input name="termos" class="form-check-input "
-                           type="checkbox" value="true" id="termos" required>
-                    <label class="form-check-label required-field" for="termos">
+                <div class="mb-3 d-flex align-items-center">
+                    <input name="termos" class="checkbox-termos"
+                        type="checkbox" value="true" id="termos" required>
+                    <label class="label-termos required-field ms-2" for="termos">
                         {{ __('Concordo e respeitarei os') }}
-                        <a  href="#modal-termo-de-uso" data-bs-toggle="modal" data-bs-target="#modal-termo-de-uso">Termos de uso da plataforma</a>.
+                        <a href="#modal-termo-de-uso" data-bs-toggle="modal" data-bs-target="#modal-termo-de-uso"
+                        style="color: #034652; font-weight: bold;">Termos de uso da plataforma</a>.
                     </label>
                 </div>
         </div>
@@ -436,6 +448,133 @@
 @section('javascript')
   <script type="text/javascript" >
     $(document).ready(function($){
+
+        function salvarDadosFormulario() {
+            const formData = {
+                // Dados da validação (hidden inputs)
+                nome: $('input[name="name"]').val(),
+                email: $('input[name="email"]').val(),
+                cpf: $('input[name="cpf"]').val(),
+                cnpj: $('input[name="cnpj"]').val(),
+                passaporte: $('input[name="passaporte"]').val(),
+                pais: $('input[name="pais"]').val(),
+
+                // Dados editáveis da tela atual
+                nomeSocial: $('#nomeSocial').val(),
+                instituicao: $('#instituicao').val(),
+                celular: $('#phone').val(),
+                dataNascimento: $('#dataNascimento').val(),
+                password: $('#password').val(), // Salvar senha também
+
+                // Endereço
+                cep: $('#cep, #cepOutroPais').val(),
+                rua: $('#rua').val(),
+                numero: $('#numero').val(),
+                bairro: $('#bairro').val(),
+                complemento: $('#complemento').val(),
+                cidade: $('#cidade').val(),
+                uf: $('#uf').val(),
+
+                // Estado dos radio buttons
+                tipoDocumento: $('input[name="customRadioInline"]:checked').attr('id'),
+                termosAceitos: $('#termos').is(':checked')
+            };
+
+            localStorage.setItem('dadosFormulario', JSON.stringify(formData));
+            console.log('Dados salvos:', formData); // Para debug
+        }
+
+      function restaurarDadosFormulario() {
+        const dados = localStorage.getItem('dadosFormulario');
+        if (dados) {
+            const formData = JSON.parse(dados);
+            console.log('Restaurando dados:', formData); // Para debug
+
+            // Restaurar dados da validação (caso a sessão tenha perdido)
+            if (formData.nome && !$('input[name="name"]').val()) {
+                $('input[name="name"]').val(formData.nome);
+            }
+            if (formData.email && !$('input[name="email"]').val()) {
+                $('input[name="email"]').val(formData.email);
+            }
+            if (formData.cpf && !$('input[name="cpf"]').val()) {
+                $('input[name="cpf"]').val(formData.cpf);
+            }
+            if (formData.cnpj && !$('input[name="cnpj"]').val()) {
+                $('input[name="cnpj"]').val(formData.cnpj);
+            }
+            if (formData.passaporte && !$('input[name="passaporte"]').val()) {
+                $('input[name="passaporte"]').val(formData.passaporte);
+            }
+
+            // Restaurar campos editáveis
+            if (formData.nomeSocial) $('#nomeSocial').val(formData.nomeSocial);
+            if (formData.instituicao) $('#instituicao').val(formData.instituicao);
+            if (formData.celular) $('#phone').val(formData.celular);
+            if (formData.dataNascimento) $('#dataNascimento').val(formData.dataNascimento);
+            if (formData.password) $('#password').val(formData.password);
+
+            // Restaurar endereço
+            if (formData.cep) $('#cep, #cepOutroPais').val(formData.cep);
+            if (formData.rua) $('#rua').val(formData.rua);
+            if (formData.numero) $('#numero').val(formData.numero);
+            if (formData.bairro) $('#bairro').val(formData.bairro);
+            if (formData.complemento) $('#complemento').val(formData.complemento);
+            if (formData.cidade) $('#cidade').val(formData.cidade);
+            if (formData.uf) $('#uf').val(formData.uf);
+
+            // Restaurar radio buttons
+            if (formData.tipoDocumento) {
+                $('#' + formData.tipoDocumento).prop('checked', true).trigger('click');
+            }
+
+            // Restaurar checkbox dos termos
+            if (formData.termosAceitos) {
+                $('#termos').prop('checked', true);
+            }
+        }
+    }
+
+      // Restaurar dados ao carregar a página
+      restaurarDadosFormulario();
+
+      // Verificar se dados da sessão estão vazios e restaurar do localStorage
+        setTimeout(function() {
+            const dados = localStorage.getItem('dadosFormulario');
+            if (dados) {
+                const formData = JSON.parse(dados);
+
+                // Se nome/email estão vazios mas temos no localStorage
+                if (!$('input[name="name"]').val() && formData.nome) {
+                    $('input[name="name"]').val(formData.nome);
+                }
+                if (!$('input[name="email"]').val() && formData.email) {
+                    $('input[name="email"]').val(formData.email);
+                }
+
+                // Mostrar campos corretos baseado no tipo de documento
+                if (formData.cpf && formData.cpf.length > 0) {
+                    $('#customRadioInline1').prop('checked', true).trigger('click');
+                    $('#cpf').val(formData.cpf);
+                } else if (formData.cnpj && formData.cnpj.length > 0) {
+                    $('#customRadioInline2').prop('checked', true).trigger('click');
+                    $('#cnpj').val(formData.cnpj);
+                } else if (formData.passaporte && formData.passaporte.length > 0) {
+                    $('#customRadioInline3').prop('checked', true).trigger('click');
+                    $('#passaporte').val(formData.passaporte);
+                }
+            }
+        }, 500); // Pequeno delay para garantir que a página carregou
+
+      // Salvar dados sempre que houver mudança nos campos
+      $('input, select, textarea').on('change keyup', function() {
+          salvarDadosFormulario();
+      });
+
+      // Limpar dados quando form for enviado com sucesso
+      $('form').on('submit', function() {
+          localStorage.removeItem('dadosFormulario');
+      });
 
       $('#cpf').mask('000.000.000-00');
       $('#cnpj').mask('00.000.000/0000-00');
@@ -530,6 +669,7 @@
             limpa_formulário_cep();
         }
     };
+
   </script>
   <script src="{{ asset('js/celular.js') }}" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
@@ -573,6 +713,31 @@
             $('.iti').css('width', '100%');
             $('.iti input').css('width', '100%');
         }, 100); // pequeno atraso para garantir que o plugin já aplicou os elementos
+        // VALIDAÇÃO ESPECÍFICA PARA O CHECKBOX
+      $('#termos').on('change', function() {
+          if ($(this).is(':checked')) {
+              $(this).removeClass('is-invalid');
+              $('.invalid-feedback').hide();
+          }
+      });
+
+      // Melhorar feedback visual
+      $('form').on('submit', function(e) {
+          if (!$('#termos').is(':checked')) {
+              e.preventDefault();
+              $('#termos').addClass('is-invalid');
+
+              // Criar mensagem de erro se não existir
+              if (!$('#erro-termos').length) {
+                  $('#termos').parent().append('<div id="erro-termos" class="invalid-feedback d-block mt-2" style="color: #dc3545; font-weight: bold;">É obrigatório concordar com os termos de uso para prosseguir.</div>');
+              }
+
+              // Scroll até o checkbox
+              $('html, body').animate({
+                  scrollTop: $('#termos').offset().top - 100
+              }, 500);
+          }
+      });
     });
   </script>
 
