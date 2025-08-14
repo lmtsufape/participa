@@ -36,6 +36,49 @@
                         </button>
                         </button>
                     </div>
+                </div>
+                
+                <!-- Formulário de Busca -->
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <form method="GET" action="{{ route('inscricao.inscritos', $evento) }}" class="row g-3">
+                            <div class="col-md-3">
+                                <input type="text" class="form-control" name="nome" placeholder="Buscar por nome..." value="{{ request('nome') }}">
+                            </div>
+                            <div class="col-md-3">
+                                <input type="email" class="form-control" name="email" placeholder="Buscar por email..." value="{{ request('email') }}">
+                            </div>
+                            <div class="col-md-2">
+                                <select class="form-control" name="status">
+                                    <option value="">Todos os status</option>
+                                    <option value="finalizada" {{ request('status') === 'finalizada' ? 'selected' : '' }}>Finalizada</option>
+                                    <option value="pendente" {{ request('status') === 'pendente' ? 'selected' : '' }}>Pendente</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <button type="submit" class="btn btn-primary w-100">Buscar</button>
+                            </div>
+                            <div class="col-md-2">
+                                <a href="{{ route('inscricao.inscritos', $evento) }}" class="btn btn-outline-secondary w-100">Limpar</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                
+                <!-- Informações dos resultados -->
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <div class="alert alert-info">
+                            <strong>Total de inscritos encontrados:</strong> {{ $inscricoes->total() }} 
+                            @if(request('nome') || request('email') || request('status'))
+                                <span class="text-muted">(com filtros aplicados)</span>
+                            @endif
+                            <span class="float-end">
+                                <small class="text-muted">Página {{ $inscricoes->currentPage() }} de {{ $inscricoes->lastPage() }}</small>
+                            </span>
+                        </div>
+                    </div>
+                </div>
 
                     @include('coordenador.inscricoes.inscrever_participante')
 
@@ -90,6 +133,12 @@
                             </tbody>
                         @endforeach
                     </table>
+                    
+                    <!-- Paginação -->
+                    <div class="d-flex justify-content-center mt-4">
+                        {{ $inscricoes->links() }}
+                    </div>
+                    
                     </p>
                 </div>
             </div>
