@@ -975,13 +975,22 @@
                                                         <div class="col-md-12">
                                                             <label class="mt-3 mb-0"> <b>{{$evento->formSubTrab->etiquetaautortrabalho}}</b> </label>
                                                             @if(in_array('etiquetacoautortrabalho', $ordemCampos))
-                                                                    <button @click.prevent="adicionaAutor" id="addCoautor" class="btn btn-primary btn-padding border mb-2 float-end"
-                                                                            style="text-decoration: none; border-radius: 10px; background-color: #D44100"
-                                                                            title="Clique aqui para adicionar {{$evento->formSubTrab->etiquetacoautortrabalho}}, se houver">
-                                                                        <img id="icone-add-coautor" src="{{asset('img/icons/user-plus-solid.svg')}}"
-                                                                             alt="ícone de adicionar {{$evento->formSubTrab->etiquetacoautortrabalho}}" width="30px">
-                                                                        Adicione um coautor(a)
-                                                                    </button>
+                                                                    <div class="float-end mb-2">
+                                                                        <button @click.prevent="adicionaAutor" id="addCoautor" class="btn btn-primary btn-padding border me-2"
+                                                                                style="text-decoration: none; border-radius: 10px; background-color: #D44100"
+                                                                                title="Clique aqui para adicionar {{$evento->formSubTrab->etiquetacoautortrabalho}} já cadastrado">
+                                                                            <img id="icone-add-coautor" src="{{asset('img/icons/user-plus-solid.svg')}}"
+                                                                                 alt="ícone de adicionar {{$evento->formSubTrab->etiquetacoautortrabalho}}" width="30px">
+                                                                            Adicione um coautor(a)
+                                                                        </button>
+                                                                        <button @click.prevent="cadastrarAutor" id="cadastrarCoautor" class="btn btn-success btn-padding border"
+                                                                                style="text-decoration: none; border-radius: 10px; background-color: #D44100"
+                                                                                title="Clique aqui para cadastrar um novo {{$evento->formSubTrab->etiquetacoautortrabalho}}">
+                                                                            <img id="icone-cadastrar-coautor" src="{{asset('img/icons/user-plus-solid.svg')}}"
+                                                                                 alt="ícone de cadastrar {{$evento->formSubTrab->etiquetacoautortrabalho}}" width="30px">
+                                                                            Inserir coautor(a) sem cadastro
+                                                                        </button>
+                                                                    </div>
 
                                                             @endif
                                                         </div>
@@ -997,30 +1006,37 @@
                                                                 </template>
                                                                 <div class="item card w-100 mb-2">
                                                                     <div class="row card-body">
-                                                                        <div :class="index == 0 ? 'col-md-6' : 'col-md-4 col-lg-4'">
-                                                                            <label :for="'email' + index">E-mail</label>
-                                                                            <input type="email" style="margin-bottom:10px"
-                                                                                class="form-control emailCoautor"
-                                                                                :class="index === 0 ? 'bg-light text-muted' : ''"
-                                                                                name="emailCoautor[]" placeholder="E-mail"
-                                                                                :id="'email' + index"
-                                                                                x-init="$nextTick(() => centralizarTela(index))"
+                                                                        <div :class="index == 0 ? 'col-md-6' : (autor.cadastrado === 'nao' ? 'col-md-4 col-lg-4' : 'col-md-4 col-lg-4')">
+                                                                            <label :for="'email' + index">E-mail <small class="text-muted" x-show="index > 0 && autor.cadastrado === 'nao'">(opcional)</small></label>
+                                                                        <input type="email" style="margin-bottom:10px"
+                                                                            class="form-control emailCoautor"
+                                                                            :class="index === 0 ? 'bg-light text-muted' : ''"
+                                                                            name="emailCoautor[]" placeholder="E-mail"
+                                                                            :id="'email' + index"
+                                                                            x-init="$nextTick(() => centralizarTela(index))"
                                                                                 x-on:focusout="checarNome(index)"
-                                                                                x-model="autor.email"
+                                                                            x-model="autor.email"
                                                                                 :readonly="@can('isCoordenadorOrComissaoCientifica', $evento) undefined @else index == 0 @endcan"
-                                                                                required>
-                                                                        </div>
-                                                                        <div :class="index == 0 ? 'col-md-6' : 'col-md-4 col-lg-5'">
-                                                                            <label :for="'nome' + index">Nome Completo</label>
-                                                                            <input type="text" style="margin-bottom:10px"
-                                                                                class="form-control emailCoautor"
-                                                                                :class="index === 0 ? 'bg-light text-muted' : ''"
-                                                                                name="nomeCoautor[]" placeholder="Nome"
-                                                                                :id="'nome' + index"
-                                                                                x-model="autor.nome"
+                                                                                :required="index == 0 || autor.cadastrado === 'sim'">
+                                                                    </div>
+                                                                    <div :class="index == 0 ? 'col-md-6' : (autor.cadastrado === 'nao' ? 'col-md-4 col-lg-5' : 'col-md-4 col-lg-5')">
+                                                                        <label :for="'nome' + index">Nome Completo</label>
+                                                                        <input type="text" style="margin-bottom:10px"
+                                                                            class="form-control emailCoautor"
+                                                                            :class="index === 0 ? 'bg-light text-muted' : ''"
+                                                                            name="nomeCoautor[]" placeholder="Nome"
+                                                                            :id="'nome' + index"
+                                                                            x-model="autor.nome"
                                                                                 :readonly="@can('isCoordenadorOrComissaoCientifica', $evento) undefined @else index == 0 @endcan"
-                                                                                required>
-                                                                        </div>
+                                                                                :required="index == 0 || autor.cadastrado === 'nao'">
+                                                                    </div>
+                                                                        <template x-if="index > 0 && autor.cadastrado === 'nao'">
+                                                                            <div class="col-md-4 col-lg-3">
+                                                                                <label :for="'vinculo' + index">Vínculo</label>
+                                                                                <input type="text" class="form-control" :id="'vinculo' + index" name="vinculoCoautor[]" x-model="autor.vinculo" placeholder="Organização" required>
+                                                                            </div>
+                                                                        </template>
+                                                                        <input type="hidden" :name="'coautorCadastrado['+index+']'" x-model="autor.cadastrado">
                                                                         <template x-if="index > 0">
                                                                             <div class="col-md-4 col-lg-3 justify-content-center d-flex align-items-end btn-group pb-1">
                                                                                 <button type="button" @click="removeAutor(index)" style="color: #d30909;" class="btn"><img src="{{asset('img/icons/trash-alt-regular.svg')}}" class="icon-card" width="24" alt="Remover"></button>
@@ -1147,7 +1163,34 @@
                     }
                     this.autores.push({
                         nome: '',
-                        email: ''
+                        email: '',
+                        cadastrado: 'sim',
+                        vinculo: ''
+                    });
+                },
+                cadastrarAutor() {
+                    const select = document.getElementById('modalidade');
+                    const selectedId = select ? select.value : null;
+                    if (!selectedId) {
+                        showErrorModal('Selecione primeiro uma modalidade antes de cadastrar coautor.');
+                        return;
+                    }
+                    const modalidadeEscolhida = this.modalidades.find(
+                        m => m.id === Number(selectedId)
+                    );
+                    const maxCo = modalidadeEscolhida.maxCoautores;
+                    if (maxCo != null){
+                        const coautoresAtuais = this.autores.length - 1;
+                        if (coautoresAtuais >= maxCo) {
+                            showErrorModal(`Você já atingiu o número máximo de coautores (${maxCo}).`);
+                            return;
+                        }
+                    }
+                    this.autores.push({
+                        nome: '',
+                        email: '',
+                        cadastrado: 'nao',
+                        vinculo: ''
                     });
                 },
                 removeAutor(index) {

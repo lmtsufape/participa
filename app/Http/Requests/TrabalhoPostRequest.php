@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use App\Models\Submissao\Evento;
 use App\Models\Submissao\MidiaExtra;
 use App\Models\Submissao\Modalidade;
+use App\Models\Users\User;
 use App\Rules\CoautorCadastrado;
 use App\Rules\CoautorInscritoNoEvento;
 use App\Rules\FileType;
@@ -54,7 +55,9 @@ class TrabalhoPostRequest extends FormRequest
             'resumo_en' => ['nullable', 'string'],
             'nomeCoautor.*' => ['string'],
             'emailCoautor' => [new MaxCoautoresNaModalidade($modalidade)],
-            'emailCoautor.*' => ['string', new MaxTrabalhosCoautor($evento->numMaxCoautores), new CoautorInscritoNoEvento($evento), new CoautorCadastrado($evento)],
+            'emailCoautor.*' => ['nullable','string', new MaxTrabalhosCoautor($evento->numMaxCoautores), new CoautorInscritoNoEvento($evento), new CoautorCadastrado($evento)],
+            'coautorCadastrado.*' => ['nullable', 'in:sim,nao'],
+            'vinculoCoautor.*' => ['nullable', 'string'],
             'arquivo' => ['nullable', 'file', new FileType($modalidade, new MidiaExtra, request()->arquivo, true)],
             'campoextra1arquivo' => ['nullable', 'file', 'max:2048'],
             'campoextra2arquivo' => ['nullable', 'file', 'max:2048'],
@@ -95,6 +98,29 @@ class TrabalhoPostRequest extends FormRequest
         return [
             'arquivo.max' => 'O tamanho máximo permitido é de 2mb',
         ];
+    }
+
+    public function withValidator($validator)
+    {
+        $validator->after(function ($validator) {
+            $emails = (array) $this->input('emailCoautor', []);
+            $flags  = (array) $this->input('coautorCadastrado', []);
+
+            foreach ($emails as $index => $email) {
+                $flag = $flags[$index] ?? 'sim';
+                if ($index == 0) {
+                    continue;
+                }
+                if ($flag === 'nao' && $email) {
+                    if (User::where('email', $email)->exists()) {
+                        $validator->errors()->add(
+                            'emailCoautor.' . $index,
+                            'O email ' .$email. ' já está cadastrado no sistema. Use o botão "Adicionar coautor" para coautores já cadastrados.'
+                        );
+                    }
+                }
+            }
+        });
     }
 
     public function attributes()
