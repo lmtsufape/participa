@@ -68,13 +68,13 @@ class InscricaoController extends Controller
         
         if ($request->filled('nome')) {
             $query->whereHas('user', function($q) use ($request) {
-                $q->where('name', 'like', '%' . $request->nome . '%');
+                $q->whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($request->nome) . '%']);
             });
         }
         
         if ($request->filled('email')) {
             $query->whereHas('user', function($q) use ($request) {
-                $q->where('email', 'like', '%' . $request->email . '%');
+                $q->whereRaw('LOWER(email) LIKE ?', ['%' . strtolower($request->email) . '%']);
             });
         }
         
