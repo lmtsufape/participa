@@ -1033,7 +1033,7 @@
                                                                         <template x-if="index > 0 && autor.cadastrado === 'nao'">
                                                                             <div class="col-md-4 col-lg-3">
                                                                                 <label :for="'vinculo' + index">Vínculo</label>
-                                                                                <input type="text" class="form-control" :id="'vinculo' + index" name="vinculoCoautor[]" x-model="autor.vinculo" placeholder="Organização" required>
+                                                                                <input type="text" class="form-control" :id="'vinculo' + index" name="vinculoCoautor[]" x-model="autor.vinculo" placeholder="Vínculo" required>
                                                                             </div>
                                                                         </template>
                                                                         <input type="hidden" :name="'coautorCadastrado['+index+']'" x-model="autor.cadastrado">
