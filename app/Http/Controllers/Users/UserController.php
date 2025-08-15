@@ -77,7 +77,7 @@ class UserController extends Controller
             'cnpj' => ($request->passaporte == null && $request->cpf == null ? ['bail', 'required'] : 'nullable'),
             'passaporte' => ($request->cpf == null && $request->cnpj == null ? ['bail', 'required', 'max:10'] : ['nullable']),
             'celular' => '|string|max:20',
-            'instituicao' => 'required|string|max:255|regex:/^[A-Za-zÀ-ÿ0-9\s\-\.\(\)\[\]\{\}\/\\,;&@#$%*+=|<>!?~`\'"]+$/',
+            'instituicao' => 'required|string| max:255',
             'rua' => 'required|string|max:255',
             'numero' => 'required|string',
             'bairro' => 'required|string|max:255',
@@ -98,27 +98,45 @@ class UserController extends Controller
             $validations['bairro'] = ['nullable', 'string'];
             $validations['cep'] = ['nullable', 'string'];
         }
-        $validator = $request->validate($validations);
+        try {
+            $validator = $request->validate($validations);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return redirect()->back()
+                ->withErrors($e->validator)
+                ->withInput()
+                ->with('erro', 'Por favor, corrija os erros no formulário antes de continuar.');
+        }
 
         if ($request->senha_atual != null) {
             if (! (Hash::check($request->senha_atual, $user->password))) {
-                return redirect()->back()->withErrors(['senha_atual' => 'A senha digitada não correspondente a senha cadastrada.'])->withInput($validator);
+                return redirect()->back()
+                    ->withErrors(['senha_atual' => 'A senha atual informada está incorreta. Verifique e tente novamente.'])
+                    ->withInput($validator)
+                    ->with('erro', 'Erro na alteração de senha. Verifique os dados informados.');
             }
 
             if (! ($request->password != null)) {
-                return redirect()->back()->withErrors(['password' => 'Digite a nova senha.'])->withInput($validator);
+                return redirect()->back()
+                    ->withErrors(['password' => 'Digite a nova senha desejada.'])
+                    ->withInput($validator)
+                    ->with('erro', 'Campo de nova senha é obrigatório.');
             }
 
             if (! ($request->input('password-confirm') != null)) {
-                return redirect()->back()->withErrors(['password-confirm' => 'Digite a confirmação da senha.'])->withInput($validator);
+                return redirect()->back()
+                    ->withErrors(['password-confirm' => 'Digite a confirmação da nova senha.'])
+                    ->withInput($validator)
+                    ->with('erro', 'Confirmação de senha é obrigatória.');
             }
 
             if (! ($request->password == $request->input('password-confirm'))) {
-                return redirect()->back()->withErrors(['password' => 'A confirmação não confere com a nova senha.'])->withInput($validator);
+                return redirect()->back()
+                    ->withErrors(['password' => 'A confirmação da senha não confere com a nova senha digitada.'])
+                    ->withInput($validator)
+                    ->with('erro', 'As senhas não coincidem. Verifique e tente novamente.');
             }
 
             $password = Hash::make($request->password);
-
             $user->password = $password;
         }
 
@@ -129,7 +147,10 @@ class UserController extends Controller
                 $user->email = $request->email;
                 $user->email_verified_at = null;
             } else {
-                return redirect()->back()->withErrors(['email' => 'Já existe uma conta registrada com esse e-mail.'])->withInput($validator);
+                return redirect()->back()
+                    ->withErrors(['email' => 'Este e-mail já está sendo usado por outra conta. Use um e-mail diferente.'])
+                    ->withInput($validator)
+                    ->with('erro', 'E-mail já cadastrado. Escolha outro endereço de e-mail.');
             }
         }
 
@@ -142,40 +163,47 @@ class UserController extends Controller
         if ($request->input('especialidade') != null) {
             $user->especProfissional = $request->input('especialidade');
         }
-        $user->usuarioTemp = null;
-        $user->update();
-
-        if ($user->enderecoId == null) {
-            $end = new Endereco($request->all());
-            $end->save();
-            $user->enderecoId = $end->id;
+        try {
+            $user->usuarioTemp = null;
             $user->update();
-        } else {
-            $end = Endereco::find($user->enderecoId);
-            $end->fill($validator);
-            $end->update();
-        }
 
-        $perfilIdentitario = PerfilIdentitario::query()
-            ->where('userId', $user->id)
-            ->first();
+            if ($user->enderecoId == null) {
+                $end = new Endereco($request->all());
+                $end->save();
+                $user->enderecoId = $end->id;
+                $user->update();
+            } else {
+                $end = Endereco::find($user->enderecoId);
+                $end->fill($validator);
+                $end->update();
+            }
 
-        if ($perfilIdentitario == null) {
-            $perfilIdentitario = new PerfilIdentitario();
-            $perfilIdentitario->userId = $user->id;
-            $perfilIdentitario->setAttributes($data);
-            $perfilIdentitario->save();
-        }
-        else{
-            $perfilIdentitario->editAttributes($data);
-            $perfilIdentitario->save();
-        }
+            $perfilIdentitario = PerfilIdentitario::query()
+                ->where('userId', $user->id)
+                ->first();
 
-        if($temp){
-            return redirect()->route('index')->with(['message' => 'Perfil atualizado com sucesso!']);
-        }
+            if ($perfilIdentitario == null) {
+                $perfilIdentitario = new PerfilIdentitario();
+                $perfilIdentitario->userId = $user->id;
+                $perfilIdentitario->setAttributes($data);
+                $perfilIdentitario->save();
+            }
+            else{
+                $perfilIdentitario->editAttributes($data);
+                $perfilIdentitario->save();
+            }
 
-        return back()->with(['message' => 'Atualizado com sucesso!']);
+            if($temp){
+                return redirect()->route('index')->with('sucesso', 'Perfil atualizado com sucesso! Seus dados foram salvos e você já pode participar dos eventos.');
+            }
+
+            return back()->with('sucesso', 'Perfil atualizado com sucesso! Todas as suas informações foram salvas corretamente.');
+            
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->withInput()
+                ->with('erro', 'Ocorreu um erro ao atualizar o perfil. Por favor, tente novamente. Se o problema persistir, entre em contato com o suporte.');
+        }
     }
 
     public function meusCertificados()
