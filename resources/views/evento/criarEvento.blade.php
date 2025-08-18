@@ -209,16 +209,20 @@
                                 <input type="radio" id="customRadioInline1" name="customRadioInline" class="custom-control-input" checked>
                                 <label class="custom-control-label me-2" for="customRadioInline1">{{ __('Online') }}</label>
 
-                                <input type="radio"  name="customRadioInline" class="custom-control-input">
+                                <input type="radio" name="customRadioInline" class="custom-control-input">
                                 <label class="custom-control-label me-2" for="customRadioInline2">{{__('Presencial')}}</label>
 
                                 <input type="radio" name="customRadioInline" class="custom-control-input">
-                                <label class="custom-control-label " for="customRadioInline3">{{__('Híbrido')}}</label>
+                                <label class="custom-control-label" for="customRadioInline3">{{__('Híbrido')}}</label>
                             </div>
-
+                        </div>
+                        <div class="col-md-6 d-flex justify-content-end align-items-center">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="is_multilingual" name="is_multilingual">
+                                <label class="form-check-label fw-bold" for="is_multilingual">{{ __('Evento Multilingue') }}</label>
+                            </div>
                         </div>
                     </div>
-
                     <br>
 
                     <div class="form-group row">
@@ -251,17 +255,6 @@
                                     <strong>{{ $message }}</strong>
                                 </span>
                             @enderror
-                        </div>
-                    </div>
-
-                    <br>
-
-                    <div class="row">
-                        <div class="form-check col-sm-12 form-group">
-                            <div class="form-check col-sm-12 form-group">
-                                    <input class="form-check-input" type="checkbox" id="is_multilingual" name="is_multilingual">
-                                    <label class="form-check-label text-start d-block fw-bold" for="is_multilingual">{{ __('Evento Multilingue') }}</label>
-                            </div>
                         </div>
                     </div>
 
