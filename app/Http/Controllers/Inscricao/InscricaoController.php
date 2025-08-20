@@ -182,13 +182,8 @@ class InscricaoController extends Controller
             }
             $campo->inscricoesFeitas()->detach($inscricao->id);
         }
-        $pagamento = null;
-        if ($inscricao->pagamento()->exists())
-            $pagamento = $inscricao->pagamento;
 
         $inscricao->delete();
-        if ($pagamento)
-            $pagamento->delete();
     }
 
     public function cancelar(Inscricao $inscricao)
@@ -647,7 +642,7 @@ class InscricaoController extends Controller
         if ($inscricao->finalizada) {
             return redirect()->back()->with(['message' => 'Não é possível alterar a categoria de uma inscrição já finalizada.', 'class' => 'danger']);
         }
-
+        
         $validator = Validator::make($request->all(), [
             'categoria' => 'required|exists:categoria_participantes,id',
         ]);
