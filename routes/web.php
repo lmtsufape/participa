@@ -478,8 +478,9 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
         Route::post('/confirmar-inscricao/{id}', [CheckoutController::class, 'index'])->name('index');
         Route::post('/proccess', [CheckoutController::class, 'proccess'])->name('proccess');
         Route::get('/obrigado', [CheckoutController::class, 'obrigado'])->name('obrigado');
-        Route::get('/{id}/pagamentos', [CheckoutController::class, 'listarPagamentos'])->name('pagamentos');
-        Route::post('/pag-boleto', [CheckoutController::class, 'pagBoleto'])->name('boleto');
+            Route::get('/{id}/pagamentos', [CheckoutController::class, 'listarPagamentos'])->name('pagamentos');
+    Route::post('/pag-boleto', [CheckoutController::class, 'pagBoleto'])->name('boleto');
+    Route::post('/nova-tentativa/{evento}', [CheckoutController::class, 'novaTentativa'])->name('novaTentativa');
 
     });
     //Pagamentos
