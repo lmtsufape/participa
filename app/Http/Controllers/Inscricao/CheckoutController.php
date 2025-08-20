@@ -38,7 +38,15 @@ class CheckoutController extends Controller
         $categoria = $inscricao?->categoria;
 
         if ($inscricao->pagamento != null) {
-            return redirect()->route('checkout.statusPagamento', ['evento' => $evento->id]);
+            $pagamento = $inscricao->pagamento;
+
+            $statusPermitemTentativa = ['rejected', 'cancelled', 'expired', 'refunded', 'charged_back'];
+
+            if (in_array($pagamento->status, $statusPermitemTentativa)) {
+                return view('inscricao.pagamento.brick', compact('evento', 'inscricao', 'user', 'categoria', 'key'));
+            } else {
+                return redirect()->route('checkout.statusPagamento', ['evento' => $evento->id]);
+            }
         }
 
         return view('inscricao.pagamento.brick', compact('evento', 'inscricao', 'user', 'categoria', 'key'));
@@ -54,7 +62,22 @@ class CheckoutController extends Controller
             return redirect()->route('evento.visualizar', ['id' => $evento->id])->with('message', 'Não existe um pagamento para esse evento.');
         }
 
+        // PAra boletos
+        if ($pagamento->status === 'pending' && $this->pagamentoExpirado($pagamento)) {
+            $pagamento->status = 'expired';
+            $pagamento->save();
+        }
+
         return view('inscricao.pagamento.status', compact('pagamento', 'key'));
+    }
+
+    private function pagamentoExpirado($pagamento)
+    {
+        // validade do boleto sao 10 dias
+        $dataCriacao = $pagamento->created_at;
+        $dataExpiracao = $dataCriacao->addDays(10);
+
+        return now()->isAfter($dataExpiracao);
     }
 
     public function listarPagamentos($id)
@@ -291,6 +314,31 @@ class CheckoutController extends Controller
     public function obrigado()
     {
         return view('coordenador.programacao.obrigado');
+    }
+
+
+
+    public function novaTentativa(Evento $evento)
+    {
+        $user = auth()->user();
+        $inscricao = $evento->inscricaos()->where('user_id', $user->id)->first();
+
+        if (!$inscricao || !$inscricao->pagamento) {
+            return redirect()->back()->with('error', 'Nenhum pagamento encontrado.');
+        }
+
+        $statusPermitemRetry = ['rejected', 'cancelled', 'expired', 'refunded', 'charged_back'];
+
+        if (!in_array($inscricao->pagamento->status, $statusPermitemRetry)) {
+            return redirect()->back()->with('error', 'Este pagamento não permite nova tentativa.');
+        }
+
+        $inscricao->pagamento_id = null;
+        $inscricao->save();
+
+        $inscricao->pagamento->delete();
+
+        return redirect()->route('checkout.telaPagamento', ['evento' => $evento->id])->with('success', 'Você pode tentar um novo pagamento.');
     }
 
     public function proccess(Request $request)
