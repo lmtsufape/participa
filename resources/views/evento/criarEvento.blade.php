@@ -847,7 +847,6 @@
             });
 
             $('#imagem-loader-icone').click(function() {
-                $('#icone-input').click();
                 $('#icone-input').change(function() {
                     if (this.files && this.files[0]) {
                         var file = new FileReader();
@@ -860,7 +859,6 @@
             });
 
             $('#imagem-loader-en').click(function() {
-                $('#logo-input-en').click();
                 $('#logo-input-en').change(function() {
                     if (this.files && this.files[0]) {
                         var file = new FileReader();
@@ -873,7 +871,6 @@
             });
 
             $('#imagem-loader-icone-en').click(function() {
-                $('#icone-input-en').click();
                 $('#icone-input-en').change(function() {
                     if (this.files && this.files[0]) {
                         var file = new FileReader();
@@ -886,7 +883,6 @@
             });
 
             $('#imagem-loader-es').click(function() {
-                $('#logo-input-es').click();
                 $('#logo-input-es').change(function() {
                     if (this.files && this.files[0]) {
                         var file = new FileReader();
@@ -899,7 +895,6 @@
             });
 
             $('#imagem-loader-icone-es').click(function() {
-                $('#icone-input-es').click();
                 $('#icone-input-es').change(function() {
                     if (this.files && this.files[0]) {
                         var file = new FileReader();
