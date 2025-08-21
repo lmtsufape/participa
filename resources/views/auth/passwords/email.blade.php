@@ -22,7 +22,7 @@
             @csrf
 
             <div class="mb-3">
-              <label for="email" class="form-label">{{ __('Endereço de e-mail') }}</label>
+              <label for="email" class="form-label fw-bold">{{ __('Endereço de e-mail') }}</label>
               <input
                 id="email"
                 type="email"

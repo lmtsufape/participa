@@ -6,6 +6,7 @@
 /vendor
 /storage/app/*
 .env
+pr.md
 .idea
 .env.backup
 .phpunit.result.cache

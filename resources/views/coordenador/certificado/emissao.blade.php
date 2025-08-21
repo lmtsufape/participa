@@ -34,7 +34,7 @@
             <input type="hidden" name="eventoId" value="{{$evento->id}}">
             <div class="form-row">
                 <div class="form-group col-md-12 mt-2">
-                    <label for="idSelecionarDestinatario" class="h4">Destinatários</label>
+                    <label for="idSelecionarDestinatario" class="h4 fw-bold">Destinatários</label>
                     <select name="destinatario" class="form-control @error('destinatarios') is-invalid @enderror"
                             id="idSelecionarDestinatario" x-on:change="selecionarDestinatario({{$evento->id}})"
                             x-model="tipo">
@@ -82,8 +82,9 @@
                     </div>
                     @enderror
                 </div>
+                <br>
                 <div class="col-sm-12">
-                    <h4>Lista de Destinatários</h4>
+                    <h4 class="fw-bold">Lista de Destinatários</h4>
                 </div>
                 <div class="form-group col-md-12">
                     <div style="width:100%; height:250px; display: inline-block; border: 2px solid #f2f2f2; border-radius: 2px; overflow:auto; padding-top: 8px;">
@@ -135,7 +136,7 @@
                     </div>
                 </div>
                 <div class="col-sm-12 form-group">
-                    <h4>Certificados</h4>
+                    <h4 class="fw-bold">Certificados</h4>
                     <input type="hidden" class="checkbox_certificado @error('certificado') is-invalid @enderror">
                     <div id="listaCertificados" class="row cards-eventos-index">
                         <template x-for="(certificado, index) in certificados" :key="index">
@@ -166,6 +167,7 @@
                       </div>
                 </div>
             </div>
+            <br>
             <div class="row justify-content-center">
                 <div class="col-md-12">
                     <button type="submit" class="btn btn-primary  button-prevent-multiple-submits" style="width:100%">

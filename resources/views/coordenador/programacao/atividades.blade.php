@@ -1,5 +1,15 @@
 @extends('coordenador.detalhesEvento')
 
+<style>
+
+.required-field::after {
+            content: "*";
+            color: #D44100;
+            margin-left: 2px;
+}
+
+</style>
+
 @section('menu')
 
 <!-- Modal para editar a atividade-->
@@ -64,6 +74,7 @@
                                     </div>
                                     <input class="form-control" type="text" name="nomeTipo" id="nomeTipo{{$atv->id}}" placeholder="Nome do novo tipo">
                                 </div>
+                                <br>
                                 <div class="col-sm-12">
                                     <button id="submitNovoTipoAtividade{{$atv->id}}" type="button" class="btn btn-primary" onclick="salvarTipoAtividadeAjax({{$atv->id}})">Salvar</button>
                                 </div>
@@ -474,7 +485,7 @@
 
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
         <!-- <button type="submit" class="btn btn-primary" onclick="editarAtividade({{$atv->id}})">Salvar</button> -->
         <button type="submit" class="btn btn-primary">Salvar</button>
     </div>
@@ -488,9 +499,6 @@
         <div class="modal-content">
             <div class="modal-header" style="background-color: #114048ff; color: white;">
                 <h5 class="modal-title" id="modalLabelCriarAtividade">Criar Atividade</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
-                    <span aria-hidden="true">&times;</span>
-                </button>
             </div>
             <div class="modal-body">
                 <form id="formNovaAtividade" method="POST" action="{{ route('coord.atividades.store') }}">
@@ -500,7 +508,7 @@
                             <input type="hidden" name="idNovaAtividade" value="2">
                             <input type="hidden" name="eventoId" value="{{ $evento->id }}">
                             <div class="col-sm-6">
-                                <label for="titulo">Título*:</label>
+                                <label class="required-field" for="titulo">Título:</label>
                                 <input class="form-control @error('título') is-invalid @enderror" type="text" name="título" id="titulo" value="{{ old('título')}}" placeholder="Nova atividade" required>
 
                                 @error('título')
@@ -510,7 +518,7 @@
                                 @enderror
                             </div>
                             <div class="col-sm-4">
-                                <label for="tipo">Tipo*:</label>
+                                <label class="required-field" for="tipo">Tipo:</label>
                                 <select class="form-control @error('tipo') is-invalid @enderror" name="tipo" id="tipo" required>
                                     <option value="" selected disabled>-- Tipo --</option>
                                     @foreach ($tipos as $tipo)
@@ -525,18 +533,21 @@
                                 @enderror
                             </div>
                             <div class="col-sm-2">
-                                <button id="buttomFormNovoTipoAtividade" type="button" class="btn btn-primary" style="position: relative; top: 31px; right: 30px;" onclick="exibirFormTipoAtividade(0)">+Tipo</button>
+                                <button id="buttomFormNovoTipoAtividade" type="button" class="btn btn-primary" style="position: relative; top: 25px; right: 30px; left: -10px;" onclick="exibirFormTipoAtividade(0)">+Tipo</button>
                             </div>
                         </div>
                         <div id="formNovoTipoAtividade" class="form-group" style="display: none;">
+                            <br>
                             <div class="row" style="background-color: rgba(242, 253, 144, 0.829); padding: 15px; border: red solid 1px;;">
                                 <div class="col-sm-12">
                                     <div class="row" style="justify-content: space-between;">
-                                        <label for="nomeTipo">Nome*:</label>
-                                        <p style="color: red; font-weight: bold" onclick="exibirFormTipoAtividade(0)">X</p>
+                                        <label class="required-field" for="nomeTipo">Nome:</label>
+                                        <p style="color: red; font-weight: bold" onclick="exibirFormTipoAtividade(0)">FECHAR</p>
                                     </div>
                                     <input class="form-control apenasLetras" type="text" name="nomeNovoTipo" id="nomeTipo" placeholder="Nome do novo tipo">
+                                    <br>
                                 </div>
+
                                 <div class="col-sm-12">
                                     <button id="submitNovoTipoAtividade" type="button" class="btn btn-primary" onclick="salvarTipoAtividadeAjax(0)">Salvar</button>
                                 </div>
@@ -546,7 +557,7 @@
 
                         <div class="row form-group">
                             <div class="col-sm-12">
-                                <label for="descricao">Descrição*:</label>
+                                <label class="required-field" for="descricao">Descrição:</label>
                                 <textarea class=" @error('descrição') is-invalid @enderror"  rows="5" name="descrição" id="descricao" placeholder="Descreva em detalhes sua atividade">{{ old('descrição') }}</textarea required>
 
                                 @error('descrição')
@@ -559,7 +570,7 @@
                         <hr>
                         <div class="row form-group">
                             <div class="col-sm-6">
-                                <label for="duracaoAtividade">Duração*:</label>
+                                <label class="required-field" for="duracaoAtividade">Duração:</label>
                                 <select class="form-control  @error('duraçãoDaAtividade') is-invalid @enderror" name="duraçãoDaAtividade" id="duracaoAtividade" onchange="exibirDias(0)" required>
                                     <option value="" selected disabled>-- Duração --</option>
                                     <option value="1" @if(old('duraçãoDaAtividade')=="1" ) selected @endif>Um dias</option>
@@ -577,7 +588,7 @@
                                         @enderror
                             </div>
                             <div class="col-sm-6">
-                                <label for="local">Local*:</label>
+                                <label class="required-field" for="local">Local:</label>
                                 <input class="form-control @error('local') is-invalid @enderror" type="text" name="local" id="local" placeholder="Local da atividade" value="{{ old('local') }}" required>
 
                                 @error('local')
@@ -933,7 +944,7 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
                 <button id="submitNovaAtividade" type="submit" class="btn btn-primary">Salvar</button>
             </div>
 
@@ -972,9 +983,6 @@
         <div class="modal-content">
             <div class="modal-header" style="background-color: #114048ff; color: white;">
                 <h5 class="modal-title" id="modalAdicionarPdfLabel">Adicionar PDF com a programação</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
-                    <span aria-hidden="true">&times;</span>
-                </button>
             </div>
             <form method="POST" action="{{ route('coord.evento.pdf.programacao', ['id' => $evento->id]) }}" enctype="multipart/form-data">
                 @csrf
@@ -991,8 +999,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-primary">Salvar</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary" id="btnSalvarPdf" disabled>Salvar</button>
                 </div>
             </form>
         </div>
@@ -1023,15 +1031,13 @@
                 <h6 class="card-subtitle mb-2 text-muted">Atividades que seu evento irá realizar.</h6>
                 <small>Clique em uma atividade para editar</small>
 
-                <div class="container">
-                    <div class="row">
-                        <div class="col-sm-9">
-                            <button id="adicionarPdf" data-bs-toggle="modal" data-bs-target="#modalAdicionarPdf" class="btn btn-primary float-md-right" style="position: relative; bottom: 50px; left: 100px;">+ PDF com as atividades</button>
-                        </div>
-                        <div class="col-sm-3">
-                            <button id="criarAtividade" data-bs-toggle="modal" data-bs-target="#modalCriarAtividade" class="btn btn-primary float-md-right" style="position: relative; bottom: 50px; margin-left: 20px;">+ Criar atividade</button>
-                        </div>
-                    </div>
+                <div class="d-flex justify-content-end gap-3 mb-4 flex-wrap">
+                    <button id="adicionarPdf" data-bs-toggle="modal" data-bs-target="#modalAdicionarPdf" class="btn btn-outline-primary">
+                        <i class="fas fa-file-pdf me-2"></i>+ PDF com as atividades
+                    </button>
+                    <button id="criarAtividade" data-bs-toggle="modal" data-bs-target="#modalCriarAtividade" class="btn btn-primary">
+                        <i class="fas fa-plus me-2"></i>+ Criar atividade
+                    </button>
                 </div>
                 <p class="card-text">
                 <table class="table table-hover table-responsive-lg table-sm" style="position: relative; top: -22px;">
@@ -1087,10 +1093,8 @@
         CKEDITOR.replace(textareaId);
     }
 
-
-    //Função para controlar a exibição da div para cadastro de um novo tipo de atividade
+    // Função para controlar a exibição da div para cadastro de um novo tipo de atividade
     function exibirFormTipoAtividade(id) {
-
         if (id == 0) {
             if (document.getElementById('formNovoTipoAtividade').style.display == "block") {
                 document.getElementById('formNovoTipoAtividade').style.display = "none";
@@ -1123,7 +1127,6 @@
                     }
                 },
                 success: function(data) {
-                    // var data = JSON.parse(result);
                     if (data != null) {
                         if (data.length > 0) {
                             if ($('#tipo').val() == null || $('#tipo').val() == "") {
@@ -1144,10 +1147,6 @@
                         $('#tipo').html(option).show();
                         if (data.length > 0) {
                             for (var i = 0; i < data.length; i++) {
-                                // console.log('---------------------------------'+i+'------------------------');
-                                // console.log(data[i].descricao);
-                                // console.log(document.getElementById('nomeTipo').value);
-                                // console.log(data[i].descricao === document.getElementById('nomeTipo').value);
                                 if (data[i].descricao === document.getElementById('nomeTipo').value) {
                                     document.getElementById('tipo').selectedIndex = i;
                                 }
@@ -1194,10 +1193,6 @@
                         $('#tipo' + id).html(option).show();
                         if (data.length > 0) {
                             for (var i = 0; i < data.length; i++) {
-                                // console.log('---------------------------------'+i+'------------------------');
-                                // console.log(data[i].descricao);
-                                // console.log(document.getElementById('nomeTipo').value);
-                                // console.log(data[i].descricao === document.getElementById('nomeTipo').value);
                                 if (data[i].descricao === document.getElementById('nomeTipo' + id).value) {
                                     document.getElementById('tipo' + id).selectedIndex = i;
                                 }
@@ -1210,5 +1205,75 @@
             });
         }
     }
+
+    // ✅ VALIDAÇÃO PDF - ADICIONADO AQUI
+    document.addEventListener('DOMContentLoaded', function() {
+        const fileInput = document.getElementById('pdf_programacao');
+        const btnSalvar = document.getElementById('btnSalvarPdf');
+        const modal = document.getElementById('modalAdicionarPdf');
+
+        // Função para validar arquivo
+        function validarArquivo() {
+            const arquivo = fileInput.files[0];
+            const isValid = arquivo && arquivo.type === 'application/pdf';
+
+            // Habilita/desabilita botão
+            btnSalvar.disabled = !isValid;
+
+            // Feedback visual
+            if (arquivo) {
+                if (isValid) {
+                    fileInput.classList.remove('is-invalid');
+                    fileInput.classList.add('is-valid');
+                    mostrarFeedback(`✅ Arquivo válido: ${arquivo.name}`, 'success');
+                } else {
+                    fileInput.classList.remove('is-valid');
+                    fileInput.classList.add('is-invalid');
+                    mostrarFeedback('❌ Apenas arquivos PDF são permitidos', 'error');
+                }
+            } else {
+                fileInput.classList.remove('is-valid', 'is-invalid');
+                removerFeedback();
+            }
+        }
+
+        // Função para mostrar feedback
+        function mostrarFeedback(mensagem, tipo) {
+            removerFeedback();
+
+            const feedback = document.createElement('div');
+            feedback.id = 'pdf-feedback';
+            feedback.className = `mt-2 text-${tipo === 'success' ? 'success' : 'danger'} small`;
+            feedback.innerHTML = `<i class="fas fa-${tipo === 'success' ? 'check-circle' : 'exclamation-triangle'}"></i> ${mensagem}`;
+
+            fileInput.parentNode.appendChild(feedback);
+        }
+
+        // Função para remover feedback
+        function removerFeedback() {
+            const feedback = document.getElementById('pdf-feedback');
+            if (feedback) feedback.remove();
+        }
+
+        // Event listeners
+        fileInput.addEventListener('change', validarArquivo);
+
+        // Resetar modal quando abrir
+        modal.addEventListener('show.bs.modal', function() {
+            fileInput.value = '';
+            btnSalvar.disabled = true;
+            fileInput.classList.remove('is-valid', 'is-invalid');
+            removerFeedback();
+        });
+
+        // Validação antes do submit
+        document.querySelector('#modalAdicionarPdf form').addEventListener('submit', function(e) {
+            if (!fileInput.files[0] || fileInput.files[0].type !== 'application/pdf') {
+                e.preventDefault();
+                alert('⚠️ Por favor, selecione um arquivo PDF válido!');
+                return false;
+            }
+        });
+    });
 </script>
 @endsection
