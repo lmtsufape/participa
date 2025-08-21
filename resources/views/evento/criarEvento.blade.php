@@ -827,7 +827,6 @@
             }).trigger('change'); // Apply on page load
 
             $('#imagem-loader').click(function() {
-                $('#logo-input').click();
                 $('#logo-input').change(function() {
                     if (this.files && this.files[0]) {
                         var file = new FileReader();
