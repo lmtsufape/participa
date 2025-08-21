@@ -1,5 +1,4 @@
 @extends('coordenador.detalhesEvento')
-
 @section('menu')
 <div id="divCadastrarModalidades" class="modalidades" style="display: block">
     <div class="row">
@@ -103,7 +102,10 @@
                                 </div>
                                 <br>
                                 <div class="form-group col-sm-6">
-                                    <label for="fimCorrecao" class="col-form-label fw-bold">{{ __('Fim da Correção') }} <i data-bs-toggle="tooltip" data-placement="top" title="Opcional" class="fas fa-exclamation-circle"></i></label>
+                                    <label for="fimCorrecao" class="col-form-label fw-bold">
+                                        {{ __('Fim da Correção') }}
+                                        <i class="bi bi-info-circle"></i>
+                                    </label>
                                     <input id="fimCorrecao" type="datetime-local" class="form-control @error('fimCorrecao') is-invalid @enderror" name="fimCorrecao" value="{{ old('fimCorrecao') }}" autocomplete="fimCorrecao" autofocus>
                                     @error('fimCorrecao')
                                     <span class="invalid-feedback" role="alert">
@@ -128,7 +130,10 @@
                                 </div>
                                 <br>
                                 <div class="form-group col-sm-6">
-                                    <label for="fimValidacao" class="col-form-label fw-bold">{{ __('Fim da Validação') }} <i data-bs-toggle="tooltip" data-placement="top" title="Opcional" class="fas fa-exclamation-circle"></i></label>
+                                    <label for="fimValidacao" class="col-form-label fw-bold">
+                                        {{ __('Fim da Validação') }}
+                                        <i data-bs-toggle="tooltip" data-placement="top" title="Opcional" i class="bi bi-info-circle"></i>
+                                    </label>
                                     <input id="fimValidacao" type="datetime-local" class="form-control @error('fimValidacao') is-invalid @enderror" name="fimValidacao" value="{{ old('fimValidacao') }}" autocomplete="fimValidacao" autofocus>
                                     @error('fimValidacao')
                                     <span class="invalid-feedback" role="alert">
@@ -237,7 +242,7 @@
                                         </label>
                                     </div>
                                 </div>
-                                <template x-if="texto == true">
+                                <template x-if="texto == 1">
                                     <div style="margin-top: -1rem; margin-left: 1.3rem;">
                                         <label class="col-form-label fw-bold">{{ __('Restrições de resumo:') }}</label>
                                         <div class="form-check">
@@ -304,11 +309,11 @@
                                     </div>
                                 </template>
                             </div>
-                            <div x-data="{arquivo: '{{old('arquivo')}}' == 'on'}">
+                            <div x-data="{arquivo: '{{old('arquivo')}}' == 'on', submissaoUnica: '{{old('submissaoUnica')}}' == 'on'}">
                                 <div class="form-group">
                                     <div class="form-check">
-                                        <input class="form-check-input incluirarquivo @error('arquivo') is-invalid @enderror" id="arquivocheck" x-model="arquivo" type="checkbox" name="arquivo" value="on">
-                                        <label class="form-check-label fw-bold" for="arquivocheck">
+                                        <input class="form-check-input incluirarquivo @error('arquivo') is-invalid @enderror" id="arquivocheck" x-model="arquivo" type="checkbox" name="arquivo" value="1">
+                                        <label class="form-check-label font-weight-bold" for="arquivocheck">
                                             Incluir submissão por arquivo
                                         </label>
                                     </div>
@@ -468,10 +473,10 @@
                                     </div>
                                 </template>
                             </div>
-                            <div x-data="{apresentacao: '{{old('apresentacao')}}' == 'on'}">
+                            <div x-data="{apresentacao: '{{old('apresentacao')}}' == '1'}">
                                 <div class="form-group">
                                     <div class="form-check">
-                                        <input class="form-check-input apresentacao @error('apresentacao') is-invalid @enderror" id="apresentacaocheck" value="on" x-model="apresentacao" type="checkbox" name="apresentacao">
+                                        <input class="form-check-input apresentacao @error('apresentacao') is-invalid @enderror" id="apresentacaocheck" value="1" x-model="apresentacao" type="checkbox" name="apresentacao">
                                         <label class="form-check-label fw-bold" for="apresentacaocheck">
                                             {{ __('Habilitar escolha da forma de apresentação do trabalho:') }}
                                         </label>
@@ -487,25 +492,25 @@
                                         <label class="col-md-12 col-form-label fw-bold ml-0 pl-0">{{ __('Selecione a(s) forma(s) de apresentação do trabalho que poderá(ão) ser escolhida(s) pelo(a) autor(a) ') }} <span style="color: red">{{ __('(não obrigatório)')}}</span>:</label>
                                         <div class="form-row mb-2 row-cols-3 ml-0">
                                             <div class="form-check">
-                                                <input class="form-check-input" id="remotoapresentacaocheck" type="checkbox" name="remoto" @if(old('remoto')) checked @endif>
+                                                <input class="form-check-input" id="remotoapresentacaocheck" type="checkbox" value="1" name="remoto" @if(old('remoto')) checked @endif>
                                                 <label class="form-check-label" for="remotoapresentacaocheck">
                                                     Remoto
                                                 </label>
                                             </div>
                                             <div class="form-check">
-                                                <input class="form-check-input" id="presencialapresentacaocheck" type="checkbox" name="presencial" @if(old('presencial')) checked @endif>
+                                                <input class="form-check-input" id="presencialapresentacaocheck" type="checkbox" value="1" name="presencial" @if(old('presencial')) checked @endif>
                                                 <label class="form-check-label" for="presencialapresentacaocheck">
                                                     Presencial
                                                 </label>
                                             </div>
                                             <div class="form-check">
-                                                <input class="form-check-input" id="adistanciaapresentacaocheck" type="checkbox" name="a_distancia" @if(old('a_distancia')) checked @endif>
+                                                <input class="form-check-input" id="adistanciaapresentacaocheck" type="checkbox" value="1" name="a_distancia" @if(old('a_distancia')) checked @endif>
                                                 <label class="form-check-label" for="adistanciaapresentacaocheck">
                                                     À distância
                                                 </label>
                                             </div>
                                             <div class="form-check">
-                                                <input class="form-check-input" id="semipresencialapresentacaocheck" type="checkbox" name="semipresencial" @if(old('semipresencial')) checked @endif>
+                                                <input class="form-check-input" id="semipresencialapresentacaocheck" type="checkbox" value="1" name="semipresencial" @if(old('semipresencial')) checked @endif>
                                                 <label class="form-check-label" for="semipresencialapresentacaocheck">
                                                     Semipresencial
                                                 </label>
@@ -514,24 +519,16 @@
                                     </div>
                                 </template>
 
-                                <div x-data="{arquivo: '{{old('arquivo')}}' == 'on'}">
+                                <div x-data="{arquivo: '{{old('arquivo')}}' == 'on', submissaoUnica: '{{old('submissaoUnica')}}' == 'on'}">
                                     <div class="form-group">
                                         <div class="form-check">
-                                            <input class="form-check-input" id="submissocheck" x-model="submissaoUnica" type="checkbox" name="submissaoUnica" value="on">
+                                            <input class="form-check-input" id="submissaoUnicacheck" x-model="submissaoUnica" type="checkbox" name="submissaoUnica" value="on">
                                             <label class="form-check-label fw-bold" for="submissaoUnicacheck">
-
                                                 {{ __('Habilitar submissão única para avaliação') }}
                                             </label>
                                         </div>
-                                        @error('submissaoUnica')
-                                        <div class="invalid-feedback d-flex mt-0" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </div>
-                                        @enderror
                                     </div>
                                 </div>
-
-                                <br>
 
                                 <div class="form-group">
                                     <label for="nomeTrabalho" class="col-form-label fw-bold">Modelo de apresentação de slides:</label>
@@ -575,13 +572,14 @@
                                     </span>
                                     @enderror
                                 </div>
+
                                 <br>
+
                                 <div x-data="construct()">
                                     <div class="d-flex justify-content-end">
                                         <button type="button" id="btn-adicionar-escolhar" @click="adicionaDocumento()" class="btn btn-primary">Requisitar novo documento
                                         </button>
                                     </div>
-                                    <br>
                                     <div id="docs" class="form-group">
                                         <template x-for="(documento, index) in documentos" :key="index">
                                             <div class="form-group">
@@ -747,6 +745,9 @@
                                             </div>
                                         </template>
                                     </div>
+
+                                    <br>
+
                                     </>
                                     <div class="row justify-content-center">
                                         <div class="col-md-12">
@@ -787,7 +788,7 @@
                 this.datas.push({
                     inicio: '',
                     fim: '',
-                    permitirSubmissao: '',
+                    permitirSubmissao: '0',
                     nome: ''
                 });
             },

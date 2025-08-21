@@ -1,0 +1,117 @@
+.form-home {
+    border-radius: 10px;
+    background-color: white;
+    max-width: 500px;
+    width: 100%;
+    min-height: 480px;
+    padding: 20px 30px;
+}
+
+/* Ajustes responsivos para o formulário */
+@media (max-width: 576px) {
+    .form-home {
+        padding: 15px 20px;
+        margin: 0 15px;
+        min-height: auto;
+    }
+}
+
+p {
+    text-align: justify;
+}
+
+/* Ajustes para a logo */
+.logo-container img {
+    max-width: 100%;
+    height: auto;
+}
+
+@media (max-width: 768px) {
+    .logo-container img {
+        width: 60% !important;
+        max-width: 250px;
+    }
+}
+
+@media (max-width: 576px) {
+    .logo-container img {
+        width: 70% !important;
+        max-width: 200px;
+    }
+}
+
+/* Ajustes para o texto descritivo */
+.description-text {
+    font-size: 1.25rem;
+}
+
+@media (max-width: 768px) {
+    .description-text {
+        font-size: 1.1rem;
+        text-align: center !important;
+        margin-bottom: 2rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .description-text {
+        font-size: 1rem;
+        margin-bottom: 1.5rem;
+    }
+}
+
+/* Melhor espaçamento em telas pequenas */
+@media (max-width: 768px) {
+    .container.my-5 {
+        margin-top: 2rem !important;
+        margin-bottom: 2rem !important;
+    }
+}
+
+/* Ajustes para os campos do formulário em mobile */
+@media (max-width: 576px) {
+    .form-group.py-4 {
+        padding-top: 1.5rem !important;
+        padding-bottom: 1.5rem !important;
+    }
+
+    .form-group.py-1 {
+        padding-top: 0.5rem !important;
+        padding-bottom: 0.5rem !important;
+    }
+
+    .pb-5 {
+        padding-bottom: 2rem !important;
+    }
+
+    .pt-4 {
+        padding-top: 1.5rem !important;
+    }
+}
+
+/* Melhoria no botão de mostrar/ocultar senha */
+#togglePassword {
+    border-left: none;
+}
+
+.input-group .form-control {
+    border-right: none;
+}
+
+.input-group .form-control:focus {
+    border-right: none;
+    box-shadow: none;
+}
+
+.input-group .btn-outline-secondary:focus {
+    box-shadow: 0 0 0 .2rem rgba(3, 70, 82, 0.25) !important;
+    border-color: rgb(3, 70, 82) !important;
+}
+
+/* Centralização melhorada em mobile */
+@media (max-width: 768px) {
+    .mobile-center {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+}
