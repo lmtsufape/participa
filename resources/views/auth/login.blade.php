@@ -24,7 +24,6 @@
         <div class="col-lg-6 col-md-12 d-flex align-items-center justify-content-center">
             <form class="shadow form-home" method="POST" action="{{ route('login') }}">
                 @csrf
-
                 <!-- Cabeçalho do formulário -->
                 <h4 class="text-center mb-3">
                     <strong>{{ __('Entrar') }}</strong>
