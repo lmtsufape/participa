@@ -13,12 +13,15 @@ use App\Http\Requests\UpdateEventoRequest;
 use App\Mail\AvisoPeriodoCorrecao;
 use App\Mail\EmailParaUsuarioNaoCadastrado;
 use App\Mail\EventoCriado;
+use App\Models\CandidatoAvaliador;
 use App\Models\Inscricao\Inscricao;
+use App\Models\Inscricao\InscricaoPCD;
 use App\Models\Submissao\Area;
 use App\Models\Submissao\AreaModalidade;
 use App\Models\Submissao\Atividade;
 use App\Models\Submissao\Avaliacao;
 use App\Models\Submissao\Criterio;
+use App\Models\Submissao\DatasAtividade;
 use App\Models\Submissao\Endereco;
 use App\Models\Submissao\Evento;
 use App\Models\Submissao\Form;
@@ -31,6 +34,7 @@ use App\Models\Submissao\Resposta;
 use App\Models\Submissao\Trabalho;
 use App\Models\Users\Coautor;
 use App\Models\Users\ComissaoEvento;
+use App\Models\Users\CoordEixoTematico;
 use App\Models\Users\CoordenadorEvento;
 use App\Models\Users\Revisor;
 use App\Models\Users\User;
@@ -47,6 +51,7 @@ use Illuminate\Support\Str;
 use Intervention\Image\ImageManagerStatic as Image;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Gate;
 
 // dd($request->all());
 class EventoController extends Controller
@@ -88,7 +93,7 @@ class EventoController extends Controller
             ])
             ->find($request->eventoId);
 
-        $this->authorize('isCoordenadorOrCoordenadorDasComissoesOrIsCoordenadorDeOutrasComissoes', $evento);
+        $this->authorize('isUsuarioDaComissao', $evento);
 
         $evento->loadCount([
             'inscricaos',
@@ -101,7 +106,20 @@ class EventoController extends Controller
             'revisors as revisores_count' => fn ($query) => $query->select(DB::raw('count(distinct user_id)')),
             'usuariosDaComissao as comissao_cientifica_count',
             'usuariosDaComissaoOrganizadora as comissao_organizadora_count',
+            'candidatosAvaliadores as candidaturas_count' => fn($query) => $query->select(DB::raw('count(distinct user_id)')),
+            'candidatosAvaliadores as candidaturas_aprovadas_count' => fn($query) => $query->where('aprovado', true)->select(DB::raw('count(distinct user_id)')),
+            'candidatosAvaliadores as candidaturas_pendentes_count' => fn($query) => $query->where('em_analise', true)->select(DB::raw('count(distinct user_id)')),
+            'candidatosAvaliadores as candidaturas_rejeitadas_count' => fn($query) => $query->where('aprovado', false)->where('em_analise', false)->select(DB::raw('count(distinct user_id)')),
+            'solicitacoesPCD as solicitacoes_pcd_count' => fn($query) => $query->select(DB::raw('count(distinct user_id)')),
+            'solicitacoesPCD as solicitacoes_pcd_aprovadas_count' => fn($query) => $query->where('status', 'aprovado'),
+            'solicitacoesPCD as solicitacoes_pcd_pendentes_count' => fn($query) => $query->where('status', 'pendente'),
+            'solicitacoesPCD as solicitacoes_pcd_rejeitadas_count' => fn($query) => $query->where('status', 'rejeitado'),
         ]);
+
+        $evento->total_arrecadado = $evento->inscricaos()->where('finalizada', true)->with('categoria')->get()->sum(fn($inscricao) => $inscricao->categoria->valor_total ?? 0);
+
+        $evento->total_taxas = $evento->inscricaos()->where('finalizada', true)->with('pagamento')->get()->sum(fn($inscricao) => $inscricao->pagamento->taxa ?? 0);
+        $evento->total_disponivel = $evento->total_arrecadado - $evento->total_taxas;
 
         return view('coordenador.informacoes', [
             'evento' => $evento,
@@ -121,82 +139,212 @@ class EventoController extends Controller
         ]);
     }
 
-    public function listarTrabalhos(Request $request, $column = 'titulo', $direction = 'asc', $status = 'rascunho')
+   public function listarTrabalhos(Request $request, $column = 'titulo', $direction = 'asc', $status = 'rascunho')
     {
         $evento = Evento::find($request->eventoId);
-        $this->authorize('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento);
-        // $users = $evento->usuariosDaComissao;
+        $this->authorize('isCoordenadorOrCoordCientificaOrCoordEixo', $evento);
 
-        $areas = Area::where('eventoId', $evento->id)->orderBy('nome')->get();
+        $areas = Area::where('eventoId', $evento->id)->orderBy('ordem')->get();
+
+        $statusFilter = function ($query) use ($status) {
+            if ($status == 'rascunho') {
+                $query->where('status', '!=', 'arquivado');
+            } elseif ($status == 'with_revisor') {
+                $query->has('atribuicoes')->where('status', '!=', 'arquivado');
+            } elseif ($status == 'no_revisor') {
+                $query->doesntHave('atribuicoes')->where('status', '!=', 'arquivado');
+            } else {
+                $query->where('status', $status);
+            }
+        };
+
         $modalidades = Modalidade::where('evento_id', $evento->id)
-            ->withCount(['trabalho as trabalhos_count' => function($query) use ($status) {
-                if ($status == 'rascunho') {
-                    $query->where('status', '!=', 'arquivado');
-                } elseif ($status == 'with_revisor') {
-                    $query->has('atribuicoes')
-                        ->where('status', '!=', 'arquivado');
-                } elseif ($status == 'no_revisor') {
-                    $query->doesntHave('atribuicoes')
-                        ->where('status', '!=', 'arquivado');
-                } else {
-                    $query->where('status', $status);
-                }
-            }])
-            ->with(['trabalho' => function ($query) use ($column, $direction, $status) {
-                if ($column == 'autor') {
-                    $query->orderBy(
-                        User::select('name')
-                            ->whereColumn('autorId', 'users.id')
-                    , $direction);
-                } elseif ($column == 'areaId') {
-                    $query->orderBy(
-                        Area::select('nome')
-                            ->whereColumn('areaId', 'areas.id')
-                    , $direction);
-                } else {
-                    $query->orderBy($column, $direction);
-                }
-                if ($status == 'rascunho') {
-                    $query->where('status', '!=', 'arquivado');
-                } elseif ($status == 'with_revisor') {
-                    $query->has('atribuicoes')
-                        ->where('status', '!=', 'arquivado');
-                } elseif ($status == 'no_revisor') {
-                    $query->doesntHave('atribuicoes')
-                        ->where('status', '!=', 'arquivado');
-                } else {
-                    $query->where('status', $status);
-                }
-                $query->with(['area', 'modalidade']);
-            }])
+            ->withCount(['trabalho as trabalhos_count' => $statusFilter])
             ->orderBy('nome')->get();
 
+        $query = Trabalho::where('eventoId', $evento->id)
+            ->with([
+                'area:id,nome',
+                'modalidade:id,nome',
+                'autor:id,name',
+                'coautors:id,trabalhoId,autorId',
+                'coautors.user:id,name,cpf',
+                'arquivo:id,trabalhoId',
+                'midiasExtra:id,nome,modalidade_id',
+                'midiasExtra.modalidade:id,nome'
+            ])
+            ->withCount(['atribuicoes', 'respostas as quantidade_avaliacoes' => function ($q) {
+                $q->select(DB::raw('count(distinct revisor_id)'));
+            }])
+            ->withExists('arquivo as tem_arquivo');
+
+        $query->where($statusFilter);
+
+        if ($request->has('titulo') && $request->titulo != '') {
+            $query->where('titulo', 'ilike', '%' . $request->titulo . '%');
+        }
+
+        if ($column == 'autor') {
+            $query->orderBy(User::select('name')->whereColumn('autorId', 'users.id'), $direction);
+        } elseif ($column == 'areaId') {
+            $query->orderBy(Area::select('nome')->whereColumn('areaId', 'areas.id'), $direction);
+        } else {
+            $query->orderBy($column, $direction);
+        }
+
+        $user_logado = auth()->user();
+        if (
+            $user_logado->eventosComoCoordEixo()->pluck('eventos.id')->contains($evento->id) &&
+            !$user_logado->administradors &&
+            !$user_logado->coordComissaoCientifica()->where('eventos_id', $evento->id)->exists()
+        ) {
+            $areasCoordEixo = auth()->user()->areasComoCoordEixoNoEvento($evento->id)->pluck('areas.id');
+            $query->whereIn('areaId', $areasCoordEixo);
+        }
+
+        // OTIMIZAÇÃO: Usando chunk para evitar problemas de memória
+        $trabalhos = $query->simplePaginate(50)->withQueryString();
+
         $coautoresSemCpfPorTrabalho = collect();
-
-        foreach ($evento->trabalhos as $trabalho) {
-            $coautoresSemCpf = $trabalho->coautors()->whereHas('user', function($user) {
-                return $user->whereNull('cpf')->orWhere('cpf', '');
-            })->with('user')->get();
-
+        foreach ($trabalhos as $trabalho) {
+            $coautoresSemCpf = $trabalho->coautors->filter(function($coautor) {
+                return optional($coautor->user)->cpf === null || optional($coautor->user)->cpf === '';
+            });
             if ($coautoresSemCpf->isNotEmpty()) {
                 $coautoresSemCpfPorTrabalho->put($trabalho->titulo, $coautoresSemCpf);
             }
         }
 
+        $trabalhosPorModalidade = $trabalhos->groupBy('modalidadeId');
+        foreach ($modalidades as $modalidade) {
+            $trabalhosDaModalidade = $trabalhosPorModalidade->get($modalidade->id, collect());
+            foreach ($trabalhosDaModalidade as $trabalho) {
+                try {
+                    $trabalho->midias_extra_verificadas = $trabalho->midiasExtra->keyBy('id');
+                } catch (\Exception $e) {
+                    \Log::warning("Erro ao processar midiasExtra para trabalho {$trabalho->id}: " . $e->getMessage());
+                    $trabalho->midias_extra_verificadas = collect();
+                }
+            }
+            $modalidade->trabalho = $trabalhosDaModalidade;
+        }
+
         return view('coordenador.trabalhos.listarTrabalhos', [
-            'evento' => $evento,
-            'areas' => $areas,
-            'modalidades' => $modalidades,
-            'agora' => now(),
-            'status' => $status,
+            'evento' => $evento, 'areas' => $areas, 'modalidades' => $modalidades,
+            'trabalhos' => $trabalhos, 'agora' => now(), 'status' => $status,
             'coautoresSemCpfPorTrabalho' => $coautoresSemCpfPorTrabalho,
+        ]);
+    }
+
+
+    public function listarTrabalhosPorEixo(Request $request, $column = 'titulo', $direction = 'asc', $status = 'rascunho')
+    {
+        $evento = Evento::find($request->eventoId);
+        $this->authorize('isCoordenadorOrCoordCientificaOrCoordEixo', $evento);
+        $areas = Area::where('eventoId', $evento->id)->orderBy('ordem')->get();
+        $eixoSelecionado = $request->get('eixo_id');
+
+        if (!$eixoSelecionado) {
+            return view('coordenador.trabalhos.listarTrabalhosPorEixo', [
+                'evento' => $evento, 'areas' => $areas, 'modalidades' => collect(),
+                'agora' => now(), 'status' => $status, 'coautoresSemCpfPorTrabalho' => collect(),
+                'eixoSelecionado' => null, 'trabalhos' => null,
+            ]);
+        }
+
+        $statusFilter = function ($query) use ($status) {
+            if ($status == 'rascunho') {
+                $query->where('status', '!=', 'arquivado');
+            } elseif ($status == 'with_revisor') {
+                $query->has('atribuicoes')->where('status', '!=', 'arquivado');
+            } elseif ($status == 'no_revisor') {
+                $query->doesntHave('atribuicoes')->where('status', '!=', 'arquivado');
+            } else {
+                $query->where('status', $status);
+            }
+        };
+
+        $query = Trabalho::where('eventoId', $evento->id)
+            ->where('areaId', $eixoSelecionado)
+            ->with([
+                'area:id,nome', 'modalidade:id,nome', 'autor:id,name',
+                'coautors:id,trabalhoId,autorId',
+                'coautors.user:id,name,cpf',
+                'arquivo:id,trabalhoId',
+                'midiasExtra:id,nome,modalidade_id',
+                'midiasExtra.modalidade:id,nome'
+            ])
+            ->withCount(['atribuicoes', 'respostas as quantidade_avaliacoes' => function ($q) {
+                $q->select(DB::raw('count(distinct revisor_id)'));
+            }])
+            ->withExists('arquivo as tem_arquivo');
+
+        if ($request->has('titulo') && $request->titulo != '') {
+            $query->where('titulo', 'ilike', '%' . $request->titulo . '%');
+        }
+
+        $query->where($statusFilter);
+
+        if ($column == 'autor') {
+            $query->orderBy(User::select('name')->whereColumn('autorId', 'users.id'), $direction);
+        } else {
+            $query->orderBy($column, $direction);
+        }
+
+        $user_logado = auth()->user();
+        if (
+            $user_logado->eventosComoCoordEixo()->pluck('eventos.id')->contains($evento->id) &&
+            !$user_logado->administradors &&
+            !$user_logado->coordComissaoCientifica()->where('eventos_id', $evento->id)->exists()
+        ) {
+            $areasCoordEixo = auth()->user()->areasComoCoordEixoNoEvento($evento->id)->pluck('areas.id');
+            $query->whereIn('areaId', $areasCoordEixo);
+        }
+
+        $trabalhos = $query->simplePaginate(50)->withQueryString();
+
+        $modalidades = Modalidade::where('evento_id', $evento->id)
+            ->whereHas('trabalho', function ($q) use ($eixoSelecionado, $statusFilter) {
+                $q->where('areaId', $eixoSelecionado)->where($statusFilter);
+            })->withCount(['trabalho as trabalhos_count' => function($q) use ($eixoSelecionado, $statusFilter) {
+                $q->where('areaId', $eixoSelecionado)->where($statusFilter);
+            }])->orderBy('nome')->get();
+
+        $coautoresSemCpfPorTrabalho = collect();
+        foreach ($trabalhos as $trabalho) {
+            $coautoresSemCpf = $trabalho->coautors->filter(function($coautor) {
+                return optional($coautor->user)->cpf === null || optional($coautor->user)->cpf === '';
+            });
+            if ($coautoresSemCpf->isNotEmpty()) {
+                $coautoresSemCpfPorTrabalho->put($trabalho->titulo, $coautoresSemCpf);
+            }
+        }
+
+        $trabalhosPorModalidade = $trabalhos->groupBy('modalidadeId');
+        foreach ($modalidades as $modalidade) {
+            $trabalhosDaModalidade = $trabalhosPorModalidade->get($modalidade->id, collect());
+            foreach ($trabalhosDaModalidade as $trabalho) {
+                try {
+                    $trabalho->midias_extra_verificadas = $trabalho->midiasExtra->keyBy('id');
+                } catch (\Exception $e) {
+                    \Log::warning("Erro ao processar midiasExtra para trabalho {$trabalho->id}: " . $e->getMessage());
+                    $trabalho->midias_extra_verificadas = collect();
+                }
+            }
+            $modalidade->trabalho = $trabalhosDaModalidade;
+        }
+
+        return view('coordenador.trabalhos.listarTrabalhosPorEixo', [
+            'evento' => $evento, 'areas' => $areas, 'modalidades' => $modalidades,
+            'agora' => now(), 'status' => $status, 'coautoresSemCpfPorTrabalho' => $coautoresSemCpfPorTrabalho,
+            'eixoSelecionado' => $eixoSelecionado, 'trabalhos' => $trabalhos,
         ]);
     }
 
     public function listarAvaliacoes(Request $request, $column = 'titulo', $direction = 'asc', $status = 'rascunho')
     {
         $evento = Evento::find($request->eventoId);
-        $this->authorize('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento);
+        $this->authorize('isCoordenadorOrCoordCientificaOrCoordEixo', $evento);
         $modalidades = Modalidade::where('evento_id', $evento->id)->orderBy('nome')->get();
         $trabalhos = null;
         if ($column == 'autor') {
@@ -262,6 +410,27 @@ class EventoController extends Controller
             }
         }
 
+
+        $user_logado = auth()->user();
+
+        //Se o user for um coordenador de eixo e não for admin e coordenador cientifico do evento
+        if($user_logado->eventosComoCoordEixo()->pluck('eventos.id')->contains($evento->id) &&
+            !$user_logado->administradors &&
+            !$user_logado->coordComissaoCientifica()->where('eventos_id', $evento->id)->exists()
+        ){
+
+            $areasCoordEixo = $user_logado->areasComoCoordEixoNoEvento($evento->id)->pluck('areas.id');
+
+            $trabalhos = $trabalhos->map(function ($subCollection) use ($areasCoordEixo) {
+                return $subCollection->filter(function ($trabalho) use ($areasCoordEixo) {
+                    return $areasCoordEixo->contains($trabalho->areaId);
+                });
+            })->filter(function ($subCollection) {
+                return $subCollection->isNotEmpty();
+            });
+        }
+
+
         return view(
             'coordenador.trabalhos.listarRespostas',
             [
@@ -271,53 +440,69 @@ class EventoController extends Controller
         );
     }
 
-    public function listarTrabalhosModalidades(Request $request, $column = 'titulo', $direction = 'asc', $status = 'arquivado')
+    public function listarTrabalhosModalidades(Request $request, $column = 'titulo', $direction = 'asc', $status = 'rascunho')
     {
         $evento = Evento::find($request->eventoId);
-        $this->authorize('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento);
+        $this->authorize('isCoordenadorOrCoordCientificaOrCoordEixo', $evento);
         $modalidade = Modalidade::find($request->modalidadeId);
-        $areas = Area::where('eventoId', $evento->id)->orderBy('nome')->get();
-        $areasId = Area::where('eventoId', $evento->id)->select('id')->orderBy('nome')->get();
+        $areas = Area::where('eventoId', $evento->id)->orderBy('ordem')->get();
 
-        $trabalhos = null;
+        $query = Trabalho::where('modalidadeId', $request->modalidadeId)
+            ->with([
+                'area:id,nome', 'modalidade:id,nome', 'autor:id,name',
+                'coautors:id,trabalhoId,autorId',
+                'coautors.user:id,name',
+                'arquivo:id,trabalhoId',
+                'midiasExtra',
+                'midiasExtra.modalidade:id,nome'
+            ])
+            ->withCount(['atribuicoes', 'respostas as quantidade_avaliacoes' => function ($q) {
+                $q->select(DB::raw('count(distinct revisor_id)'));
+            }])
+            ->withExists('arquivo as tem_arquivo');
+
+        if ($request->has('titulo') && $request->titulo != '') {
+            $query->where('titulo', 'ilike', '%' . $request->titulo . '%');
+        }
+
+        if ($status == 'rascunho') {
+            $query->where('status', '!=', 'arquivado');
+        } else {
+            $query->where('status', $status);
+        }
 
         if ($column == 'autor') {
-            //Pela logica da implementacao de status, rascunho eh o parametro para encontrar todos os trabalhos diferentes de arquivado
-            if ($status == 'rascunho') {
-                $trabalhos = Trabalho::whereIn('areaId', $areasId)->where([['status', '!=', 'arquivado'], ['modalidadeId', $request->modalidadeId]])->get()->sortBy(
-                    function ($trabalho) {
-                        return $trabalho->autor->name;
-                    },
-                    SORT_REGULAR,
-                    $direction == 'desc'
-                );
-            } else {
-                // Não tem como ordenar os trabalhos por nome do autor automaticamente
-                // Já que na tabale a de trabalhos não existe o nome do autor
-                $trabalhos = Trabalho::whereIn('areaId', $areasId)->where([['status', '=', $status], ['modalidadeId', $request->modalidadeId]])->get()->sortBy(
-                    function ($trabalho) {
-                        return $trabalho->autor->name; // Ordena o pelo valor do nome do autor
-                    },
-                    SORT_REGULAR, // Usa o método padrão de ordenação
-                    $direction == 'desc'
-                ); // Se true, então ordena decrescente
-            }
+            $query->orderBy(User::select('name')->whereColumn('autorId', 'users.id'), $direction);
+        } elseif ($column == 'areaId') {
+            $query->orderBy(Area::select('nome')->whereColumn('areaId', 'areas.id'), $direction);
         } else {
-            if ($status == 'rascunho') {
-                $trabalhos = Trabalho::whereIn('areaId', $areasId)->where([['status', '!=', 'arquivado'], ['modalidadeId', $request->modalidadeId]])->orderBy($column, $direction)->get();
-            } else {
-                // Como aqui é um else, então $trabalhos nunca vai ser null
-                // Busca os trabalhos da forma como era feita antes
-                $trabalhos = Trabalho::whereIn('areaId', $areasId)->where([['status', '=', $status], ['modalidadeId', $request->modalidadeId]])->orderBy($column, $direction)->get();
+            $query->orderBy($column, $direction);
+        }
+
+        $user_logado = auth()->user();
+        if (
+            $user_logado->eventosComoCoordEixo()->pluck('eventos.id')->contains($evento->id) &&
+            !$user_logado->administradors &&
+            !$user_logado->coordComissaoCientifica()->where('eventos_id', $evento->id)->exists()
+        ) {
+            $areasCoordEixo = auth()->user()->areasComoCoordEixoNoEvento($evento->id)->pluck('areas.id');
+            $query->whereIn('areaId', $areasCoordEixo);
+        }
+
+        $trabalhos = $query->simplePaginate(10)->withQueryString();
+
+        foreach ($trabalhos as $trabalho) {
+            try {
+                $trabalho->midias_extra_verificadas = $trabalho->midiasExtra->keyBy('id');
+            } catch (\Exception $e) {
+                \Log::warning("Erro ao processar midiasExtra para trabalho {$trabalho->id}: " . $e->getMessage());
+                $trabalho->midias_extra_verificadas = collect();
             }
         }
 
         return view('coordenador.trabalhos.listarTrabalhosModalidades', [
-            'evento' => $evento,
-            'areas' => $areas,
-            'trabalhos' => $trabalhos,
-            'agora' => now(),
-            'modalidade' => $modalidade,
+            'evento' => $evento, 'areas' => $areas, 'trabalhos' => $trabalhos,
+            'agora' => now(), 'modalidade' => $modalidade,
         ]);
     }
 
@@ -349,8 +534,7 @@ class EventoController extends Controller
     {
         $evento = Evento::find($request->eventoId);
         $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
-        $areas = Area::where('eventoId', $evento->id)->orderBy('nome')->get();
-        $areas = $areas->sortBy('nome', SORT_NATURAL)->values()->all();
+        $areas = Area::where('eventoId', $evento->id)->orderBy('ordem')->get();
 
         return view('coordenador.areas.listarAreas', [
             'evento' => $evento,
@@ -372,7 +556,12 @@ class EventoController extends Controller
     {
         $evento = Evento::find($request->eventoId);
 
-        $this->authorize('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento);
+        if (! Gate::any([
+            'isCoordenadorOrCoordenadorDaComissaoCientifica',
+            'isCoordenadorEixo'
+        ], $evento)) {
+            abort(403, 'Acesso negado');
+        }
         $revisores = User::whereHas('revisor', function (Builder $query) use ($evento) {
             $query->where('evento_id', $evento->id);
         })->orderBy('name')->get();
@@ -397,6 +586,7 @@ class EventoController extends Controller
         ]);
     }
 
+
     public function listarUsuarios(Request $request)
     {
         $evento = Evento::find($request->evento_id);
@@ -416,18 +606,49 @@ class EventoController extends Controller
         return view('coordenador.comissao.definirCoordComissao', compact('evento', 'users', 'coordenadores'));
     }
 
+    public function definirCoordEixo(Request $request)
+    {
+
+        $evento = Evento::find($request->eventoId);
+
+        $users = $evento->usuariosDaComissao->map(function ($user) use ($evento) {
+            $areas = CoordEixoTematico::where('evento_id', $evento->id)
+                ->where('user_id', $user->id)
+                ->pluck('area_id')
+                ->toArray();
+
+            $user->areas = $areas;
+
+            return $user;
+        });
+
+        $areas = $evento->areas;
+        return view('coordenador.comissao.definirCoordEixo', compact('evento', 'users', 'areas'));
+    }
+
     public function listarComissao(Request $request)
     {
         $evento = Evento::find($request->eventoId);
 
         $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
+
         $users = $evento->usuariosDaComissao;
+
+        foreach ($users as $user) {
+            $eixos = CoordEixoTematico::where('evento_id', $evento->id)
+                                        ->where('user_id', $user->id)
+                                        ->with('area')
+                                        ->get();
+
+            $user->eixosCoordenados = $eixos->pluck('area.nome');
+        }
 
         return view('coordenador.comissao.listarComissao', [
             'evento' => $evento,
             'users' => $users,
         ]);
     }
+
 
     public function exportInscritos(Evento $evento, Request $request)
     {
@@ -438,6 +659,15 @@ class EventoController extends Controller
         ]);
     }
 
+    public function exportarInscritosXLSX(Evento $evento)
+    {
+        $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
+        $nomeArquivo = Str::slug($evento->nome) . '-inscritos.xlsx';
+
+        return Excel::download(new InscritosExport($evento), $nomeArquivo, \Maatwebsite\Excel\Excel::XLSX);
+    }
+
+
     public function exportInscritosCertifica(Evento $evento, Request $request)
     {
         $nome = $this->somenteLetrasNumeros($evento->nome);
@@ -447,7 +677,7 @@ class EventoController extends Controller
 
     public function exportTrabalhos(Evento $evento)
     {
-        $this->authorize('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento);
+        $this->authorize('isCoordenadorOrCoordCientificaOrCoordEixo', $evento);
         $trabalhos = Trabalho::where('eventoId', $evento->id)
             ->get()->map(function ($trabalho) {
                 return [
@@ -480,6 +710,36 @@ class EventoController extends Controller
         $nome = $this->somenteLetrasNumeros($evento->nome);
 
         return Excel::download(new TrabalhosExportForCertifica($evento->trabalhos()->with(['autor', 'coautors.user'])->get(), $request->ch), $nome . '.xlsx', \Maatwebsite\Excel\Excel::XLSX);
+    }
+
+    public function downloadTrabalhosAprovadosPDF(Evento $evento)
+    {
+        $this->authorize('isCoordenadorOrCoordCientificaOrCoordEixo', $evento);
+
+        $modalidades = Modalidade::where('evento_id', $evento->id)
+            ->orderBy('nome')
+            ->get();
+
+        $trabalhosPorModalidade = collect();
+        foreach ($modalidades as $modalidade) {
+            $trabalhos = Trabalho::where([
+                ['modalidadeId', $modalidade->id],
+                ['aprovado', true]
+            ])
+            ->orderBy('titulo')
+            ->get();
+
+            if ($trabalhos->isNotEmpty()) {
+                $trabalhosPorModalidade->push($trabalhos);
+            }
+        }
+
+        $pdf = Pdf::loadView('coordenador.trabalhos.trabalhosAprovadosPdf', [
+            'trabalhosPorModalidade' => $trabalhosPorModalidade,
+            'evento' => $evento
+        ])->setOptions(['defaultFont' => 'sans-serif']);
+
+        return $pdf->download("trabalhos-aprovados-{$evento->nome}.pdf");
     }
 
     private function somenteLetrasNumeros($string)
@@ -627,7 +887,7 @@ class EventoController extends Controller
     {
         $evento = Evento::find($request->eventoId);
         $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
-        $modalidades = Modalidade::where('evento_id', $evento->id)->orderBy('nome')->get();
+        $modalidades = Modalidade::where('evento_id', $evento->id)->orderBy('ordem')->get();
         $areasId = Area::where('eventoId', $evento->id)->select('id')->get();
         // $areaModalidades = AreaModalidade::whereIn('areaId', $areasId)->get();
 
@@ -641,50 +901,69 @@ class EventoController extends Controller
     public function listarCorrecoes(Request $request, $column = 'titulo', $direction = 'asc')
     {
         $evento = Evento::find($request->eventoId);
-        $this->authorize('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento);
-
-        $modalidades = Modalidade::where('evento_id', $evento->id)->orderBy('nome')->get();
-        $areas = Area::where('eventoId', $evento->id)->orderBy('nome')->get();
-        $trabalhos = collect();
-        if ($column == 'titulo') {
-            foreach ($modalidades as $modalidade) {
-                $trabalhosArea = collect();
-                foreach ($areas as $area) {
-                    $trabalhosArea->push(Trabalho::where([['modalidadeId', $modalidade->id], ['status', '!=', 'arquivado'], ['areaId', $area->id]])->get()->sortBy(
-                        function ($trabalho) {
-                            return $trabalho->autor->name;
-                        },
-                        SORT_REGULAR
-                    ));
-                }
-                $trabalhos->push($trabalhosArea);
-                //dd($trabalhosArea);
-            }
-        } elseif ($column == 'data') {
-            foreach ($modalidades as $modalidade) {
-                $trabalhosArea = collect();
-                foreach ($areas as $area) {
-                    $trabalhosArea->push(Trabalho::where([['modalidadeId', $modalidade->id], ['status', '!=', 'arquivado'], ['areaId', $area->id]])->get()->sortBy(
-                        function ($trabalho) {
-                            if ($trabalho->arquivoCorrecao) {
-                                return $trabalho->arquivoCorrecao->created_at;
-                            } else {
-                                return date('1900-01-30');
-                            }
-                        },
-                        SORT_REGULAR,
-                        $direction == 'asc'
-                    ));
-                }
-                $trabalhos->push($trabalhosArea);
-            }
+        if (! Gate::any([
+            'isCoordenadorOrCoordenadorDaComissaoCientifica',
+            'isCoordenadorEixo'
+        ], $evento)) {
+            abort(403, 'Acesso negado');
         }
 
-        //dd($trabalhos);
+        $query = Trabalho::where('eventoId', $evento->id)
+                        ->where('status', '!=', 'arquivado')
+                        ->with(['modalidade', 'area', 'autor', 'arquivoCorrecao', 'atribuicoes.user']);
+
+        if ($request->filled('titulo')) {
+            $query->where('titulo', 'ilike', '%' . $request->titulo . '%');
+        }
+
+        if ($column == 'autor') {
+            $query->orderBy(User::select('name')->whereColumn('autorId', 'users.id'), $direction);
+        } elseif ($column == 'data') {
+            $query->leftJoin('arquivos as correcao', 'trabalhos.id', '=', 'correcao.trabalhoId')
+                ->orderBy('correcao.created_at', $direction)
+                ->select('trabalhos.*');
+        } else {
+            $query->orderBy($column, $direction);
+        }
+        
+        $user_logado = auth()->user();
+
+        if($user_logado->eventosComoCoordEixo()->pluck('eventos.id')->contains($evento->id) &&
+        !$user_logado->administradors &&
+        !$user_logado->coordComissaoCientifica()->where('eventos_id', $evento->id)->exists()
+        ){
+            $areasCoordEixo = $user_logado->areasComoCoordEixoNoEvento($evento->id)->pluck('areas.id');
+            $query->whereIn('areaId', $areasCoordEixo);
+        }
+
+        $trabalhos = $query->simplePaginate(15)->withQueryString();
+
+        $modalidades = Modalidade::where('evento_id', $evento->id)
+            ->whereHas('trabalho', function($q) use ($request, $user_logado, $evento) {
+                $q->where('status', '!=', 'arquivado');
+                if ($request->filled('titulo')) {
+                    $q->where('titulo', 'ilike', '%' . $request->titulo . '%');
+                }
+                if($user_logado->eventosComoCoordEixo()->pluck('eventos.id')->contains($evento->id) &&
+                !$user_logado->administradors &&
+                !$user_logado->coordComissaoCientifica()->where('eventos_id', $evento->id)->exists()
+                ){
+                    $areasCoordEixo = $user_logado->areasComoCoordEixoNoEvento($evento->id)->pluck('areas.id');
+                    $q->whereIn('areaId', $areasCoordEixo);
+                }
+            })
+            ->orderBy('nome')->get();
+
+        $trabalhosPorModalidade = $trabalhos->groupBy('modalidadeId');
+
+        foreach ($modalidades as $modalidade) {
+            $modalidade->trabalho = $trabalhosPorModalidade->get($modalidade->id, collect());
+        }
 
         return view('coordenador.trabalhos.listarTrabalhosCorrecoes', [
             'evento' => $evento,
-            'trabalhosPorModalidade' => $trabalhos,
+            'modalidades' => $modalidades,     
+            'trabalhos' => $trabalhos,          
             'agora' => now(),
         ]);
     }
@@ -817,17 +1096,22 @@ class EventoController extends Controller
                 //Verificação de alteração em múltipla escolha já existente
                 if ($data['tipo'][$key] == 'radio') {
                     //dd($request->tituloRadio);
-                    foreach ($request->tituloRadio['row' . $key] as $i => $titulo) {
-                        $opcoes->first()->titulo = $titulo;
-                        //Verificação de marcação da resposta da múltipla escolha
-                        if (isset($request->checkbox[$opcoes->first()->id])) {
-                            $opcoes->first()->check = true;
-                        } else {
-                            $opcoes->first()->check = false;
-                        }
+                    $rowKey = 'row' . $key;
+                    if (isset($request->tituloRadio[$rowKey])) {
+                        foreach ($request->tituloRadio[$rowKey] as $i => $titulo) {
+                            if ($opcoes->count() > 0) {
+                                $opcoes->first()->titulo = $titulo;
+                                //Verificação de marcação da resposta da múltipla escolha
+                                if (isset($request->checkbox[$opcoes->first()->id])) {
+                                    $opcoes->first()->check = true;
+                                } else {
+                                    $opcoes->first()->check = false;
+                                }
 
-                        $opcoes->first()->update();
-                        $opcoes->shift();
+                                $opcoes->first()->update();
+                                $opcoes->shift();
+                            }
+                        }
                     }
                 }
 
@@ -864,13 +1148,18 @@ class EventoController extends Controller
                         $paragrafo = new Paragrafo();
                         $resposta->paragrafo()->save($paragrafo);
                     } elseif ($data['tipo'][$i] == 'checkbox') {
-                        $listResposta = array_shift($data['tituloCheckoxMarc']);
-                        foreach (array_shift($data['tituloCheckox']) as $key => $titulo) {
-                            $resposta->opcoes()->create([
-                                'titulo' => $titulo,
-                                'tipo' => 'radio',
-                                'check' => $listResposta[$key],
-                            ]);
+                        $listResposta = (isset($data['tituloCheckoxMarc']) && is_array($data['tituloCheckoxMarc'])) ? array_shift($data['tituloCheckoxMarc']) : [];
+                        $opcoesArray = (isset($data['tituloCheckox']) && is_array($data['tituloCheckox'])) ? array_shift($data['tituloCheckox']) : [];
+                        if (is_array($opcoesArray)) {
+                            foreach ($opcoesArray as $key => $titulo) {
+                                if (!empty($titulo)) {
+                                    $resposta->opcoes()->create([
+                                        'titulo' => $titulo,
+                                        'tipo' => 'radio',
+                                        'check' => $listResposta[$key] ?? false,
+                                    ]);
+                                }
+                            }
                         }
                     }
                 }
@@ -950,7 +1239,7 @@ class EventoController extends Controller
 
     public function resumosToPdf(Evento $evento, Request $request, $column = 'titulo', $direction = 'asc', $status = 'rascunho')
     {
-        $this->authorize('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento);
+        $this->authorize('isCoordenadorOrCoordCientificaOrCoordEixo', $evento);
         $areas = Area::where('eventoId', $evento->id)->orderBy('nome')->get();
         $modalidades = Modalidade::where('evento_id', $evento->id)->orderBy('nome')->get();
         $trabalhos = null;
@@ -1013,7 +1302,7 @@ class EventoController extends Controller
     public function listarRespostasTrabalhos(Request $request, $column = 'titulo', $direction = 'asc', $status = 'rascunho')
     {
         $evento = Evento::find($request->eventoId);
-        $this->authorize('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento);
+        $this->authorize('isCoordenadorOrCoordCientificaOrCoordEixo', $evento);
         // $users = $evento->usuariosDaComissao;
 
         $areas = Area::where('eventoId', $evento->id)->orderBy('nome')->get();
@@ -1047,6 +1336,21 @@ class EventoController extends Controller
             }
         }
 
+        $user_logado = auth()->user();
+        //Se o user for um coordenador de eixo e não for admin e coordenador cientifico do evento
+        if($user_logado->eventosComoCoordEixo()->pluck('eventos.id')->contains($evento->id) &&
+            !$user_logado->administradors &&
+            !$user_logado->coordComissaoCientifica()->where('eventos_id', $evento->id)->exists()
+            ){
+
+            $areasCoordEixo = $user_logado->areasComoCoordEixoNoEvento($evento->id)->get();
+
+            $trabalhos = $trabalhos->filter(function ($trabalho) use ($areasCoordEixo) {
+
+                return $areasCoordEixo->contains($trabalho->areaId);
+            });
+        }
+
         return view('coordenador.trabalhos.listarRespostasTrabalhos', [
             'evento' => $evento,
             'areas' => $areas,
@@ -1058,7 +1362,12 @@ class EventoController extends Controller
     public function visualizarRespostaFormulario(Request $request)
     {
         $evento = Evento::find($request->eventoId);
-        $this->authorize('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento);
+         if (! Gate::any([
+            'isCoordenadorOrCoordenadorDaComissaoCientifica',
+            'isCoordenadorEixo'
+        ], $evento)) {
+            abort(403, 'Acesso negado');
+        }
         $modalidade = Modalidade::find($request->modalidadeId);
         $trabalho = Trabalho::find($request->trabalhoId);
         $revisor = Revisor::find($request->revisorId);
@@ -1165,6 +1474,7 @@ class EventoController extends Controller
         $data['enderecoId'] = $endereco->id;
         $data['coordenadorId'] = Auth::user()->id;
         $data['data_limite_inscricao'] = $request->dataLimiteInscricao;
+        $data['instagram'] = $request->instagram;
         $evento = Evento::create($data);
 
         $user = Auth::user();
@@ -1191,6 +1501,10 @@ class EventoController extends Controller
             $evento->fotoEvento_en = $this->uploadFile($request, $evento);
             $evento->save();
         }
+        if ($request->fotoEvento_es != null) {
+            $evento->fotoEvento_es = $this->uploadFile($request, $evento);
+            $evento->save();
+        }
 
         if ($request->icone != null) {
             $evento->icone = $this->uploadIconeFile($request, $evento);
@@ -1198,6 +1512,10 @@ class EventoController extends Controller
         }
         if ($request->icone_en != null) {
             $evento->icone_en = $this->uploadIconeFile($request, $evento);
+            $evento->save();
+        }
+        if ($request->icone_es != null) {
+            $evento->icone_es = $this->uploadIconeFile($request, $evento);
             $evento->save();
         }
 
@@ -1235,6 +1553,16 @@ class EventoController extends Controller
             return 'eventos/' . $evento->id . '/' . $nome;
         }
 
+        if ($request->hasFile('fotoEvento_es')) {
+            $file = $request->fotoEvento_es;
+            $path = 'eventos/'.$evento->id;
+            $extensao = $request->file('fotoEvento_es')->getClientOriginalExtension();
+            $nome = 'banner-es.'.$extensao;
+            Storage::disk('public')->putFileAs($path, $file, $nome);
+
+            return 'eventos/' . $evento->id . '/' . $nome;
+        }
+
         return null;
     }
 
@@ -1245,7 +1573,7 @@ class EventoController extends Controller
             $path = 'eventos/' . $evento->id;
             $extensao = $request->file('icone')->getClientOriginalExtension();
             $nome = 'icone.' . $extensao;
-            $image = Image::make($file)->resize(600, 600)->encode();
+            $image = Image::make($file)->encode();
             Storage::disk('public')->put($path . '/' . $nome, $image);
 
             return $path.'/'.$nome;
@@ -1256,7 +1584,18 @@ class EventoController extends Controller
             $path = 'eventos/'.$evento->id;
             $extensao= $request->file('icone_en')->getClientOriginalExtension();
             $nome = 'icone-en.'.$extensao;
-            $image = Image::make($file)->resize(600, 600)->encode();
+            $image = Image::make($file)->encode();
+            Storage::disk('public')->put($path.'/'.$nome, $image);
+
+            return $path . '/' . $nome;
+        }
+
+        if ($request->hasFile('icone_es')) {
+            $file = $request->icone_es;
+            $path = 'eventos/'.$evento->id;
+            $extensao= $request->file('icone_es')->getClientOriginalExtension();
+            $nome = 'icone-es.'.$extensao;
+            $image = Image::make($file)->encode();
             Storage::disk('public')->put($path.'/'.$nome, $image);
 
             return $path . '/' . $nome;
@@ -1280,6 +1619,26 @@ class EventoController extends Controller
             return abort(404);
         }
         $encerrada = $evento->eventoInscricoesEncerradas();
+        $datas = DB::table('atividades')
+            ->join('datas_atividades', 'atividades.id', '=', 'datas_atividades.atividade_id')
+            ->where('eventoId', $id)
+            ->where('visibilidade_participante', true)
+            // seleciona só a parte DATE(), zero‐padded
+            ->select(DB::raw('DATE(data) as data'))
+            ->distinct()
+            ->orderBy('data')          // <-- garante que o banco já ordene por data
+            ->get();
+
+        $atividades = Atividade::join('datas_atividades', 'atividades.id', '=', 'datas_atividades.atividade_id')
+        ->select('atividades.*', 'datas_atividades.data', 'datas_atividades.hora_inicio')
+        ->orderBy('datas_atividades.data')
+        ->orderBy('datas_atividades.hora_inicio')
+        ->with('datasAtividade')
+        ->get();
+        $atividadesAgrupadas = $atividades->groupBy('data');
+
+        $dataInicio = Carbon::parse($evento->dataInicio);
+        $dataFim    = Carbon::parse($evento->dataFim);
         if (auth()->user()) {
             $subeventos = Evento::where('deletado', false)->where('publicado', true)->where('evento_pai_id', $id)->get();
             $hasTrabalho = false;
@@ -1291,15 +1650,20 @@ class EventoController extends Controller
             // $trabalhosIdCoautor = Coautor::whereIn('trabalhoId', $trabalhosId)->where('autorId', Auth::user()->id)->select('trabalhoId')->get();
             // $coautorCount = Coautor::whereIn('trabalhoId', $trabalhosId)->where('autorId', Auth::user()->id)->count();
             // $trabalhosCoautor = Trabalho::whereIn('id', $trabalhosIdCoautor)->get();
-            $modalidades = Modalidade::where('evento_id', $evento->id)->get();
-            $modalidades = $modalidades->sortBy('nome', SORT_NATURAL)->values()->all();
+            $modalidades = Modalidade::where('evento_id', $evento->id)->orderBy('ordem')->get();
+
+            $areas = Area::where('eventoId', $evento->id)->orderBy('ordem')->get();
             $atividades = Atividade::where('eventoId', $id)->get();
             $dataInicial = DB::table('atividades')->join('datas_atividades', 'atividades.id', 'datas_atividades.atividade_id')->select('data')->orderBy('data')->where('eventoId', '=', $id)->first();
 
             $qry = Inscricao::where('user_id', Auth()->user()->id)->where('evento_id', $evento->id);
             $inscricao = $qry->first();
             $isInscrito = $qry->count();
+            $InscritoSemCategoria = $inscricao? $inscricao->categoria_participante_id == null : false;
 
+            $jaCandidatou = CandidatoAvaliador::where('evento_id', $evento->id)
+                ->where('user_id', Auth::user()->id)
+                ->exists();
             // if($trabalhosCount != 0){
             //   $hasTrabalho = true;
             //   $hasFile = true;
@@ -1327,7 +1691,7 @@ class EventoController extends Controller
             // dd($evento->categoriasParticipantes()->where('permite_inscricao', true)->get());
             // dd($etiquetas);
 
-            return view('evento.visualizarEvento', compact('evento', 'hasFile', 'mytime', 'etiquetas', 'modalidades', 'formSubTraba', 'atividades', 'dataInicial', 'isInscrito', 'inscricao', 'subeventos', 'encerrada', 'links'));
+            return view('evento.visualizarEvento', compact('evento', 'hasFile', 'mytime', 'etiquetas', 'modalidades', 'formSubTraba', 'atividades', 'atividadesAgrupadas', 'dataInicial', 'datas', 'isInscrito', 'inscricao', 'subeventos', 'encerrada', 'links', 'areas', 'dataInicio','dataFim', 'jaCandidatou', 'InscritoSemCategoria'));
         } else {
             $subeventos = Evento::where('deletado', false)->where('publicado', true)->where('evento_pai_id', $id)->get();
             $hasTrabalho = false;
@@ -1341,6 +1705,7 @@ class EventoController extends Controller
             $dataInicial = DB::table('atividades')->join('datas_atividades', 'atividades.id', 'datas_atividades.atividade_id')->select('data')->orderBy('data')->where([['eventoId', '=', $id], ['visibilidade_participante', '=', true]])->first();
             $modalidades = Modalidade::where('evento_id', $id)->get();
             $modalidades = $modalidades->sortBy('nome', SORT_NATURAL)->values()->all();
+            $areas = Area::where('eventoId', $evento->id)->orderBy('nome')->get();
             $mytime = Carbon::now('America/Recife');
             // dd(false);
             $isInscrito = false;
@@ -1349,7 +1714,7 @@ class EventoController extends Controller
             }
 
 
-            return view('evento.visualizarEvento', compact('evento', 'trabalhos', 'trabalhosCoautor', 'hasTrabalho', 'hasTrabalhoCoautor', 'hasFile', 'mytime', 'etiquetas', 'formSubTraba', 'atividades', 'dataInicial', 'modalidades', 'isInscrito', 'subeventos', 'encerrada'));
+            return view('evento.visualizarEvento', compact('evento', 'trabalhos', 'trabalhosCoautor', 'hasTrabalho', 'hasTrabalhoCoautor', 'hasFile', 'datas', 'mytime', 'etiquetas', 'formSubTraba', 'atividadesAgrupadas', 'atividades', 'dataInicial', 'modalidades', 'isInscrito', 'subeventos', 'encerrada', 'areas', 'dataInicio', 'dataFim'));
         }
     }
 
@@ -1424,7 +1789,7 @@ class EventoController extends Controller
 
             $evento->update();
 
-            $image = Image::make($file)->resize(600, 600)->encode();
+            $image = Image::make($file)->encode();
             Storage::disk('public')->put($path . '/' . $nome, $image);
         }
 
@@ -1678,7 +2043,7 @@ class EventoController extends Controller
 
     public function avisoCorrecao(Evento $evento, Request $request)
     {
-        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
+        $this->authorize('isUsuarioDaComissao', $evento);
 
         $request->validate([
             'trabalhosSelecionados' => 'array|min:1|required',
@@ -1718,19 +2083,65 @@ class EventoController extends Controller
         return $coordenador;
     }
 
-    public function eventosPassados()
+    public function eventosPassados(Request $request)
     {
+        $query = Evento::where('publicado', true)
+            ->where('deletado', false)
+            ->where('dataFim', '<', today())
+            ->whereNull('evento_pai_id');
 
-        $eventosPassados = Evento::where([['publicado', '=', true], ['deletado', '=', false], ['dataFim', '<', today()]])->whereNull('evento_pai_id')->get()->sortDesc();
+        if ($request->filled('busca')) {
+            $query->where('nome', 'ilike', '%' . $request->busca . '%');
+        }
+
+        if ($request->filled('ordenar')) {
+            switch ($request->ordenar) {
+                case 'nome':
+                    $query->orderBy('nome');
+                    break;
+                case 'data':
+                default:
+                    $query->orderBy('dataFim', 'desc');
+                    break;
+            }
+        } else {
+            $query->orderBy('dataFim', 'desc');
+        }
+
+        $eventosPassados = $query->paginate(9);
 
         return view('coordenador.evento.eventosPassados', compact('eventosPassados'));
     }
 
-    public function eventosProximos()
-    {
 
-        $proximosEventos = Evento::where([['publicado', '=', true], ['deletado', '=', false], ['dataFim', '>=', today()]])->whereNull('evento_pai_id')->get();
+    public function eventosProximos(Request $request)
+    {
+        $query = Evento::where('publicado', true)
+            ->where('deletado', false)
+            ->where('dataFim', '>=', today())
+            ->whereNull('evento_pai_id');
+
+        if ($request->filled('busca')) {
+            $query->where('nome', 'ilike', '%' . $request->busca . '%');
+        }
+
+        if ($request->filled('ordenar')) {
+            switch ($request->ordenar) {
+                case 'nome':
+                    $query->orderBy('nome');
+                    break;
+                case 'data':
+                default:
+                    $query->orderBy('dataInicio');
+                    break;
+            }
+        } else {
+            $query->orderBy('dataInicio'); // ordenação padrão
+        }
+
+        $proximosEventos = $query->paginate(9);
 
         return view('coordenador.evento.eventosProximos', compact('proximosEventos'));
     }
+
 }

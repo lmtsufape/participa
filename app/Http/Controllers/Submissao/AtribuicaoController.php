@@ -8,11 +8,16 @@ use App\Mail\EmailConviteRevisor;
 use App\Mail\EmailLembrete;
 use App\Models\Submissao\Area;
 use App\Models\Submissao\Evento;
+use App\Models\Submissao\Modalidade;
 use App\Models\Submissao\Trabalho;
 use App\Models\Users\Revisor;
 use Illuminate\Http\Request;
+use \App\Models\Users\CoordEixoTematico;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 
 class AtribuicaoController extends Controller
 {
@@ -183,6 +188,17 @@ class AtribuicaoController extends Controller
         return redirect()->back()->with(['success' => 'Trabalhos da área '.$area->nome.' distribuidos!']);
     }
 
+    private function atualizarPrazoCorrecaoAtribuicao($trabalhoId)
+    {
+        $modalidadeid = Trabalho::find($trabalhoId)->modalidadeId;
+        $modalidade = Modalidade::find($modalidadeid);
+        $prazoCorrecao = now()->addDays(10);
+        if($prazoCorrecao > $modalidade->fimRevisao) {
+            $prazoCorrecao = $modalidade->fimRevisao;
+        }
+        return $prazoCorrecao;
+    }
+
     public function distribuicaoManual(Request $request)
     {
         $validatedData = $request->validate([
@@ -192,7 +208,12 @@ class AtribuicaoController extends Controller
         ]);
 
         $evento = Evento::find($request->eventoId);
-        $this->authorize('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento);
+        if (! Gate::any([
+            'isCoordenadorOrCoordenadorDaComissaoCientifica',
+            'isCoordenadorEixo'
+        ], $evento)) {
+            abort(403, 'Acesso negado');
+        }
 
         $trabalho = Trabalho::find($request->trabalhoId);
         $trabalho->avaliado = 'processando';
@@ -208,18 +229,31 @@ class AtribuicaoController extends Controller
             return redirect()->back()->with(['error' => $revisor->user->name.' não pode ser revisor deste trabalho.'])->withInput($validatedData);
         }
 
-        $revisor->trabalhosAtribuidos()->attach($trabalho->id, ['confirmacao' => false, 'parecer' => 'processando']);
+        $prazo_correcao = $this->atualizarPrazoCorrecaoAtribuicao($trabalho->id);
+        $token = Str::random(40);
+        $revisor->trabalhosAtribuidos()->attach($trabalho->id, [
+            'confirmacao' => false,
+            'parecer' => 'processando',
+            'prazo_correcao' => $prazo_correcao,
+            'token' => $token
+        ]);
         $revisor->correcoesEmAndamento = $revisor->correcoesEmAndamento + 1;
         $revisor->save();
 
-        $subject = config('app.name').' - Atribuição como avaliador(a) e/ou parecerista';
+        // Buscar o token da atribuição recém criada de forma segura
+        $atribuicao = \DB::table('atribuicaos')
+            ->where('trabalho_id', $trabalho->id)
+            ->where('revisor_id', $revisor->id)
+            ->orderByDesc('id')
+            ->first();
+        $token = $atribuicao->token;
 
+
+        $subject = config('app.name').' - Atribuição como avaliador(a) e/ou parecerista';
         $informacoes = $trabalho->titulo;
-        //   Mail::to($revisor->user->email)
-        //         ->send(new EmailLembrete($revisor->user, $subject, $informacoes));
 
         Mail::to($revisor->user->email)
-            ->send(new EmailConviteRevisor($revisor->user, $evento, $subject, $evento->email));
+            ->send(new EmailConviteRevisor($revisor->user, $evento, $subject, $evento->email, $informacoes, $token));
 
         $mensagem = $trabalho->titulo.' atribuído ao revisor '.$revisor->user->name.' com sucesso!';
 
@@ -235,7 +269,12 @@ class AtribuicaoController extends Controller
         ]);
 
         $evento = Evento::find($request->eventoId);
-        $this->authorize('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento);
+        if (! Gate::any([
+            'isCoordenadorOrCoordenadorDaComissaoCientifica',
+            'isCoordenadorEixo'
+        ], $evento)) {
+            abort(403, 'Acesso negado');
+        }
 
         $revisor = Revisor::find($id);
         $trabalho = Trabalho::find($request->trabalhoId);
@@ -311,5 +350,60 @@ class AtribuicaoController extends Controller
       // $informacoes = $trabalho->titulo;
       // Mail::to($revisor->user->email)
       //       ->send(new EmailLembrete($revisor->user, $subject, $informacoes));
+    }
+
+
+    public function aceitarConvite($token)
+    {
+        $atribuicao = DB::table('atribuicaos')->where('token', $token)->first();
+        if (!$atribuicao) {
+            return redirect('/index')->with('error', 'Token inválido ou convite não encontrado.');
+        }
+        if ($atribuicao->confirmacao === true) {
+            return redirect('/index')->with('error', 'Convite já foi aceito anteriormente.');
+        }
+        if ($atribuicao->prazo_correcao < now()) {
+            return redirect('/index')->with('error', 'O prazo para aceitar o convite já expirou.');
+        }
+
+        DB::table('atribuicaos')->where('token', $token)->update(['confirmacao' => true]);
+
+        return redirect('/index')->with('success', 'Convite aceito com sucesso! Agora você pode avaliar o trabalho.');
+    }
+
+    public function recusarConvite(Request $request, $token)
+    {
+        $atribuicao = DB::table('atribuicaos')->where('token', $token)->first();
+        if (!$atribuicao) {
+            return 'Token inválido ou convite não encontrado.';
+        }
+        if ($atribuicao->confirmacao === true) {
+            return redirect('/index')->with('error', 'Convite já foi aceito anteriormente.');
+        }
+
+        if ($request->isMethod('get')) {
+            return view('revisor.justificativa_recusa', compact('token'));
+        }
+
+        $justificativa = $request->input('justificativa');
+        if (!$justificativa) {
+            $justificativa = 'Nenhuma justificativa fornecida.';
+        }
+        DB::table('atribuicaos')->where('token', $token)->update(['confirmacao' => false, 'justificativa_recusa' => $justificativa]);
+
+        // Buscar área e evento
+        $trabalho = Trabalho::find($atribuicao->trabalho_id);
+        $evento_id = $trabalho->eventoId;
+        $area_id = $trabalho->areaId;
+        $evento = Evento::find($evento_id);
+        $revisor = Revisor::find($atribuicao->revisor_id);
+
+        // Busca coordenadores de eixo
+        $coords = CoordEixoTematico::where('evento_id', $evento_id)->where('area_id', $area_id)->get();
+        foreach ($coords as $coord) {
+            Mail::to($coord->user->email)
+                ->send(new \App\Mail\EmailRecusaConvite($coord->user, $trabalho, $justificativa, $evento, $revisor));
+        }
+        return redirect('/index')->with('success', 'Convite recusado. Sua justificativa foi enviada aos coordenadores de eixo.');
     }
 }

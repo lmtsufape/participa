@@ -5,11 +5,14 @@ namespace App\Http\Requests;
 use App\Models\Submissao\Evento;
 use App\Models\Submissao\MidiaExtra;
 use App\Models\Submissao\Modalidade;
+use App\Models\Users\User;
+use App\Rules\CoautorCadastrado;
 use App\Rules\CoautorInscritoNoEvento;
 use App\Rules\FileType;
 use App\Rules\MaxTrabalhosCoautor;
 use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
+use App\Rules\MaxCoautoresNaModalidade;
 
 class TrabalhoPostRequest extends FormRequest
 {
@@ -20,7 +23,7 @@ class TrabalhoPostRequest extends FormRequest
      */
     public function authorize()
     {
-        $modalidade = Modalidade::find($this->route('id'));
+        $modalidade = Modalidade::find($this->request->get('modalidadeId'));
         $mytime = Carbon::now('America/Recife');
         $evento = Evento::find(request()->eventoId);
         if (! $modalidade->estaEmPeriodoDeSubmissao()) {
@@ -51,7 +54,10 @@ class TrabalhoPostRequest extends FormRequest
             'resumo' => ['nullable', 'string'],
             'resumo_en' => ['nullable', 'string'],
             'nomeCoautor.*' => ['string'],
-            'emailCoautor.*' => ['string', new MaxTrabalhosCoautor($evento->numMaxCoautores), 'email', 'exists:users,email', new CoautorInscritoNoEvento($evento)],
+            'emailCoautor' => [new MaxCoautoresNaModalidade($modalidade)],
+            'emailCoautor.*' => ['nullable','string', new MaxTrabalhosCoautor($evento->numMaxCoautores), new CoautorInscritoNoEvento($evento), new CoautorCadastrado($evento)],
+            'coautorCadastrado.*' => ['nullable', 'in:sim,nao'],
+            'vinculoCoautor.*' => ['nullable', 'string'],
             'arquivo' => ['nullable', 'file', new FileType($modalidade, new MidiaExtra, request()->arquivo, true)],
             'campoextra1arquivo' => ['nullable', 'file', 'max:2048'],
             'campoextra2arquivo' => ['nullable', 'file', 'max:2048'],
@@ -91,8 +97,30 @@ class TrabalhoPostRequest extends FormRequest
     {
         return [
             'arquivo.max' => 'O tamanho máximo permitido é de 2mb',
-            'emailCoautor.*.exists' => 'O usuário com o e-mail :input precisa estar cadastrado no sistema.',
         ];
+    }
+
+    public function withValidator($validator)
+    {
+        $validator->after(function ($validator) {
+            $emails = (array) $this->input('emailCoautor', []);
+            $flags  = (array) $this->input('coautorCadastrado', []);
+
+            foreach ($emails as $index => $email) {
+                $flag = $flags[$index] ?? 'sim';
+                if ($index == 0) {
+                    continue;
+                }
+                if ($flag === 'nao' && $email) {
+                    if (User::where('email', $email)->exists()) {
+                        $validator->errors()->add(
+                            'emailCoautor.' . $index,
+                            'O email ' .$email. ' já está cadastrado no sistema. Use o botão "Adicionar coautor" para coautores já cadastrados.'
+                        );
+                    }
+                }
+            }
+        });
     }
 
     public function attributes()

@@ -16,11 +16,13 @@ use App\Models\Submissao\Endereco;
 use App\Models\Submissao\Evento;
 use App\Notifications\InscricaoAprovada;
 use App\Notifications\InscricaoEvento;
+use App\Notifications\PreInscricao;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Users\User;
 use App\Models\Users\Administrador;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class InscricaoController extends Controller
 {
@@ -50,10 +52,41 @@ class InscricaoController extends Controller
             'campos' => $camposDoFormulario, ]);
     }
 
-    public function inscritos(Evento $evento)
+    public function inscritos(Evento $evento, Request $request)
     {
         $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
-        $inscricoes = $evento->inscritos()->sortBy('finalizada');
+        
+        if ($evento->subeventos->count() > 0) {
+            $subeventoIds = $evento->subeventos->pluck('id')->toArray();
+            $query = Inscricao::where(function($q) use ($evento, $subeventoIds) {
+                $q->where('evento_id', $evento->id)
+                  ->orWhereIn('evento_id', $subeventoIds);
+            });
+        } else {
+            $query = $evento->inscricaos();
+        }
+        
+        if ($request->filled('nome')) {
+            $query->whereHas('user', function($q) use ($request) {
+                $q->whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($request->nome) . '%']);
+            });
+        }
+        
+        if ($request->filled('email')) {
+            $query->whereHas('user', function($q) use ($request) {
+                $q->whereRaw('LOWER(email) LIKE ?', ['%' . strtolower($request->email) . '%']);
+            });
+        }
+        
+        if ($request->filled('status')) {
+            if ($request->status === 'finalizada') {
+                $query->where('finalizada', true);
+            } elseif ($request->status === 'pendente') {
+                $query->where('finalizada', false);
+            }
+        }
+        
+        $inscricoes = $query->orderBy('finalizada', 'desc')->paginate(50)->withQueryString();
 
         return view('coordenador.inscricoes.inscritos', compact('inscricoes', 'evento'));
     }
@@ -180,10 +213,6 @@ class InscricaoController extends Controller
                     break;
             }
             $campo->inscricoesFeitas()->detach($inscricao->id);
-        }
-
-        if ($inscricao->pagamento()->exists()) {
-            $inscricao->pagamento->delete();
         }
 
         $inscricao->delete();
@@ -323,11 +352,16 @@ class InscricaoController extends Controller
     {
         auth()->user() != null;
         $evento = Evento::find($request->evento_id);
-        if (Inscricao::where('user_id', auth()->user()->id)->where('evento_id', $evento->id)->exists()) {
+        //"pre inscrição" feita na submissão de trabalhos por um user não inscrito, sem categoria e pagamento
+        $preInscricao = false;
+        if (Inscricao::where('user_id', auth()->user()->id)->where('evento_id', $evento->id)->where('finalizada', true)->exists()) {
             return redirect()->action([EventoController::class, 'show'], ['id' => $request->evento_id])->with('message', 'Inscrição já realizada.');
         }
         if ($evento->eventoInscricoesEncerradas()) {
             return redirect()->action([EventoController::class, 'show'], ['id' => $request->evento_id])->with('message', 'Inscrições encerradas.');
+        }
+        if(Inscricao::where('user_id', auth()->user()->id)->where('evento_id', $evento->id)->where('finalizada', false)->exists()){
+            $preInscricao = true;
         }
         $categoria = CategoriaParticipante::find($request->categoria);
         $possuiFormulario = $evento->possuiFormularioDeInscricao();
@@ -349,16 +383,57 @@ class InscricaoController extends Controller
                     ->with('abrirmodalinscricao', true);
             }
         }
-        $inscricao = new Inscricao();
-        $inscricao->categoria_participante_id = $request->categoria;
-        $inscricao->user_id = auth()->user()->id;
-        $inscricao->evento_id = $request->evento_id;
-        $inscricao->finalizada = false;
-        $inscricao->save();
+
+        $categoriasInscricaoAutomatica = [
+            'Associado - Agricultoras/es, povos e comunidades tradicionais',
+            'Associado - Pessoa com Deficiência (PCD)',
+        ];
+
+        if (in_array($categoria->nome, $categoriasInscricaoAutomatica)) {
+            if ($preInscricao){
+                $inscricao = Inscricao::where('user_id', auth()->user()->id)->where('evento_id', $evento->id)->first();
+                $inscricao->categoria_participante_id = $request->categoria;
+            } else {
+                $inscricao = new Inscricao();
+                $inscricao->user_id = auth()->user()->id;
+                $inscricao->evento_id = $request->evento_id;
+                $inscricao->categoria_participante_id = $request->categoria;
+            }
+
+            $inscricao->finalizada = true;
+            $inscricao->save();
+
+            if ($possuiFormulario) {
+                $this->salvarCamposExtras($inscricao, $request, $categoria);
+            }
+
+            auth()->user()->notify(new InscricaoEvento($evento));
+            
+            return redirect()->action([EventoController::class, 'show'], ['id' => $request->evento_id])->with('message', 'Inscrição realizada com sucesso!');
+        }
+
+        if ($preInscricao){
+            $inscricao = Inscricao::where('user_id', auth()->user()->id)
+                ->where('evento_id', $evento->id)
+                ->first();
+            if ($inscricao != null) {
+                $inscricao->categoria_participante_id = $request->categoria;
+                $inscricao->save();
+            }
+        } else {
+            $inscricao = new Inscricao();
+            $inscricao->categoria_participante_id = $request->categoria;
+            $inscricao->user_id = auth()->user()->id;
+            $inscricao->evento_id = $request->evento_id;
+            $inscricao->finalizada = false;
+            $inscricao->save();
+        }
 
         if ($possuiFormulario) {
             $this->salvarCamposExtras($inscricao, $request, $categoria);
         }
+
+        auth()->user()->notify(new PreInscricao($evento, auth()->user()));
 
         if ($categoria != null && $categoria->valor_total != 0) {
             return redirect()->action([CheckoutController::class, 'telaPagamento'], ['evento' => $request->evento_id]);
@@ -618,4 +693,95 @@ class InscricaoController extends Controller
         return redirect(route('inscricao.inscritos', ['evento' => $request->evento_id]))->with(['message' => 'Participante inscrito com sucesso!']);
 
     }
+
+    public function alterarCategoria(Request $request, Inscricao $inscricao)
+    {
+        if (auth()->user()->id !== $inscricao->user_id) {
+            abort(403, 'Acesso não autorizado.');
+        }
+
+        if ($inscricao->finalizada) {
+            return redirect()->back()->with(['message' => 'Não é possível alterar a categoria de uma inscrição já finalizada.', 'class' => 'danger']);
+        }
+
+        $validator = Validator::make($request->all(), [
+            'categoria' => 'required|exists:categoria_participantes,id',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        $inscricao->categoria_participante_id = $request->categoria;
+        $inscricao->save();
+
+        return redirect()->action([CheckoutController::class, 'telaPagamento'], ['evento' => $inscricao->evento_id])
+                       ->with('message', 'Categoria alterada com sucesso! Prossiga com o pagamento.');
+    }
+    public function validarRecibo($codigo)
+    {
+        $inscricao = Inscricao::where('codigo_validacao', $codigo)->first();
+
+        if (!$inscricao) {
+            return view('validacao.recibo_invalido');
+        }
+
+        $data = [
+            'nome' => $inscricao->user->name,
+            'valor' => $inscricao->pagamento ? $inscricao->pagamento->valor : 0,
+            'data' => $inscricao->created_at,
+            'codigo_validacao' => $inscricao->codigo_validacao,
+            'evento' => $inscricao->evento->nome ?? 'Evento',
+            'categoria' => $inscricao->categoria->nome ?? 'Categoria',
+        ];
+
+        return view('validacao.recibo_valido', $data);
+    }
+
+    public function recibo(Inscricao $inscricao)
+    {
+        try{
+
+
+        if (! $inscricao->finalizada) {
+            return redirect()->back()->with(['error_message' => 'Recibo disponível apenas para inscrições finalizadas.']);
+        }
+
+        if (!$inscricao->codigo_validacao) {
+            $inscricao->codigo_validacao = $this->gerarCodigoValidacaoUnico();
+            $inscricao->save();
+
+        }
+
+        $data = [
+            'nome' => $inscricao->user->name,
+            'valor' => $inscricao->pagamento ? $inscricao->pagamento->valor : 0,
+            'data' => now(),
+            'codigo_validacao' => $inscricao->codigo_validacao,
+        ];
+
+
+        $pdf = Pdf::loadView('inscricao.recibo_pdf', $data)
+            ->setPaper('a4', 'portrait');
+
+        return $pdf->download("recibo-{$inscricao->id}.pdf");
+    } catch (\Throwable $e) {
+        \Log::error('Erro ao gerar recibo', [
+            'inscricao_id' => $inscricao->id ?? null,
+            'exception' => $e->getMessage(),
+            'trace' => $e->getTraceAsString(),
+        ]);
+        return redirect()->back()->with(['error_message' => 'Erro ao gerar recibo.']);
+    }
+    }
+
+    private function gerarCodigoValidacaoUnico(): string
+    {
+        do {
+            $codigo = strtoupper(substr(md5(uniqid()), 0, 16));
+        } while (Inscricao::where('codigo_validacao', $codigo)->exists());
+
+        return $codigo;
+    }
+
 }

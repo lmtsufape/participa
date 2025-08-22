@@ -25,6 +25,24 @@
                                 </span>
                                 @enderror
                             </div>
+                            <div class="form-group">
+                                <label for="nomeModalidade_en" class="col-form-label font-weight-bold">{{ __('Nome (Inglês)') }}</label>
+                                <input id="nomeModalidade_en" type="text" class="form-control @error('nome_en') is-invalid @enderror" name="nome_en" value="{{ old('nome_en') }}" autocomplete="off">
+                                @error('nome_en')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div>
+                            <div class="form-group">
+                                <label for="nomeModalidade_es" class="col-form-label font-weight-bold">{{ __('Nome (Espanhol)') }}</label>
+                                <input id="nomeModalidade_es" type="text" class="form-control @error('nome_es') is-invalid @enderror" name="nome_es" value="{{ old('nome_es') }}" autocomplete="off">
+                                @error('nome_es')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div>
                             <div class="form-row">
                                 <div class="form-group col-md-6">
                                     <label for="inicioSubmissao" class="col-form-label font-weight-bold">{{ __('Início da Submissão') }}</label>
@@ -67,7 +85,7 @@
                             </div>
                             <div class="form-row">
                                 <div class="form-group col-sm-6">
-                                    <label for="inicioCorrecao" class="col-form-label font-weight-bold">{{ __('Início da Correção') }} <i data-toggle="tooltip" data-placement="top" title="Opcional" class="fas fa-exclamation-circle"></i></label>
+                                    <label for="inicioCorrecao" class="col-form-label font-weight-bold">{{ __('Início da Correção') }} <i data-bs-toggle="tooltip" data-placement="top" title="Opcional" class="fas fa-exclamation-circle"></i></label>
                                     <input id="inicioCorrecao" type="datetime-local" class="form-control @error('inicioCorrecao') is-invalid @enderror" name="inicioCorrecao" value="{{ old('inicioCorrecao') }}" autocomplete="inicioCorrecao" autofocus>
                                     @error('inicioCorrecao')
                                     <span class="invalid-feedback" role="alert">
@@ -76,7 +94,7 @@
                                     @enderror
                                 </div>
                                 <div class="form-group col-sm-6">
-                                    <label for="fimCorrecao" class="col-form-label font-weight-bold">{{ __('Fim da Correção') }} <i data-toggle="tooltip" data-placement="top" title="Opcional" class="fas fa-exclamation-circle"></i></label>
+                                    <label for="fimCorrecao" class="col-form-label font-weight-bold">{{ __('Fim da Correção') }} <i data-bs-toggle="tooltip" data-placement="top" title="Opcional" class="fas fa-exclamation-circle"></i></label>
                                     <input id="fimCorrecao" type="datetime-local" class="form-control @error('fimCorrecao') is-invalid @enderror" name="fimCorrecao" value="{{ old('fimCorrecao') }}" autocomplete="fimCorrecao" autofocus>
                                     @error('fimCorrecao')
                                     <span class="invalid-feedback" role="alert">
@@ -89,7 +107,7 @@
                                 <div class="form-group col-sm-6">
                                     <label for="inicioValidacao" class="col-form-label font-weight-bold">
                                         {{ __('Início da Validação') }}
-                                        <i data-toggle="tooltip" data-placement="top" title="Opcional" class="fas fa-exclamation-circle"></i>
+                                        <i data-bs-toggle="tooltip" data-placement="top" title="Opcional" class="fas fa-exclamation-circle"></i>
                                     </label>
                                     <input id="inicioValidacao" type="datetime-local" class="form-control @error('inicioValidacao') is-invalid @enderror" name="inicioValidacao" value="{{ old('inicioValidacao') }}" autocomplete="inicioValidacao" autofocus>
                                     @error('inicioValidacao')
@@ -99,7 +117,7 @@
                                     @enderror
                                 </div>
                                 <div class="form-group col-sm-6">
-                                    <label for="fimValidacao" class="col-form-label font-weight-bold">{{ __('Fim da Validação') }} <i data-toggle="tooltip" data-placement="top" title="Opcional" class="fas fa-exclamation-circle"></i></label>
+                                    <label for="fimValidacao" class="col-form-label font-weight-bold">{{ __('Fim da Validação') }} <i data-bs-toggle="tooltip" data-placement="top" title="Opcional" class="fas fa-exclamation-circle"></i></label>
                                     <input id="fimValidacao" type="datetime-local" class="form-control @error('fimValidacao') is-invalid @enderror" name="fimValidacao" value="{{ old('fimValidacao') }}" autocomplete="fimValidacao" autofocus>
                                     @error('fimValidacao')
                                     <span class="invalid-feedback" role="alert">
@@ -113,6 +131,17 @@
                                     <label for="inicioResultado" class="col-form-label font-weight-bold">{{ __('Resultado') }}</label>
                                     <input id="inicioResultado" type="datetime-local" class="form-control @error('inicioResultado') is-invalid @enderror" name="inicioResultado" value="{{ old('inicioResultado') }}" autocomplete="inicioResultado" autofocus>
                                     @error('inicioResultado')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-sm-6">
+                                    <label for="numMaxCoautores" class="col-form-label font-weight-bold">{{ __('Número de coautores') }}</label>
+                                    <input id="numMaxCoautores" type="text" class="form-control @error('numMaxCoautores') is-invalid @enderror" name="numMaxCoautores" value="{{ old('numMaxCoautores') }}" autocomplete="numMaxCoautores" autofocus>
+                                    @error('numMaxCoautores')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>

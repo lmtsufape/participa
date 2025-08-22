@@ -10,7 +10,7 @@
         <div class="row justify-content-center">
             <div class="col-auto">
                 <h2 >
-                    Editar usuário: {{ $user->name }}
+                    {{ __('Editar usuário') }}: {{ $user->name }}
                 </h2>
             </div>
         </div>
@@ -18,14 +18,14 @@
     @else
         <div class="row" style="margin-top: 20px; margin-bottom: 20px; font-weight: 2000;">
             <div class="col-sm-12">
-                <h1>Completar Cadastro</h1>
+                <h1>{{ __('Completar Cadastro') }}</h1>
             </div>
         </div>
     @endif
 
     <div class="row subtitulo">
         <div class="col-sm-12">
-            <p>Informações Pessoais</p>
+            <p>{{ __('Informações Pessoais') }}</p>
         </div>
     </div>
 
@@ -51,7 +51,7 @@
                 </div>
                 <div class="custom-control custom-radio custom-control-inline">
                 <input type="radio" id="customRadioInline4" name="check_cpf" class="custom-control-input"  >
-                <label class="custom-control-label " for="customRadioInline4">Passaporte</label>
+                <label class="custom-control-label " for="customRadioInline4">{{ __('Passaporte') }}</label>
                 </div>
 
                 <div id="fieldCPF" @error('passaporte') style="display: none" @enderror>
@@ -154,7 +154,7 @@
         @if($end != null)
             <div class="row subtitulo" style="margin-top:20px">
                 <div class="col-sm-12">
-                    <p>Endereço</p>
+                    <p>{{ __('Endereço') }}</p>
                 </div>
             </div>
 
@@ -302,7 +302,7 @@
         @else
             <div class="row subtitulo" style="margin-top:20px">
                 <div class="col-sm-12">
-                    <p>Endereço</p>
+                    <p>{{ __('Endereço') }}</p>
                 </div>
             </div>
 
@@ -443,7 +443,7 @@
       $(".apenasLetras").mask("#", {
         maxlength: false,
         translation: {
-            '#': {pattern: /[A-zÀ-ÿ ]/, recursive: true}
+            '#': {pattern: /[A-zÀ-ÿ0-9\s\-\.\(\)\[\]\{\}\/\\,;&@#$%*+=|<>!?~`'"]/, recursive: true}
         }
       });
       //$('#numero').mask('0000000000000');
@@ -517,7 +517,6 @@
     <script src="{{ asset('js/jquery-mask-plugin.js')}}" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css"/>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script type="text/javascript">
 
       $(document).ready(function(){

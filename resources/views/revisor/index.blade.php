@@ -55,7 +55,7 @@
                                         </div>
                                         <div class="col-sm-2">
                                             <div class="btn-group dropright dropdown-options">
-                                                <a id="options" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <a id="options" class="dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                     <div onmouseout="this.children[0].src='{{ asset('/img/icons/ellipsis-v-solid.svg') }}';" onmousemove="this.children[0].src='{{ asset('/img/icons/ellipsis-v-solid-hover.svg')}}';">
                                                         <img src="{{asset('img/icons/ellipsis-v-solid.svg')}}" style="width:8px">
                                                     </div>
@@ -105,7 +105,7 @@
             <div class="row">
                 <div class="col-sm-12">
                     <h3 class="titulo-detalhes" style="text-align:center">
-                        <a href="{{  route('evento.visualizar',['id'=>$trabalhosPorRevisor[0][0]->evento->id])  }}"> {{$trabalhosPorRevisor[0][0]->evento->nome}} </a>
+                        <a href="{{  route('evento.visualizar',['id'=>$trabalhosPorRevisor->first()->first()->evento->id])  }}"> {{$trabalhosPorRevisor->first()->first()->evento->nome}} </a>
                     </h3>
                 </div>
             </div>
@@ -117,14 +117,14 @@
                 <div class="col-sm-12">
                     <div class="card">
                         <div class="card-body">
-                        <h5 class="card-title">{{$trabalhosDoRevisor[0]->evento->formSubTrab->etiquetaareatrabalho}}: <span class="card-subtitle mb-2 text-muted" >{{$trabalhosDoRevisor[0]->area->nome}}</span></h5>
-                        <h5 class="card-title">Modalidade: <span class="card-subtitle mb-2 text-muted" >{{$trabalhosDoRevisor[0]->modalidade->nome}}</span></h5>
-                        <h5 class="card-title">Período de avaliação: <span class="card-subtitle mb-2 text-muted" >De {{date('d/m/Y',strtotime($trabalhosDoRevisor[0]->modalidade->inicioRevisao))}} até {{date('d/m/Y',strtotime($trabalhosDoRevisor[0]->modalidade->fimRevisao))}}</span></h5>
-                        @if ($trabalhosDoRevisor[0]->modalidade->regra != null)
-                            <h5 class="card-title">Regras de submissão: <span class="card-subtitle mb-2 text-muted"><a href="{{route('modalidade.regras.download', ['id' => $trabalhosDoRevisor[0]->modalidade->id])}}" target="_blank">Arquivo</a></span></h5>
+                        <h5 class="card-title">{{$trabalhosDoRevisor->first()->evento->formSubTrab->etiquetaareatrabalho}}: <span class="card-subtitle mb-2 text-muted" >{{$trabalhosDoRevisor->first()->area->nome}}</span></h5>
+                        <h5 class="card-title">Modalidade: <span class="card-subtitle mb-2 text-muted" >{{$trabalhosDoRevisor->first()->modalidade->nome}}</span></h5>
+                        <h5 class="card-title">Período de avaliação: <span class="card-subtitle mb-2 text-muted" >De {{date('d/m/Y',strtotime($trabalhosDoRevisor->first()->modalidade->inicioRevisao))}} até {{date('d/m/Y',strtotime($trabalhosDoRevisor->first()->modalidade->fimRevisao))}}</span></h5>
+                        @if ($trabalhosDoRevisor->first()->modalidade->regra != null)
+                            <h5 class="card-title">Regras de submissão: <span class="card-subtitle mb-2 text-muted"><a href="{{route('modalidade.regras.download', ['id' => $trabalhosDoRevisor->first()->modalidade->id])}}" target="_blank">Arquivo</a></span></h5>
                         @endif
-                        @if ($trabalhosDoRevisor[0]->modalidade->instrucoes != null)
-                            <h5 class="card-title"> {{$trabalhosDoRevisor[0]->modalidade->evento->formEvento->etiquetabaixarinstrucoes}}: <span class="card-subtitle mb-2 text-muted"><a href="{{route('modalidade.instrucoes.download', ['modalidade' => $trabalhosDoRevisor[0]->modalidade->id])}}" target="_blank">Arquivo</a></span></h5>
+                        @if ($trabalhosDoRevisor->first()->modalidade->instrucoes != null)
+                            <h5 class="card-title"> {{$trabalhosDoRevisor->first()->modalidade->evento->formEvento->etiquetabaixarinstrucoes}}: <span class="card-subtitle mb-2 text-muted"><a href="{{route('modalidade.instrucoes.download', ['modalidade' => $trabalhosDoRevisor->first()->modalidade->id])}}" target="_blank">Arquivo</a></span></h5>
                         @endif
                         <p class="card-text">
                             <div class="col-sm-12">
@@ -141,6 +141,7 @@
                                 <th scope="col" style="text-align:center">Avaliação do trabalho</th>
                                 <th scope="col" style="text-align:center">Validação das correções</th>
                                 <th scope="col" style="text-align:center">Atribuído em</th>
+                                <th scope="col" style="text-align:center">Prazo</th>
                                 </tr>
                             </thead>
                             @foreach($trabalhosDoRevisor as $trabalho)
@@ -154,7 +155,7 @@
                                     @endif
                                     <td style="text-align:center">
                                     @if ($trabalho->resumo != null)
-                                        <a class="resumoTrabalho" href="#" data-toggle="modal" onclick="resumoModal({{$trabalho->id}})" data-target="#exampleModalLong"><img src="{{asset('img/icons/resumo.png')}}" style="width:20px"></a>
+                                        <a class="resumoTrabalho" href="#" data-bs-toggle="modal" onclick="resumoModal({{$trabalho->id}})" data-bs-target="#exampleModalLong"><img src="{{asset('img/icons/resumo.png')}}" style="width:20px"></a>
                                     @else
                                         Sem resumo
                                     @endif
@@ -166,9 +167,9 @@
                                     </td>
 
                                     @if (!$trabalho->avaliado(auth()->user())){{--avaliacao do revisor aqui--}}
-                                        @if (now() >= $trabalho->modalidade->inicioRevisao && now() <= $trabalho->modalidade->fimRevisao)
+                                        @if (now() >= $trabalho->modalidade->inicioRevisao && now() <= $trabalho->modalidade->fimRevisao && ($trabalho->atribuicoes->where('user_id', auth()->user()->id)->first()->pivot->prazo_correcao == null || now() <= $trabalho->atribuicoes->where('user_id', auth()->user()->id)->first()->pivot->prazo_correcao))
                                             {{-- <td>
-                                            <a href="#"><img src="{{asset('img/icons/check-solid.svg')}}" style="width:20px" data-toggle="modal" data-target="#modalAvaliarTrabalho{{$trabalho->id}}"></a>
+                                            <a href="#"><img src="{{asset('img/icons/check-solid.svg')}}" style="width:20px" data-bs-toggle="modal" data-bs-target="#modalAvaliarTrabalho{{$trabalho->id}}"></a>
                                             </td> --}}
                                             <td>
                                             <form action="{{route('revisor.responde')}}" method="get">
@@ -177,6 +178,7 @@
                                                 <input type="hidden" name="trabalho_id" value="{{$trabalho->id}}">
                                                 <input type="hidden" name="evento_id" value="{{$eventos[$key]->id}}">
                                                 <input type="hidden" name="modalidade_id" value="{{$trabalho->modalidade->id}}">
+                                                <input type="hidden" name="prazo_correcao" value="{{$trabalho->atribuicoes->where('user_id', auth()->user()->id)->first()->pivot->prazo_correcao}}">
                                                 <div class="d-flex justify-content-center">
                                                     <button type="submit" class="btn btn-success">
                                                     Avaliar
@@ -187,7 +189,7 @@
                                         @else
                                             <div class="d-flex justify-content-center">
                                                 <td style="text-align:center">
-                                                    <img src="{{asset('img/icons/check-solid.svg')}}" style="width:20px" title="Avaliação disponível em {{date('d/m/Y',strtotime($trabalho->modalidade->inicioRevisao))}} até {{date('d/m/Y',strtotime($trabalho->modalidade->fimRevisao))}}">
+                                                    <img src="{{asset('img/icons/check-solid.svg')}}" style="width:20px" title="Avaliação disponível em {{date('d/m/Y',strtotime($trabalho->modalidade->inicioRevisao))}} até {{date('d/m/Y',strtotime($trabalho->atribuicoes->first()->pivot->prazo_correcao))}}">
                                                 </td>
                                             </div>
                                         @endif
@@ -205,15 +207,27 @@
                                         <td class="d-flex flex-column align-items-center">
                                             @if ($trabalho->arquivoCorrecao != null)
                                                 <a href="{{route('downloadCorrecao', ['id' => $trabalho->id])}}"><img src="{{asset('img/icons/file-download-solid-black.svg')}}" style="width:20px"></a>
-                                                <a type="button" data-target="#validacaoCorrecaoModal{{$trabalho->id}}" data-toggle="modal" class="btn btn-sm btn-primary mt-2">
-                                                    Fazer validação
-                                                </a>
+
+
+                                                @if(!in_array($trabalho->avaliado, ['corrigido', 'corrigido_parcialmente', 'nao_corrigido']))
+                                                    <a type="button" data-bs-target="#validacaoCorrecaoModal{{$trabalho->id}}" data-bs-toggle="modal" class="btn btn-sm btn-primary mt-2">
+                                                        Fazer validação
+                                                    </a>
+                                                @endif
 
                                             @endif
                                         </td>
                                         <td style="text-align:center">
                                             {{date('d/m/Y H:i',strtotime($trabalho->atribuicoes->first()->pivot->created_at))}}
                                         </td>
+
+
+                                        <td style="text-align:center">
+                                            @if ($trabalho->atribuicoes->first()->pivot->prazo_correcao)
+                                                {{ date('d/m/Y H:i', strtotime($trabalho->atribuicoes->first()->pivot->prazo_correcao)) }}
+                                            @endif
+                                        </td>
+
                                     </tr>
                                     @include('revisor.validarCorrecao-modal')
                             @endforeach
@@ -232,11 +246,11 @@
         @foreach ($trabalhosPorRevisor as $trabalhosDoRevisor)
             <!-- Modal regras da Modalidade-->
             @if($trabalhosDoRevisor != null && count($trabalhosDoRevisor) > 0)
-            <div class="modal fade" id="modalRegrasModalidade{{$trabalhosDoRevisor[0]->modalidade->id}}" tabindex="-1" role="dialog" aria-labelledby="#labelModalRegrasModalidade{{$trabalhosDoRevisor[0]->modalidade->id}}" aria-hidden="true">
+            <div class="modal fade" id="modalRegrasModalidade{{$trabalhosDoRevisor->first()->modalidade->id}}" tabindex="-1" role="dialog" aria-labelledby="#labelModalRegrasModalidade{{$trabalhosDoRevisor->first()->modalidade->id}}" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                    <h5 class="modal-title">Regras da modalidade {{$trabalhosDoRevisor[0]->modalidade->nome}} </h5>
+                    <h5 class="modal-title">Regras da modalidade {{$trabalhosDoRevisor->first()->modalidade->nome}} </h5>
                     </div>
                     <div class="modal-body">
                     <div class="container">
@@ -244,13 +258,13 @@
                         <div class="col-sm-12">
                             <strong>Período de avaliação</strong>
                             <p id="periodo">
-                            De {{date('d/m/Y',strtotime($trabalhosDoRevisor[0]->modalidade->inicioRevisao))}} até {{date('d/m/Y',strtotime($trabalhosDoRevisor[0]->modalidade->fimRevisao))}}
+                            De {{date('d/m/Y',strtotime($trabalhosDoRevisor->first()->modalidade->inicioRevisao))}} até {{date('d/m/Y',strtotime($trabalhosDoRevisor->first()->modalidade->fimRevisao))}}
                             </p>
                         </div>
                         </div>
                         <div class="row">
                         <div class="col-sm-12">
-                            @if ($trabalhosDoRevisor[0]->modalidade->arquivo != null && $trabalhosDoRevisor[0]->modalidade->arquivo == true)
+                            @if ($trabalhosDoRevisor->first()->modalidade->arquivo != null && $trabalhosDoRevisor->first()->modalidade->arquivo == true)
                             <strong>Forma de avaliação</strong>
                             <p id="formaDeAvaliacao">
                                 Avaliação por arquivo submetido
@@ -265,32 +279,32 @@
                         </div>
                         <div class="row">
                         <div class="col-sm-12">
-                            @if ($trabalhosDoRevisor[0]->modalidade->caracteres)
+                            @if ($trabalhosDoRevisor->first()->modalidade->caracteres)
                             <strong>Limite por quantidade caracteres</strong>
                             <p>
-                                Minimo: {{number_format($trabalhosDoRevisor[0]->modalidade->mincaracteres, 0, ',', '.')}}<br>
-                                Máximo: {{number_format($trabalhosDoRevisor[0]->modalidade->maxcaracteres, 0, ',', '.')}}
+                                Minimo: {{number_format($trabalhosDoRevisor->first()->modalidade->mincaracteres, 0, ',', '.')}}<br>
+                                Máximo: {{number_format($trabalhosDoRevisor->first()->modalidade->maxcaracteres, 0, ',', '.')}}
                             </p>
-                            @elseif ($trabalhosDoRevisor[0]->modalidade->palavras)
+                            @elseif ($trabalhosDoRevisor->first()->modalidade->palavras)
                             <strong>Limite por quantidade palavras</strong>
                             <p>
-                                Minimo: {{number_format($trabalhosDoRevisor[0]->modalidade->minpalavras, 0, ',', '.')}}<br>
-                                Máximo: {{number_format($trabalhosDoRevisor[0]->modalidade->maxpalavras, 0, ',', '.')}}
+                                Minimo: {{number_format($trabalhosDoRevisor->first()->modalidade->minpalavras, 0, ',', '.')}}<br>
+                                Máximo: {{number_format($trabalhosDoRevisor->first()->modalidade->maxpalavras, 0, ',', '.')}}
                             </p>
                             @endif
                         </div>
                         </div>
                         <div class="row">
                         <div class="col-sm-12">
-                            @if ($trabalhosDoRevisor[0]->modalidade->regra != null)
-                            <a href="{{route('modalidade.regras.download', ['id' => $trabalhosDoRevisor[0]->modalidade->id])}}">Arquivo de regras extras</a>
+                            @if ($trabalhosDoRevisor->first()->modalidade->regra != null)
+                            <a href="{{route('modalidade.regras.download', ['id' => $trabalhosDoRevisor->first()->modalidade->id])}}">Arquivo de regras extras</a>
                             @endif
                         </div>
                         </div>
                     </div>
                     </div>
                     <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-dismiss="modal">Fechar</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Fechar</button>
                     </div>
                 </div>
                 </div>
@@ -310,7 +324,7 @@
             <div class="modal-body" name="resumoTrabalhoModal" id="resumoTrabalhoModal">
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-primary" data-dismiss="modal">Fechar</button>
+              <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Fechar</button>
             </div>
           </div>
         </div>

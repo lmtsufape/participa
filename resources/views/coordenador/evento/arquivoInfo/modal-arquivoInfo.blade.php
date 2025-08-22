@@ -1,8 +1,8 @@
 <!-- Button trigger modal -->
 <button type="button"
     class="btn btn-primary"
-    data-toggle="modal"
-    data-target="#exampleModal">
+    data-bs-toggle="modal"
+    data-bs-target="#exampleModal">
     Adicionar arquivo
 </button>
 

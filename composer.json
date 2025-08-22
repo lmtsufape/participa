@@ -19,8 +19,9 @@
         "laravel/tinker": "^2.7",
         "laravel/ui": "^4.0",
         "maatwebsite/excel": "^3.1",
-        "mercadopago/dx-php": "2.5.3",
-        "simplesoftwareio/simple-qrcode": "^4.2"
+        "mercadopago/dx-php": "3.5.0",
+        "simplesoftwareio/simple-qrcode": "^4.2",
+        "umpirsky/country-list": "^2.0"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.8",

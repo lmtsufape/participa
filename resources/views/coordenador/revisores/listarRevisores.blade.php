@@ -23,7 +23,7 @@
                           <h6 class="card-subtitle mb-2 text-muted">Avaliadores cadastrados no seu evento</h6>
                         </div>
                         <div class="col-sm-3" style="text-align: right;">
-                          <button class="btn btn-primary" data-toggle="modal" data-target="#modalCadastrarRevisor">+ Cadastrar revisor</button>
+                          <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalCadastrarRevisor">+ Cadastrar revisor</button>
                         </div>
                       </div>
                       <p class="card-text">
@@ -43,16 +43,16 @@
                             <tbody>
                               @foreach($revisores as $revisor)
                                 <tr>
-                                  <td data-toggle="modal" data-target="#modalEditarRevisor{{$revisor->id}}">{{$revisor->name}}</td>
-                                  <td data-toggle="modal" data-target="#modalEditarRevisor{{$revisor->id}}">{{$revisor->email}}</td>
-                                  <td data-toggle="modal" data-target="#modalEditarRevisor{{$revisor->id}}" style="text-align:center">
+                                  <td data-bs-toggle="modal" data-bs-target="#modalEditarRevisor{{$revisor->id}}">{{$revisor->name}}</td>
+                                  <td data-bs-toggle="modal" data-bs-target="#modalEditarRevisor{{$revisor->id}}">{{$revisor->email}}</td>
+                                  <td data-bs-toggle="modal" data-bs-target="#modalEditarRevisor{{$revisor->id}}" style="text-align:center">
                                     @if($contadores->where('user_id', $revisor->id)->isNotEmpty())
                                         {{$contadores->where('user_id', $revisor->id)->sum('processando_count')}}
                                     @else
                                         0
                                     @endif
                                 </td>
-                                  <td data-toggle="modal" data-target="#modalEditarRevisor{{$revisor->id}}" style="text-align:center">
+                                  <td data-bs-toggle="modal" data-bs-target="#modalEditarRevisor{{$revisor->id}}" style="text-align:center">
                                     @if($contadores->where('user_id', $revisor->id)->isNotEmpty())
                                         {{$contadores->where('user_id', $revisor->id)->sum('avaliados_count')}}
                                     @else
@@ -60,14 +60,14 @@
                                     @endif
                                 </td>
                                   <td style="text-align:center">
-                                    <a href="#" data-toggle="modal" data-target="#modalRevisor{{$revisor->id}}">
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#modalRevisor{{$revisor->id}}">
                                       <img src="{{asset('img/icons/eye-regular.svg')}}" style="width:20px">
                                     </a>
                                   </td>
                                   <td style="text-align:center">
                                     <form id="removerRevisor{{$revisor->id}}" action="{{route('remover.revisor', ['id' => $revisor->id, 'evento_id' => $evento->id])}}" method="POST">
                                       @csrf
-                                      <a href="#" data-toggle="modal" data-target="#modalRemoverRevisor{{$revisor->id}}">
+                                      <a href="#" data-bs-toggle="modal" data-bs-target="#modalRemoverRevisor{{$revisor->id}}">
                                         <img src="{{asset('img/icons/user-times-solid.svg')}}" class="icon-card" style="width:25px">
                                       </a>
                                     </form>
@@ -87,7 +87,7 @@
                                   <td style="text-align:center">
                                     <form id="reenviarEmailRevisor{{$revisor->id}}" action="{{route('revisor.reenviarEmail', ['id' => $revisor->id, 'evento_id' => $evento->id])}}" method="POST">
                                       @csrf
-                                      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalReenviarEmailRevisor{{$revisor->id}}">
+                                      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalReenviarEmailRevisor{{$revisor->id}}">
                                         Reenviar cadastro
                                       </button>
                                     </form>

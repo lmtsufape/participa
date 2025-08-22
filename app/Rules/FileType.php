@@ -54,9 +54,9 @@ class FileType implements Rule
         }
 
         if ($diff && ($types != 'mp4, mp3' && count($this->acceptedTypes) > 1)) {
-            $texto .= '. Os demais tipos possuem tamanho máximo de 2 MB.';
+            $texto .= '. Os demais tipos possuem tamanho máximo de 5 MB.';
         } elseif (! $diff) {
-            $texto .= '. O tamanho máximo é de 2 MB.';
+            $texto .= '. O tamanho máximo é de 5 MB.';
         }
 
         return $texto;
@@ -88,7 +88,7 @@ class FileType implements Rule
 
             return true;
         } else {
-            if ($tamanhoMB > 2) {
+            if ($tamanhoMB > 5) {
                 return false;
             }
 

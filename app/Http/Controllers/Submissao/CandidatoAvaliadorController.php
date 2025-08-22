@@ -1,0 +1,261 @@
+<?php
+
+namespace App\Http\Controllers\Submissao;
+
+use App\Http\Requests\CandidatoAvaliadorRequest;
+use App\Models\Submissao\Area;
+use App\Models\Submissao\Evento;
+use App\Models\CandidatoAvaliador;
+use App\Mail\EmailConviteAvaliador;
+use App\Mail\EmailRespostaAvaliador;
+use App\Http\Controllers\Controller;
+use App\Models\Users\Revisor;
+use App\Models\Users\User;
+use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Auth;
+use App\Exports\CandidatosAvaliadoresExport;
+use Maatwebsite\Excel\Facades\Excel;
+
+class CandidatoAvaliadorController extends Controller
+{
+    public function store(CandidatoAvaliadorRequest $request)
+    {
+        $user = Auth::user();
+        $eventoId = $request->input('evento_id');
+        $evento    = Evento::findOrFail($eventoId);
+        $link_lattes = $request->input('lattes_link');
+        $resumo_lattes = $request->input('lattes_resumo');
+        $jaAvaliou   = $request->input('avaliou_antes') === 'sim';
+        $idiomas     = $request->input('idiomas', []);
+        $dispIdiomas = implode(',', $idiomas);
+
+         $areas = $request->input('eixos', []);
+
+        try {
+            foreach ($areas as $area_id) {
+                CandidatoAvaliador::create([
+                    'user_id' => $user->id,
+                    'evento_id' => $eventoId,
+                    'link_lattes' => $link_lattes,
+                    'resumo_lattes' => $resumo_lattes,
+                    'ja_avaliou_cba' => $jaAvaliou,
+                    'disponibilidade_idiomas' => $dispIdiomas,
+                    'area_id' => $area_id,
+                ]);
+            }
+
+            Mail::send(new EmailConviteAvaliador($user, $evento));
+
+            return redirect()->route('evento.visualizar', ['id' => $eventoId])->with(['message' => 'Candidatura enviada com sucesso!', 'class' => 'success']);
+        } catch (\Exception $e) {
+            //log the error for debugging
+            \Log::error('Erro ao cadastrar candidato avaliador: ' . $e->getMessage(), [
+                'user_id' => $user->id,
+                'evento_id' => $eventoId,
+                'areas' => $areas,
+                'link_lattes' => $link_lattes,
+                'resumo_lattes' => $resumo_lattes,
+                'ja_avaliou' => $jaAvaliou,
+                'dispIdiomas' => $dispIdiomas,
+            ]);
+            return redirect()->back()->with(['message' => 'Houve um erro durante sua candidatura!', 'class' => 'danger']);
+        }
+    }
+
+    public function listarCandidatos(Request $request, $eventoId)
+    {
+        $evento = Evento::findOrFail($eventoId);
+
+        $query = CandidatoAvaliador::select(DB::raw(
+            'DISTINCT ON (user_id, evento_id, area_id) candidatos_avaliadores.*'
+        ))
+            ->with(['user','area'])
+            ->where('evento_id', $evento->id)
+
+            ->orderBy('user_id')
+            ->orderBy('evento_id')
+            ->orderBy('area_id')
+            ->orderBy('id');
+
+        $allAxes = CandidatoAvaliador::where('evento_id', $evento->id)
+            ->with('area')
+            ->get()
+            ->pluck('area.nome')
+            ->unique()
+            ->sort()
+            ->values();
+
+
+        if ($request->filled('name')) {
+            $query->whereHas('user', function($q) use ($request) {
+                $q->where('name', 'like', '%'.$request->name.'%');
+            });
+        }
+        if ($request->filled('axis')) {
+            $query->whereHas('area', function($q) use ($request) {
+                $q->where('nome', $request->axis);
+            });
+        }
+        if ($request->filled('email')) {
+            $query->whereHas('user', function($q) use ($request) {
+                $q->where('email', 'like', '%'.$request->email.'%');
+            });
+        }
+
+        $todos = $query->get();
+        $statusPorUsuarioEixo = [];
+        foreach ($todos as $item) {
+            $statusPorUsuarioEixo[$item->user_id][$item->area->nome] = [
+                'aprovado'   => $item->aprovado,
+                'em_analise' => $item->em_analise,
+            ];
+        }
+
+        $candidaturasCollection = $todos
+            ->groupBy('user_id')
+            ->map(function($group) {
+                $first = $group->first();
+                return (object)[
+                    'id'            => $first->id,
+                    'user'          => $first->user,
+                    'lattes_link'   => $first->link_lattes,
+                    'resumo_lattes' => $first->resumo_lattes,
+                    'eixos'         => $group->pluck('area.nome')->toArray(),
+                    'avaliou_antes' => $first->ja_avaliou_cba ? 'sim' : 'nao',
+                    'idiomas'       => explode(',', $first->disponibilidade_idiomas),
+                ];
+            })
+            ->values();
+
+
+        $perPage = 10;
+        $page    = $request->get('page', 1);
+        $offset  = ($page - 1) * $perPage;
+        $slice   = $candidaturasCollection->slice($offset, $perPage)->values();
+
+        $candidaturas = new LengthAwarePaginator(
+            $slice,
+            $candidaturasCollection->count(),
+            $perPage,
+            $page,
+            [
+                'path'  => $request->url(),
+                'query' => $request->query(),
+            ]
+        );
+
+        return view('coordenador.revisores.listarCandidatos', compact(
+            'evento',
+            'candidaturas',
+            'statusPorUsuarioEixo',
+            'allAxes'
+        ));
+    }
+
+    public function aprovar(Request $request)
+    {
+
+        $eventoId = $request->input('evento_id');
+        $userId   = $request->input('user_id');
+        $eixo   = $request->input('eixo');
+        $area = Area::where('nome', $eixo)->firstOrFail();
+        CandidatoAvaliador::where('area_id', $area->id)
+        ->where('user_id',   $userId)
+        ->update([
+            'aprovado'   => true,
+            'em_analise' => false,
+        ]);
+
+        $user   = User::findOrFail($userId);
+        $evento = Evento::findOrFail($eventoId);
+
+
+        $modalidades = $evento->modalidades()->pluck('id')->toArray();
+
+
+        $jaRevisor = $user->revisor()
+            ->where('evento_id', $eventoId)
+            ->where('areaId',     $area->id)
+            ->exists();
+
+        if (! $jaRevisor) {
+            foreach ($modalidades as $modalidadeId) {
+                Revisor::create([
+                    'user_id'              => $user->id,
+                    'evento_id'            => $evento->id,
+                    'areaId'               => $area->id,
+                    'modalidadeId'         => $modalidadeId,
+                    'trabalhosCorrigidos'  => 0,
+                    'correcoesEmAndamento' => 0,
+                ]);
+            }
+        } else {
+            return redirect()->back()
+                ->withErrors(['errorRevisor' => 'Você já é revisor desta área para o evento.']);
+        }
+
+        // --- Envio de e-mail e retorno ---
+        Mail::to($user->email)
+            ->send(new EmailRespostaAvaliador($user, $evento, 'aprovada', $area->nome));
+
+        return redirect()->back()
+            ->with('sucesso', 'Candidatura aprovada e candidato notificado.');
+    }
+
+    public function exportar(Request $request, Evento $evento)
+    {
+        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
+
+        $eixos = $request->input('axis');
+        if ($eixos && !is_array($eixos)) {
+            $eixos = [$eixos];
+        }
+
+        if ($eixos) {
+            $eixos = Area::whereIn('nome', $eixos)->pluck('id')->toArray();
+        }
+
+        return Excel::download(
+            new CandidatosAvaliadoresExport($evento->id, $eixos),
+            'candidatos-avaliadores-' . $evento->nome . '.xlsx'
+        );
+    }
+
+    public function rejeitar(Request $request)
+    {
+        $eventoId = $request->input('evento_id');
+        $userId   = $request->input('user_id');
+        $eixo     = $request->input('eixo');
+        $justificativa = $request->input('justificativa');
+        $area     = Area::where('nome', $eixo)->firstOrFail();
+
+        CandidatoAvaliador::where('evento_id', $eventoId)
+            ->where('user_id',    $userId)
+            ->where('area_id',    $area->id)
+            ->update([
+                'aprovado'   => false,
+                'em_analise' => false,
+                'justificativa' => $justificativa,
+            ]);
+
+        $usuario = User::findOrFail($userId);
+        $evento  = Evento::findOrFail($eventoId);
+
+        Mail::to($usuario->email)
+            ->send(new EmailRespostaAvaliador(
+                $usuario,
+                $evento,
+                'rejeitada',
+                $area->nome,
+                null,
+                $justificativa
+            ));
+
+        // 5) redireciona com feedback
+        return redirect()->back()
+            ->with('sucesso', 'Candidatura rejeitada e candidato notificado.');
+    }
+}

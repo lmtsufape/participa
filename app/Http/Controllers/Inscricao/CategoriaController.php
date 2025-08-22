@@ -58,7 +58,7 @@ class CategoriaController extends Controller
         $categoria->save();
         $categoria->camposNecessarios()->attach($evento->camposFormulario);
 
-
+        /*
         if (isset($request->linkPagamento)) {
             $qtdeLinks = count($request->linkPagamento);
             for ($i = 0; $i < $qtdeLinks; $i++) {
@@ -71,6 +71,7 @@ class CategoriaController extends Controller
                 $link->save();
             }
         }
+        */
 
 
 
@@ -119,16 +120,18 @@ class CategoriaController extends Controller
      */
     public function update(Request $request, $id)
     {
-
+        /*
         if($request->linkIdExcluir[0] != null){
             for ($i = 0; $i < count($request->linkIdExcluir); $i++) {
                 $link = LinksPagamento::where('link', $request->linkIdExcluir[$i])->first();
                 $link->delete();
             }
         }
+        */
 
         $categoria = CategoriaParticipante::find($id);
 
+        /*
         if(isset($request->linkPagamento)){
             for ($i = 0; $i < count($request->linkPagamento); $i++) {
 
@@ -147,6 +150,7 @@ class CategoriaController extends Controller
                 }
             }
         }
+        */
 
 
         $categoria->nome = $request->input("nome_{$categoria->id}");
@@ -185,6 +189,7 @@ class CategoriaController extends Controller
     {
 
         $categoria = CategoriaParticipante::find($id);
+        /*
         $linkPagamento = LinksPagamento::where('categoria_id', $id)->get();
         if ($linkPagamento) {
             for ($i = 0; $i < $linkPagamento->count(); $i++) {
@@ -192,6 +197,7 @@ class CategoriaController extends Controller
                 $linkParaApagar->delete();
             }
         }
+        */
 
         $evento = $categoria->evento;
         $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
@@ -210,6 +216,7 @@ class CategoriaController extends Controller
         return redirect()->back()->with(['success' => 'Categoria excluida com sucesso!']);
     }
 
+    /*
     public function destroyLink($id)
     {
 
@@ -217,6 +224,7 @@ class CategoriaController extends Controller
         $linkParaApagar->delete();
         return redirect()->back()->with(['success' => 'Link de pagamento excluido com sucesso!']);
     }
+    */
 
     public function valorAjax(Request $request)
     {

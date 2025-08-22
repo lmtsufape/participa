@@ -8,7 +8,7 @@
         </div>
         <div class="btn-group mb-2" role="group" aria-label="Button group with nested dropdown">
             <div class="btn-group" role="group">
-                <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown"
+                <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown"
                     aria-haspopup="true" aria-expanded="false">
                     Opções
                 </button>
@@ -43,7 +43,7 @@
                         <div class="card-body">
                             @if (!is_null($trabalhos->first()))
                                 <h5 class="card-title">Modalidade: <span
-                                        class="card-subtitle mb-2 text-muted">{{ $trabalhos[0]->modalidade->nome }}</span></h5>
+                                        class="card-subtitle mb-2 text-muted">{{ $trabalhos->first()->modalidade->nome }}</span></h5>
                             @endif
                             <div class="row table-trabalhos">
                                 <div class="col-sm-12">
@@ -55,36 +55,41 @@
                                                     Trabalho
                                                     <a
                                                         href="{{ route('coord.listarAvaliacoes', ['eventoId' => $evento->id, 'titulo', 'asc']) }}">
-                                                        <i class="fas fa-arrow-alt-circle-up"></i>
+                                                        <img src="{{ asset('img/icons/sobe.png') }}" alt="Ordenar crescente" style="width: 16px; height: 16px;">
                                                     </a>
                                                     <a
                                                         href="{{ route('coord.listarAvaliacoes', ['eventoId' => $evento->id, 'titulo', 'desc']) }}">
-                                                        <i class="fas fa-arrow-alt-circle-down"></i>
+                                                        <img src="{{ asset('img/icons/desce.png') }}" alt="Ordenar decrescente" style="width: 16px; height: 16px;">
                                                     </a>
                                                 </th>
                                                 <th scope="col">
                                                     Autor
                                                     <a
                                                         href="{{ route('coord.listarAvaliacoes', ['eventoId' => $evento->id, 'autor', 'asc']) }}">
-                                                        <i class="fas fa-arrow-alt-circle-up"></i>
+                                                        <img src="{{ asset('img/icons/sobe.png') }}" alt="Ordenar crescente" style="width: 16px; height: 16px;">
                                                     </a>
                                                     <a
                                                         href="{{ route('coord.listarAvaliacoes', ['eventoId' => $evento->id, 'autor', 'desc']) }}">
-                                                        <i class="fas fa-arrow-alt-circle-down"></i>
+                                                        <img src="{{ asset('img/icons/desce.png') }}" alt="Ordenar decrescente" style="width: 16px; height: 16px;">
                                                     </a>
                                                 </th>
                                                 <th scope="col">
                                                     Área
                                                     <a
                                                         href="{{ route('coord.listarAvaliacoes', ['eventoId' => $evento->id, 'area', 'asc']) }}">
-                                                        <i class="fas fa-arrow-alt-circle-up"></i>
+                                                        <img src="{{ asset('img/icons/sobe.png') }}" alt="Ordenar crescente" style="width: 16px; height: 16px;">
                                                     </a>
                                                     <a
                                                         href="{{ route('coord.listarAvaliacoes', ['eventoId' => $evento->id, 'area', 'desc']) }}">
-                                                        <i class="fas fa-arrow-alt-circle-down"></i>
+                                                        <img src="{{ asset('img/icons/desce.png') }}" alt="Ordenar decrescente" style="width: 16px; height: 16px;">
                                                     </a>
                                                 </th>
                                                 <th scope="col">Avaliador(es)</th>
+                                                <th scope="col" class="text-center">
+                                                    Data da atribuição
+                                                    <a href="{{ route('coord.listarAvaliacoes', ['eventoId' => $evento->id, 'data_atribuicao', 'asc']) }}"></a>
+                                                    <a href="{{ route('coord.listarAvaliacoes', ['eventoId' => $evento->id, 'data_atribuicao', 'desc']) }}"></a>
+                                                </th>
                                                 <th scope="col">Status</th>
                                                 <th scope="col" style="text-align:center">Parecer</th>
                                                 <th scope="col" class="text-center">Encaminhado para o autor</th>
@@ -99,14 +104,14 @@
                                                         <a
                                                             href="{{ route('downloadTrabalho', ['id' => $trabalho->id]) }}">
                                                             <span class="d-inline-block"
-                                                                class="d-inline-block" tabindex="0" data-toggle="tooltip"
+                                                                class="d-inline-block" tabindex="0" data-bs-toggle="tooltip"
                                                                 title="{{ $trabalho->titulo }}">
                                                                 {{ $trabalho->titulo }}
                                                             </span>
                                                         </a>
                                                     @else
                                                         <span class="d-inline-block" class="d-inline-block"
-                                                            tabindex="0" data-toggle="tooltip"
+                                                            tabindex="0" data-bs-toggle="tooltip"
                                                             title="{{ $trabalho->titulo }}">
                                                             {{ $trabalho->titulo }}
                                                         </span>
@@ -117,6 +122,12 @@
                                                 <td>
                                                     @foreach ($trabalho->atribuicoes as $revisor)
                                                         {{ $revisor->user->name }}
+                                                        <br>
+                                                    @endforeach
+                                                </td>
+                                                <td class="text-center">
+                                                    @foreach ($trabalho->atribuicoes as $revisor)
+                                                        {{ \Carbon\Carbon::parse($revisor->pivot->created_at)->format('d/m/Y H:i') }}
                                                         <br>
                                                     @endforeach
                                                 </td>

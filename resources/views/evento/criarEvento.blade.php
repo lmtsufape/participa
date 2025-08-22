@@ -1,419 +1,515 @@
 @extends('layouts.app')
 
 @section('content')
+    <style>
+        .etapas {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 2px solid #ccc;
+            margin-bottom: 20px;
+            font-family: sans-serif;
+        }
+
+        .etapa {
+            flex: 1;
+            text-align: left;
+            padding: 10px 0;
+            color: #aaa;
+            font-weight: normal;
+            border-bottom: 2px solid transparent;
+        }
+
+        .etapa.ativa {
+            color: #004d51;
+            font-weight: bold;
+            border-bottom: 2px solid #004d51;
+        }
+
+        .required-field::after {
+            content: "*";
+            color: #D44100;
+            margin-left: 2px;
+        }
+    </style>
+
     <div class="container">
-        <div class="card p-4">
-
-            <div class="row justify-content-center titulo">
-                @if ($eventoPai ?? '')
-                    <h1>{{ __('Novo Subevento') }}</h1>
-                @else
-                    <h1>{{ __('Novo Evento') }}</h1>
-                @endif
-
-            </div>
-
-            <form action="{{ route('evento.store') }}" method="POST" enctype="multipart/form-data">
-                @csrf
-                @if ($eventoPai ?? '')
-                    <input type="hidden" name="eventoPai" value="{{ $eventoPai->id }}">
-                @endif
-
-                <div class="row subtitulo">
-                    <div class="col-sm-12">
-                        {{ __('Informações Gerais') }}
-                        @error('eventoPai')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
-                    </div>
-                </div>
-                {{-- nome | Participantes | Tipo --}}
-                <div class="row">
-
-                    <div class="form-check col-sm-12 form-group">
-                        <div class="form-check col-sm-12 form-group">
-                            <input class="form-check-input" type="checkbox" id="is_multilingual" name="is_multilingual">
-                            <label class="form-check-label" for="is_multilingual">{{ __('Evento Multilingue') }}</label>
-                        </div>
-                    </div>
-
-                    <div class="col-md-6 form-group">
-                        <label for="nome" class="col-form-label">{{ __('Nome') }}*</label>
-                        <input id="nome" type="text" class="form-control @error('nome') is-invalid @enderror"
-                            name="nome" value="{{ old('nome') }}" required autocomplete="nome" autofocus>
-
-                        @error('nome')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
-                    </div>
-
-                    <div class="col-md-6 form-group multilingual_fields" style="display: none;">
-                        <label for="nome_en" class="form-label">{{ __('Nome em inglês') }}*</label>
-                        <input id="nome_en" type="text" class="form-control @error('nome_en') is-invalid @enderror"
-                            name="nome_en" value="{{ old('nome_en') }}" autocomplete="nome_en" autofocus>
-
-                        @error('nome_en')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
-                    </div>
-
-                    <div class="col-md-6 form-group">
-                        <label for="email" class="form-label">{{ __('E-mail de contato') }}*</label>
-                        <input class="form-control @error('email') is-invalid @enderror" type="email"
-                            value="{{ old('email') }}" name="email" id="email" required autofocus
-                            autocomplete="email">
-
-                        @error('email')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
-                    </div>
-
+        <div class="row mb-4">
+            <div class="col-12">
+                <h2 class="text-start" style="color: #034652; font-weight: bold;">
                     @if ($eventoPai ?? '')
-                        <div class="col-sm-6 form-group">
-                            <label for="email_coordenador" class="col-form-label">{{ __('E-mail do coordenador') }}</label>
-                            <input class="form-control @error('email_coordenador') is-invalid @enderror" type="email"
-                                value="{{ old('email_coordenador') }}" name="email_coordenador" id="email_coordenador">
+                        {{ __('Novo Subevento') }}
+                    @else
+                        {{ __('Novo Evento') }}
+                    @endif
+                </h2>
+            </div>
+        </div>
 
-                            @error('email_coordenador')
+        <form action="{{ route('evento.store') }}" method="POST" enctype="multipart/form-data">
+            @csrf
+            @if ($eventoPai ?? '')
+                <input type="hidden" name="eventoPai" value="{{ $eventoPai->id }}">
+            @endif
+
+            <div id="etapa-1">
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <div class="etapas" style="font-weight: 500;">
+                            <div class="etapa ativa">
+                                <p>1. {{ __('Informações gerais') }}</p>
+                            </div>
+                            <div class="etapa">
+                                <p>2. {{ __('Endereço e data') }}</p>
+                            </div>
+                            @error('eventoPai')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>
                             @enderror
                         </div>
-                    @endif
-                    <div class="@if ($eventoPai ?? '') col-md-3 @else col-md-6 @endif form-group">
-                        <label for="tipo" class="form-label">{{ __('Tipo') }}*</label>
-                        <select id="tipo" type="text" class="form-control @error('tipo') is-invalid @enderror"
-                            name="tipo" required>
-                            <option disabled selected hidden value="">-- {{ __('Tipo') }} --</option>
-                            <option @if (old('tipo') == 'Congresso') selected @endif value="Congresso">Congresso
-                            </option>
-                            <option @if (old('tipo') == 'Encontro') selected @endif value="Encontro">Encontro
-                            </option>
-                            <option @if (old('tipo') == 'Seminário') selected @endif value="Seminário">Seminário
-                            </option>
-                            <option @if (old('tipo') == 'Mesa redonda') selected @endif value="Mesa redonda">Mesa
-                                redonda</option>
-                            <option @if (old('tipo') == 'Simpósio') selected @endif value="Simpósio">Simpósio
-                            </option>
-                            <option @if (old('tipo') == 'Painel') selected @endif value="Painel">Painel
-                            </option>
-                            <option @if (old('tipo') == 'Fórum') selected @endif value="Fórum">Fórum
-                            </option>
-                            <option @if (old('tipo') == 'Conferência') selected @endif value="Conferência">
-                                Conferência</option>
-                            <option @if (old('tipo') == 'Jornada') selected @endif value="Jornada">Jornada
-                            </option>
-                            <option @if (old('tipo') == 'Cursos') selected @endif value="Cursos">Cursos
-                            </option>
-                            <option @if (old('tipo') == 'Colóquio') selected @endif value="Colóquio">Colóquio
-                            </option>
-                            <option @if (old('tipo') == 'Semana') selected @endif value="Semana">Semana
-                            </option>
-                            <option @if (old('tipo') == 'Workshop') selected @endif value="Workshop">Workshop
-                            </option>
-                            <option @if (old('tipo') == 'outro') selected @endif value="outro">Outro
-                            </option>
-                        </select>
-
-                        @error('tipo')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
-                    </div>
-
-                    <div class="@if ($eventoPai ?? '') col-md-3 @else col-md-6 @endif form-group">
-                        <label for="recolhimento" class="form-label">{{ __('Recolhimento') }}</label>
-                        <select name="recolhimento" id="recolhimento"
-                            class="form-control @error('recolhimento') is-invalid @enderror">
-                            @if (old('recolhimento') != null)
-                                <option @if (old('recolhimento') == '') selected @endif value="">--
-                                    Recolhimento --</option>
-                                <option @if (old('recolhimento') == 'apoiado') selected @endif value="apoiado">Apoiado
-                                </option>
-                                <option @if (old('recolhimento') == 'gratuito') selected @endif value="gratuito">
-                                    Gratuito</option>
-                                <option @if (old('recolhimento') == 'pago') selected @endif value="pago">Pago
-                                </option>
-                            @else
-                                <option value="">-- Recolhimento --</option>
-                                <option value="apoiado">Apoiado</option>
-                                <option value="gratuito">Gratuito</option>
-                                <option value="pago">Pago</option>
-                            @endif
-                        </select>
-
-                        @error('recolhimento')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
-                    </div>
-                </div>{{-- end nome | Participantes | Tipo --}}
-                {{-- Descricao Evento --}}
-                <div class="form-group">
-                    <div class="form-group">
-                        <label for="descricao">{{ __('Descrição') }}*</label>
-                        <textarea class="ckeditor-texto @error('descricao') is-invalid @enderror" required
-                            autocomplete="descricao" autofocus id="descricao" name="descricao" rows="8">{{ old('descricao') }}</textarea>
-                        @error('descricao')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
-                    </div>
-
-                    <div class="form-group multilingual_fields" style="display: none;">
-                        <label for="descricao_en">{{ __('Descrição em inglês') }}*</label>
-                        <textarea class="form-control @error('descricao_en') is-invalid @enderror" autocomplete="descricao_en" autofocus
-                            id="descricao_en" name="descricao_en" rows="8">{{ old('descricao_en') }}</textarea>
-                        @error('descricao_en')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
-                    </div>
-
-                </div>
-                <div class="row">
-                    <div class="col-md-6 form-group">
-                        <label for="fotoEvento">Banner</label>
-                        <div id="imagem-loader" class="imagem-loader">
-                            <img id="logo-preview" class="img-fluid" src="{{ asset('/img/nova_imagem.PNG') }}"
-                                alt="">
-                        </div>
-                        <div style="display: none;">
-                            <input type="file" id="logo-input"
-                                class="form-control @error('fotoEvento') is-invalid @enderror" name="fotoEvento"
-                                value="{{ old('fotoEvento') }}" id="fotoEvento">
-                        </div>
-                        <small style="position: relative; top: 5px;">{{ __('Tamanho minimo') }}: 1024 x
-                            425;<br>{{ __('Formato') }}: JPEG, JPG, PNG</small>
-                        @error('fotoEvento')
-                            <br>
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
-                    </div>
-                    <div class="col-md-6 form-group">
-                        <label for="icone">{{ __('Ícone') }}</label>
-                        <div id="imagem-loader-icone" class="imagem-loader">
-                            <img id="icone-preview" class="img-fluid" src="{{ asset('/img/nova_imagem.PNG') }}"
-                                alt="">
-                        </div>
-                        <div style="display: none;">
-                            <input type="file" id="icone-input"
-                                class="form-control @error('icone') is-invalid @enderror" name="icone"
-                                value="{{ old('icone') }}" id="icone">
-                        </div>
-                        <small style="position: relative; top: 5px;">{{ __('O arquivo será redimensionado para') }}
-                            600 x 600;<br>{{ __('Formato') }}: JPEG, JPG, PNG</small>
-                        @error('icone')
-                            <br>
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
-                    </div>
-
-                    <div class="col-sm-7 form-group multilingual_fields" style="display: none;">
-                        <label for="fotoEvento_en">Banner Ingles</label>
-                        <div id="imagem-loader-en" class="imagem-loader">
-                            <img id="logo-preview-en" class="img-fluid" src="{{ asset('/img/nova_imagem.PNG') }}"
-                                alt="">
-                        </div>
-                        <div style="display: none;">
-                            <input type="file" id="logo-input-en"
-                                class="form-control @error('fotoEvento_en') is-invalid @enderror" name="fotoEvento_en"
-                                value="{{ old('fotoEvento_en') }}" id="fotoEvento_en">
-                        </div>
-                        <small style="position: relative; top: 5px;">{{ __('Tamanho minimo') }}: 1024 x
-                            425;<br>{{ __('Formato') }}: JPEG, JPG, PNG</small>
-                        @error('fotoEvento_en')
-                            <br>
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
-                    </div>
-                    <div class="col-sm-5 form-group multilingual_fields" style="display: none;">
-                        <label for="icone_en">{{ __('Ícone inglês') }}</label>
-                        <div id="imagem-loader-icone-en" class="imagem-loader">
-                            <img id="icone-preview-en" class="img-fluid" src="{{ asset('/img/nova_imagem.PNG') }}"
-                                alt="">
-                        </div>
-                        <div style="display: none;">
-                            <input type="file" id="icone-input-en"
-                                class="form-control @error('icone_en') is-invalid @enderror" name="icone_en"
-                                value="{{ old('icone_en') }}" id="icone_en">
-                        </div>
-                        <small style="position: relative; top: 5px;">{{ __('O arquivo será redimensionado para') }}
-                            600 x 600;<br>{{ __('Formato') }}: JPEG, JPG, PNG</small>
-                        @error('icone_en')
-                            <br>
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
-                    </div>
-                </div>
-                <!-- Inicio e fim do evento -->
-                <div class="row">
-                    <div class="col-md-6 form-group">
-                        <label for="dataInicio" class="col-form-label">{{ __('Início') }}*</label>
-                        <input id="dataInicio" type="date"
-                            class="form-control @error('dataInicio') is-invalid @enderror" name="dataInicio"
-                            value="{{ old('dataInicio') }}" required autocomplete="dataInicio" autofocus>
-
-                        @error('dataInicio')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
-                    </div>
-                    <div class="col-md-6 form-group">
-                        <label for="dataFim" class="col-form-label">{{ __('Fim') }}*</label>
-                        <input id="dataFim" type="date" class="form-control @error('dataFim') is-invalid @enderror"
-                            name="dataFim" value="{{ old('dataFim') }}" required autocomplete="dataFim" autofocus>
-
-                        @error('dataFim')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
-                    </div>
-
-                </div><!-- end Inicio e fim do evento -->
-
-                <div class="row">
-                    <div class="col-md-6 form-group">
-                        <label for="dataLimiteInscricao" class="form-label">
-                            {{ __('Data de encerramento de inscrições') }}
-                        </label>
-                        <input id="dataLimiteInscricao" type="datetime-local"
-                            class="form-control @error('dataLimiteInscricao') is-invalid @enderror"
-                            name="dataLimiteInscricao" value="{{ old('dataLimiteInscricao') }}"
-                            autocomplete="dataLimiteInscricao" autofocus>
-                        @error('dataLimiteInscricao')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
-                    </div>
-                    <div class="col-md-6">
-                        <small>
-                            (<span
-                                style="color: red">{{ __('Disponível ao habilitar o módulo de inscrição') }}!</span>)<br>
-                            {{ __('Informe uma data para encerramento das inscrições no evento. Caso não informada, a data limite para inscrição no evento será um dia prévio a data de início do evento') }}.
-                        </small>
                     </div>
                 </div>
 
-                {{-- Foto Evento --}}
-                <div class="row justify-content-center" style="margin-top:10px">
+                <div class="container card shadow">
+                    <br>
+                    {{-- nome | Participantes | Tipo --}}
+                    <div class="row">
+                        <div class="form-check col-sm-12 form-group">
+                            <div class="form-check col-sm-12 form-group">
+                                <input class="form-check-input" type="checkbox" id="is_multilingual" name="is_multilingual">
+                                <label class="form-check-label text-start d-block" for="is_multilingual">{{ __('Evento Multilingue') }}</label>
+                            </div>
+                        </div>
+                    </div>
 
-                </div>
+                    <div class="form-group row">
+                        <div class="col-md-6">
+                            <label for="nome" class="col-form-label text-start d-block fw-bold mb-3 required-field">{{ __('Nome do evento') }}</label>
+                            <input id="nome" type="text" class="form-control @error('nome') is-invalid @enderror"
+                                name="nome" value="{{ old('nome') }}" required autocomplete="nome" autofocus>
 
-                <div class="row subtitulo">
-                    <div class="col-sm-12">
-                        {{ __('Endereço') }}
+                            @error('nome')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="email" class="col-form-label text-start d-block fw-bold mb-3 required-field">{{ __('E-mail de contato') }}</label>
+                            <input class="form-control @error('email') is-invalid @enderror" type="email"
+                                value="{{ old('email') }}" name="email" id="email" required autofocus
+                                autocomplete="email">
+
+                            @error('email')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-md-6 multilingual_fields" style="display: none;">
+                            <label for="nome_en" class="col-form-label text-start d-block fw-bold mb-3 required-field">{{ __('Nome em inglês') }}</label>
+                            <input id="nome_en" type="text" class="form-control @error('nome_en') is-invalid @enderror"
+                                name="nome_en" value="{{ old('nome_en') }}" autocomplete="nome_en" autofocus>
+
+                            @error('nome_en')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+
+                        <div class="col-md-6 multilingual_fields" style="display: none;">
+                            <label for="nome_es" class="col-form-label text-start d-block fw-bold mb-3 required-field">{{ __('Nome em espanhol') }}</label>
+                            <input id="nome_es" type="text" class="form-control @error('nome_es') is-invalid @enderror"
+                                name="nome_es" value="{{ old('nome_es') }}" autocomplete="nome_es" autofocus>
+                            @error('nome_es')
+                                <span class="invalid-feedback"><strong>{{ $message }}</strong></span>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="@if ($eventoPai ?? '') col-md-3 @else col-md-4 @endif">
+                            <label for="tipo" class="col-form-label text-start d-block fw-bold mb-3 required-field">{{ __('Tipo') }}</label>
+                            <select id="tipo" type="text" class="form-control @error('tipo') is-invalid @enderror"
+                                name="tipo" required>
+                                <option disabled selected hidden value="">-- {{ __('Tipo') }} --</option>
+                                <option @if (old('tipo') == 'Congresso') selected @endif value="Congresso">Congresso</option>
+                                <option @if (old('tipo') == 'Encontro') selected @endif value="Encontro">Encontro</option>
+                                <option @if (old('tipo') == 'Seminário') selected @endif value="Seminário">Seminário</option>
+                                <option @if (old('tipo') == 'Mesa redonda') selected @endif value="Mesa redonda">Mesa redonda</option>
+                                <option @if (old('tipo') == 'Simpósio') selected @endif value="Simpósio">Simpósio</option>
+                                <option @if (old('tipo') == 'Painel') selected @endif value="Painel">Painel</option>
+                                <option @if (old('tipo') == 'Fórum') selected @endif value="Fórum">Fórum</option>
+                                <option @if (old('tipo') == 'Conferência') selected @endif value="Conferência">Conferência</option>
+                                <option @if (old('tipo') == 'Jornada') selected @endif value="Jornada">Jornada</option>
+                                <option @if (old('tipo') == 'Cursos') selected @endif value="Cursos">Cursos</option>
+                                <option @if (old('tipo') == 'Colóquio') selected @endif value="Colóquio">Colóquio</option>
+                                <option @if (old('tipo') == 'Semana') selected @endif value="Semana">Semana</option>
+                                <option @if (old('tipo') == 'Workshop') selected @endif value="Workshop">Workshop</option>
+                                <option @if (old('tipo') == 'outro') selected @endif value="outro">Outro</option>
+                            </select>
+
+                            @error('tipo')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+
+                        <div class="@if ($eventoPai ?? '') col-md-3 @else col-md-4 @endif">
+                            <label for="recolhimento" class="col-form-label text-start d-block fw-bold mb-3 required-field">{{ __('Recolhimento') }}</label>
+                            <select name="recolhimento" id="recolhimento"
+                                class="form-control @error('recolhimento') is-invalid @enderror">
+                                @if (old('recolhimento') != null)
+                                    <option @if (old('recolhimento') == '') selected @endif value="">-- Recolhimento --</option>
+                                    <option @if (old('recolhimento') == 'apoiado') selected @endif value="apoiado">Apoiado</option>
+                                    <option @if (old('recolhimento') == 'gratuito') selected @endif value="gratuito">Gratuito</option>
+                                    <option @if (old('recolhimento') == 'pago') selected @endif value="pago">Pago</option>
+                                @else
+                                    <option value="">-- Recolhimento --</option>
+                                    <option value="apoiado">Apoiado</option>
+                                    <option value="gratuito">Gratuito</option>
+                                    <option value="pago">Pago</option>
+                                @endif
+                            </select>
+
+                            @error('recolhimento')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                        <div class="col-md-4">
+                            <label for="instagram" class="col-form-label text-start d-block fw-bold mb-3">{{ __('ID do Instagram') }}</label>
+                            <input class="form-control @error('instagram') is-invalid @enderror" type="text"
+                                value="{{ old('instagram') }}" name="instagram" id="instagram" autofocus
+                                autocomplete="instagram">
+
+                            @error('email')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-12">
+                            <!-- link do contato de suporte -->
+                            <label for="contato_suporte" class="col-form-label text-start d-block fw-bold mb-3">{{ __('Link do contato de suporte') }}</label>
+                            <input class="form-control @error('contato_suporte') is-invalid @enderror" type="text"
+                                value="{{ old('contato_suporte') }}" name="contato_suporte" id="contato_suporte"
+                                autocomplete="contato_suporte">
+                            @error('contato_suporte')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-6">
+                            <div class="custom-control custom-radio custom-control-inline col-form-label">
+                                <span class="fw-bold mb-3">{{ __('O seu evento será:') }}</span> <br>
+                                <input type="radio" id="customRadioInline1" name="customRadioInline" class="custom-control-input" checked>
+                                <label class="custom-control-label me-2" for="customRadioInline1">{{ __('Online') }}</label>
+
+                                <input type="radio"  name="customRadioInline" class="custom-control-input">
+                                <label class="custom-control-label me-2" for="customRadioInline2">{{__('Remoto')}}</label>
+
+                                <input type="radio" name="customRadioInline" class="custom-control-input">
+                                <label class="custom-control-label " for="customRadioInline3">{{__('Hibrido')}}</label>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                    <div class="form-group row">
+
+
+                        @if ($eventoPai ?? '')
+                            <div class="col-md-6">
+                                <label for="email_coordenador" class="col-form-label text-start d-block fw-bold mb-3">{{ __('E-mail do coordenador') }}</label>
+                                <input class="form-control @error('email_coordenador') is-invalid @enderror" type="email"
+                                    value="{{ old('email_coordenador') }}" name="email_coordenador" id="email_coordenador">
+
+                                @error('email_coordenador')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        @endif
+                    </div>
+
+
+
+                    <div class="form-group row">
+                        <div class="col-md-12">
+                            <label for="descricao" class="fw-bold mb-3  required-field">{{ __('Descrição:') }}</label>
+                            <textarea class="form-control mb-3 @error('descricao') is-invalid @enderror" required
+                                autocomplete="descricao" autofocus id="descricao" name="descricao" rows="8">{{ old('descricao') }}</textarea>
+                            @error('descricao')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="form-group row multilingual_fields" style="display: none;">
+                        <div class="col-md-12">
+                            <label for="descricao_en" class="fw-bold mb-3 required-field">{{ __('Descrição em inglês') }}</label>
+                            <textarea class="form-control @error('descricao_en') is-invalid @enderror" autocomplete="descricao_en" autofocus
+                                id="descricao_en" name="descricao_en" rows="8">{{ old('descricao_en') }}</textarea>
+                            @error('descricao_en')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="form-group row multilingual_fields" style="display: none;">
+                        <div class="col-md-12">
+                            <label for="exampleFormControlTextarea1" class="fw-bold mb-3 required-field">{{__('Descrição em espanhol')}}</label>
+                            <textarea class="form-control @error('descricao_es') is-invalid @enderror" autocomplete="descricao_es" autofocus
+                                id="descricao_es" name="descricao_es" rows="8">{{ old('descricao_es') }}</textarea>
+                            @error('descricao_es')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-md-6">
+                            <label for="fotoEvento" class="fw-bold mb-3 required-field" >{{ __('Banner (tamanho: 1024 x 425, formato: JPEG, JPG e PNG):') }}</label>
+                            <div id="imagem-loader" class="imagem-loader">
+                                <img id="logo-preview" class="img-fluid" src="{{ asset('/img/nova_imagem.PNG') }}" alt="">
+                            </div>
+                            <div style="display: none;">
+                                <input type="file" id="logo-input" class="form-control @error('fotoEvento') is-invalid @enderror"
+                                    name="fotoEvento" value="{{ old('fotoEvento') }}" id="fotoEvento" required>
+                            </div>
+                            @error('fotoEvento')
+                                <br>
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="icone" class="fw-bold mb-3 required-field">{{ __('Ícone (tamanho: 600 x 600, formato: JPEG, JPG e PNG):') }}</label>
+                            <div id="imagem-loader-icone" class="imagem-loader">
+                                <img id="icone-preview" class="img-fluid" src="{{ asset('/img/nova_imagem.PNG') }}" alt="">
+                            </div>
+                            <div style="display: none;">
+                                <input type="file" id="icone-input" class="form-control @error('icone') is-invalid @enderror"
+                                    name="icone" value="{{ old('icone') }}" id="icone" required>
+                            </div>
+                            @error('icone')
+                                <br>
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="form-group row multilingual_fields" style="display: none;">
+                        <div class="col-md-6">
+                            <label for="fotoEvento_en" class="fw-bold mb-3">{{ __('Banner Inglês') }}</label>
+                            <div id="imagem-loader-en" class="imagem-loader">
+                                <img id="logo-preview-en" class="img-fluid" src="{{ asset('/img/nova_imagem.PNG') }}" alt="">
+                            </div>
+                            <div style="display: none;">
+                                <input type="file" id="logo-input-en" class="form-control @error('fotoEvento_en') is-invalid @enderror"
+                                    name="fotoEvento_en" value="{{ old('fotoEvento_en') }}" id="fotoEvento_en">
+                            </div>
+                            @error('fotoEvento_en')
+                                <br>
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="icone_en" class="fw-bold mb-3">{{ __('Ícone inglês') }}</label>
+                            <div id="imagem-loader-icone-en" class="imagem-loader">
+                                <img id="icone-preview-en" class="img-fluid" src="{{ asset('/img/nova_imagem.PNG') }}" alt="">
+                            </div>
+                            <div style="display: none;">
+                                <input type="file" id="icone-input-en" class="form-control @error('icone_en') is-invalid @enderror"
+                                    name="icone_en" value="{{ old('icone_en') }}" id="icone_en">
+                            </div>
+                            @error('icone_en')
+                                <br>
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="form-group row multilingual_fields" style="display: none;">
+                        <div class="col-md-6">
+                            <label for="fotoEvento_es" class="fw-bold mb-3">{{ __('Banner Espanhol') }}</label>
+                            <div id="imagem-loader-es" class="imagem-loader">
+                                <img id="logo-preview-es" class="img-fluid" src="{{ asset('/img/nova_imagem.PNG') }}" alt="">
+                            </div>
+                            <div style="display: none;">
+                                <input type="file" id="logo-input-es" class="form-control @error('fotoEvento_es') is-invalid @enderror"
+                                    name="fotoEvento_es" value="{{ old('fotoEvento_es') }}" id="fotoEvento_es">
+                            </div>
+                            @error('fotoEvento_es')
+                                <br>
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="icone_es" class="fw-bold mb-3">{{__('Ícone espanhol')}}</label>
+                            <div id="imagem-loader-icone-es" class="imagem-loader">
+                                <img id="icone-preview-es" class="img-fluid" src="{{ asset('/img/nova_imagem.PNG') }}" alt="">
+                            </div>
+                            <div style="display: none;">
+                                <input type="file" id="icone-input-es" class="form-control @error('icone_es') is-invalid @enderror"
+                                    name="icone_es" value="{{ old('icone_es') }}" id="icone_es">
+                            </div>
+                            <small style="position: relative; top: 5px;">{{ __('O arquivo será redimensionado para') }} 600 x 600;<br>{{ __('Formato') }}: JPEG, JPG, PNG</small>
+                            @error('icone_es')
+                                <br>
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="row form-group pb-4 pt-4">
+                        <div class="col-md-10"></div>
+                        <div class="col-md-2">
+                            <button type="button" class="btn btn-primary w-100" style="background-color: #034652; color: white; border-color: #034652;" onclick="proximaEtapa()">
+                                {{ __('Continuar') }}
+                            </button>
+                        </div>
                     </div>
                 </div>
-                {{-- Rua | Número | Bairro --}}
-                <div class="row">
+            </div>
 
-                    <div class="col-md-6 form-group">
-                        <label for="rua" class="col-form-label">{{ __('Logradouro') }}*</label>
-                        <input id="rua" type="text" class="form-control @error('rua') is-invalid @enderror"
-                            name="rua" value="{{ old('rua') }}" required autocomplete="rua" autofocus>
-
-                        @error('rua')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
-                    </div>
-
-                    <div class="col-md-2 form-group">
-                        <label for="numero" class="col-form-label">{{ __('Número') }}*</label>
-                        <input id="numero" type="text" class="form-control @error('numero') is-invalid @enderror"
-                            name="numero" value="{{ old('numero') }}" required autocomplete="numero" autofocus
-                            maxlength="10">
-
-                        @error('numero')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
-                    </div>
-
-                    <div class="col-md-4 form-group">
-                        <label for="complemento" class="col-form-label">{{ __('Complemento') }}</label>
-                        <input id="complemento" type="text"
-                            class="form-control apenasLetras @error('complemento') is-invalid @enderror"
-                            name="complemento" value="{{ old('complemento') }}" autocomplete="complemento" autofocus>
-
-                        @error('complemento')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
-                    </div>
-
-                </div>{{-- end Rua | Número | Bairro --}}
-                <div class="row">
-                    <div class="col-md-6 form-group">
-                        <label for="cep" class="col-form-label">{{ __('CEP') }}*</label>
-                        <input value="{{ old('cep') }}" onblur="pesquisacep(this.value);" id="cep"
-                            name="cep" type="text" class="form-control @error('cep') is-invalid @enderror"
-                            required autocomplete="cep">
-
-                        @error('cep')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
-                    </div>
-
-                    <div class="col-md-6 form-group">
-                        <label for="bairro" class="col-form-label">{{ __('Bairro') }}*</label>
-                        <input id="bairro" type="text" class="form-control @error('bairro') is-invalid @enderror"
-                            name="bairro" value="{{ old('bairro') }}" required autocomplete="bairro" autofocus>
-
-                        @error('bairro')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
+            <!-- Endereço e data -->
+             <div id="etapa-2" style="display: none;">
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <div class="etapas">
+                            <div class="etapa">
+                                <p>1. {{ __('Informações gerais') }}</p>
+                            </div>
+                            <div class="etapa ativa">
+                                <p>2.{{ __('Endereço e data') }}</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="row">
 
-                    <div class="col-md-6 form-group">
-                        <label for="cidade" class="col-form-label">{{ __('Cidade') }}*</label>
-                        <input id="cidade" type="text"
-                            class="form-control apenasLetras @error('cidade') is-invalid @enderror" name="cidade"
-                            value="{{ old('cidade') }}" required autocomplete="cidade" autofocus>
+                <div class="container card shadow">
+                    <br>
+                    {{-- Endereço --}}
+                    <div class="form-group row">
+                        <div class="col-md-6 form-group">
+                           <label for="cep" class="col-form-label">{{ __('CEP') }}</label>
+                           <input value="{{ old('cep') }}" onblur="pesquisacep(this.value);" id="cep"
+                               name="cep" type="text" class="form-control @error('cep') is-invalid @enderror"
+                               required autocomplete="cep">
 
-                        @error('cidade')
+                           @error('cep')
+                               <span class="invalid-feedback" role="alert">
+                                   <strong>{{ $message }}</strong>
+                               </span>
+                           @enderror
+                       </div>
+
+                        <div class="col-md-6">
+                            <label for="rua" class="col-form-label text-start d-block fw-bold ">{{ __('Rua') }}</label>
+                            <input value="{{old('rua')}}" id="rua" type="text" class="form-control @error('rua') is-invalid @enderror"
+                            name="rua" autocomplete="new-password" required>
+
+                            @error('rua')
                             <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
+                                <strong>{{ __($message) }}</strong>
                             </span>
-                        @enderror
+                            @enderror
+                        </div>
+
                     </div>
 
-                    <div class="col-md-6 form-group">
-                        <label for="uf" class="col-form-label">{{ __('UF') }}*</label>
+
+
+                        <div class="form-group row">
+                            <div class="col-md-6">
+                            <label for="numero" class="col-form-label text-start d-block fw-bold mb-3">{{ __('Número') }}</label>
+                                <input id="numero" type="text" class="form-control @error('numero') is-invalid @enderror"
+                                    name="numero" value="{{ old('numero') }}" required autocomplete="numero" autofocus
+                                    maxlength="10">
+
+                                @error('numero')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                            <div class="col-md-6">
+                                <label for="bairro" class="col-form-label text-start d-block fw-bold mb-3">{{ __('Bairro') }}</label>
+                                <input value="{{old('bairro')}}" id="bairro" type="text" class="form-control @error('bairro') is-invalid @enderror"
+                                    name="bairro" autocomplete="bairro" required>
+
+                                @error('bairro')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ __($message) }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+
+                        </div>
+                        <div class="col-md-12">
+                            <label for="complemento" class="col-form-label text-start d-block fw-bold mb-3">{{ __('Complemento') }}</label>
+                            <input type="text" value="{{old('complemento')}}" id="complemento"
+                                class="form-control @error('complemento') is-invalid @enderror" name="complemento">
+
+                            @error('complemento')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ __($message) }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+
+                    <div class="form-group row">
+                        <div class="col-md-6">
+                            <label for="cidade" class="col-form-label text-start d-block fw-bold mb-3">{{ __('Cidade') }}</label>
+                            <input value="{{old('cidade')}}" id="cidade" type="text"
+                                class="form-control apenasLetras @error('cidade') is-invalid @enderror"
+                                name="cidade" autocomplete="cidade" required>
+
+                            @error('cidade')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ __($message) }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+
+                        <div class="col-md-6 form-group">
+                        <label for="uf" class="col-form-label text-start d-block fw-bold mb-3">{{ __('Estado') }}</label>
                         {{-- <input id="uf" type="text" class="form-control @error('uf') is-invalid @enderror" name="uf" value="{{ old('uf') }}" required autocomplete="uf" autofocus> --}}
                         <select class="form-control @error('uf') is-invalid @enderror" id="uf" name="uf">
                             <option value="" disabled selected hidden>-- UF --</option>
@@ -479,43 +575,95 @@
                             </span>
                         @enderror
                     </div>
+                    </div>
 
+                    {{-- Datas do Evento --}}
+                    <div class="form-group row">
+                        <div class="col-md-6">
+                            <label for="dataInicio" class="col-form-label text-start d-block fw-bold mb-3">{{ __('Data de início') }}</label>
+                            <input id="dataInicio" type="date" class="form-control @error('dataInicio') is-invalid @enderror"
+                                name="dataInicio" value="{{ old('dataInicio') }}" required autocomplete="dataInicio" autofocus>
 
-                </div>
+                            @error('dataInicio')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
 
+                        <div class="col-md-6">
+                            <label for="dataFim" class="col-form-label text-start d-block fw-bold mb-3 ">{{ __('Data de término') }}</label>
+                            <input id="dataFim" type="date" class="form-control @error('dataFim') is-invalid @enderror"
+                                name="dataFim" value="{{ old('dataFim') }}" required autocomplete="dataFim" autofocus>
 
-                <div class="form-group">
-                    <div class="form-check">
-                        <input name="termos" class="form-check-input @error('termos') is-invalid @enderror"
-                            type="checkbox" value="true" id="termos">
-                        <label class="form-check-label" for="termos">
-                            {{ __('Concordo e respeitarei os') }} <a
-                                href=" {{ route('termos.de.uso') }} ">{{ __('termos de uso') }}</a>
-                            {{ __('da plataforma') }} {{ config('app.name') }}
-                        </label>
-                        @error('termos')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
+                            @error('dataFim')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="form-group row align-items-center">
+                        <div class="col-md-6">
+                            <label for="dataLimiteInscricao" class="col-form-label text-start d-block fw-bold mb-3">
+                                {{ __('Data de encerramento de inscrições') }}
+                            </label>
+                            <input id="dataLimiteInscricao" type="datetime-local"
+                                class="form-control @error('dataLimiteInscricao') is-invalid @enderror"
+                                name="dataLimiteInscricao" value="{{ old('dataLimiteInscricao') }}"
+                                autocomplete="dataLimiteInscricao" autofocus>
+                            @error('dataLimiteInscricao')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+
+                        <div class="col-md-6 d-flex align-items-center">
+                            <small class="mt-4">
+                                <span style="color: red">{{ __('Atenção:') }}</span>
+                                {{ __('Informe uma data para encerramento das inscrições no evento. Caso não informada, a data limite para inscrição no evento será um dia prévio a data de início do evento') }}.
+                            </small>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="form-check  pt-4 pb-3">
+                            <input name="termos" class="form-check-input @error('termos') is-invalid @enderror"
+                                type="checkbox" value="true" id="termos">
+                            <label class="form-check-label " for="termos">
+                                {{ __('Concordo e respeitarei os') }} <a href="{{ route('termos.de.uso') }}">{{ __('termos de uso') }}</a>
+                                {{ __('da plataforma') }} {{ config('app.name') }}
+                            </label>
+                            @error('termos')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="row form-group pb-4">
+                        <div class="col-md-2">
+                            <button type="button" class="btn btn-primary w-100" style="background-color: #034652; color: white; border-color: #034652;" onclick="etapaAnterior()">
+                                {{ __('Voltar') }}
+                            </button>
+                        </div>
+                        <div class="col-md-8"></div>
+                        <div class="col-md-2">
+                            <button type="submit" class="btn btn-primary w-100" style="background-color: #034652; color: white; border-color: #034652;">
+                                @if ($eventoPai ?? '')
+                                    {{ __('Criar Subevento') }}
+                                @else
+                                    {{ __('Criar Evento') }}
+                                @endif
+                            </button>
+                        </div>
                     </div>
                 </div>
-
-                <div class="row justify-content-end">
-                    <div class="col-md-5">
-                        <button type="submit" class="btn btn-primary button-prevent-multiple-submits"
-                            style="width:100%">
-                            @if ($eventoPai ?? '')
-                                {{ __('Criar Subevento') }}
-                            @else
-                                {{ __('Criar Evento') }}
-                            @endif
-                        </button>
-
-                    </div>
-                </div>
-            </form>
-        </div>
+            </div>
+        </form>
     </div>
 @endsection
 
@@ -548,10 +696,7 @@
             $(".apenasLetras").mask("#", {
                 maxlength: false,
                 translation: {
-                    '#': {
-                        pattern: /[A-zÀ-ÿ ]/,
-                        recursive: true
-                    }
+                    '#': {pattern: /[A-zÀ-ÿ0-9\s\-\.\(\)\[\]\{\}\/\\,;&@#$%*+=|<>!?~`'"]/, recursive: true}
                 }
             });
             /*$('#numero').mask('#', {
@@ -562,12 +707,26 @@
             });*/
 
             $('#is_multilingual').change(function() {
-                if ($(this).is(':checked')) {
-                    $('.multilingual_fields').show();
-                } else {
-                    $('.multilingual_fields').hide();
-                }
-            });
+                const isChecked = $(this).is(':checked');
+                $('.multilingual_fields').toggle(isChecked); // Show/hide the whole section
+
+                // For all inputs and textareas within multilingual_fields
+                $('.multilingual_fields').find('input[type="text"], textarea, input[type="file"]').each(function() {
+                    const campoMulti = $(this);
+                    campoMulti.prop('required', isChecked); // Set required based on checkbox
+
+                    if (!isChecked) { // If checkbox is unchecked (fields are hidden and not required)
+                        campoMulti.removeClass('is-invalid'); // Remove validation class from input/textarea
+                        if (campoMulti.is('input[type="file"]')) {
+                            const loaderDiv = campoMulti.parent().prev('.imagem-loader');
+                            if (loaderDiv.length) {
+                                loaderDiv.removeClass('border border-danger'); // Remove error style from loader
+                            }
+                        }
+                        // Opcional: $(this).val(''); // Limpar valor ao desmarcar (cuidado com file inputs)
+                    }
+                });
+            }).trigger('change'); // Apply on page load
 
             $('#imagem-loader').click(function() {
                 $('#logo-input').click();
@@ -615,6 +774,32 @@
                         var file = new FileReader();
                         file.onload = function(e) {
                             document.getElementById("icone-preview-en").src = e.target.result;
+                        };
+                        file.readAsDataURL(this.files[0]);
+                    }
+                })
+            });
+
+            $('#imagem-loader-es').click(function() {
+                $('#logo-input-es').click();
+                $('#logo-input-es').change(function() {
+                    if (this.files && this.files[0]) {
+                        var file = new FileReader();
+                        file.onload = function(e) {
+                            document.getElementById("logo-preview-es").src = e.target.result;
+                        };
+                        file.readAsDataURL(this.files[0]);
+                    }
+                })
+            });
+
+            $('#imagem-loader-icone-es').click(function() {
+                $('#icone-input-es').click();
+                $('#icone-input-es').change(function() {
+                    if (this.files && this.files[0]) {
+                        var file = new FileReader();
+                        file.onload = function(e) {
+                            document.getElementById("icone-preview-es").src = e.target.result;
                         };
                         file.readAsDataURL(this.files[0]);
                     }
@@ -678,5 +863,102 @@
                 limpa_formulário_cep();
             }
         };
+
+        function proximaEtapa() {
+            let primeiroCampoInvalido = null;
+            let formEtapa1Valido = true;
+
+            // Seleciona todos os campos que podem ser validados na etapa 1
+            const camposEtapa1 = $('#etapa-1').find('input, select, textarea');
+
+            camposEtapa1.each(function() {
+                const campo = $(this);
+                // Limpa a validação anterior do Bootstrap (se houver)
+                campo.removeClass('is-invalid');
+                if (campo.is('input[type="file"]')) {
+                    const loaderDiv = campo.parent().prev('.imagem-loader');
+                    if (loaderDiv.length) {
+                        loaderDiv.removeClass('border border-danger'); // Clear previous error style
+                    }
+                }
+
+                if (campo.prop('required')) { // Verifica se o campo está marcado como 'required'
+                    let isFieldValid = true;
+                    let fieldIsEffectivelyVisible = campo.is(':visible');
+
+                    // Para campos de arquivo, a visibilidade efetiva depende se sua seção (multilíngue ou não) está visível.
+                    if (campo.is('input[type="file"]')) {
+                        const multilingualParent = campo.closest('.multilingual_fields');
+                        if (multilingualParent.length > 0) { // É um campo de arquivo multilíngue
+                            fieldIsEffectivelyVisible = multilingualParent.is(':visible');
+                        } else { // É um campo de arquivo principal (não multilíngue)
+                            fieldIsEffectivelyVisible = true; // Considerado sempre visível para validação se 'required'
+                        }
+                    }
+
+                    if (fieldIsEffectivelyVisible) { // Apenas valida se o campo (ou seu controlador) está visível
+                        if (campo.is('input[type="file"]')) {
+                            if (this.files.length === 0) {
+                                isFieldValid = false;
+                                campo.addClass('is-invalid'); // Adiciona classe ao próprio input
+                                const loaderDiv = campo.parent().prev('.imagem-loader');
+                                if (loaderDiv.length) {
+                                    loaderDiv.addClass('border border-danger'); // Adiciona borda ao visualizador
+                                    if (!primeiroCampoInvalido) {
+                                        primeiroCampoInvalido = loaderDiv; // Prioriza o visualizador para foco/scroll
+                                    }
+                                } else if (!primeiroCampoInvalido) {
+                                    primeiroCampoInvalido = campo; // Fallback para o input se o visualizador não for encontrado
+                                }
+                            }
+                        } else { // Para text, select, textarea
+                            if (!this.checkValidity()) { // Usa a validação nativa do navegador
+                                isFieldValid = false;
+                                campo.addClass('is-invalid');
+                                if (!primeiroCampoInvalido) {
+                                    primeiroCampoInvalido = campo;
+                                }
+                            }
+                        }
+                    }
+                    // Se o campo não for válido E era para ser validado (visível e obrigatório), marca o formulário como inválido.
+                    if (!isFieldValid && fieldIsEffectivelyVisible) {
+                        formEtapa1Valido = false;
+                    }
+                }
+            });
+
+            if (formEtapa1Valido) {
+                document.getElementById('etapa-1').style.display = 'none';
+                document.getElementById('etapa-2').style.display = 'block';
+                // Atualiza a interface de etapas
+                $('.etapas .etapa').removeClass('ativa');
+                $('.etapas .etapa').eq(1).addClass('ativa');
+                window.scrollTo(0, 0); // Rola para o topo para o usuário ver a nova etapa
+            } else {
+                if (primeiroCampoInvalido) {
+                    // Rola para o elemento e tenta focar
+                    if (primeiroCampoInvalido.is('div.imagem-loader')) { // Se for o nosso visualizador de imagem
+                        $('html, body').animate({
+                            scrollTop: primeiroCampoInvalido.offset().top - 100 // Ajuste o offset conforme necessário
+                        }, 500);
+                        // Adicionar tabindex para tornar o div focável pode ser uma opção para leitores de tela
+                        // primeiroCampoInvalido.attr('tabindex', -1).focus();
+                    } else {
+                        primeiroCampoInvalido.focus(); // Foca em inputs de texto, select, etc.
+                    }
+                }
+            }
+        }
+
+        function etapaAnterior() {
+            document.getElementById('etapa-1').style.display = 'block';
+            document.getElementById('etapa-2').style.display = 'none';
+            // Atualiza a interface de etapas
+            $('.etapas .etapa').removeClass('ativa'); // Remove de todas
+            $('.etapas .etapa').eq(0).addClass('ativa'); // Ativa a primeira etapa
+            window.scrollTo(0, 0);
+        }
+
     </script>
 @endsection

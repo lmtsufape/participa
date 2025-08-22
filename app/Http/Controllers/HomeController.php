@@ -6,6 +6,7 @@ use App\Models\Inscricao\Inscricao;
 use App\Models\Submissao\Evento;
 use Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
@@ -24,7 +25,7 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function home()
+    public function home(Request $request)
     {
         $user = Auth::user();
         $eventos = collect();
@@ -41,9 +42,29 @@ class HomeController extends Controller
         }else{
             $eventos = Evento::whereHas('inscricaos', function($query) use ($user) {
                 $query->where('user_id', $user->id);
-            })->get();
+            });
 
-             return view('user.areaParticipante', ['eventos' => $eventos]);
+            if ($request->filled('busca')) {
+                $eventos->where('nome', 'ilike', '%' . $request->busca . '%');
+            }
+
+            if ($request->filled('ordenar')) {
+                switch ($request->ordenar) {
+                    case 'nome':
+                        $eventos->orderBy('nome');
+                        break;
+                    case 'data':
+                    default:
+                        $eventos->orderBy('dataFim', 'desc');
+                        break;
+                }
+            } else {
+                $eventos->orderBy('dataFim', 'desc');
+            }
+
+            $eventos = $eventos->paginate(9);
+
+            return view('user.areaParticipante', ['eventos' => $eventos]);
         }
         $eventos = $eventos->concat($user->eventos);
         $eventos = $eventos->concat($user->eventosCoordenador);
@@ -54,7 +75,7 @@ class HomeController extends Controller
 
     public function index()
     {
-        $eventos_destaques = Evento::where([ ['dataInicio', '<=', today()], ['dataFim', '>=', today()]])->get();
+        $eventos_destaques = Evento::where([ ['publicado', '=', 'true'], ['dataFim', '>=', 'today()']])->get();
 
         $proximosEventos = Evento::where([['publicado', '=', true], ['deletado', '=', false], ['dataFim', '>=', today()]])->whereNull('evento_pai_id')->get();
 

@@ -2,12 +2,17 @@
 
 namespace App\Models\Submissao;
 
+use App\Models\Users\CoordEixoTematico;
 use App\Models\Users\User;
+use App\Models\CandidatoAvaliador;
+use App\Models\Inscricao\InscricaoPCD;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Str;
+use App\Services\AssociadoService;
 
 class Evento extends Model
 {
@@ -20,7 +25,9 @@ class Evento extends Model
         'nome', 'descricao', 'tipo', 'dataInicio', 'dataFim', 'fotoEvento', 'icone',
         'enderecoId', 'coordenadorId', 'numMaxTrabalhos', 'numMaxCoautores', 'hasResumo',
         'evento_pai_id', 'email', 'data_limite_inscricao',
-        'nome_en', 'descricao_en','fotoEvento_en', 'icone_en', 'is_multilingual',
+        'nome_en', 'descricao_en','fotoEvento_en', 'icone_en',
+        'nome_es', 'descricao_es','fotoEvento_es', 'icone_es',
+        'is_multilingual', 'instagram', 'contato_suporte'
     ];
 
     public function endereco()
@@ -158,12 +165,96 @@ class Evento extends Model
     public function categoriasQuePermitemInscricao()
     {
         return $this->hasMany('App\Models\Inscricao\CategoriaParticipante', 'evento_id')
-            ->orderBy('created_at')
-            ->where('permite_inscricao', true)
-            ->where(function ($query) {
-                $query->whereNull('limite_inscricao')
-                    ->orWhere('limite_inscricao', '>', now());
-            });
+                    ->where('permite_inscricao', true)
+                    ->where(function ($q) {
+                        $q->whereNull('limite_inscricao')
+                          ->orWhere('limite_inscricao', '>', now());
+                    })
+                    ->orderBy('created_at');
+    }
+    public function categoriasPermitidasParaUsuario()
+    {
+        $solicitacaoPCD = InscricaoPCD::where('user_id', auth()->id())
+                                      ->where('evento_id', $this->id)
+                                      ->where('status', 'aprovado')
+                                      ->first();
+        $isPCDAprovado = $solicitacaoPCD !== null;
+        $svc = new AssociadoService();
+        $userCpf = auth()->user()->cpf ?? '';
+        $assoc = $svc->fetchByCpf($userCpf);
+
+        $baseCats = $this->categoriasQuePermitemInscricao()->get();
+
+        if ($assoc) {
+            if ($assoc && ($assoc['allowed'] ?? false)) {
+                if($isPCDAprovado) {
+                    $map = [
+                        'Profissional' => [
+                            'Associado - Profissional (professoras/es, pesquisadoras/es, consultoras/es etc)',
+                            'Associado - Assessora/or Técnico/a (ONGs; empresas públicas de ATER etc)',
+                            'Associado - Pessoa com Deficiência (PCD)',
+                        ],
+                        'Estudante'      => [
+                            'Associado - Estudante (Ensino médio, IFs, EFAs, graduação, pós-graduação etc)',
+                            'Associado - Pessoa com Deficiência (PCD)',
+                        ],
+                        'Agricultor'     => [
+                            'Associado - Agricultoras/es, povos e comunidades tradicionais',
+                            'Associado - Pessoa com Deficiência (PCD)',
+                        ],
+                        'Quilombola'     => [
+                            'Associado - Agricultoras/es, povos e comunidades tradicionais',
+                            'Associado - Pessoa com Deficiência (PCD)',
+                        ],
+                        'Indígena'       => [
+                            'Associado - Agriculturas/es, povos e comunidades tradicionais',
+                            'Associado - Pessoa com Deficiência (PCD)',
+                        ],
+                        'Outras categorias de povos e comunidades tradicionais' => [
+                            'Associado - Agricultoras/es, povos e comunidades tradicionais',
+                            'Associado - Pessoa com Deficiência (PCD)',
+                        ],
+                    ];
+                } else {
+                    $map = [
+                        'Profissional' => [
+                            'Associado - Profissional (professoras/es, pesquisadoras/es, consultoras/es etc)',
+                            'Associado - Assessora/or Técnico/a (ONGs; empresas públicas de ATER etc)',
+                        ],
+                        'Estudante'      => [
+                            'Associado - Estudante (Ensino médio, IFs, EFAs, graduação, pós-graduação etc)',
+                        ],
+                        'Agricultor'     => [
+                            'Associado - Agricultoras/es, povos e comunidades tradicionais',
+                        ],
+                        'Quilombola'     => [
+                            'Associado - Agricultoras/es, povos e comunidades tradicionais',
+                        ],
+                        'Indígena'       => [
+                            'Associado - Agriculturas/es, povos e comunidades tradicionais',
+                        ],
+                        'Outras categorias de povos e comunidades tradicionais' => [
+                            'Associado - Agricultoras/es, povos e comunidades tradicionais',
+                        ],
+                    ];
+                }
+                $tiposPermitidos = $map[$assoc['category']] ?? [];
+                return $baseCats->whereIn('nome', $tiposPermitidos);
+            }
+        }
+        
+        // Mostra APENAS a categoria "Pessoa com Deficiência (PCD)"
+        if ($isPCDAprovado) {
+            return $baseCats->filter(fn($cat) => 
+                strtolower(trim($cat->nome)) === 'pessoa com deficiência (pcd)'
+            );
+        }
+
+         // não associado: remove categorias que começam com "Associado" ou a categoria "Pessoa com Deficiência (PCD)"
+        return $baseCats->reject(fn($cat) => 
+            Str::startsWith($cat->nome, 'Associado') || 
+            strtolower(trim($cat->nome)) === 'pessoa com deficiência (pcd)'
+        );
     }
 
     public function camposFormulario()
@@ -248,5 +339,18 @@ class Evento extends Model
         }
 
         return $encerrada;
+    }
+
+    public function coordEixosTematicos(){
+        return $this->hasMany(CoordEixoTematico::class);
+    }
+
+    public function candidatosAvaliadores(){
+        return $this->hasMany(CandidatoAvaliador::class, 'evento_id');
+    }
+
+    public function solicitacoesPCD()
+    {
+        return $this->hasMany(\App\Models\Inscricao\InscricaoPCD::class, 'evento_id');
     }
 }

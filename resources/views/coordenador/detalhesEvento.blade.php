@@ -136,10 +136,7 @@
         $(".apenasLetras").mask("#", {
             maxlength: false,
             translation: {
-                '#': {
-                    pattern: /[A-zÀ-ÿ ]/,
-                    recursive: true
-                }
+                '#': {pattern: /[A-zÀ-ÿ0-9\s\-\.\(\)\[\]\{\}\/\\,;&@#$%*+=|<>!?~`'"]/, recursive: true}
             }
         });
         //$('.numero').mask('0000000');
@@ -1084,10 +1081,7 @@
         $(".apenasLetras").mask("#", {
             maxlength: false,
             translation: {
-                '#': {
-                    pattern: /[A-zÀ-ÿ ]/,
-                    recursive: true
-                }
+                '#': {pattern: /[A-zÀ-ÿ0-9\s\-\.\(\)\[\]\{\}\/\\,;&@#$%*+=|<>!?~`'"]/, recursive: true}
             }
         });
     });
@@ -1310,7 +1304,7 @@
                             "<td style='text-align:center'>" + obj.emAndamento + "</td>" +
                             "<td style='text-align:center'>" + obj.concluido + "</td>" +
                             "<td style='text-align:center'>" +
-                            "<a href='#' data-toggle='modal' data-target='#modalRevisor'" + obj.id + ">" +
+                            "<a href='#' data-bs-toggle='modal' data-bs-target='#modalRevisor'" + obj.id + ">" +
                             "<img src='{{asset('img/icons/eye-regular.svg')}}' style='width:20px'>" +
                             "</a>" +
                             "</td>" +
@@ -1363,7 +1357,7 @@
                                 "<p id='area'>" + obj.area + "</p>" +
                                 "<label for='modalidade'>Modalidade:</label>" +
                                 "<p id='modalidade'>" + obj.modalidade + "</p>" +
-                                "<a href='#' class='card-link' data-toggle='modal' data-target='#modalResultados" + obj.id + "'>Resultado</a>" +
+                                "<a href='#' class='card-link' data-bs-toggle='modal' data-bs-target='#modalResultados" + obj.id + "'>Resultado</a>" +
                                 "<a href='" + obj.rota_download + "' class='card-link'>Baixar</a>" +
                                 "</div>" +
                                 "</div>";
@@ -1376,7 +1370,7 @@
                                 "<p id='area'>" + obj.area + "</p>" +
                                 "<label for='modalidade'>Modalidade:</label>" +
                                 "<p id='modalidade'>" + obj.modalidade + "</p>" +
-                                "<a href='#' class='card-link' data-toggle='modal' data-target='#modalResultados" + obj.id + "'>Resultado</a>" +
+                                "<a href='#' class='card-link' data-bs-toggle='modal' data-bs-target='#modalResultados" + obj.id + "'>Resultado</a>" +
                                 "</div>" +
                                 "</div>";
                         }

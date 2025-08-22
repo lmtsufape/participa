@@ -1,50 +1,61 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container content" >
-    <div class="row justify-content-center">
-        <div class="col-md-5">
-            <div class="card card-login-cadastro">
-                {{-- <div class="card-header">{{ __('Login') }}</div> --}}
+<style>
 
-                <div class="card-body">
-                    <form method="POST" action="{{route('validarCertificadoPost')}}">
-                        @csrf
+.form-home {
+    border-radius: 10px;
+    background-color: white;
+    width: 500px;
 
-                        <div class="row justify-content-center">
-                            <div class="titulo-login-cadastro">Validar certificado</div>
-                        </div>
+    min-height: 200px;
+    padding: 1.5rem 2rem;
+}
 
-                        <div class="form-group row">
 
-                            <div class="col-md-12">
-                                <label for="hash" class="col-form-label text-md-right">{{ __('Hash de validação') }}</label>
-                                <input id="hash" type="text" name="hash" class="form-control @error('hash') is-invalid @enderror" required autofocus>
+p{
+    text-align: justify;
+}
 
-                                @error('hash')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
+</style>
 
-                        <div class="form-group row mb-0">
+<div class="container my-5">
+    <div class="row">
+        <section class="col-md-6 d-flex flex-column justify-content-center">
+            <a class="navbar-brand" href="{{route('index')}}">
+                <img src="{{ asset('/img/logoatualizada.png') }}" alt="logo" width="60%">
+            </a>
+        </section>
 
-                            <div class="col-md-12">
-                                <button type="submit" class="btn btn-primary" style="width:100%">
-                                    {{ __('Validar') }}
-                                </button>
-                            </div>
-                        </div>
-                    </form>
+        <div class="col-md-6 d-flex align-items-center justify-content-end">
+            <form class="d-flex flex-column justify-content-center shadow form-home" method="POST" action="{{route('validarCertificadoPost')}}">
+                @csrf
+
+                <div class="d-flex justify-content-center">
+                    <h3>{{ __('Validar certificado') }}</h3>
                 </div>
-            </div>
+                <hr class="border-secondary">
+
+                <div class="form-group">
+                    <label for="hash" class="form-label">{{ __('Hash de validação') }}</label>
+                    <input id="hash" type="text" name="hash" class="form-control @error('hash') is-invalid @enderror" required autofocus>
+
+                    @error('hash')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                </div>
+
+                <div class="mt-3">
+                    <button type="submit" class="btn btn-my-primary w-100">
+                        {{ __('Validar') }}
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
-</div>
-<br>
-<br>
 
+</div>
 
 @endsection

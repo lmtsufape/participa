@@ -23,10 +23,12 @@ use App\Notifications\LembreteRevisorCompletarCadastro;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 
 class RevisorController extends Controller
 {
@@ -54,6 +56,15 @@ class RevisorController extends Controller
             $trabalhos = collect();
             foreach ($revisorEvento as $revisor) {
                 $trabalhosAtribuidos = $revisor->trabalhosAtribuidos()->orderBy('titulo')->get();
+                // // Filtrar para só mostrar trabalhos cuja justificativa_recusa é null
+                foreach ($trabalhosAtribuidos as $trabalho) {
+                    $pivot = $trabalho->atribuicoes()->where('revisor_id', $revisor->id)->first()->pivot;
+                    if ($pivot->justificativa_recusa != null) {
+                        $trabalhosAtribuidos = $trabalhosAtribuidos->reject(function ($item) use ($pivot) {
+                            return $item->id === $pivot->trabalho_id;
+                        });
+                    }
+                }
                 if (count($trabalhosAtribuidos) > 0) {
                     $trabalhos->push($trabalhosAtribuidos);
                 }
@@ -101,7 +112,12 @@ class RevisorController extends Controller
 
         $usuario = User::where('email', $request->emailRevisor)->first();
         $evento = Evento::find($request->eventoId);
-        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
+        if (! Gate::any([
+            'isCoordenadorOrCoordenadorDaComissaoCientifica',
+            'isCoordenadorEixo'
+        ], $evento)) {
+            abort(403, 'Acesso negado');
+        }
 
         // dd(count($usuario->revisor()->where('evento_id', $evento->id)->get()));
         if ($usuario == null) {
@@ -439,8 +455,20 @@ class RevisorController extends Controller
 
     public function responde(Request $request)
     {
-        // dd($request->all());
         $data = $request->all();
+        if($data['prazo_correcao'] < now()){
+            return redirect()->back()->withErrors(['message' => 'Prazo de correção expirado.']);
+        }
+
+        // Verificar se o revisor recusou o convite para este trabalho
+        $atribuicao = DB::table('atribuicaos')
+            ->where('trabalho_id', $data['trabalho_id'])
+            ->where('revisor_id', $data['revisor_id'])
+            ->first();
+
+        if ($atribuicao && $atribuicao->justificativa_recusa) {
+            return redirect()->back()->withErrors(['message' => 'Você recusou o convite para avaliar este trabalho.']);
+        }
         $evento = Evento::find($data['evento_id']);
         $data['revisor'] = Revisor::find($data['revisor_id']);
         $data['modalidade'] = Modalidade::find($data['modalidade_id']);
@@ -455,6 +483,16 @@ class RevisorController extends Controller
     {
         // dd($request);
         $data = $request->all();
+
+        // Verificar se o revisor recusou o convite para este trabalho
+        $atribuicao = DB::table('atribuicaos')
+            ->where('trabalho_id', $data['trabalho_id'])
+            ->where('revisor_id', $data['revisor_id'])
+            ->first();
+
+        if ($atribuicao && $atribuicao->justificativa_recusa) {
+            return redirect()->back()->withErrors(['message' => 'Você recusou o convite para avaliar este trabalho.']);
+        }
         // $comment = $post->comments()->create([
         //     'message' => 'A new comment.',
         // ]);
@@ -466,7 +504,7 @@ class RevisorController extends Controller
             }
 
             $validatedData = $request->validate([
-                'arquivo' => ['required', 'file', 'max:2048'],
+                'arquivo' => ['required', 'file', 'max:5120'],
             ]);
         }
 
@@ -517,7 +555,26 @@ class RevisorController extends Controller
         }
 
         $coordenador = User::find($evento->coordenadorId);
-        Mail::to($coordenador->email)->send(new EmailNotificacaoTrabalhoAvaliado($coordenador, $trabalho->autor, $evento->nome, $trabalho, $revisor));
+
+        $coordenadoresEixo = \App\Models\Users\CoordEixoTematico::where('evento_id', $evento_id)
+            ->where('area_id', $trabalho->areaId)
+            ->with(['user' => fn($q) => $q->select('id', 'name', 'email')])
+            ->get()
+            ->pluck('user')
+            ->filter(fn($u) => $u && !empty($u->email))
+            ->unique('id');
+
+
+        if ($coordenador?->email) {
+            Mail::to($coordenador->email)->send(
+                new EmailNotificacaoTrabalhoAvaliado($coordenador, $trabalho->autor, $evento->nome, $trabalho, $revisor)
+            );
+        }
+        foreach ($coordenadoresEixo as $coordUser) {
+            Mail::to($coordUser->email)->send(
+                new EmailNotificacaoTrabalhoAvaliado($coordUser, $trabalho->autor, $evento->nome, $trabalho, $revisor)
+            );
+        }
 
         return redirect()->route('revisor.index')->with(['message' => 'Avaliação enviada com sucesso.']);
     }
@@ -535,7 +592,7 @@ class RevisorController extends Controller
             }
 
             $request->validate([
-                'arquivoAvaliacao' => ['required', 'file', 'max:2048'],
+                'arquivoAvaliacao' => ['required', 'file', 'max:5120'],
             ]);
         }
         $opcaoCont = 0;

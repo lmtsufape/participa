@@ -72,7 +72,7 @@ class Trabalho extends Model
 
     public function atribuicoes()
     {
-        return $this->belongsToMany('App\Models\Users\Revisor', 'atribuicaos', 'trabalho_id', 'revisor_id')->withPivot('confirmacao', 'parecer')->withTimestamps();
+        return $this->belongsToMany('App\Models\Users\Revisor', 'atribuicaos', 'trabalho_id', 'revisor_id')->withPivot('confirmacao', 'parecer','prazo_correcao', 'justificativa_recusa')->withTimestamps();
     }
 
     public function evento()

@@ -4,16 +4,16 @@
 
 <div class="container position-relative">
 
-  <h2>{{ Auth()->user()->name }} - Perfil: Coautor</h2>
+  <h2>{{ Auth()->user()->name }} - {{ __('Perfil: Coautor') }}</h2>
 
   @if ($trabalhos != null && count($trabalhos) > 0)
   <table class="table table-responsive-lg table-hover">
     <thead>
       <tr>
-        <th>Evento</th>
-        <th>Título</th>
-        <th>Autor</th>
-        <th style="text-align:center">Baixar</th>
+        <th>{{ __('Evento') }}</th>
+        <th>{{ __('Título') }}</th>
+        <th>{{ __('Autor') }}</th>
+        <th style="text-align:center">{{ __('Baixar') }}</th>
       </tr>
     </thead>
     <tbody>
@@ -28,7 +28,7 @@
             <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">
           </a>
           @else
-          <a href="#" onclick="return false;" data-toggle="popover" data-trigger="focus" data-trigger="focus" title="Download não disponível" data-content="Não foi enviado arquivo para este trabalho" style="font-size: 20px; color: #114048ff;">
+          <a href="#" onclick="return false;" data-bs-toggle="popover" data-trigger="focus" data-trigger="focus" title="Download não disponível" data-content="Não foi enviado arquivo para este trabalho" style="font-size: 20px; color: #114048ff;">
             <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">
           </a>
           @endif
@@ -38,7 +38,7 @@
     </tbody>
   </table>
   @else
-  Você não participa como coautor em nenhum trabalho...
+  {{ __('Você não participa como coautor em nenhum trabalho...') }}
   @endif
 
 </div>

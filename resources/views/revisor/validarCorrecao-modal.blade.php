@@ -1,11 +1,10 @@
 
-
 <div class="modal fade" id="validacaoCorrecaoModal{{$trabalho->id}}" tabindex="-1" aria-labelledby="#validacaoCorrecaoModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
           <h1 class="modal-title fs-5" id="#validacaoCorrecaoModalLabel">Validação das correções</h1>
-          <button type="button" class="btn" data-dismiss="modal" aria-label="Close">X</button>
+          <button type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">X</button>
         </div>
         <div class="modal-body">
             <form class="mt-1" id="validacao-correcao" action="{{route('revisor.verificarCorrecao', ['trabalho_id' => $trabalho->id])}}" method="POST">
