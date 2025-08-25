@@ -261,10 +261,6 @@
                                             <a href="#" data-bs-toggle="modal" data-bs-target="#modalCorrecaoTrabalho_{{$trabalho->id}}" style="color:#114048ff">
                                                 <img class="" src="{{asset('img/icons/file-upload-solid.svg')}}" style="width:20px">
                                             </a>
-                                        @else
-                                            <a href="#" onclick="return false;" data-toggle="popover" data-trigger="focus" data-placement="bottom" title="Não permitido" data-content="A correção não está habilitada para este trabalho.">
-                                                <img src="{{asset('img/icons/file-upload-solid.svg')}}" style="width:20px">
-                                            </a>
                                         @endif
                                     </td>
                                 </tr>
