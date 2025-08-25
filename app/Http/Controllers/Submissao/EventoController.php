@@ -346,96 +346,68 @@ class EventoController extends Controller
         $evento = Evento::find($request->eventoId);
         $this->authorize('isCoordenadorOrCoordCientificaOrCoordEixo', $evento);
         $modalidades = Modalidade::where('evento_id', $evento->id)->orderBy('nome')->get();
-        $trabalhos = null;
-        if ($column == 'autor') {
-            if ($status == 'rascunho') {
-                $trabalhos = collect();
-                foreach ($modalidades as $modalidade) {
-                    $trabalhos->push(Trabalho::where([['modalidadeId', $modalidade->id], ['status', '!=', 'arquivado']])->get()->sortBy(
-                        function ($trabalho) {
-                            return $trabalho->autor->name;
-                        },
-                        SORT_REGULAR,
-                        $direction == 'desc'
-                    ));
-                }
-            } else {
-                $trabalhos = collect();
-                foreach ($modalidades as $modalidade) {
-                    $trabalhos->push(Trabalho::where([['modalidadeId', $modalidade->id], ['status', '=', $status]])->get()->sortBy(
-                        function ($trabalho) {
-                            return $trabalho->autor->name;
-                        },
-                        SORT_REGULAR,
-                        $direction == 'desc'
-                    ));
-                }
-            }
-        } elseif ($column == 'area') {
-            if ($status == 'rascunho') {
-                $trabalhos = collect();
-                foreach ($modalidades as $modalidade) {
-                    $trabalhos->push(Trabalho::where([['modalidadeId', $modalidade->id], ['status', '!=', 'arquivado']])->get()->sortBy(
-                        function ($trabalho) {
-                            return $trabalho->area->nome;
-                        },
-                        SORT_REGULAR,
-                        $direction == 'desc'
-                    ));
-                }
-            } else {
-                $trabalhos = collect();
-                foreach ($modalidades as $modalidade) {
-                    $trabalhos->push(Trabalho::where([['modalidadeId', $modalidade->id], ['status', '=', $status]])->get()->sortBy(
-                        function ($trabalho) {
-                            return $trabalho->area->nome;
-                        },
-                        SORT_REGULAR,
-                        $direction == 'desc'
-                    ));
-                }
-            }
-        } else {
-            if ($status == 'rascunho') {
-                $trabalhos = collect();
-                foreach ($modalidades as $modalidade) {
-                    //dd($modalidadeId->id);
-                    $trabalhos->push(Trabalho::where([['modalidadeId', $modalidade->id], ['status', '!=', 'arquivado']])->orderBy($column, $direction)->get());
-                }
-            } else {
-                $trabalhos = collect();
-                foreach ($modalidades as $modalidade) {
-                    $trabalhos->push(Trabalho::where([['modalidadeId', $modalidade->id], ['status', '=', $status]])->orderBy($column, $direction)->get());
-                }
-            }
+        $user_logado = auth()->user();
+        $perPage = 50;
+
+        $query = Trabalho::whereIn('modalidadeId', $modalidades->pluck('id'));
+
+        if ($request->has('search') && !empty($request->search)) {
+            $query->where('titulo', 'ILIKE', '%' . $request->search . '%');
         }
 
-
-        $user_logado = auth()->user();
+        if ($status == 'rascunho') {
+            $query->where('status', '!=', 'arquivado');
+        } else {
+            $query->where('status', '=', $status);
+        }
 
         //Se o user for um coordenador de eixo e não for admin e coordenador cientifico do evento
         if($user_logado->eventosComoCoordEixo()->pluck('eventos.id')->contains($evento->id) &&
             !$user_logado->administradors &&
             !$user_logado->coordComissaoCientifica()->where('eventos_id', $evento->id)->exists()
         ){
-
             $areasCoordEixo = $user_logado->areasComoCoordEixoNoEvento($evento->id)->pluck('areas.id');
-
-            $trabalhos = $trabalhos->map(function ($subCollection) use ($areasCoordEixo) {
-                return $subCollection->filter(function ($trabalho) use ($areasCoordEixo) {
-                    return $areasCoordEixo->contains($trabalho->areaId);
-                });
-            })->filter(function ($subCollection) {
-                return $subCollection->isNotEmpty();
-            });
+            $query->whereIn('areaId', $areasCoordEixo);
         }
 
+        if ($column == 'autor') {
+            $query->join('users', 'trabalhos.autorId', '=', 'users.id')
+                  ->orderBy('users.name', $direction)
+                  ->select('trabalhos.*');
+        } elseif ($column == 'area') {
+            $query->join('areas', 'trabalhos.areaId', '=', 'areas.id')
+                  ->orderBy('areas.nome', $direction)
+                  ->select('trabalhos.*');
+        } else {
+            $query->orderBy($column, $direction);
+        }
+
+        $trabalhosPaginados = $query->paginate($perPage)->appends([
+            'eventoId' => $request->eventoId,
+            'column' => $column,
+            'direction' => $direction,
+            'status' => $status,
+            'search' => $request->search
+        ]);
+
+        // mostra a partir das modalidades
+        $trabalhosPorModalidade = collect();
+        foreach ($modalidades as $modalidade) {
+            $trabalhosModalidade = $trabalhosPaginados->filter(function ($trabalho) use ($modalidade) {
+                return $trabalho->modalidadeId == $modalidade->id;
+            });
+
+            if ($trabalhosModalidade->isNotEmpty()) {
+                $trabalhosPorModalidade->push($trabalhosModalidade);
+            }
+        }
 
         return view(
             'coordenador.trabalhos.listarRespostas',
             [
                 'evento' => $evento,
-                'trabalhosPorModalidade' => $trabalhos,
+                'trabalhosPorModalidade' => $trabalhosPorModalidade,
+                'trabalhosPaginados' => $trabalhosPaginados, // Para os controles de paginação
             ]
         );
     }
@@ -925,7 +897,7 @@ class EventoController extends Controller
         } else {
             $query->orderBy($column, $direction);
         }
-        
+
         $user_logado = auth()->user();
 
         if($user_logado->eventosComoCoordEixo()->pluck('eventos.id')->contains($evento->id) &&
@@ -962,8 +934,8 @@ class EventoController extends Controller
 
         return view('coordenador.trabalhos.listarTrabalhosCorrecoes', [
             'evento' => $evento,
-            'modalidades' => $modalidades,     
-            'trabalhos' => $trabalhos,          
+            'modalidades' => $modalidades,
+            'trabalhos' => $trabalhos,
             'agora' => now(),
         ]);
     }
@@ -1308,35 +1280,20 @@ class EventoController extends Controller
         $areas = Area::where('eventoId', $evento->id)->orderBy('nome')->get();
         $areasId = Area::where('eventoId', $evento->id)->select('id')->orderBy('nome')->get();
 
-        $trabalhos = null;
+        $user_logado = auth()->user();
+        $perPage = 50;
 
-        if ($column == 'autor') {
-            if ($status == 'rascunho') {
-                $trabalhos = Trabalho::where([['modalidadeId', $request->modalidadeId], ['status', '!=', 'arquivado']])->get()->sortBy(
-                    function ($trabalho) {
-                        return $trabalho->autor->name;
-                    },
-                    SORT_REGULAR,
-                    $direction == 'desc'
-                );
-            } else {
-                $trabalhos = Trabalho::where([['modalidadeId', $request->modalidadeId], ['status', '=', 'arquivado']])->get()->sortBy(
-                    function ($trabalho) {
-                        return $trabalho->autor->name;
-                    },
-                    SORT_REGULAR,
-                    $direction == 'desc'
-                );
-            }
+        $query = Trabalho::where('modalidadeId', $request->modalidadeId);
+
+        if ($request->has('search') && !empty($request->search)) {
+            $query->where('titulo', 'ILIKE', '%' . $request->search . '%');
+        }
+        if ($status == 'rascunho') {
+            $query->where('status', '!=', 'arquivado');
         } else {
-            if ($status == 'rascunho') {
-                $trabalhos = Trabalho::where([['modalidadeId', $request->modalidadeId], ['status', '!=', 'arquivado']])->orderBy($column, $direction)->get();
-            } else {
-                $trabalhos = Trabalho::where([['modalidadeId', $request->modalidadeId], ['status', '=', $status]])->orderBy($column, $direction)->get();
-            }
+            $query->where('status', '=', $status);
         }
 
-        $user_logado = auth()->user();
         //Se o user for um coordenador de eixo e não for admin e coordenador cientifico do evento
         if($user_logado->eventosComoCoordEixo()->pluck('eventos.id')->contains($evento->id) &&
             !$user_logado->administradors &&
@@ -1344,12 +1301,24 @@ class EventoController extends Controller
             ){
 
             $areasCoordEixo = $user_logado->areasComoCoordEixoNoEvento($evento->id)->get();
-
-            $trabalhos = $trabalhos->filter(function ($trabalho) use ($areasCoordEixo) {
-
-                return $areasCoordEixo->contains($trabalho->areaId);
-            });
+            $areasCoordEixoIds = $areasCoordEixo->pluck('id')->toArray();
+            $query->whereIn('areaId', $areasCoordEixoIds);
         }
+        if ($column == 'autor') {
+            $query->join('users', 'trabalhos.autorId', '=', 'users.id')
+                  ->orderBy('users.name', $direction)
+                  ->select('trabalhos.*');
+        } else {
+            $query->orderBy($column, $direction);
+        }
+        $trabalhos = $query->paginate($perPage)->appends([
+            'eventoId' => $request->eventoId,
+            'modalidadeId' => $request->modalidadeId,
+            'column' => $column,
+            'direction' => $direction,
+            'status' => $status,
+            'search' => $request->search
+        ]);
 
         return view('coordenador.trabalhos.listarRespostasTrabalhos', [
             'evento' => $evento,
