@@ -274,7 +274,14 @@ class UserController extends Controller
 
     public function searchUser(Request $request)
     {
-        $user = User::where('email', $request->email)->first('name');
+        $user = null;
+        
+        if ($request->has('email') && !empty($request->email)) {
+            $user = User::where('email', $request->email)->first(['name', 'email']);
+        }
+        if ($request->has('cpf') && !empty($request->cpf)) {
+            $user = User::where('cpf', $request->cpf)->first(['name', 'cpf']);
+        }
 
         return response()->json([
             'user' => [
