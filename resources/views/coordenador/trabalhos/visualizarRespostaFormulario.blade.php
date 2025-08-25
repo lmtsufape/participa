@@ -202,34 +202,17 @@
     <hr class="my-5">
 
     <div class="d-flex justify-content-center gap-3">
-        <div class="mr-2">
-            <button class="btn btn-danger"
-            data-bs-toggle="modal" data-bs-target="#avaliacao-reprovar-{{$trabalho->id}}" @disabled($trabalho->aprovado === false)>
-                Reprovar Trabalho
-            </button>
-        </div>
-        @if($trabalho->avaliado == 'Avaliado')
-        <div>
-            <button class="btn btn-primary"
-                data-bs-toggle="modal" data-bs-target="#avaliacao-corrigir-{{$trabalho->id}}">
-                Aprovar com pendências
-            </button>
-            @push('modais')
-                @include('coordenador.trabalhos.avaliacao-modal', ['trabalho' => $trabalho, 'valor' => 'null', 'descricao' => 'corrigir'])
-            @endpush
+        <button class="btn btn-primary"
+            data-bs-toggle="modal" data-bs-target="#avaliacao-corrigir-{{$trabalho->id}}">
+            Aprovar com pendências
+        </button>
+        @push('modais')
+            @include('coordenador.trabalhos.avaliacao-modal', ['trabalho' => $trabalho, 'valor' => 'null', 'descricao' => 'corrigir'])
+        @endpush
 
-            </div>
-            @endif
-            <div class="ml-2">
-                <button class="btn btn-success"
-                data-bs-toggle="modal" data-bs-target="#avaliacao-aprovar-{{$trabalho->id}}" @disabled($trabalho->aprovado === true)>
-                    Aprovar Trabalho
-                </button>
-        </div>
     </div>
+    
     @include('components.delete_modal', ['route' => 'coord.avaliacao.destroy', 'param' => 'trabalho_id', 'entity_id' => $trabalho->id, 'element' => $revisor->id, 'param_element' => 'revisor_id'])
-    @include('coordenador.trabalhos.avaliacao-modal', ['trabalho' => $trabalho, 'valor' => 'true', 'descricao' => 'aprovar'])
-    @include('coordenador.trabalhos.avaliacao-modal', ['trabalho' => $trabalho, 'valor' => 'false', 'descricao' => 'reprovar'])
     @stack('modais')
 
 @endsection

@@ -932,7 +932,7 @@ class EventoController extends Controller
             $modalidade->trabalho = $trabalhosPorModalidade->get($modalidade->id, collect());
         }
 
-        return view('coordenador.trabalhos.listarTrabalhosValidacoes', [
+        return view('coordenador.trabalhos.listarTrabalhosCorrecoes', [
             'evento' => $evento,
             'modalidades' => $modalidades,
             'trabalhos' => $trabalhos,
@@ -1002,7 +1002,7 @@ class EventoController extends Controller
             $modalidade->trabalho = $trabalhosPorModalidade->get($modalidade->id, collect());
         }
 
-        return view('coordenador.trabalhos.listarTrabalhosCorrecoes', [
+        return view('coordenador.trabalhos.listarTrabalhosValidacoes', [
             'evento' => $evento,
             'modalidades' => $modalidades,
             'trabalhos' => $trabalhos,
