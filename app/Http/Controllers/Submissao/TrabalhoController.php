@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Submissao;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TrabalhoPostRequest;
 use App\Http\Requests\TrabalhoUpdateRequest;
+use App\Mail\CartaDeAceiteMail;
 use App\Mail\EmailParaUsuarioNaoCadastrado;
 use App\Mail\EmailParecerDisponivel;
 use App\Mail\SubmissaoTrabalho;
@@ -1083,6 +1084,8 @@ class TrabalhoController extends Controller
 
                         if($autor_inscrito || ($coautor_inscrito ?? false)){
                             $trabalho->update(['aprovado' => true]);
+
+                            Mail::to($trabalho->autor->email)->send(new CartaDeAceiteMail($trabalho));
                             return ['flash' => 'success', 'msg' => 'Trabalho aprovado com sucesso!'];
 
                         }else{
