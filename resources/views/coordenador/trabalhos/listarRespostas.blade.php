@@ -1,9 +1,28 @@
 @extends('coordenador.detalhesEvento')
 @section('menu')
     <div id="divListarAvaliacoes" style="display: block">
-        <div class="row ">
-            <div class="col-sm-6">
+        <div class="row">
+            <div class="col-12">
                 <h1 class="">Avaliações</h1>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-9">
+                <form method="GET" action="{{ route('coord.listarAvaliacoes', ['eventoId' => $evento->id]) }}">
+                    <input type="hidden" name="eventoId" value="{{ $evento->id }}">
+                    <input type="hidden" name="column" value="{{ request('column', 'titulo') }}">
+                    <input type="hidden" name="direction" value="{{ request('direction', 'asc') }}">
+                    <input type="hidden" name="status" value="{{ request('status', 'rascunho') }}">
+                    <div class="input-group">
+                        <input class="form-control" type="search" name="search" value="{{ request('search') }}" placeholder="Pesquisar por título" aria-label="Pesquisar">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-info" type="submit">Pesquisar</button>
+                            @if(request('search'))
+                                <a href="{{ route('coord.listarAvaliacoes', ['eventoId' => $evento->id, 'column' => request('column', 'titulo'), 'direction' => request('direction', 'asc'), 'status' => request('status', 'rascunho')]) }}" class="btn btn-outline-success">Limpar</a>
+                            @endif
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
         <div class="btn-group mb-2" role="group" aria-label="Button group with nested dropdown">
@@ -93,12 +112,13 @@
                                                 <th scope="col">Status</th>
                                                 <th scope="col" style="text-align:center">Parecer</th>
                                                 <th scope="col" class="text-center">Encaminhado para o autor</th>
-                                                <th scope="col" class="text-center">Lembrete de correção enviado</th>
+                                                {{-- <th scope="col" class="text-center">Lembrete de correção enviado</th> --}}
                                             </tr>
                                         </thead>
 
                                         <tbody>
-                                            @foreach ($trabalhos as $trabalho)
+                                            @forelse ($trabalhos as $trabalho)
+                                                <tr>
                                                 <td>
                                                     @if ($trabalho->arquivo && count($trabalho->arquivo) > 0)
                                                         <a
@@ -169,9 +189,13 @@
                                                         <br>
                                                     @endforeach
                                                 </td>
-                                                <td class="text-center">{{$trabalho->lembrete_enviado ? 'Sim' : 'Não'}}</td>
+                                                {{-- <td class="text-center">{{$trabalho->lembrete_enviado ? 'Sim' : 'Não'}}</td> --}}
                                                 </tr>
-                                            @endforeach
+                                            @empty
+                                                <tr>
+                                                    <td colspan="9" class="text-center">Nenhum trabalho encontrado nesta modalidade.</td>
+                                                </tr>
+                                            @endforelse
                                         </tbody>
                                     </table>
                                 </div>
@@ -180,5 +204,22 @@
                     </div>
                 </div>
         @endforeach
+        @if(isset($trabalhosPaginados))
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted">
+                                Mostrando {{ $trabalhosPaginados->firstItem() ?? 0 }} até {{ $trabalhosPaginados->lastItem() ?? 0 }}
+                                de {{ $trabalhosPaginados->total() }} resultados
+                            </p>
+                        </div>
+                        <div>
+                            {{ $trabalhosPaginados->links() }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endif
     </div>
 @endsection

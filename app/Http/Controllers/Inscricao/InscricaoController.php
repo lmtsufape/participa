@@ -55,7 +55,7 @@ class InscricaoController extends Controller
     public function inscritos(Evento $evento, Request $request)
     {
         $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
-        
+
         if ($evento->subeventos->count() > 0) {
             $subeventoIds = $evento->subeventos->pluck('id')->toArray();
             $query = Inscricao::where(function($q) use ($evento, $subeventoIds) {
@@ -65,19 +65,19 @@ class InscricaoController extends Controller
         } else {
             $query = $evento->inscricaos();
         }
-        
+
         if ($request->filled('nome')) {
             $query->whereHas('user', function($q) use ($request) {
                 $q->whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($request->nome) . '%']);
             });
         }
-        
+
         if ($request->filled('email')) {
             $query->whereHas('user', function($q) use ($request) {
                 $q->whereRaw('LOWER(email) LIKE ?', ['%' . strtolower($request->email) . '%']);
             });
         }
-        
+
         if ($request->filled('status')) {
             if ($request->status === 'finalizada') {
                 $query->where('finalizada', true);
@@ -85,7 +85,7 @@ class InscricaoController extends Controller
                 $query->where('finalizada', false);
             }
         }
-        
+
         $inscricoes = $query->orderBy('finalizada', 'desc')->paginate(50)->withQueryString();
 
         return view('coordenador.inscricoes.inscritos', compact('inscricoes', 'evento'));
@@ -408,7 +408,7 @@ class InscricaoController extends Controller
             }
 
             auth()->user()->notify(new InscricaoEvento($evento));
-            
+
             return redirect()->action([EventoController::class, 'show'], ['id' => $request->evento_id])->with('message', 'Inscrição realizada com sucesso!');
         }
 
@@ -627,6 +627,15 @@ class InscricaoController extends Controller
 
         $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
 
+        if ($request->has('participantes')) {
+            return $this->inscreverParticipantesColetivos($request, $evento);
+        } else {
+            return $this->inscreverParticipanteIndividual($request, $evento);
+        }
+    }
+
+    private function inscreverParticipanteIndividual(Request $request, $evento)
+    {
         if ($request->identificador == 'email') {
             $participante = User::where('email', $request->email)->first();
         } elseif ($request->identificador == 'cpf') {
@@ -636,12 +645,12 @@ class InscricaoController extends Controller
 
         if(!$participante)
         {
-            return redirect(route('inscricao.inscritos', ['evento' => $request->evento_id]))->with(['error_message' => 'Participante informado não possui cadastrado no sistema!']);
+            return redirect(route('inscricao.inscritos', ['evento' => $evento->id]))->with(['error_message' => 'Participante informado não possui cadastrado no sistema!']);
         }
 
         if (Inscricao::where('user_id', $participante->id)->where('evento_id', $evento->id)->exists())
         {
-            return redirect(route('inscricao.inscritos', ['evento' => $request->evento_id]))->with(['error_message' => 'Participante informado já está inscrito neste evento!']);
+            return redirect(route('inscricao.inscritos', ['evento' => $evento->id]))->with(['error_message' => 'Participante informado já está inscrito neste evento!']);
         }
 
         $categoria = CategoriaParticipante::find($request->categoria);
@@ -677,7 +686,7 @@ class InscricaoController extends Controller
 
         $inscricao->categoria_participante_id = $request->categoria;
         $inscricao->user_id = $participante->id;
-        $inscricao->evento_id = $request->evento_id;
+        $inscricao->evento_id = $evento->id;
         $inscricao->finalizada = true;
 
         $inscricao->save();
@@ -690,8 +699,107 @@ class InscricaoController extends Controller
 
         $participante->notify(new InscricaoEvento($evento));
 
-        return redirect(route('inscricao.inscritos', ['evento' => $request->evento_id]))->with(['message' => 'Participante inscrito com sucesso!']);
+        return redirect(route('inscricao.inscritos', ['evento' => $evento->id]))->with(['message' => 'Participante inscrito com sucesso!']);
+    }
 
+    private function inscreverParticipantesColetivos(Request $request, $evento)
+    {
+        $participantes = $request->participantes;
+
+        if (empty($participantes) || !is_array($participantes)) {
+            return redirect(route('inscricao.inscritos', ['evento' => $evento->id]))->with(['error_message' => 'Nenhum participante foi informado.']);
+        }
+
+        $sucessos = 0;
+        $erros = [];
+        $possuiFormulario = $evento->possuiFormularioDeInscricao();
+
+        foreach ($participantes as $index => $dadosParticipante) {
+            try {
+                if (empty($dadosParticipante['categoria']) || $dadosParticipante['categoria'] == 0) {
+                    $erros[] = "Participante " . ($index + 1) . ": Categoria é obrigatória";
+                    continue;
+                }
+
+                if (empty($dadosParticipante['email']) && empty($dadosParticipante['cpf'])) {
+                    $erros[] = "Participante " . ($index + 1) . ": E-mail ou CPF é obrigatório";
+                    continue;
+                }
+
+                // busca por cpf ou email, que são os 2 meios de inscrever uma pessoa
+                $participante = null;
+                if (isset($dadosParticipante['identificador']) && $dadosParticipante['identificador'] == 'email' && !empty($dadosParticipante['email'])) {
+                    $participante = User::where('email', $dadosParticipante['email'])->first();
+                } elseif (isset($dadosParticipante['identificador']) && $dadosParticipante['identificador'] == 'cpf' && !empty($dadosParticipante['cpf'])) {
+                    $participante = User::where('cpf', $dadosParticipante['cpf'])->first();
+                } elseif (!empty($dadosParticipante['email'])) {
+                    $participante = User::where('email', $dadosParticipante['email'])->first();
+                } elseif (!empty($dadosParticipante['cpf'])) {
+                    $participante = User::where('cpf', $dadosParticipante['cpf'])->first();
+                }
+
+                if (!$participante) {
+                    $erros[] = "Participante " . ($index + 1) . ": Não possui cadastro no sistema";
+                    continue;
+                }
+
+                if (Inscricao::where('user_id', $participante->id)->where('evento_id', $evento->id)->exists()) {
+                    $erros[] = "Participante " . ($index + 1) . " ({$participante->name}): Já está inscrito neste evento";
+                    continue;
+                }
+
+                $categoria = CategoriaParticipante::find($dadosParticipante['categoria']);
+
+                if (!$categoria) {
+                    $erros[] = "Participante " . ($index + 1) . " ({$participante->name}): Categoria inválida";
+                    continue;
+                }
+
+                if ($possuiFormulario) {
+                    $validator = Validator::make($dadosParticipante, ['categoria' => 'required']);
+                    if ($validator->fails()) {
+                        $erros[] = "Participante " . ($index + 1) . " ({$participante->name}): Categoria é obrigatória";
+                        continue;
+                    }
+
+                    $validator = $this->validarCamposExtras(new Request($dadosParticipante), $categoria);
+                    if ($validator->fails()) {
+                        $erros[] = "Participante " . ($index + 1) . " ({$participante->name}): " . implode(', ', $validator->errors()->all());
+                        continue;
+                    }
+                }
+
+                $inscricao = new Inscricao();
+                $inscricao->categoria_participante_id = $dadosParticipante['categoria'];
+                $inscricao->user_id = $participante->id;
+                $inscricao->evento_id = $evento->id;
+                $inscricao->finalizada = true;
+                $inscricao->save();
+
+                if ($possuiFormulario) {
+                    $this->salvarCamposExtras($inscricao, new Request($dadosParticipante), $categoria);
+                }
+
+                $participante->notify(new InscricaoEvento($evento));
+
+                $sucessos++;
+
+            } catch (\Exception $e) {
+                $erros[] = "Participante " . ($index + 1) . ": Erro interno - " . $e->getMessage();
+            }
+        }
+
+        $mensagem = '';
+        if ($sucessos > 0) {
+            $mensagem .= "{$sucessos} participante(s) inscrito(s) com sucesso! ";
+        }
+        if (!empty($erros)) {
+            $mensagem .= "Erros: " . implode('; ', $erros);
+        }
+
+        $tipoMensagem = !empty($erros) ? 'error_message' : 'message';
+
+        return redirect(route('inscricao.inscritos', ['evento' => $evento->id]))->with([$tipoMensagem => $mensagem]);
     }
 
     public function alterarCategoria(Request $request, Inscricao $inscricao)
