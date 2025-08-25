@@ -112,7 +112,7 @@
                                                 <th scope="col">Status</th>
                                                 <th scope="col" style="text-align:center">Parecer</th>
                                                 <th scope="col" class="text-center">Encaminhado para o autor</th>
-                                                <th scope="col" class="text-center">Lembrete de correção enviado</th>
+                                                {{-- <th scope="col" class="text-center">Lembrete de correção enviado</th> --}}
                                             </tr>
                                         </thead>
 
@@ -189,7 +189,7 @@
                                                         <br>
                                                     @endforeach
                                                 </td>
-                                                <td class="text-center">{{$trabalho->lembrete_enviado ? 'Sim' : 'Não'}}</td>
+                                                {{-- <td class="text-center">{{$trabalho->lembrete_enviado ? 'Sim' : 'Não'}}</td> --}}
                                                 </tr>
                                             @empty
                                                 <tr>
