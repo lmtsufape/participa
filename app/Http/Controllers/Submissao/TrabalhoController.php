@@ -1061,25 +1061,47 @@ class TrabalhoController extends Controller
 
     public function aprovacaoTrabalho(Request $request)
     {
-        $trabalho = Trabalho::find($request->trabalho_id);
-        switch ($request->aprovado) {
-            case 'true':
-                $trabalho->update(['aprovado' => true]);
-                $mensagem = 'Trabalho aprovado com sucesso!';
-                break;
-            case 'false':
-                $trabalho->update(['aprovado' => false]);
-                $mensagem = 'Trabalho reprovado com sucesso!';
-                break;
-            case 'null':
-                $trabalho->update(['aprovado' => null]);
-                $mensagem = 'Trabalho liberado para correção com sucesso!';
+        $resultado = DB::transaction(function () use ($request){
+            $trabalho = Trabalho::lockForUpdate()->find($request->trabalho_id);
 
-                break;
+            switch ($request->aprovado) {
+                case 'true':
+                    if($trabalho->coautors->count() <= $trabalho->modalidade->numMaxCoautores){
+                        $autor_inscrito = Inscricao::where('user_id', $trabalho->autor->id)
+                            ->where('evento_id', $trabalho->eventoId)
+                            ->where('finalizada', true)
+                            ->exists();
 
-        }
+                        if(!$autor_inscrito){
+                            $coautor_inscrito = $trabalho->coautors()
+                                ->whereHas('user.inscricaos', function ($query) use ($trabalho) {
+                                    $query->where('evento_id', $trabalho->eventoId)
+                                        ->where('finalizada', true);
+                                })
+                                ->exists();
+                        }
 
-        return redirect()->back()->with(['success' => $mensagem ?? '']);
+                        if($autor_inscrito || ($coautor_inscrito ?? false)){
+                            $trabalho->update(['aprovado' => true]);
+                            return ['flash' => 'success', 'msg' => 'Trabalho aprovado com sucesso!'];
+
+                        }else{
+                            return ['flash' => 'error', 'msg' => 'Nenhum autor ou coautor com inscrição no evento paga'];
+                        }
+                    }
+                    return ['flash' => 'error', 'msg' => 'Número de coautores superior ao permitido na modalidade do trabalho'];
+
+                case 'false':
+                    $trabalho->update(['aprovado' => false]);
+                    return ['flash' => 'success', 'msg' => 'Trabalho reprovado com sucesso!'];
+
+                case 'null':
+                    $trabalho->update(['aprovado' => null]);
+                    return ['flash' => 'success', 'msg' => 'Trabalho liberado para correção com sucesso!'];
+            }
+
+        });
+        return back()->with([$resultado['flash'] => $resultado['msg']]);
     }
 
     public function correcaoTrabalho(Request $request)
