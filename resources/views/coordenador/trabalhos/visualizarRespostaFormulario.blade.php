@@ -126,7 +126,7 @@
                 Deletar Avaliação
             </button>
 
-            <button type="submit" class="btn btn-md btn-primary" id="submeterFormBotao">
+            <button type="submit" class="btn btn-md btn-primary" form="editarRespostas" id="submeterFormBotao">
                 {{ __('Atualizar Avaliação') }}
             </button>
 
