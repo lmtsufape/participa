@@ -257,39 +257,16 @@
                                     </td>
 
                                     <td style="text-align:center">
-                                        {{-- Desabilitando temporariamente a restricao de aprovacao para correcao --}}
-                                        {{-- @if ($trabalho->aprovado !== false) --}}
-                                        @if ($trabalho->modalidade->inicioCorrecao > date(01 - 01 - 2021))
-                                            <a href="#"
-                                                @if (
-                                                    ($trabalho->modalidade->inicioCorrecao <= $agora && $agora <= $trabalho->modalidade->fimCorrecao) ||
-                                                        $trabalho->modalidade->estaEmPeriodoExtraDeCorrecao()) data-bs-toggle="modal" data-bs-target="#modalCorrecaoTrabalho_{{ $trabalho->id }}" style="color:#114048ff" @else onclick="return false;" data-bs-toggle="popover" data-trigger="focus" data-placement="bottom" title="Não permitido" data-content="A correção do trabalho só é permitida durante o período de correção. De {{ date('d/m/Y H:i', strtotime($trabalho->modalidade->inicioCorrecao)) }} a {{ date('d/m/Y H:i', strtotime($trabalho->modalidade->fimCorrecao)) }}" @endif>
-                                                <img class="" src="{{ asset('img/icons/file-upload-solid.svg') }}"
-                                                    style="width:20px">
+                                        @if(($trabalho->modalidade->inicioCorrecao <= $agora && $trabalho->modalidade->fimCorrecao >= $agora || $trabalho->modalidade->estaEmPeriodoExtraDeCorrecao()) && $trabalho->aprovado === null)
+                                            <a href="#" data-bs-toggle="modal" data-bs-target="#modalCorrecaoTrabalho_{{$trabalho->id}}" style="color:#114048ff">
+                                                <img class="" src="{{asset('img/icons/file-upload-solid.svg')}}" style="width:20px">
                                             </a>
                                         @else
-                                            <a href="#"
-                                                @if (
-                                                    ($trabalho->modalidade->inicioCorrecao <= $agora && $agora <= $trabalho->modalidade->fimCorrecao) ||
-                                                        $trabalho->modalidade->estaEmPeriodoExtraDeCorrecao()) data-bs-toggle="modal" data-bs-target="#modalCorrecaoTrabalho_{{ $trabalho->id }}" style="color:#114048ff" @else onclick="return false;" data-bs-toggle="popover" data-trigger="focus" data-placement="bottom" title="Não permitido" data-content="A correção não está habilitada para este trabalho." @endif>
-                                                <img class="" src="{{ asset('img/icons/file-upload-solid.svg') }}"
-                                                    style="width:20px">
+                                            <a href="#" onclick="return false;" data-toggle="popover" data-trigger="focus" data-placement="bottom" title="Não permitido" data-content="A correção não está habilitada para este trabalho.">
+                                                <img src="{{asset('img/icons/file-upload-solid.svg')}}" style="width:20px">
                                             </a>
                                         @endif
-                                        {{-- @else
-                        <a data-bs-toggle="popover" data-placement="bottom" title="Não permitido" data-content="A correção não está disponível para o seu trabalho.">
-                            <img class="" src="{{asset('img/icons/file-upload-solid.svg')}}" style="width:20px">
-              </a>
-              @endif --}}
                                     </td>
-
-                                    {{-- <td style="text-align:center">
-                    <form action="{{ route('trabalho.arquivar') }}" method="post">
-            @csrf
-            <input type="hidden" name="trabalho_id" value="{{ $trabalho->id }}">
-            <button type="submit" class="btn btn-warning">Arquivar</button>
-            </form>
-            </td> --}}
                                 </tr>
                             @endforeach
                         </tbody>
@@ -1177,10 +1154,8 @@
                         <div class="modal-header" style="background-color: #114048ff; color: white;">
                             <h5 class="modal-title" id="modalCorrecaoTrabalho_{{ $trabalho->id }}Label">Correção do
                                 trabalho {{ $trabalho->titulo }}</h5>
-                            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"
-                                style="color: white;">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
                         </div>
                         <div class="modal-body">
                             <form id="formCorrecaoTrabalho{{ $trabalho->id }}"

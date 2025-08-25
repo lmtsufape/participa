@@ -214,10 +214,10 @@ class TrabalhoController extends Controller
             }
 
             $coautoresIds = [];
-            
+
             if ($request->has('nomeCoautor')) {
                 $total = count($request->nomeCoautor);
-                
+
                 for ($key = 1; $key < $total; $key++) {
                     $value = $request->emailCoautor[$key] ?? null;
                     $nome = $request->nomeCoautor[$key];
@@ -234,7 +234,7 @@ class TrabalhoController extends Controller
                         } else {
                             continue;
                         }
-                    } else { 
+                    } else {
                         $passwordTemporario = Str::random(8);
                         $userCoautor = User::create([
                             'email' => $value ?: null,
@@ -244,7 +244,7 @@ class TrabalhoController extends Controller
                             'instituicao' => $vinculo
                         ]);
                         $coautoresIds[$key] = $userCoautor->id;
-                        
+
                         if ($value) {
                             $coord = User::find($evento->coordenadorId);
                             Mail::to($value)->send(new EmailParaUsuarioNaoCadastrado(Auth()->user()->name, '  ', 'Coautor', $evento->nome, $passwordTemporario, $value, $coord));
@@ -419,7 +419,7 @@ class TrabalhoController extends Controller
             $subject = 'Submissão de Trabalho';
             Notification::send($autor, new SubmissaoTrabalhoNotification($autor, $subject, $trabalho));
             if ($request->emailCoautor != null) {
-                foreach ($request->emailCoautor as $key => $value) {                    
+                foreach ($request->emailCoautor as $key => $value) {
                     if ($value == $autor->email) {
                     } else {
                         $userCoautor = User::where('email', $value)->first();
@@ -427,7 +427,7 @@ class TrabalhoController extends Controller
                             // Mail::to($userCoautor->email)
                             //     ->send(new SubmissaoTrabalho($userCoautor, $subject, $trabalho));
                             Notification::send($userCoautor, new SubmissaoTrabalhoNotification($userCoautor, $subject, $trabalho));
-                        } 
+                        }
                     }
                 }
             }
@@ -1062,19 +1062,24 @@ class TrabalhoController extends Controller
     public function aprovacaoTrabalho(Request $request)
     {
         $trabalho = Trabalho::find($request->trabalho_id);
-        $mensagem = '';
+        switch ($request->aprovado) {
+            case 'true':
+                $trabalho->update(['aprovado' => true]);
+                $mensagem = 'Trabalho aprovado com sucesso!';
+                break;
+            case 'false':
+                $trabalho->update(['aprovado' => false]);
+                $mensagem = 'Trabalho reprovado com sucesso!';
+                break;
+            case 'null':
+                $trabalho->update(['aprovado' => null]);
+                $mensagem = 'Trabalho liberado para correção com sucesso!';
 
-        if ($request->aprovacao == 'true') {
-            $trabalho->aprovado = true;
-            $mensagem = 'Trabalho aprovado com sucesso!';
-        } elseif ($request->aprovacao == 'false') {
-            $trabalho->aprovado = false;
-            $mensagem = 'Trabalho reprovado com sucesso!';
+                break;
+
         }
 
-        $trabalho->update();
-
-        return redirect()->back()->with(['message' => $mensagem, 'class' => 'success']);
+        return redirect()->back()->with(['success' => $mensagem ?? '']);
     }
 
     public function correcaoTrabalho(Request $request)

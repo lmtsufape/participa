@@ -117,6 +117,21 @@
                 </div>
             </div>
         @endforeach
+        <div class="alert alert-info w-50">
+            @switch($trabalho->avaliado)
+                @case('nao_corrigido')
+                    <span>Parececer do avaliador sobre a correção: <strong>Não corrigido</strong></span>
+                    @break
+                @case('corrigido_parcialmente')
+                    <span>Parececer do avaliador sobre a correção: <strong>Corrigido parcialmente</strong></span>
+                    @break
+                @case('corrigido')
+                    <span>Parececer do avaliador sobre a correção: <strong>Corrigido totalmente</strong></span>
+                    @break
+                @default
+                    <span>Parecer do avaliador sobre a correção ainda não definido</span>
+            @endswitch
+        </div>
         <div class="col-sm-12" style="margin-top: 20px;">
             <small>Para trocar o arquivo de avaliação do avaliador, envie um novo.</small><br>
             <div class="custom-file">
@@ -138,147 +153,84 @@
                  </span>
             @enderror
         </div>
-        <div class="row justify-content-left">
-            <div class="col-md-6">
-                <button type="submit" class="btn btn-primary" id="submeterFormBotao">
-                    {{ __('Editar parecer') }}
-                </button>
-            </div>
-        </div>
     </form>
-    @if ($arquivoAvaliacao != null)
-        <div class="d-flex justify-content-left">
-            <a class="btn btn-primary" href="{{route('downloadAvaliacao', ['trabalhoId' => $trabalho->id, 'revisorUserId' => $revisorUser->id])}}">
-                <div class="btn-group">
-                    <img src="{{asset('img/icons/file-download-solid.svg')}}" style="width:15px">
-                    <h6 style="margin-left: 5px; margin-top:1px; margin-bottom: 1px;">Baixar trabalho corrigido</h6>
-                </div>
+    <div class="d-flex mt-4">
+        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{$trabalho->id}}">
+            Deletar Avaliação
+        </button>
+
+        <div class="px-2">
+            <button type="submit" class="btn btn-primary" id="submeterFormBotao">
+                {{ __('Atualizar Avaliação') }}
+            </button>
+        </div>
+        @if ($arquivoAvaliacao != null)
+            <a class="btn btn-primary btn-group" href="{{route('downloadAvaliacao', ['trabalhoId' => $trabalho->id, 'revisorUserId' => $revisorUser->id])}}">
+                <img class="mr-1" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:1em">Baixar trabalho corrigido
             </a>
-            @canany(['isCoordenadorOrCoordenadorDaComissaoCientifica', 'isCoordenadorEixo'], $evento)
-                <div class="col-md-4" style="padding-ridht:0">
-                    @if ($trabalho->avaliado($revisor->user))
-                        @if ($trabalho->getParecerAtribuicao($revisor->user) != "encaminhado")
-                            <a href="{{ route('trabalho.encaminhar', [$trabalho->id, $revisor]) }}" class="btn btn-secondary">
-                                Encaminhar parecer ao autor
-                            </a>
-                        @else
-                            <a href="{{ route('trabalho.encaminhar', [$trabalho->id, $revisor]) }}" class="btn btn-secondary">
-                                Desfazer encaminhamento do parecer
-                            </a>
-                        @endif
-                    @endif
-                </div>
-                <div class="col-md-4">
-                    <form action="{{route('coord.evento.avisoCorrecao', $evento->id)}}" method="POST" id="avisoCorrecao">
-                        @csrf
-                        <input type="hidden" name="trabalhosSelecionados[]" value="{{$trabalho->id}}">
-                        <button class="btn btn-primary" type="submit">Lembrete de envio de versão corrigida do texto</button>
-                    </form>
-                </div>
-            @endcan
-        </div>
-    @else
-        <div>
-            @canany(['isCoordenadorOrCoordenadorDaComissaoCientifica', 'isCoordenadorEixo'], $evento)
-                <div class="py-3">
-                    @if ($trabalho->avaliado($revisor->user))
-                        @if ($trabalho->getParecerAtribuicao($revisor->user) != "encaminhado")
-                            <a href="{{ route('trabalho.encaminhar', [$trabalho->id, $revisor]) }}" class="btn btn-secondary">
-                               Encaminhar parecer ao autor
-                            </a>
-                        @else
-                            <a href="{{ route('trabalho.encaminhar', [$trabalho->id, $revisor]) }}" class="btn btn-secondary">
-                               Desfazer encaminhamento do parecer
-                            </a>
-                        @endif
-                    @endif
-                </div>
-                <div>
-                    <form action="{{route('coord.evento.avisoCorrecao', $evento->id)}}" method="POST" id="avisoCorrecao">
-                        @csrf
-                        <input type="hidden" name="trabalhosSelecionados[]" value="{{$trabalho->id}}">
-                        <button class="btn btn-primary" type="submit">Lembrete de envio de versão corrigida do texto</button>
-                    </form>
-                </div>
-            @endcan
-        </div>
-        <div style="margin-left:10px">
-            <h6 style="color: red">A correção não foi <br> enviada pelo parecerista.</h6>
-        </div>
-    @endif
 
-    <div class="d-flex flex-row justify-content-center p-5">
+        @else
+            <div class="mx-2 text-danger">
+                <h6>A correção não foi <br> enviada pelo parecerista.</h6>
+            </div>
+        @endif
         <div class="px-2">
-            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{$trabalho->id}}">
-                Deletar Avaliação
-            </button>
+            <form action="{{route('coord.evento.avisoCorrecao', $evento->id)}}" method="POST" id="avisoCorrecao">
+                @csrf
+                <input type="hidden" name="trabalhosSelecionados[]" value="{{$trabalho->id}}">
+                <button class="btn btn-primary" type="submit">Lembrete de envio de versão corrigida do texto</button>
+            </form>
         </div>
-        <div>
-            <button class="btn {{$trabalho->aprovado == true ? 'btn-primary' : 'btn-secondary'}}"
-            data-bs-toggle="modal" data-bs-target="#reprovar-trabalho-{{$trabalho->id}}" {{$trabalho->aprovado == true ? '' : 'disabled' }}>
-                Reprovar para Correção
-            </button>
-        </div>
-        <div class="px-2">
-            <button class="btn {{$trabalho->aprovado == false ? 'btn-primary' : 'btn-secondary'}}"
-            data-bs-toggle="modal" data-bs-target="#aprovar-trabalho-{{$trabalho->id}}" {{$trabalho->aprovado == false ? '' : 'disabled' }}>
-                Aprovar para Correção
-            </button>
-        </div>
+        @can('isCoordenadorOrCoordenadorDasComissoes', $evento)
+            <div>
+                @if ($trabalho->avaliado($revisor->user))
+                    @if ($trabalho->getParecerAtribuicao($revisor->user) != "encaminhado")
+                        <a href="{{ route('trabalho.encaminhar', [$trabalho->id, $revisor]) }}" class="btn btn-success">
+                            Encaminhar avaliação ao autor
+                        </a>
+                    @else
+                        <a href="{{ route('trabalho.encaminhar', [$trabalho->id, $revisor]) }}" class="btn btn-secondary">
+                            Desfazer encaminhamento da avaliação
+                        </a>
+                    @endif
+                @endif
+            </div>
+        @endcan
     </div>
 
+
+    <hr class="my-5">
+
+    <div class="d-flex justify-content-center gap-3">
+        <div class="mr-2">
+            <button class="btn btn-danger"
+            data-bs-toggle="modal" data-bs-target="#avaliacao-reprovar-{{$trabalho->id}}" @disabled($trabalho->aprovado === false)>
+                Reprovar Trabalho
+            </button>
+        </div>
+        @if($trabalho->avaliado == 'Avaliado')
+        <div>
+            <button class="btn btn-primary"
+                data-bs-toggle="modal" data-bs-target="#avaliacao-corrigir-{{$trabalho->id}}">
+                Aprovar com pendências
+            </button>
+            @push('modais')
+                @include('coordenador.trabalhos.avaliacao-modal', ['trabalho' => $trabalho, 'valor' => 'null', 'descricao' => 'corrigir'])
+            @endpush
+
+            </div>
+            @endif
+            <div class="ml-2">
+                <button class="btn btn-success"
+                data-bs-toggle="modal" data-bs-target="#avaliacao-aprovar-{{$trabalho->id}}" @disabled($trabalho->aprovado === true)>
+                    Aprovar Trabalho
+                </button>
+        </div>
+    </div>
     @include('components.delete_modal', ['route' => 'coord.avaliacao.destroy', 'param' => 'trabalho_id', 'entity_id' => $trabalho->id, 'element' => $revisor->id, 'param_element' => 'revisor_id'])
-
-    <div class="modal fade" id="reprovar-trabalho-{{$trabalho->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Reprovar</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form id="form-reprovar-trabalho-{{$trabalho->id}}" method="POST" action="{{route('trabalho.aprovar-reprovar', $trabalho->id)}}">
-                        <input type="hidden" name="trabalho_id" value={{$trabalho->id}}>
-                        <input type="hidden" name="aprovacao" value="false">
-                        @csrf
-                        Tem certeza que deseja reprovar este trabalho {{$trabalho->titulo}}?
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Não</button>
-                    <button type="submit" class="btn btn-danger" form="form-reprovar-trabalho-{{$trabalho->id}}">Sim</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="aprovar-trabalho-{{$trabalho->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Aprovar</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form id="form-aprovar-trabalho-{{$trabalho->id}}" method="POST" action="{{route('trabalho.aprovar-reprovar', $trabalho->id)}}">
-                        <input type="hidden" name="trabalho_id" value={{$trabalho->id}}>
-                        <input type="hidden" name="aprovacao" value="true">
-                        @csrf
-                        Tem certeza que deseja aprovar este trabalho {{$trabalho->titulo}}?
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Não</button>
-                    <button type="submit" class="btn btn-danger" form="form-aprovar-trabalho-{{$trabalho->id}}">Sim</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
+    @include('coordenador.trabalhos.avaliacao-modal', ['trabalho' => $trabalho, 'valor' => 'true', 'descricao' => 'aprovar'])
+    @include('coordenador.trabalhos.avaliacao-modal', ['trabalho' => $trabalho, 'valor' => 'false', 'descricao' => 'reprovar'])
+    @stack('modais')
 
 @endsection
 
