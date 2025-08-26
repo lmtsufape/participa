@@ -118,7 +118,23 @@ class EventoController extends Controller
 
         $evento->total_arrecadado = $evento->inscricaos()->where('finalizada', true)->with('categoria')->get()->sum(fn($inscricao) => $inscricao->categoria->valor_total ?? 0);
 
-        $evento->total_taxas = $evento->inscricaos()->where('finalizada', true)->with('pagamento')->get()->sum(fn($inscricao) => $inscricao->pagamento->taxa ?? 0);
+        //Descomentar essa linha caso esteja em outro participa fora o da aba
+        //$evento->total_taxas = $evento->inscricaos()->where('finalizada', true)->with('pagamento')->get()->sum(fn($inscricao) => $inscricao->pagamento->taxa ?? 0);
+
+        // Cálculo específico para o Participa ABA -> comentar essa parte caso esteja em outro participa
+        if($evento->id == 2 && $evento->nome == "13º Congresso Brasileiro de Agroecologia"){
+            $dataCorte = '2025-08-21 09:13:00';
+            $valorAdicional = 10623.46;
+            $evento->total_taxas = $evento->inscricaos()
+                ->where('finalizada', true)
+                ->whereHas('pagamento', function($query) use ($dataCorte) {
+                    $query->where('created_at', '>=', $dataCorte);
+                })
+                ->join('pagamentos', 'inscricaos.pagamento_id', '=', 'pagamentos.id')
+                ->sum('pagamentos.taxa') + $valorAdicional;
+        } else {
+            $evento->total_taxas = $evento->inscricaos()->where('finalizada', true)->with('pagamento')->get()->sum(fn($inscricao) => $inscricao->pagamento->taxa ?? 0);
+        }
         $evento->total_disponivel = $evento->total_arrecadado - $evento->total_taxas;
 
         return view('coordenador.informacoes', [
@@ -650,22 +666,37 @@ class EventoController extends Controller
     public function exportTrabalhos(Evento $evento)
     {
         $this->authorize('isCoordenadorOrCoordCientificaOrCoordEixo', $evento);
-        $trabalhos = Trabalho::where('eventoId', $evento->id)
-            ->get()->map(function ($trabalho) {
-                return [
-                    $trabalho->area->nome,
-                    $trabalho->modalidade->nome,
-                    $trabalho->titulo,
-                    $trabalho->autor->name,
-                    $trabalho->autor->cpf,
-                    $trabalho->autor->email,
-                    $trabalho->autor->celular,
-                    $this->coautoresToString($trabalho, 'nome'),
-                    $this->coautoresToString($trabalho, 'cpf'),
-                    $this->coautoresToString($trabalho, 'email'),
-                    $this->coautoresToString($trabalho, 'celular'),
-                ];
-            })->collect();
+
+        $trabalhos = collect();
+
+        // sem chunk estoura a memória quando tem trabalhos demais
+        Trabalho::where('eventoId', $evento->id)
+            ->with([
+                'area:id,nome',
+                'modalidade:id,nome',
+                'autor:id,name,cpf,email,celular',
+                'coautors.user:id,name,cpf,email,celular'
+            ])
+            ->chunk(500, function ($trabalhosChunk) use ($trabalhos) {
+                foreach ($trabalhosChunk as $trabalho) {
+                    $coautoresData = $this->processCoautores($trabalho);
+
+                    $trabalhos->push([
+                        $trabalho->id,
+                        $trabalho->area->nome,
+                        $trabalho->modalidade->nome,
+                        $trabalho->titulo,
+                        $trabalho->autor->name,
+                        $trabalho->autor->cpf,
+                        $trabalho->autor->email,
+                        $trabalho->autor->celular,
+                        $coautoresData['nomes'],
+                        $coautoresData['cpfs'],
+                        $coautoresData['emails'],
+                        $coautoresData['celulares'],
+                    ]);
+                }
+            });
 
         $nome = $this->somenteLetrasNumeros($evento->nome);
 
@@ -719,6 +750,30 @@ class EventoController extends Controller
         return preg_replace('/[^A-Za-z0-9\_ ]/', '', $string);
     }
 
+    private function processCoautores(Trabalho $trabalho)
+    {
+        $nomes = [];
+        $cpfs = [];
+        $emails = [];
+        $celulares = [];
+
+        foreach ($trabalho->coautors as $coautor) {
+            if ($coautor->user->id != $trabalho->autorId) {
+                $nomes[] = $coautor->user->name;
+                $cpfs[] = $coautor->user->cpf;
+                $emails[] = $coautor->user->email;
+                $celulares[] = $coautor->user->celular;
+            }
+        }
+
+        return [
+            'nomes' => implode(', ', $nomes),
+            'cpfs' => implode(', ', $cpfs),
+            'emails' => implode(', ', $emails),
+            'celulares' => implode(', ', $celulares),
+        ];
+    }
+
     private function coautoresToString(Trabalho $trabalho, $campo)
     {
         $stringRetorno = '';
@@ -739,6 +794,12 @@ class EventoController extends Controller
             foreach ($trabalho->coautors as $coautor) {
                 if ($coautor->user->id != $trabalho->autorId) {
                     $stringRetorno .= $coautor->user->celular . ', ';
+                }
+            }
+        } elseif ($campo == 'cpf') {
+            foreach ($trabalho->coautors as $coautor) {
+                if ($coautor->user->id != $trabalho->autorId) {
+                    $stringRetorno .= $coautor->user->cpf . ', ';
                 }
             }
         }

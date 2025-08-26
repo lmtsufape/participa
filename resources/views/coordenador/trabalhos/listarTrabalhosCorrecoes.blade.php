@@ -43,7 +43,8 @@
 
         <div class="card mb-3">
             <div class="card-body">
-                <form method="GET" action="{{ route('coord.listarCorrecoes', ['eventoId' => $evento->id]) }}">
+                <form method="GET" action="{{ route('coord.listarCorrecoes') }}">
+                    <input type="hidden" name="eventoId" value="{{ $evento->id }}">
                     <div class="row">
                         <div class="col-md-10">
                             <label for="titulo" class="form-label">Buscar por Título</label>
