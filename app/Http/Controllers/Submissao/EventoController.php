@@ -650,22 +650,37 @@ class EventoController extends Controller
     public function exportTrabalhos(Evento $evento)
     {
         $this->authorize('isCoordenadorOrCoordCientificaOrCoordEixo', $evento);
-        $trabalhos = Trabalho::where('eventoId', $evento->id)
-            ->get()->map(function ($trabalho) {
-                return [
-                    $trabalho->area->nome,
-                    $trabalho->modalidade->nome,
-                    $trabalho->titulo,
-                    $trabalho->autor->name,
-                    $trabalho->autor->cpf,
-                    $trabalho->autor->email,
-                    $trabalho->autor->celular,
-                    $this->coautoresToString($trabalho, 'nome'),
-                    $this->coautoresToString($trabalho, 'cpf'),
-                    $this->coautoresToString($trabalho, 'email'),
-                    $this->coautoresToString($trabalho, 'celular'),
-                ];
-            })->collect();
+
+        $trabalhos = collect();
+
+        // sem chunk estoura a memória quando tem trabalhos demais
+        Trabalho::where('eventoId', $evento->id)
+            ->with([
+                'area:id,nome',
+                'modalidade:id,nome',
+                'autor:id,name,cpf,email,celular',
+                'coautors.user:id,name,cpf,email,celular'
+            ])
+            ->chunk(500, function ($trabalhosChunk) use ($trabalhos) {
+                foreach ($trabalhosChunk as $trabalho) {
+                    $coautoresData = $this->processCoautores($trabalho);
+
+                    $trabalhos->push([
+                        $trabalho->id,
+                        $trabalho->area->nome,
+                        $trabalho->modalidade->nome,
+                        $trabalho->titulo,
+                        $trabalho->autor->name,
+                        $trabalho->autor->cpf,
+                        $trabalho->autor->email,
+                        $trabalho->autor->celular,
+                        $coautoresData['nomes'],
+                        $coautoresData['cpfs'],
+                        $coautoresData['emails'],
+                        $coautoresData['celulares'],
+                    ]);
+                }
+            });
 
         $nome = $this->somenteLetrasNumeros($evento->nome);
 
@@ -719,6 +734,30 @@ class EventoController extends Controller
         return preg_replace('/[^A-Za-z0-9\_ ]/', '', $string);
     }
 
+    private function processCoautores(Trabalho $trabalho)
+    {
+        $nomes = [];
+        $cpfs = [];
+        $emails = [];
+        $celulares = [];
+
+        foreach ($trabalho->coautors as $coautor) {
+            if ($coautor->user->id != $trabalho->autorId) {
+                $nomes[] = $coautor->user->name;
+                $cpfs[] = $coautor->user->cpf;
+                $emails[] = $coautor->user->email;
+                $celulares[] = $coautor->user->celular;
+            }
+        }
+
+        return [
+            'nomes' => implode(', ', $nomes),
+            'cpfs' => implode(', ', $cpfs),
+            'emails' => implode(', ', $emails),
+            'celulares' => implode(', ', $celulares),
+        ];
+    }
+
     private function coautoresToString(Trabalho $trabalho, $campo)
     {
         $stringRetorno = '';
@@ -739,6 +778,12 @@ class EventoController extends Controller
             foreach ($trabalho->coautors as $coautor) {
                 if ($coautor->user->id != $trabalho->autorId) {
                     $stringRetorno .= $coautor->user->celular . ', ';
+                }
+            }
+        } elseif ($campo == 'cpf') {
+            foreach ($trabalho->coautors as $coautor) {
+                if ($coautor->user->id != $trabalho->autorId) {
+                    $stringRetorno .= $coautor->user->cpf . ', ';
                 }
             }
         }
