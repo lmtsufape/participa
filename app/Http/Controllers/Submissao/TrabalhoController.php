@@ -1083,9 +1083,14 @@ class TrabalhoController extends Controller
                         }
 
                         if($autor_inscrito || ($coautor_inscrito ?? false)){
-                            $trabalho->update(['aprovado' => true]);
+                            $codigo = Trabalho::gerarCodigo();
 
-                            Mail::to($trabalho->autor->email)->send(new CartaDeAceiteMail($trabalho));
+                            $trabalho->aprovado                 = true;
+                            $trabalho->hash_codigo_aprovacao    = hash('sha256', str_replace('-', '', $codigo));
+                            $trabalho->aprovacao_emitida_em   = now();
+                            $trabalho->saveOrFail();
+
+                            Mail::to($trabalho->autor->email)->send(new CartaDeAceiteMail($trabalho, $codigo));
                             return ['flash' => 'success', 'msg' => 'Trabalho aprovado com sucesso!'];
 
                         }else{

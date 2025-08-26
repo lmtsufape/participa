@@ -14,12 +14,14 @@ class CartaDeAceiteMail extends Mailable
     use Queueable, SerializesModels;
 
     protected $trabalho;
+    protected $codigo;
     /**
      * Create a new message instance.
      */
-    public function __construct($trabalho)
+    public function __construct($trabalho, $codigo)
     {
         $this->trabalho = $trabalho;
+        $this->codigo = $codigo;
     }
 
     /**
@@ -44,6 +46,7 @@ class CartaDeAceiteMail extends Mailable
             view: 'emails.carta-de-aceite',
             with: [
                 'trabalho' => $this->trabalho,
+                'codigo'    => $this->codigo,
                 'imgPath' =>  file_exists($imgPath) ? $imgPath : null,
             ],
         );

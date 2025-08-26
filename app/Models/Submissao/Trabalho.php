@@ -25,6 +25,14 @@ class Trabalho extends Model
         'campoextra4grande', 'campoextra5grande', 'status', 'aprovado'
     ];
 
+    protected $casts = [
+        'aprovacao_emitida_em' => 'datetime'
+    ];
+
+    public static function gerarCodigo(){
+        return strtoupper(implode('-', str_split(bin2hex(random_bytes(16)), 4)));
+    }
+
     public function recurso()
     {
         return $this->hasMany('App\Models\Submissao\Recurso', 'trabalhoId');

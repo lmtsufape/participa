@@ -67,6 +67,34 @@
                                 <strong>Universidade Federal do Vale do São Francisco (UNIVASF), Juazeiro-BA</strong>.
                             </p>
 
+                            <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%"
+                                    style="margin:18px 0;padding:0;">
+                                <tr>
+                                    <td align="center">
+                                    <div style="display:inline-block;text-align:center;background:#f8fafc;border:1px solid #e5e7eb;
+                                                border-radius:10px;padding:16px 18px;max-width:520px;">
+                                        <div style="font-family:Arial,Helvetica,sans-serif;font-size:13px;color:#374151;margin-bottom:8px;">
+                                        Código oficial de aprovação
+                                        </div>
+
+                                        <div style="font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,'Liberation Mono','Courier New',monospace;
+                                                    font-size:22px;line-height:1.2;letter-spacing:2px;color:#111;margin:0;">
+                                        {{ $codigo }}
+                                        </div>
+
+                                        <div style="margin-top:8px;font-size:12px;color:#6b7280;font-family:Arial,Helvetica,sans-serif;">
+                                            Acesse o link:
+                                            <a href="{{ route('validarCertificado') }}"
+                                               style="color:#2563eb;text-decoration:underline;">
+                                              {{ route('validarCertificado') }}
+                                            </a>
+                                        </div>
+
+                                    </div>
+                                    </td>
+                                </tr>
+                                </table>
+
                             <p style="margin:22px 0 4px 0;font-size:16px;text-align:center;">
                                 Comissão Saberes e Conhecimentos Técnico-Científicos do 13º CBA
                             </p>
