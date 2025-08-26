@@ -118,7 +118,23 @@ class EventoController extends Controller
 
         $evento->total_arrecadado = $evento->inscricaos()->where('finalizada', true)->with('categoria')->get()->sum(fn($inscricao) => $inscricao->categoria->valor_total ?? 0);
 
-        $evento->total_taxas = $evento->inscricaos()->where('finalizada', true)->with('pagamento')->get()->sum(fn($inscricao) => $inscricao->pagamento->taxa ?? 0);
+        //Descomentar essa linha caso esteja em outro participa fora o da aba
+        //$evento->total_taxas = $evento->inscricaos()->where('finalizada', true)->with('pagamento')->get()->sum(fn($inscricao) => $inscricao->pagamento->taxa ?? 0);
+
+        // Cálculo específico para o Participa ABA -> comentar essa parte caso esteja em outro participa
+        if($evento->id == 2 && $evento->nome == "13º Congresso Brasileiro de Agroecologia"){
+            $dataCorte = '2025-08-21 09:13:00';
+            $valorAdicional = 10623.46;
+            $evento->total_taxas = $evento->inscricaos()
+                ->where('finalizada', true)
+                ->whereHas('pagamento', function($query) use ($dataCorte) {
+                    $query->where('created_at', '>=', $dataCorte);
+                })
+                ->join('pagamentos', 'inscricaos.pagamento_id', '=', 'pagamentos.id')
+                ->sum('pagamentos.taxa') + $valorAdicional;
+        } else {
+            $evento->total_taxas = $evento->inscricaos()->where('finalizada', true)->with('pagamento')->get()->sum(fn($inscricao) => $inscricao->pagamento->taxa ?? 0);
+        }
         $evento->total_disponivel = $evento->total_arrecadado - $evento->total_taxas;
 
         return view('coordenador.informacoes', [
