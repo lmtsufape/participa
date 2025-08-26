@@ -15,7 +15,9 @@ class PreRegistroController extends Controller
 {
     public function preRegistro()
     {
-        return view('auth.preRegistro');
+        $paises = config('paises');
+
+        return view('auth.preRegistro', compact('paises'));
     }
 
     public function enviarCodigo(Request $request)
@@ -31,6 +33,12 @@ class PreRegistroController extends Controller
         ];
 
         if ($request->filled('cpf')) {
+            $cpf = $request->input('cpf');
+
+            if (!$this->validarCpf($cpf)) {
+                return back()->withErrors(['cpf' => 'CPF inválido!'])->withInput();
+            }
+
             $rules['cpf'] = 'required|string';
             // Verifica se existe um usuário ativo com esse CPF
             $userCpfAtivo = User::where('cpf', $request->cpf)->whereNull('deleted_at')->first();
@@ -61,7 +69,7 @@ class PreRegistroController extends Controller
 
         // Verifica se existe um usuário com soft delete
         $userDeletado = User::withTrashed()->where('email', $request->email)->first();
-        
+
         if ($userDeletado && $userDeletado->deleted_at === null) {
             return back()->withErrors(['email' => 'Este email já está cadastrado no sistema.']);
         }
@@ -70,11 +78,11 @@ class PreRegistroController extends Controller
         $registroExistente = PreRegistro::where(function ($query) use ($request) {
             $query->where('email', $request->email);
 
-            if($request->filled('cpf')) {
+            if ($request->filled('cpf')) {
                 $query->orWhere('cpf', $request->cpf);
-            } elseif($request->filled('cnpj')) {
+            } elseif ($request->filled('cnpj')) {
                 $query->orWhere('cnpj', $request->cnpj);
-            } elseif($request->filled('passaporte')) {
+            } elseif ($request->filled('passaporte')) {
                 $query->orWhere('passaporte', $request->passaporte);
             }
         })->where('expiracao', '>', Carbon::now())->first();
@@ -91,15 +99,15 @@ class PreRegistroController extends Controller
         $expiracao = Carbon::now()->addMinutes(15);
 
         $preRegistro = PreRegistro::create([
-                            'nome' => $request->nome,
-                            'cpf' => $request->cpf,
-                            'email' => $request->email,
-                            'codigo' => $codigo,
-                            'pais' => $request->pais,
-                            'expiracao' => $expiracao,
-                            'cnpj' => $request->cnpj,
-                            'passaporte' => $request->passaporte,
-                        ]);
+            'nome' => $request->nome,
+            'cpf' => $request->cpf,
+            'email' => $request->email,
+            'codigo' => $codigo,
+            'pais' => $request->pais,
+            'expiracao' => $expiracao,
+            'cnpj' => $request->cnpj,
+            'passaporte' => $request->passaporte,
+        ]);
 
         Mail::to($request->email)->send(new \App\Mail\EmailCodigoPreRegistro($preRegistro));
 
@@ -125,12 +133,38 @@ class PreRegistroController extends Controller
             ->where('expiracao', '>', now())
             ->first();
 
-        if(!$entrar) {
+        if (!$entrar) {
             return redirect()->route('inserirCodigo', ['id' => $request->id])->with('erro', "O código informado expirou ou está incorreto!");
         }
 
         session(['verified_pre_registration' => $entrar->id]);
 
         return redirect()->route('register', ['locale' => app()->getLocale()])->with(['nome' => $entrar->nome, 'cpf' => $entrar->cpf, 'cnpj' => $entrar->cnpj, 'passaporte' => $entrar->passaporte, 'email' => $entrar->email, 'pais' => $entrar->pais, 'sucesso' => 'Código verificado! Prossiga com o cadastro.']);
+    }
+
+    private function validarCpf($cpf)
+    {
+        $cpf = preg_replace('/\D/', '', $cpf);
+
+        if (strlen($cpf) != 11) {
+            return false;
+        }
+
+        if (preg_match('/(\d)\1{10}/', $cpf)) {
+            return false;
+        }
+
+        for ($t = 9; $t < 11; $t++) {
+            $d = 0;
+            for ($c = 0; $c < $t; $c++) {
+                $d += $cpf[$c] * (($t + 1) - $c);
+            }
+            $d = ((10 * $d) % 11) % 10;
+            if ($cpf[$c] != $d) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
