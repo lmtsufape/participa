@@ -91,11 +91,9 @@
                                                 <th>Avaliações</th>
                                                 <th>Data</th>
                                                 <th>Atribuir</th>
-                                                @can('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento)
-                                                    <th>Arquivar</th>
-                                                    <th>Excluir</th>
-                                                    <th>Editar</th>
-                                                @endcan
+                                                <th>Arquivar</th>
+                                                <th>Excluir</th>
+                                                <th>Editar</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -131,7 +129,6 @@
                                                             <img src="{{ asset('img/icons/documento.svg') }}" class="icon-card" width="20" alt="atribuir">
                                                         </a>
                                                     </td>
-                                                    @can('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento)
                                                         <td style="text-align:center">
                                                             @if ($trabalho->status == 'arquivado')
                                                                 <a href="{{ route('trabalho.status', [$trabalho->id, 'rascunho']) }}" title="Desarquivar"><img src="{{ asset('img/icons/archive.png') }}" width="20" alt="Desarquivar"></a>
@@ -147,7 +144,6 @@
                                                         <td style="text-align:center">
                                                             <a href="{{ route('coord.trabalho.edit', ['id' => $trabalho->id]) }}"><img src="{{ asset('img/icons/edit-regular.svg') }}" width="20" alt="Editar"></a>
                                                         </td>
-                                                    @endcan
                                                 </tr>
                                             @endforeach
                                         </tbody>
