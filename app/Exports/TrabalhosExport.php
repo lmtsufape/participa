@@ -15,6 +15,7 @@ class TrabalhosExport implements FromCollection, WithHeadings
     public function headings(): array
     {
         return [
+            'Id',
             'Área/Eixo',
             'Modalidade',
             'Título do trabalho',
