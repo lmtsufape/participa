@@ -11,6 +11,7 @@ use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\EmailConfirmacaoCadastro;
+use App\Models\PerfilIdentitario;
 
 class RegisterController extends Controller
 {
@@ -77,8 +78,15 @@ class RegisterController extends Controller
             'uf' => ['required', 'string'],
             'cep' => ['required', 'string'],
             'complemento' => ['nullable', 'string'],
+            //perfil identário
+            'outroGenero' => ['nullable', 'string', 'max:200'],
+            'outraRaca' => ['nullable', 'string', 'max:200'],
+            'nomeComunidadeTradicional' => ['nullable', 'string', 'max:200'],
+            'outraNecessidadeEspecial' => ['nullable', 'string', 'max:200'],
+            'nomeOrganizacao' => ['nullable', 'string', 'max:200'],
+            'pedagogiasFreirianas' => ['nullable', 'string', 'max:200'],
         ];
-        if ($data['pais'] != 'brasil'){
+        if ($data['pais'] != 'brasil') {
             $validations['uf'] = ['nullable', 'string'];
             $validations['numero'] = ['nullable', 'string'];
             $validations['cep'] = ['nullable', 'string'];
@@ -134,6 +142,15 @@ class RegisterController extends Controller
 
             $userDeletado->save();
 
+            // Atualiza ou cria o perfil identitário
+            $perfilIdentitario = PerfilIdentitario::where('userId', $userDeletado->id)->first();
+            if (!$perfilIdentitario) {
+                $perfilIdentitario = new PerfilIdentitario();
+                $perfilIdentitario->userId = $userDeletado->id;
+            }
+            $perfilIdentitario->setAttributes($data);
+            $perfilIdentitario->save();
+
             Mail::to($userDeletado->email)->send(new EmailConfirmacaoCadastro($userDeletado));
 
             app()->setLocale('pt-BR');
@@ -160,6 +177,10 @@ class RegisterController extends Controller
             $user->enderecoId = $end->id;
             $user->save();
 
+            $perfilIdentitario = new PerfilIdentitario();
+            $perfilIdentitario->setAttributes($data);
+            $perfilIdentitario->userId = $user->id;
+            $perfilIdentitario->save();
 
             Mail::to($user->email)->send(new EmailConfirmacaoCadastro($user));
             return $user;
@@ -167,6 +188,11 @@ class RegisterController extends Controller
 
         $user->enderecoId = null;
         $user->save();
+
+        $perfilIdentitario = new PerfilIdentitario();
+        $perfilIdentitario->setAttributes($data);
+        $perfilIdentitario->userId = $user->id;
+        $perfilIdentitario->save();
 
         Mail::to($user->email)->send(new EmailConfirmacaoCadastro($user));
 
