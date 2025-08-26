@@ -7,6 +7,7 @@ use App\Models\Submissao\Evento;
 use Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 
 class HomeController extends Controller
 {
@@ -75,14 +76,35 @@ class HomeController extends Controller
 
     public function index()
     {
-        $eventos_destaques = Evento::where([ ['publicado', '=', 'true'], ['dataFim', '>=', 'today()']])->get();
+        $today = today();
 
-        $proximosEventos = Evento::where([['publicado', '=', true], ['deletado', '=', false], ['dataFim', '>=', today()]])->whereNull('evento_pai_id')->get();
+        $eventos_destaques = Evento::where('publicado', true)
+            ->whereDate('dataFim', '>=', $today)
+            ->get();
 
-        $eventos_passados = Evento::where([['publicado', '=', true], ['deletado', '=', false], ['dataFim', '<', today()]])->whereNull('evento_pai_id')->take(6)->get()->sortDesc();
+        $proximosEventos = Evento::where('publicado', true)
+            ->where('deletado', false)
+            ->whereNull('evento_pai_id')
+            ->whereDate('dataFim', '>=', $today)
+            ->orderBy('dataInicio')
+            ->get();
 
-        $tiposEvento = Evento::where([['publicado', '=', true], ['deletado', '=', false]])->where([['dataInicio', '<=', today()], ['dataFim', '>=', today()]])->selectRaw('DISTINCT tipo')->get();
+        $eventos_passados = Evento::where('publicado', true)
+            ->where('deletado', false)
+            ->whereNull('evento_pai_id')
+            ->whereDate('dataFim', '<', $today)
+            ->orderByDesc('dataFim')
+            ->take(6)
+            ->get();
 
-        return view('index',compact('eventos_destaques','tiposEvento','proximosEventos','eventos_passados'));
+        $tiposEvento = Evento::where('publicado', true)
+            ->where('deletado', false)
+            ->whereDate('dataInicio', '<=', $today)
+            ->whereDate('dataFim', '>=', $today)
+            ->distinct()
+            ->pluck('tipo');
+    
+        return view('index', compact('eventos_destaques', 'tiposEvento', 'proximosEventos', 'eventos_passados'));
     }
+
 }
