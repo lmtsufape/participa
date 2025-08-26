@@ -568,12 +568,12 @@
                                 <div>
                                     <div class="form-check">
                                         <input class="form-check-input" type="radio" name="comunidadeTradicional"
-                                            id="comunidade_sim" value="true" required>
+                                            id="comunidade_sim" value="1" required>
                                         <label class="form-check-label" for="comunidade_sim">Sim</label>
                                     </div>
                                     <div class="form-check">
                                         <input class="form-check-input" type="radio" name="comunidadeTradicional"
-                                            id="comunidade_nao" value="false">
+                                            id="comunidade_nao" value="0">
                                         <label class="form-check-label" for="comunidade_nao">Não</label>
                                     </div>
                                     <input type="text" name="nomeComunidadeTradicional" id="nomeComunidadeTradicional"
@@ -591,12 +591,12 @@
                                 <div>
                                     <div class="form-check">
                                         <input class="form-check-input" type="radio" name="lgbtqia" id="lgbtqia_sim"
-                                            value="true" required>
+                                            value="1" required>
                                         <label class="form-check-label" for="lgbtqia_sim">Sim</label>
                                     </div>
                                     <div class="form-check">
                                         <input class="form-check-input" type="radio" name="lgbtqia" id="lgbtqia_nao"
-                                            value="false">
+                                            value="0">
                                         <label class="form-check-label" for="lgbtqia_nao">Não</label>
                                     </div>
                                 </div>
@@ -643,12 +643,12 @@
                                 <div>
                                     <div class="form-check">
                                         <input class="form-check-input" type="radio" name="deficienciaIdoso"
-                                            id="deficiencia_sim" value="true" required>
+                                            id="deficiencia_sim" value="1" required>
                                         <label class="form-check-label" for="deficiencia_sim">Sim</label>
                                     </div>
                                     <div class="form-check">
                                         <input class="form-check-input" type="radio" name="deficienciaIdoso"
-                                            id="deficiencia_nao" value="false">
+                                            id="deficiencia_nao" value="0">
                                         <label class="form-check-label" for="deficiencia_nao">Não</label>
                                     </div>
                                 </div>
@@ -664,12 +664,12 @@
                                 <div>
                                     <div class="form-check">
                                         <input class="form-check-input" type="radio" name="associadoCPFreire"
-                                            id="associadoCPFreire_sim" value="true" required>
+                                            id="associadoCPFreire_sim" value="1" required>
                                         <label class="form-check-label" for="associadoCPFreire_sim">Sim</label>
                                     </div>
                                     <div class="form-check">
                                         <input class="form-check-input" type="radio" name="associadoCPFreire"
-                                            id="associadoCPFreire_nao" value="false">
+                                            id="associadoCPFreire_nao" value="0">
                                         <label class="form-check-label" for="associadoCPFreire_nao">Não</label>
                                     </div>
                                 </div>
@@ -683,12 +683,12 @@
                                 <div>
                                     <div class="form-check">
                                         <input class="form-check-input" type="radio" name="receberInfoCPFreire"
-                                            id="receberInfoCPFreire_sim" value="true" required>
+                                            id="receberInfoCPFreire_sim" value="1" required>
                                         <label class="form-check-label" for="receberInfoCPFreire_sim">Sim</label>
                                     </div>
                                     <div class="form-check">
                                         <input class="form-check-input" type="radio" name="receberInfoCPFreire"
-                                            id="receberInfoCPFreire_nao" value="false">
+                                            id="receberInfoCPFreire_nao" value="0">
                                         <label class="form-check-label" for="receberInfoCPFreire_nao">Não</label>
                                     </div>
                                 </div>
@@ -705,12 +705,12 @@
                                 <div>
                                     <div class="form-check">
                                         <input class="form-check-input" type="radio" name="participacaoOrganizacao"
-                                            id="participa_sim" value="true" required>
+                                            id="participa_sim" value="1" required>
                                         <label class="form-check-label" for="participa_sim">Sim</label>
                                     </div>
                                     <div class="form-check">
                                         <input class="form-check-input" type="radio" name="participacaoOrganizacao"
-                                            id="participa_nao" value="false">
+                                            id="participa_nao" value="0">
                                         <label class="form-check-label" for="participa_nao">Não</label>
                                     </div>
                                     <input type="text" name="nomeOrganizacao" id="nomeOrganizacao" class="form-control mt-2"
@@ -728,12 +728,12 @@
                                 <div>
                                     <div class="form-check">
                                         <input class="form-check-input" type="radio" name="estudoPedagogiaFreiriana"
-                                            id="estudoPedagogiaFreiriana_sim" value="true" required>
+                                            id="estudoPedagogiaFreiriana_sim" value="1" required>
                                         <label class="form-check-label" for="estudoPedagogiaFreiriana_sim">Sim</label>
                                     </div>
                                     <div class="form-check">
                                         <input class="form-check-input" type="radio" name="estudoPedagogiaFreiriana"
-                                            id="estudoPedagogiaFreiriana_nao" value="false">
+                                            id="estudoPedagogiaFreiriana_nao" value="0">
                                         <label class="form-check-label" for="estudoPedagogiaFreiriana_nao">Não</label>
                                     </div>
 
@@ -752,14 +752,14 @@
                                     <div class="form-check">
                                         <input class="form-check-input" type="radio"
                                             name="participarEstudoPedagogiaFreiriana"
-                                            id="participarEstudoPedagogiaFreiriana_sim" value="true" required>
+                                            id="participarEstudoPedagogiaFreiriana_sim" value="1" required>
                                         <label class="form-check-label"
                                             for="participarEstudoPedagogiaFreiriana_sim">Sim</label>
                                     </div>
                                     <div class="form-check">
                                         <input class="form-check-input" type="radio"
                                             name="participarEstudoPedagogiaFreiriana"
-                                            id="participarEstudoPedagogiaFreiriana_nao" value="false">
+                                            id="participarEstudoPedagogiaFreiriana_nao" value="0">
                                         <label class="form-check-label"
                                             for="participarEstudoPedagogiaFreiriana_nao">Não</label>
                                     </div>
@@ -768,7 +768,7 @@
                         </div>
 
                         <div class="my-3">
-                            <input name="termos" class="form-check-input " type="checkbox" value="true" id="termos"
+                            <input name="termos" class="form-check-input " type="checkbox" value="1" id="termos"
                                 required>
                             <label class="form-check-label required-field" for="termos">
                                 {{ __('Concordo e respeitarei os') }}
