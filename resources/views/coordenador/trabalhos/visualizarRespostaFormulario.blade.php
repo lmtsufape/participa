@@ -84,21 +84,6 @@
                     </div>
                 </div>
             @endforeach
-            <div class="alert alert-info w-50 mt-4">
-                @switch($trabalho->avaliado)
-                    @case('nao_corrigido')
-                        <span>Parececer do avaliador sobre a correção: <strong>Não corrigido</strong></span>
-                        @break
-                    @case('corrigido_parcialmente')
-                        <span>Parececer do avaliador sobre a correção: <strong>Corrigido parcialmente</strong></span>
-                        @break
-                    @case('corrigido')
-                        <span>Parececer do avaliador sobre a correção: <strong>Corrigido totalmente</strong></span>
-                        @break
-                    @default
-                        <span>Parecer do avaliador sobre a correção ainda não definido</span>
-                @endswitch
-            </div>
             <div class="col-sm-12" style="margin-top: 20px;">
                 <small>Para trocar o arquivo de avaliação do avaliador, envie um novo.</small><br>
                 <div class="custom-file">
@@ -144,7 +129,7 @@
                 @if ($trabalho->avaliado($revisor->user))
                     @if ($trabalho->getParecerAtribuicao($revisor->user) != "encaminhado")
                         <a href="{{ route('trabalho.encaminhar', [$trabalho->id, $revisor]) }}" class="btn btn-md btn-success">
-                            Encaminhar avaliação ao autor
+                            Encaminhar parecer para autor/a
                         </a>
                     @else
                         <a href="{{ route('trabalho.encaminhar', [$trabalho->id, $revisor]) }}" class="btn btn-md btn-secondary">
@@ -155,7 +140,7 @@
             @endcan
             <button class="btn btn-md btn-success"
                 data-bs-toggle="modal" data-bs-target="#avaliacao-corrigir-{{$trabalho->id}}">
-                Aprovar com pendências
+                Liberar para correção
             </button>
         </div>
 
