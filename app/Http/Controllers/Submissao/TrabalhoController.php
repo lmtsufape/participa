@@ -1024,6 +1024,46 @@ class TrabalhoController extends Controller
         return abort(403);
     }
 
+    public function downloadArquivoExtra($trabalhoId, $arquivoExtraId)
+    {
+        $trabalho = Trabalho::find($trabalhoId);
+        $arquivoExtra = $trabalho->arquivosExtras()->where('id', $arquivoExtraId)->first();
+
+        if (!$arquivoExtra) {
+            return abort(404, 'Arquivo extra não encontrado');
+        }
+
+        $ehRevisor = Revisor::where([
+                ['evento_id', '=', $trabalho->eventoId],
+                ['user_id', '=', auth()->user()->id],
+                ['areaId', '=', $trabalho->area->id],
+                ['modalidadeId', '=', $trabalho->modalidade->id],
+            ])
+            ->whereHas('trabalhosAtribuidos', fn($query) => $query->where('trabalho_id', $trabalho->id))
+            ->exists();
+        $usuarioLogado = User::find(auth()->user()->id);
+
+        $ehCoautor = $usuarioLogado->coautor?->trabalhos()->where('trabalhos.id', $trabalho->id)->exists();
+
+        $evento = $trabalho->evento;
+
+        if (
+            Gate::any(['isUsuarioDaComissao'], $evento)
+            || $trabalho->autorId == $usuarioLogado->id
+            || $ehCoautor
+            || $usuarioLogado->administradors()->exists()
+            || $ehRevisor
+        ) {
+            if (Storage::disk()->exists($arquivoExtra->nome)) {
+                return Storage::download($arquivoExtra->nome);
+            }
+
+            return redirect()->back()->with('error', 'Arquivo extra não existe');
+        }
+
+        return abort(403);
+    }
+
     public function downloadArquivoAvaliacao(Request $request)
     {
         $trabalho = Trabalho::find($request->trabalhoId);
