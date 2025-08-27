@@ -24,8 +24,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('trabalhos', function (Blueprint $table) {
-            $table->dropUnique(['hash_aprovacao']);
-            $table->dropColumn(['hash_aprovacao', 'aprovacao_emitida_em']);
+            $table->dropUnique(['hash_codigo_aprovacao']);
+            $table->dropColumn(['hash_codigo_aprovacao', 'aprovacao_emitida_em']);
         });
     }
 };
