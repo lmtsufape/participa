@@ -367,6 +367,7 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
 
         // rota download do arquivo do trabalho
         Route::get('/download-trabalho/{id}', [TrabalhoController::class, 'downloadArquivo'])->name('downloadTrabalho');
+        Route::get('/download-trabalho/{trabalhoId}/arquivo-extra/{arquivoExtraId}', [TrabalhoController::class, 'downloadArquivoExtra'])->name('downloadArquivoExtra');
         Route::get('/download-trabalho/{id}/midia-extra/{id_midia}', [TrabalhoController::class, 'downloadMidiaExtra'])->name('downloadMidiaExtra');
         //rota download do arquivo do trabalho
         Route::get('/download-avaliacao', [TrabalhoController::class, 'downloadArquivoAvaliacao'])->name('downloadAvaliacao');

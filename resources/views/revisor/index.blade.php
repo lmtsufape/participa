@@ -136,6 +136,18 @@
                                 <th scope="col" style="text-align:center">Status</th>
                                 <th scope="col" style="text-align:center">Resumo</th>
                                 <th scope="col" style="text-align:center">Baixar</th>
+                                @php
+                                    $temExtras = false;
+                                    foreach($trabalhosDoRevisor as $t) {
+                                        if ($t->midiasExtra && $t->midiasExtra->count() > 0) {
+                                            $temExtras = true;
+                                            break;
+                                        }
+                                    }
+                                @endphp
+                                @if($temExtras)
+                                    <th scope="col" style="text-align:center">Extras</th>
+                                @endif
 
                                 {{-- <th scope="col">Avaliar</th> --}}
                                 <th scope="col" style="text-align:center">Avaliação do trabalho</th>
@@ -165,6 +177,36 @@
                                         <a href="{{route('downloadTrabalho', ['id' => $trabalho->id])}}"><img src="{{asset('img/icons/file-download-solid-black.svg')}}" style="width:20px"></a>
                                     @endif
                                     </td>
+                                    @if($temExtras)
+                                        <td style="text-align:center">
+                                        @if ($trabalho->midiasExtra && $trabalho->midiasExtra->count() > 0)
+                                            @if ($trabalho->midiasExtra->count() == 1)
+                                                <a href="{{route('downloadMidiaExtra', ['id' => $trabalho->id, 'id_midia' => $trabalho->midiasExtra->first()->id])}}" title="Baixar {{$trabalho->midiasExtra->first()->nome}}">
+                                                    <img src="{{asset('img/icons/file-download-solid-black.svg')}}" style="width:20px">
+                                                </a>
+                                            @else
+                                                <div class="btn-group">
+                                                    <button type="button" class="btn btn-sm btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                                        <img src="{{asset('img/icons/file-download-solid-black.svg')}}" style="width:16px" class="me-1">
+                                                        Arquivos ({{$trabalho->midiasExtra->count()}})
+                                                    </button>
+                                                    <ul class="dropdown-menu">
+                                                        @foreach($trabalho->midiasExtra as $midiaExtra)
+                                                            <li>
+                                                                <a class="dropdown-item" href="{{route('downloadMidiaExtra', ['id' => $trabalho->id, 'id_midia' => $midiaExtra->id])}}">
+                                                                    <img src="{{asset('img/icons/file-download-solid-black.svg')}}" style="width:14px" class="me-2">
+                                                                    {{$midiaExtra->nome}}
+                                                                </a>
+                                                            </li>
+                                                        @endforeach
+                                                    </ul>
+                                                </div>
+                                            @endif
+                                        @else
+                                            <span class="text-muted">-</span>
+                                        @endif
+                                        </td>
+                                    @endif
 
                                     @if (!$trabalho->avaliado(auth()->user())){{--avaliacao do revisor aqui--}}
                                         @if (now() >= $trabalho->modalidade->inicioRevisao && now() <= $trabalho->modalidade->fimRevisao && ($trabalho->atribuicoes->where('user_id', auth()->user()->id)->first()->pivot->prazo_correcao == null || now() <= $trabalho->atribuicoes->where('user_id', auth()->user()->id)->first()->pivot->prazo_correcao))

@@ -214,10 +214,10 @@ class TrabalhoController extends Controller
             }
 
             $coautoresIds = [];
-            
+
             if ($request->has('nomeCoautor')) {
                 $total = count($request->nomeCoautor);
-                
+
                 for ($key = 1; $key < $total; $key++) {
                     $value = $request->emailCoautor[$key] ?? null;
                     $nome = $request->nomeCoautor[$key];
@@ -234,7 +234,7 @@ class TrabalhoController extends Controller
                         } else {
                             continue;
                         }
-                    } else { 
+                    } else {
                         $passwordTemporario = Str::random(8);
                         $userCoautor = User::create([
                             'email' => $value ?: null,
@@ -244,7 +244,7 @@ class TrabalhoController extends Controller
                             'instituicao' => $vinculo
                         ]);
                         $coautoresIds[$key] = $userCoautor->id;
-                        
+
                         if ($value) {
                             $coord = User::find($evento->coordenadorId);
                             Mail::to($value)->send(new EmailParaUsuarioNaoCadastrado(Auth()->user()->name, '  ', 'Coautor', $evento->nome, $passwordTemporario, $value, $coord));
@@ -419,7 +419,7 @@ class TrabalhoController extends Controller
             $subject = 'Submissão de Trabalho';
             Notification::send($autor, new SubmissaoTrabalhoNotification($autor, $subject, $trabalho));
             if ($request->emailCoautor != null) {
-                foreach ($request->emailCoautor as $key => $value) {                    
+                foreach ($request->emailCoautor as $key => $value) {
                     if ($value == $autor->email) {
                     } else {
                         $userCoautor = User::where('email', $value)->first();
@@ -427,7 +427,7 @@ class TrabalhoController extends Controller
                             // Mail::to($userCoautor->email)
                             //     ->send(new SubmissaoTrabalho($userCoautor, $subject, $trabalho));
                             Notification::send($userCoautor, new SubmissaoTrabalhoNotification($userCoautor, $subject, $trabalho));
-                        } 
+                        }
                     }
                 }
             }
@@ -1018,6 +1018,46 @@ class TrabalhoController extends Controller
             }
 
             return redirect()->back()->with('error', 'Arquivo não existe');
+        }
+
+        return abort(403);
+    }
+
+    public function downloadArquivoExtra($trabalhoId, $arquivoExtraId)
+    {
+        $trabalho = Trabalho::find($trabalhoId);
+        $arquivoExtra = $trabalho->arquivosExtras()->where('id', $arquivoExtraId)->first();
+
+        if (!$arquivoExtra) {
+            return abort(404, 'Arquivo extra não encontrado');
+        }
+
+        $ehRevisor = Revisor::where([
+                ['evento_id', '=', $trabalho->eventoId],
+                ['user_id', '=', auth()->user()->id],
+                ['areaId', '=', $trabalho->area->id],
+                ['modalidadeId', '=', $trabalho->modalidade->id],
+            ])
+            ->whereHas('trabalhosAtribuidos', fn($query) => $query->where('trabalho_id', $trabalho->id))
+            ->exists();
+        $usuarioLogado = User::find(auth()->user()->id);
+
+        $ehCoautor = $usuarioLogado->coautor?->trabalhos()->where('trabalhos.id', $trabalho->id)->exists();
+
+        $evento = $trabalho->evento;
+
+        if (
+            Gate::any(['isUsuarioDaComissao'], $evento)
+            || $trabalho->autorId == $usuarioLogado->id
+            || $ehCoautor
+            || $usuarioLogado->administradors()->exists()
+            || $ehRevisor
+        ) {
+            if (Storage::disk()->exists($arquivoExtra->nome)) {
+                return Storage::download($arquivoExtra->nome);
+            }
+
+            return redirect()->back()->with('error', 'Arquivo extra não existe');
         }
 
         return abort(403);
