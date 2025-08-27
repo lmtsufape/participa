@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Submissao;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TrabalhoPostRequest;
 use App\Http\Requests\TrabalhoUpdateRequest;
+use App\Mail\CartaDeAceiteMail;
 use App\Mail\EmailParaUsuarioNaoCadastrado;
 use App\Mail\EmailParecerDisponivel;
 use App\Mail\SubmissaoTrabalho;
@@ -214,10 +215,10 @@ class TrabalhoController extends Controller
             }
 
             $coautoresIds = [];
-            
+
             if ($request->has('nomeCoautor')) {
                 $total = count($request->nomeCoautor);
-                
+
                 for ($key = 1; $key < $total; $key++) {
                     $value = $request->emailCoautor[$key] ?? null;
                     $nome = $request->nomeCoautor[$key];
@@ -234,7 +235,7 @@ class TrabalhoController extends Controller
                         } else {
                             continue;
                         }
-                    } else { 
+                    } else {
                         $passwordTemporario = Str::random(8);
                         $userCoautor = User::create([
                             'email' => $value ?: null,
@@ -244,7 +245,7 @@ class TrabalhoController extends Controller
                             'instituicao' => $vinculo
                         ]);
                         $coautoresIds[$key] = $userCoautor->id;
-                        
+
                         if ($value) {
                             $coord = User::find($evento->coordenadorId);
                             Mail::to($value)->send(new EmailParaUsuarioNaoCadastrado(Auth()->user()->name, '  ', 'Coautor', $evento->nome, $passwordTemporario, $value, $coord));
@@ -419,7 +420,7 @@ class TrabalhoController extends Controller
             $subject = 'Submissão de Trabalho';
             Notification::send($autor, new SubmissaoTrabalhoNotification($autor, $subject, $trabalho));
             if ($request->emailCoautor != null) {
-                foreach ($request->emailCoautor as $key => $value) {                    
+                foreach ($request->emailCoautor as $key => $value) {
                     if ($value == $autor->email) {
                     } else {
                         $userCoautor = User::where('email', $value)->first();
@@ -427,7 +428,7 @@ class TrabalhoController extends Controller
                             // Mail::to($userCoautor->email)
                             //     ->send(new SubmissaoTrabalho($userCoautor, $subject, $trabalho));
                             Notification::send($userCoautor, new SubmissaoTrabalhoNotification($userCoautor, $subject, $trabalho));
-                        } 
+                        }
                     }
                 }
             }
@@ -1061,20 +1062,54 @@ class TrabalhoController extends Controller
 
     public function aprovacaoTrabalho(Request $request)
     {
-        $trabalho = Trabalho::find($request->trabalho_id);
-        $mensagem = '';
+        $resultado = DB::transaction(function () use ($request){
+            $trabalho = Trabalho::lockForUpdate()->find($request->trabalho_id);
 
-        if ($request->aprovacao == 'true') {
-            $trabalho->aprovado = true;
-            $mensagem = 'Trabalho aprovado com sucesso!';
-        } elseif ($request->aprovacao == 'false') {
-            $trabalho->aprovado = false;
-            $mensagem = 'Trabalho reprovado com sucesso!';
-        }
+            switch ($request->aprovado) {
+                case 'true':
+                    if($trabalho->coautors->count() <= $trabalho->modalidade->numMaxCoautores){
+                        $autor_inscrito = Inscricao::where('user_id', $trabalho->autor->id)
+                            ->where('evento_id', $trabalho->eventoId)
+                            ->where('finalizada', true)
+                            ->exists();
 
-        $trabalho->update();
+                        if(!$autor_inscrito){
+                            $coautor_inscrito = $trabalho->coautors()
+                                ->whereHas('user.inscricaos', function ($query) use ($trabalho) {
+                                    $query->where('evento_id', $trabalho->eventoId)
+                                        ->where('finalizada', true);
+                                })
+                                ->exists();
+                        }
 
-        return redirect()->back()->with(['message' => $mensagem, 'class' => 'success']);
+                        if($autor_inscrito || ($coautor_inscrito ?? false)){
+                            $codigo = Trabalho::gerarCodigo();
+
+                            $trabalho->aprovado                 = true;
+                            $trabalho->hash_codigo_aprovacao    = hash('sha256', str_replace('-', '', $codigo));
+                            $trabalho->aprovacao_emitida_em   = now();
+                            $trabalho->saveOrFail();
+
+                            Mail::to($trabalho->autor->email)->send(new CartaDeAceiteMail($trabalho, $codigo));
+                            return ['flash' => 'success', 'msg' => 'Trabalho aprovado com sucesso!'];
+
+                        }else{
+                            return ['flash' => 'error', 'msg' => 'Nenhum autor ou coautor com inscrição no evento paga'];
+                        }
+                    }
+                    return ['flash' => 'error', 'msg' => 'Número de coautores superior ao permitido na modalidade do trabalho'];
+
+                case 'false':
+                    $trabalho->update(['aprovado' => false]);
+                    return ['flash' => 'success', 'msg' => 'Trabalho reprovado com sucesso!'];
+
+                case 'null':
+                    $trabalho->update(['aprovado' => null]);
+                    return ['flash' => 'success', 'msg' => 'Trabalho liberado para correção com sucesso!'];
+            }
+
+        });
+        return back()->with([$resultado['flash'] => $resultado['msg']]);
     }
 
     public function correcaoTrabalho(Request $request)

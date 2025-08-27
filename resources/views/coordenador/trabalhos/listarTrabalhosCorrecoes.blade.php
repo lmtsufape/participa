@@ -101,7 +101,6 @@
                                                 </th>
                                                 <th scope="col">Parecer</th>
                                                 <th scope="col" class="text-center">Lembrete enviado</th>
-                                                <th scope="col" class="text-center">Validação</th>
                                                 <th scope="col" style="text-align:center;">Editar</th>
                                             </tr>
                                         </thead>
@@ -152,22 +151,6 @@
                                                     @endforeach
                                                 </td>
                                                 <td class="text-center">{{$trabalho->lembrete_enviado ? 'Sim' : 'Não'}}</td>
-                                                <td class="text-center">
-                                                    @switch($trabalho->avaliado)
-                                                        @case('corrigido')
-                                                            Finalizado: aprovado
-                                                            @break
-                                                        @case('corrigido_parcialmente')
-                                                            Finalizado: aprovado parcialmente
-                                                            @break
-                                                        @case('nao_corrigido')
-                                                            Finalizado: reprovado
-                                                            @break
-                                                        @default
-                                                            Em análise
-                                                    @endswitch
-                                                </td>
-
                                                 <td style="text-align:center">
                                                     <a href="#" data-bs-toggle="modal" data-bs-target="#modalCorrecaoTrabalho_{{$trabalho->id}}" style="color:#114048ff">
                                                         <img src="{{ asset('img/icons/edit-regular.svg') }}" width="20" alt="Editar">

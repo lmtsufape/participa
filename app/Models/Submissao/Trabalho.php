@@ -22,8 +22,16 @@ class Trabalho extends Model
         'titulo', 'autores', 'data', 'modalidadeId', 'areaId', 'autorId', 'eventoId', 'resumo', 'avaliado',
         'campoextra1simples', 'campoextra2simples', 'campoextra3simples', 'campoextra4simples',
         'campoextra5simples', 'campoextra1grande', 'campoextra2grande', 'campoextra3grande',
-        'campoextra4grande', 'campoextra5grande', 'status',
+        'campoextra4grande', 'campoextra5grande', 'status', 'aprovado'
     ];
+
+    protected $casts = [
+        'aprovacao_emitida_em' => 'datetime'
+    ];
+
+    public static function gerarCodigo(){
+        return strtoupper(implode('-', str_split(bin2hex(random_bytes(16)), 4)));
+    }
 
     public function recurso()
     {
