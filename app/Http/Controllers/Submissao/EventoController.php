@@ -1061,6 +1061,10 @@ class EventoController extends Controller
 
         foreach ($modalidades as $modalidade) {
             $modalidade->trabalho = $trabalhosPorModalidade->get($modalidade->id, collect());
+
+            foreach ($modalidade->trabalho as $trabalho) {
+                $trabalho->tem_pagamento = $this->verificarPagamentoAutores($trabalho);
+            }
         }
 
         return view('coordenador.trabalhos.listarTrabalhosValidacoes', [
@@ -1069,6 +1073,24 @@ class EventoController extends Controller
             'trabalhos' => $trabalhos,
             'agora' => now(),
         ]);
+    }
+
+
+    private function verificarPagamentoAutores($trabalho)
+    {
+        $autorTemPagamento = $trabalho->autor->inscricaos->where('finalizada', true)->isNotEmpty();
+        if ($autorTemPagamento) {
+            return true;
+        }
+
+        foreach ($trabalho->coautors as $coautor) {
+            $coautorTemPagamento = $coautor->user->inscricaos->where('finalizada', true)->isNotEmpty();
+            if ($coautorTemPagamento) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public function cadastrarCriterio(Request $request)
