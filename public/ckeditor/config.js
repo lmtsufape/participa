@@ -5,5 +5,5 @@
 
 CKEDITOR.editorConfig = function( config ) {
 	config.contentsCss = ['/ckeditor/fonts.css'];
-	config.font_names = 'Friends/Friends;' + config.font_names;
+	config.font_names = 'Friends/Friends;Anchor;' + config.font_names;
 };
