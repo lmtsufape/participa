@@ -931,14 +931,12 @@ class EventoController extends Controller
         ]);
     }
 
-    public function listarCorrecoes(Request $request, $column = 'titulo', $direction = 'asc')
+    public function listarCorrecoes(Request $request, $eventoId, $column = 'titulo', $direction = 'asc')
     {
-        $evento = Evento::find($request->eventoId);
-        if (! Gate::any([
-            'isCoordenadorOrCoordenadorDaComissaoCientifica',
-            'isCoordenadorEixo',
-            'isAdmin'
-        ], $evento)) {
+        $evento = Evento::find($eventoId);
+        if (! (Gate::allows('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento) ||
+               Gate::allows('isCoordenadorEixo', $evento) ||
+               Gate::allows('isAdmin', Administrador::class))) {
             abort(403, 'Acesso negado');
         }
 

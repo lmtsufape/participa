@@ -210,7 +210,7 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
             Route::delete('avaliacao/trabalho/{trabalho_id}', [TrabalhoController::class, 'destroyAvaliacao'])->name('avaliacao.destroy');
             Route::get('trabalhos/form/listarRepostasTrabalhos/{column?}/{direction?}/{status?}', [EventoController::class, 'listarRespostasTrabalhos'])->name('respostasTrabalhos');
             Route::get('trabalhos/form/visualizarRespostaFormulario', [EventoController::class, 'visualizarRespostaFormulario'])->name('visualizarRespostaFormulario');
-            Route::get('trabalhos/listarCorrecoes/{column?}/{direction?}', [EventoController::class, 'listarCorrecoes'])->name('listarCorrecoes');
+            Route::get('trabalhos/listarCorrecoes/{eventoId}/{column?}/{direction?}', [EventoController::class, 'listarCorrecoes'])->name('listarCorrecoes');
             Route::get('trabalhos/listarValidacoes/{column?}/{direction?}', [EventoController::class, 'listarValidacoes'])->name('listarValidacoes');
 
 
