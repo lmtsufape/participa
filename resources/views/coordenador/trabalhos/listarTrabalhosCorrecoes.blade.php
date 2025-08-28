@@ -43,8 +43,7 @@
 
         <div class="card mb-3">
             <div class="card-body">
-                <form method="GET" action="{{ route('coord.listarCorrecoes') }}">
-                    <input type="hidden" name="eventoId" value="{{ $evento->id }}">
+                <form method="GET" action="{{ route('coord.listarCorrecoes', $evento->id) }}">
                     <div class="row">
                         <div class="col-md-10">
                             <label for="titulo" class="form-label">Buscar por Título</label>
@@ -92,16 +91,15 @@
                                                 <th scope="col">Autor</th>
                                                 <th scope="col">
                                                     Data de Envio
-                                                    <a href="{{ route('coord.listarCorrecoes', array_merge(request()->query(), ['eventoId' => $evento->id, 'column' => 'data', 'direction' => 'asc'])) }}">
+                                                    <a href="{{ route('coord.listarCorrecoes', array_merge([$evento->id], ['column' => 'data', 'direction' => 'asc'], request()->query())) }}">
                                                         <i class="fas fa-arrow-alt-circle-up"></i>
                                                     </a>
-                                                    <a href="{{ route('coord.listarCorrecoes', array_merge(request()->query(), ['eventoId' => $evento->id, 'column' => 'data', 'direction' => 'desc'])) }}">
+                                                    <a href="{{ route('coord.listarCorrecoes', array_merge([$evento->id], ['column' => 'data', 'direction' => 'desc'], request()->query())) }}">
                                                         <i class="fas fa-arrow-alt-circle-down"></i>
                                                     </a>
                                                 </th>
                                                 <th scope="col">Parecer</th>
                                                 <th scope="col" class="text-center">Lembrete enviado</th>
-                                                <th scope="col" class="text-center">Validação</th>
                                                 <th scope="col" style="text-align:center;">Editar</th>
                                             </tr>
                                         </thead>
@@ -152,22 +150,6 @@
                                                     @endforeach
                                                 </td>
                                                 <td class="text-center">{{$trabalho->lembrete_enviado ? 'Sim' : 'Não'}}</td>
-                                                <td class="text-center">
-                                                    @switch($trabalho->avaliado)
-                                                        @case('corrigido')
-                                                            Finalizado: aprovado
-                                                            @break
-                                                        @case('corrigido_parcialmente')
-                                                            Finalizado: aprovado parcialmente
-                                                            @break
-                                                        @case('nao_corrigido')
-                                                            Finalizado: reprovado
-                                                            @break
-                                                        @default
-                                                            Em análise
-                                                    @endswitch
-                                                </td>
-
                                                 <td style="text-align:center">
                                                     <a href="#" data-bs-toggle="modal" data-bs-target="#modalCorrecaoTrabalho_{{$trabalho->id}}" style="color:#114048ff">
                                                         <img src="{{ asset('img/icons/edit-regular.svg') }}" width="20" alt="Editar">

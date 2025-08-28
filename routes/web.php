@@ -117,8 +117,8 @@ Route::namespace('Submissao')->group(function () {
         return redirect()->route('evento.visualizar', $id);
     });
     Route::get('certificado/{hash}', [CertificadoController::class, 'verificar'])->name('certificado.view')->where('hash', '.*');;
-    Route::view('validarCertificado', 'validar')->name('validarCertificado')->middleware('block.get.params');
-    Route::post('validarCertificado', [CertificadoController::class, 'validar'])->name('validarCertificadoPost');
+    Route::view('/validarDocumentos', 'validar')->name('validarCertificado')->middleware('block.get.params');
+    Route::post('validarDocumentos', [CertificadoController::class, 'validar'])->name('validarCertificadoPost');
     Route::get('/home', [CertificadoController::class, 'validar'])->name('home')->middleware('verified', 'isTemp');
 
 });
@@ -210,7 +210,9 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
             Route::delete('avaliacao/trabalho/{trabalho_id}', [TrabalhoController::class, 'destroyAvaliacao'])->name('avaliacao.destroy');
             Route::get('trabalhos/form/listarRepostasTrabalhos/{column?}/{direction?}/{status?}', [EventoController::class, 'listarRespostasTrabalhos'])->name('respostasTrabalhos');
             Route::get('trabalhos/form/visualizarRespostaFormulario', [EventoController::class, 'visualizarRespostaFormulario'])->name('visualizarRespostaFormulario');
-            Route::get('trabalhos/listarCorrecoes/{column?}/{direction?}', [EventoController::class, 'listarCorrecoes'])->name('listarCorrecoes');
+            Route::get('trabalhos/listarCorrecoes/{eventoId}/{column?}/{direction?}', [EventoController::class, 'listarCorrecoes'])->name('listarCorrecoes');
+            Route::get('trabalhos/listarValidacoes/{eventoId}/{column?}/{direction?}', [EventoController::class, 'listarValidacoes'])->name('listarValidacoes');
+
 
             Route::get('areas/cadastrarAreas', [EventoController::class, 'cadastrarAreas'])->name('cadastrarAreas');
             Route::get('areas/listarAreas', [EventoController::class, 'listarAreas'])->name('listarAreas');
@@ -354,7 +356,7 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
         Route::post('/trabalho/{id}/editar', [TrabalhoController::class, 'update'])->name('editar.trabalho');
         Route::get('/trabalho/status/{id}/{status}', [TrabalhoController::class, 'statusTrabalho'])->name('trabalho.status');
         Route::get('/trabalho/encaminhar/{id}/{revisor}', [TrabalhoController::class, 'encaminharTrabalho'])->name('trabalho.encaminhar');
-        Route::post('/trabalho/{id}/aprovar-reprovar', [TrabalhoController::class, 'aprovacaoTrabalho'])->name('trabalho.aprovar-reprovar');
+        Route::post('/trabalho/{id}/aprovar-reprovar', [TrabalhoController::class, 'aprovacaoTrabalho'])->name('trabalho.aprovacao');
         Route::post('/trabalho/{id}/correcao', [TrabalhoController::class, 'correcaoTrabalho'])->name('trabalho.correcao');
         //Atribuição
         Route::get('/atribuir', [AtribuicaoController::class, 'distribuicaoAutomatica'])->name('distribuicao');
@@ -367,6 +369,7 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
 
         // rota download do arquivo do trabalho
         Route::get('/download-trabalho/{id}', [TrabalhoController::class, 'downloadArquivo'])->name('downloadTrabalho');
+        Route::get('/download-trabalho/{trabalhoId}/arquivo-extra/{arquivoExtraId}', [TrabalhoController::class, 'downloadArquivoExtra'])->name('downloadArquivoExtra');
         Route::get('/download-trabalho/{id}/midia-extra/{id_midia}', [TrabalhoController::class, 'downloadMidiaExtra'])->name('downloadMidiaExtra');
         //rota download do arquivo do trabalho
         Route::get('/download-avaliacao', [TrabalhoController::class, 'downloadArquivoAvaliacao'])->name('downloadAvaliacao');
