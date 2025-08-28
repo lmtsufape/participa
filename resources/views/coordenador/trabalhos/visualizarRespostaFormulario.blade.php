@@ -140,7 +140,7 @@
             @endcan
             <button class="btn btn-md btn-success"
                 data-bs-toggle="modal" data-bs-target="#avaliacao-corrigir-{{$trabalho->id}}">
-                Liberar para correção
+                @if(!$trabalho->permite_correcao)Liberar para correção @else Bloquear para correção @endif
             </button>
         </div>
 
