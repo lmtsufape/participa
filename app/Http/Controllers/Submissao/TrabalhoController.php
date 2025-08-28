@@ -719,7 +719,7 @@ class TrabalhoController extends Controller
 
         $trabalho->update();
 
-        return redirect()->back()->with(['mensagem' => $trabalho->titulo . ' editado com sucesso!']);
+        return redirect()->back()->with(['success' => $trabalho->titulo . ' editado com sucesso!']);
     }
 
     /**
@@ -763,7 +763,7 @@ class TrabalhoController extends Controller
 
             $trabalho->delete();
 
-            return redirect()->back()->with(['mensagem' => 'Trabalho deletado com sucesso!']);
+            return redirect()->back()->with(['success' => 'Trabalho deletado com sucesso!']);
         }
         return abort(403);
 
@@ -1063,7 +1063,7 @@ class TrabalhoController extends Controller
             ]);
         }
 
-        return redirect()->back()->with(['mensagem' => 'Correção de ' . $trabalho->titulo . ' enviada com sucesso!']);
+        return redirect()->back()->with(['success' => 'Correção de ' . $trabalho->titulo . ' enviada com sucesso!']);
     }
 
     public function downloadArquivoCorrecao(Request $request)
@@ -1272,7 +1272,7 @@ class TrabalhoController extends Controller
         $parecer->trabalhoId = $trabalho->id;
         $parecer->save();
 
-        return redirect()->back()->with(['mensagem' => 'Avaliação salva']);
+        return redirect()->back()->with(['success' => 'Avaliação salva']);
     }
     //tirar lógica de avaliçao deste controller e inserir em um controller de avaliação
 
@@ -1280,8 +1280,6 @@ class TrabalhoController extends Controller
         DB::beginTransaction();
         try {
             $trabalho = Trabalho::findOrFail($trabalho_id);
-
-            $trabalho->atribuicoes()->detach($request->revisor_id);
 
             Resposta::where('trabalho_id', $trabalho->id)
                     ->where('revisor_id', $request->revisor_id)->delete();
@@ -1300,6 +1298,7 @@ class TrabalhoController extends Controller
             $trabalho->save();
 
             DB::commit();
+            session()->flash('evento_id', $trabalho->eventoId);
 
             return redirect()->route('coord.listarAvaliacoes')->with('success', 'Avaliação deleta com sucesso!');
 

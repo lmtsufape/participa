@@ -125,13 +125,10 @@
     </style>
 </head>
     @php
-        function extractFontFamily($html) {
-            if (preg_match('/font-family:\s*([^;"]+)/i', $html, $matches)) {
-                return trim($matches[1]);
-            }
-            return null;
+        $fontf = null;
+        if (preg_match('/font-family:\s*([^;"]+)/i', $texto, $matches)) {
+            $fontf = trim($matches[1]);
         }
-        $fontf = extractFontFamily($texto);
     @endphp
     <body style="font-family: '{{$fontf}}'">
         @php

@@ -47,6 +47,41 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    public function comissaoEvento()
+    {
+        return $this->hasMany(ComissaoEvento::class);
+    }
+
+    public function coautor()
+    {
+        return $this->hasOne(Coautor::class, 'autorId');
+    }
+
+    public function revisor()
+    {
+        return $this->hasMany(Revisor::class);
+    }
+
+    public function participante()
+    {
+        return $this->hasOne(Participante::class);
+    }
+
+    public function administradors()
+    {
+        return $this->hasOne(Administrador::class);
+    }
+
+    public function coordComissaoCientifica()
+    {
+        return $this->belongsToMany('App\Models\Submissao\Evento', 'coord_comissao_cientificas', 'user_id', 'eventos_id')->using('App\Models\Users\CoordComissaoCientifica');
+    }
+
+    public function coordComissaoOrganizadora()
+    {
+        return $this->belongsToMany('App\Models\Submissao\Evento', 'coord_comissao_organizadoras', 'user_id', 'eventos_id')->using('App\Models\Users\CoordComissaoOrganizadora');
+    }
+
     public function trabalho()
     {
         return $this->hasMany('App\Models\Submissao\Trabalho', 'autorId');
@@ -81,20 +116,7 @@ class User extends Authenticatable
         return $this->belongsTo('App\Models\Submissao\Endereco', 'enderecoId');
     }
 
-    public function comissaoEvento()
-    {
-        return $this->hasMany('App\Models\Users\ComissaoEvento');
-    }
 
-    public function coautor()
-    {
-        return $this->hasOne('App\Models\Users\Coautor', 'autorId');
-    }
-
-    public function revisor()
-    {
-        return $this->hasMany('App\Models\Users\Revisor');
-    }
 
     public function revisorWithCounts()
     {
@@ -108,25 +130,7 @@ class User extends Authenticatable
         ]);
     }
 
-    public function participante()
-    {
-        return $this->hasOne('App\Models\Users\Participante');
-    }
 
-    public function administradors()
-    {
-        return $this->hasOne('App\Models\Users\Administrador');
-    }
-
-    public function coordComissaoCientifica()
-    {
-        return $this->belongsToMany('App\Models\Submissao\Evento', 'coord_comissao_cientificas', 'user_id', 'eventos_id')->using('App\Models\Users\CoordComissaoCientifica');
-    }
-
-    public function coordComissaoOrganizadora()
-    {
-        return $this->belongsToMany('App\Models\Submissao\Evento', 'coord_comissao_organizadoras', 'user_id', 'eventos_id')->using('App\Models\Users\CoordComissaoOrganizadora');
-    }
 
     public function membroComissaoEvento()
     {

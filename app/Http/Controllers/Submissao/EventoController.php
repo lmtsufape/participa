@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Submissao;
 use App\Exports\AvaliacoesExport;
 use App\Exports\InscritosExport;
 use App\Exports\TrabalhosExport;
+use App\Exports\TrabalhosExportForCertifica;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreEventoRequest;
 use App\Http\Requests\UpdateEventoRequest;
@@ -179,7 +180,7 @@ class EventoController extends Controller
 
     public function listarAvaliacoes(Request $request, $column = 'titulo', $direction = 'asc', $status = 'rascunho')
     {
-        $evento = Evento::find($request->eventoId);
+        $evento = Evento::find($request->eventoId ?? session('evento_id')); //Variável do session definida na deleção de avaliação
         $this->authorize('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento);
         $modalidades = Modalidade::where('evento_id', $evento->id)->orderBy('nome')->get();
         $trabalhos = null;
@@ -447,6 +448,16 @@ class EventoController extends Controller
         return (new TrabalhosExport($trabalhos))->download($nome . '- Trabalhos.csv', \Maatwebsite\Excel\Excel::CSV, [
             'Content-Type' => 'text/csv',
         ]);
+    }
+
+    public function exportTrabalhosCertifica(Evento $evento, Request $request)
+    {
+        $request->validate([
+            'ch' => 'required|numeric|min:1',
+        ]);
+        $nome = $this->somenteLetrasNumeros($evento->nome);
+
+        return Excel::download(new TrabalhosExportForCertifica($evento->trabalhos()->with(['autor', 'coautors.user'])->get(), $request->ch), $nome . '.xlsx', \Maatwebsite\Excel\Excel::XLSX);
     }
 
     private function somenteLetrasNumeros($string)
@@ -848,7 +859,7 @@ class EventoController extends Controller
         $form->instrucoes = $data['instrucoes' . $form->id];
         $form->update();
 
-        return redirect()->back()->with(['mensagem' => 'Formulário editado com sucesso!']);
+        return redirect()->back()->with(['success' => 'Formulário editado com sucesso!']);
     }
 
     public function destroyForm($id)
@@ -878,7 +889,7 @@ class EventoController extends Controller
         if (!$temRespostas) {
             $form->delete();
 
-            return redirect()->back()->with(['mensagem' => 'Formulário excluído com sucesso!']);
+            return redirect()->back()->with(['success' => 'Formulário excluído com sucesso!']);
         } else {
             return redirect()->back()->withErrors(['excluirFormulario' => 'Não é possível excluir. Existem respostas submetidas ligadas a este formulário.']);
         }
@@ -1499,7 +1510,7 @@ class EventoController extends Controller
         $evento->numMaxCoautores = $request->numCoautor;
         $evento->update();
 
-        return redirect()->back()->with(['mensagem' => 'Restrições de submissão salvas com sucesso!']);
+        return redirect()->back()->with(['success' => 'Restrições de submissão salvas com sucesso!']);
     }
 
     public function setResumo(Request $request)
@@ -1544,7 +1555,7 @@ class EventoController extends Controller
         $evento->publicado = true;
         $evento->update();
 
-        return redirect()->back()->with('mensagem', 'O evento foi exposto ao público.');
+        return redirect()->back()->with('success', 'O evento foi exposto ao público.');
     }
 
     public function desabilitar($id)
@@ -1554,7 +1565,7 @@ class EventoController extends Controller
         $evento->publicado = false;
         $evento->update();
 
-        return redirect()->back()->with('mensagem', 'O evento foi ocultado ao público.');
+        return redirect()->back()->with('success', 'O evento foi ocultado ao público.');
     }
 
     public function downloadFotoEvento($id)
@@ -1595,7 +1606,7 @@ class EventoController extends Controller
             $formEvento->update();
         }
 
-        return redirect()->back()->with(['mensagem' => 'PDF salvo com sucesso!']);
+        return redirect()->back()->with(['success' => 'PDF salvo com sucesso!']);
     }
 
     public function pdfAdicional(Request $request, $id)
@@ -1620,7 +1631,7 @@ class EventoController extends Controller
             $evento->save();
         }
 
-        return redirect()->back()->with(['mensagem' => 'PDF salvo com sucesso!']);
+        return redirect()->back()->with(['success' => 'PDF salvo com sucesso!']);
     }
 
     public function buscaLivre()

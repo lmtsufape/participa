@@ -21,12 +21,15 @@
             </div>
 
           </form> --}}
-          <div class="row mt-1">
-            <a class="btn btn-primary col-sm" href="{{route('evento.downloadResumos', $evento)}}">Baixar resumos</a>
-          </div>
-          <div class="row mt-1">
-            <a class="btn btn-primary col-sm" href="{{route('evento.downloadTrabalhos', $evento)}}">Exportar trabalhos .csv</a>
-          </div>
+            <div class="row mt-1">
+                <a class="btn btn-primary col-sm" href="{{route('evento.downloadResumos', $evento)}}">Baixar resumos</a>
+            </div>
+            <div class="row mt-1">
+                <a class="btn btn-primary col-sm" href="{{route('evento.downloadTrabalhos', $evento)}}">Exportar trabalhos .csv</a>
+            </div>
+            <div class="row mt-1">
+                <a class="btn btn-primary col-sm" data-toggle="modal" data-target="#exportCertificaModal">Exportar XLSX para o Certifica</a>
+            </div>
         </div>
       </div>
 
@@ -324,6 +327,8 @@
         <x-modal-excluir-trabalho :trabalho="$trabalho" />
     @endforeach
 @endforeach
+
+@include('coordenador.trabalhos.export_certifica_modal', compact('evento'))
 @endsection
 
 @section('javascript')
