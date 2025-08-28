@@ -116,7 +116,12 @@
             font-style: italic;
         }
 
-
+        @font-face {
+            font-family: 'Anchor';
+            src: url('{{ public_path('fonts/anchor.ttf') }}') format('truetype');
+            font-weight: medium;
+            font-style: normal;
+        }
     </style>
 </head>
     @php
