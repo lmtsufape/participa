@@ -10,7 +10,9 @@
                     <input type="hidden" name="trabalho_id" value={{$trabalho->id}}>
                     <input type="hidden" name="aprovado" value="{{$valor}}">
                     @csrf
-                    Tem certeza que deseja @if($descricao == 'corrigir')liberar para correção @else{{$descricao}} @endif este trabalho "{{$trabalho->titulo}}"?
+                    Tem certeza que deseja <strong>@if($descricao == 'corrigir')
+                                                        @if(!$trabalho->permite_correcao)liberar para correção @else bloquear para correção @endif
+                                                    @else{{$descricao}} @endif</strong> este trabalho "{{$trabalho->titulo}}"?
                 </form>
             </div>
             <div class="modal-footer">

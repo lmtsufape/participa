@@ -1144,8 +1144,16 @@ class TrabalhoController extends Controller
                     return ['flash' => 'success', 'msg' => 'Trabalho reprovado com sucesso!'];
 
                 case 'null':
-                    $trabalho->update(['aprovado' => null]);
-                    return ['flash' => 'success', 'msg' => 'Trabalho liberado para correção com sucesso!'];
+                    if(!$trabalho->permite_correcao){
+                        $trabalho->update(['permite_correcao' => true]);
+
+                        return ['flash' => 'success', 'msg' => 'Trabalho liberado para correção com sucesso!'];
+                    }else{
+                        $trabalho->update(['permite_correcao' => false]);
+
+                        return ['flash' => 'success', 'msg' => 'Trabalho bloqueado para correção com sucesso!'];
+                    }
+
             }
 
         });
