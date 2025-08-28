@@ -461,7 +461,7 @@
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link d-flex align-items-center gap-2" id="correcoesTrabalhos"
-                                    href="{{ route('coord.listarCorrecoes', ['eventoId' => $evento->id, 'titulo', 'asc']) }}">
+                                    href="{{ route('coord.listarCorrecoes', [$evento->id, 'titulo', 'asc']) }}">
                                     <img src="{{ asset('img/icons/list.svg') }}" alt="" width="20px">
                                     <span>{{ __('Listar correções') }}</span>
                                 </a>
