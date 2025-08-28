@@ -936,7 +936,8 @@ class EventoController extends Controller
         $evento = Evento::find($request->eventoId);
         if (! Gate::any([
             'isCoordenadorOrCoordenadorDaComissaoCientifica',
-            'isCoordenadorEixo'
+            'isCoordenadorEixo',
+            'isAdmin'
         ], $evento)) {
             abort(403, 'Acesso negado');
         }
