@@ -258,7 +258,7 @@
 
                                     <td style="text-align:center">
                                         @if(($trabalho->modalidade->inicioCorrecao <= $agora && $trabalho->modalidade->fimCorrecao >= $agora
-                                            || $trabalho->modalidade->estaEmPeriodoExtraDeCorrecao()) && ($trabalho->getOriginal('aprovado') === null && $trabalho->permite_correcao))
+                                            || $trabalho->modalidade->estaEmPeriodoExtraDeCorrecao()) && ($trabalho->getOriginal('aprovado') === null && $trabalho->permite_correcao && !in_array($trabalho->avaliado, ['corrigido', 'corrigido_parcialmente', 'nao_corrigido'])))
                                             <a href="#" data-bs-toggle="modal" data-bs-target="#modalCorrecaoTrabalho_{{$trabalho->id}}" style="color:#114048ff">
                                                 <img class="" src="{{asset('img/icons/file-upload-solid.svg')}}" style="width:20px">
                                             </a>
