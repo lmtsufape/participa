@@ -17,7 +17,11 @@
             <div class="card-body">
                 <form method="GET" action="{{ route('coord.listarValidacoes', $evento->id) }}">
                     <div class="row">
-                        <div class="col-md-10">
+                        <div class="col-md-2">
+                            <label for="id" class="form-label">Buscar por ID</label>
+                            <input type="number" class="form-control" name="id" value="{{ request('id') }}" placeholder="Digite o ID...">
+                        </div>
+                        <div class="col-md-8">
                             <label for="titulo" class="form-label">Buscar por Título</label>
                             <input type="text" class="form-control" name="titulo" value="{{ request('titulo') }}" placeholder="Digite o título do trabalho...">
                         </div>
@@ -25,6 +29,13 @@
                             <button type="submit" id="busca" class="btn btn-primary w-100">Buscar</button>
                         </div>
                     </div>
+                    @if(request('titulo') || request('id'))
+                        <div class="row mt-2">
+                            <div class="col-12">
+                                <a href="{{ route('coord.listarValidacoes', ['eventoId' => $evento->id, 'column' => request('column', 'titulo'), 'direction' => request('direction', 'asc'), 'status' => request('status', 'rascunho')]) }}" class="btn btn-outline-success btn-sm">Limpar filtros</a>
+                            </div>
+                        </div>
+                    @endif
                 </form>
             </div>
         </div>

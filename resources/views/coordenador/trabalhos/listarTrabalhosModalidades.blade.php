@@ -29,7 +29,11 @@
                     <input type="hidden" name="status" value="{{ request('status', 'rascunho') }}">
 
                     <div class="row">
-                        <div class="col-md-10">
+                        <div class="col-md-2">
+                            <label for="id" class="form-label">Buscar por ID</label>
+                            <input type="number" class="form-control" name="id" value="{{ request('id') }}" placeholder="Digite o ID...">
+                        </div>
+                        <div class="col-md-8">
                             <label for="titulo" class="form-label">Buscar por Título</label>
                             <input type="text" class="form-control" name="titulo" value="{{ request('titulo') }}" placeholder="Digite o título do trabalho...">
                         </div>
