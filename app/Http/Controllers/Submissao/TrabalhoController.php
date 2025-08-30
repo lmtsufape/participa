@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\TrabalhoPostRequest;
 use App\Http\Requests\TrabalhoUpdateRequest;
 use App\Mail\CartaDeAceiteMail;
+use App\Mail\EmailCorrecaoTrabalho;
 use App\Mail\EmailParaUsuarioNaoCadastrado;
 use App\Mail\EmailParecerDisponivel;
 use App\Mail\SubmissaoTrabalho;
@@ -1187,6 +1188,11 @@ class TrabalhoController extends Controller
                 'caminho' => $path,
                 'trabalhoId' => $trabalho->id,
             ]);
+        }
+
+        $revisores = $trabalho->atribuicoes;
+        foreach ($revisores as $revisor) {
+            Mail::to($revisor->user->email)->send(new EmailCorrecaoTrabalho($evento, $trabalho, $revisor));
         }
 
         return redirect()->back()->with(['success' => 'Correção de ' . $trabalho->titulo . ' enviada com sucesso!']);
