@@ -140,7 +140,6 @@
                                 <th>Evento</th>
                                 <th>ID</th>
                                 <th>Título</th>
-                                <th>Apresentação</th>
                                 <th style="text-align:center">Coautores</th>
                                 <th style="text-align:center">Baixar</th>
                                 <th style="text-align:center">Editar</th>
@@ -156,7 +155,6 @@
                                     <td>{{ $trabalho->evento->nome }}</td>
                                     <td>{{ $trabalho->id }}</td>
                                     <td>{{ $trabalho->titulo }}</td>
-                                    <td>{{ $trabalho->tipo_apresentacao }}</td>
                                     <td style="text-align:center">
                                         <a data-bs-toggle="modal"
                                             data-bs-target="#modalCoautoresTrabalho_{{ $trabalho->id }}"
@@ -259,9 +257,15 @@
                                     <td style="text-align:center">
                                         @if(($trabalho->modalidade->inicioCorrecao <= $agora && $trabalho->modalidade->fimCorrecao >= $agora
                                             || $trabalho->modalidade->estaEmPeriodoExtraDeCorrecao()) && ($trabalho->getOriginal('aprovado') === null && $trabalho->permite_correcao && !in_array($trabalho->avaliado, ['corrigido', 'corrigido_parcialmente', 'nao_corrigido'])))
-                                            <a href="#" data-bs-toggle="modal" data-bs-target="#modalCorrecaoTrabalho_{{$trabalho->id}}" style="color:#114048ff">
-                                                <img class="" src="{{asset('img/icons/file-upload-solid.svg')}}" style="width:20px">
-                                            </a>
+                                            @if($trabalho->arquivoCorrecao()->first() != null)
+                                                <a href="#" onclick="return false;" data-bs-toggle="popover" data-trigger="focus" data-placement="bottom" title="Correção já enviada" data-content="Você já enviou uma correção para este trabalho." style="color:#6c757d">
+                                                    <img class="" src="{{asset('img/icons/file-upload-solid.svg')}}" style="width:20px; opacity: 0.5;">
+                                                </a>
+                                            @else
+                                                <a href="#" data-bs-toggle="modal" data-bs-target="#modalCorrecaoTrabalho_{{$trabalho->id}}" style="color:#114048ff">
+                                                    <img class="" src="{{asset('img/icons/file-upload-solid.svg')}}" style="width:20px">
+                                                </a>
+                                            @endif
                                         @endif
                                     </td>
                                 </tr>
