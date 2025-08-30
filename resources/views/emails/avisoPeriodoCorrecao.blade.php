@@ -2,11 +2,9 @@
 
 Caro(a) {{ $user->name }} e coautor/a(es/as) do trabalho {{$trabalho->titulo}} submetido(s) ao {{$trabalho->evento->nome}},
 
-Lembramos a todos(as) que o prazo de envio de versões corrigidas dos textos, com ou sem identificação dos autores (ver regras do evento) se encerra {{$fimCorrecao}}.
+Lembramos que você tem 05 dias para revisar e enviar corrigido pelo sistema. Não se esqueça de adicionar nomes, vínculos e e-mails nessa segunda submissão, conforme Edital.
 
 Pedimos que enviem nos prazos requeridos para evitar atrasos na elaboração da publicação dos trabalhos.
-
-Quaisquer dúvidas, entrar em contato com o e-mail do evento: {{$trabalho->evento->email}}.
 
 Atenciosamente,
 Comissão Científica do {{$trabalho->evento->nome}}
