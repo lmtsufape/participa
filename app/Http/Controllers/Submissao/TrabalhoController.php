@@ -1177,11 +1177,10 @@ class TrabalhoController extends Controller
 
             $arquivoCorrecao = $trabalho->arquivoCorrecao()->first();
             if ($arquivoCorrecao != null) {
-                return redirect()->back()->withErrors(['mensagem' => 'Já existe uma correção enviada para este trabalho.']);
-                // if (Storage::disk()->exists($arquivoCorrecao->caminho)) {
-                //     Storage::delete($arquivoCorrecao->caminho);
-                // }
-                // $arquivoCorrecao->delete();
+                if (Storage::disk()->exists($arquivoCorrecao->caminho)) {
+                    Storage::delete($arquivoCorrecao->caminho);
+                }
+                $arquivoCorrecao->delete();
             }
 
             $path = $this->salvarArquivoComNomeOriginal($request->arquivoCorrecao, "correcoes/{$evento->id}/{$trabalho->id}");
