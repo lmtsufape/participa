@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\TrabalhoPostRequest;
 use App\Http\Requests\TrabalhoUpdateRequest;
 use App\Mail\CartaDeAceiteMail;
+use App\Mail\EmailCorrecaoTrabalho;
 use App\Mail\EmailParaUsuarioNaoCadastrado;
 use App\Mail\EmailParecerDisponivel;
 use App\Mail\SubmissaoTrabalho;
@@ -1189,6 +1190,11 @@ class TrabalhoController extends Controller
             ]);
         }
 
+        $revisores = $trabalho->atribuicoes;
+        foreach ($revisores as $revisor) {
+            Mail::to($revisor->user->email)->send(new EmailCorrecaoTrabalho($evento, $trabalho, $revisor));
+        }
+
         return redirect()->back()->with(['success' => 'Correção de ' . $trabalho->titulo . ' enviada com sucesso!']);
     }
 
@@ -1403,11 +1409,20 @@ class TrabalhoController extends Controller
     //tirar lógica de avaliçao deste controller e inserir em um controller de avaliação
 
     public function destroyAvaliacao(Request $request, $trabalho_id){
+        $trabalho = Trabalho::findOrFail($trabalho_id);
+        $evento = $trabalho->evento;
+
+        if (! Gate::any([
+            'isCoordenadorOrCoordenadorDaComissaoCientifica',
+            'isCoordenadorEixo'
+        ], $evento) && !Gate::allows('isAdmin', Administrador::class)) {
+            abort(403, 'Acesso negado');
+        }
+
         DB::beginTransaction();
         try {
-            $trabalho = Trabalho::findOrFail($trabalho_id);
 
-            $trabalho->atribuicoes()->detach($request->revisor_id);
+            // $trabalho->atribuicoes()->detach($request->revisor_id);
 
             Resposta::where('trabalho_id', $trabalho->id)
                     ->where('revisor_id', $request->revisor_id)->delete();
@@ -1427,7 +1442,7 @@ class TrabalhoController extends Controller
 
             DB::commit();
 
-            return redirect()->route('coord.listarAvaliacoes')->with('success', 'Avaliação deleta com sucesso!');
+            return redirect()->back()->with('success', 'Avaliação deletada com sucesso!')->with('goBack', 2);
 
         } catch (\Exception $e) {
             DB::rollBack();

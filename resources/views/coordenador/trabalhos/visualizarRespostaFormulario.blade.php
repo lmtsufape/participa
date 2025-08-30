@@ -125,19 +125,17 @@
                 <input type="hidden" name="trabalhosSelecionados[]" value="{{$trabalho->id}}">
             </form>
             <button class="btn btn-md btn-primary" form="avisoCorrecao" type="submit">Lembrete de envio de versão corrigida do texto</button>
-            @can('isCoordenadorOrCoordenadorDasComissoes', $evento)
-                @if ($trabalho->avaliado($revisor->user))
-                    @if ($trabalho->getParecerAtribuicao($revisor->user) != "encaminhado")
-                        <a href="{{ route('trabalho.encaminhar', [$trabalho->id, $revisor]) }}" class="btn btn-md btn-success">
-                            Encaminhar parecer para autor/a
-                        </a>
-                    @else
-                        <a href="{{ route('trabalho.encaminhar', [$trabalho->id, $revisor]) }}" class="btn btn-md btn-secondary">
-                            Desfazer encaminhamento da avaliação
-                        </a>
-                    @endif
+            @if ($trabalho->avaliado($revisor->user))
+                @if ($trabalho->getParecerAtribuicao($revisor->user) != "encaminhado")
+                    <a href="{{ route('trabalho.encaminhar', [$trabalho->id, $revisor]) }}" class="btn btn-md btn-success">
+                        Encaminhar parecer para autor/a
+                    </a>
+                @else
+                    <a href="{{ route('trabalho.encaminhar', [$trabalho->id, $revisor]) }}" class="btn btn-md btn-secondary">
+                        Desfazer encaminhamento da avaliação
+                    </a>
                 @endif
-            @endcan
+            @endif
             <button class="btn btn-md btn-success"
                 data-bs-toggle="modal" data-bs-target="#avaliacao-corrigir-{{$trabalho->id}}">
                 @if(!$trabalho->permite_correcao)Liberar para correção @else Bloquear para correção @endif

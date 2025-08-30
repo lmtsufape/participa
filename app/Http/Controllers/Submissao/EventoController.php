@@ -196,6 +196,10 @@ class EventoController extends Controller
 
         $query->where($statusFilter);
 
+        if ($request->has('id') && $request->id != '') {
+            $query->where('id', $request->id);
+        }
+
         if ($request->has('titulo') && $request->titulo != '') {
             $query->where('titulo', 'ilike', '%' . $request->titulo . '%');
         }
@@ -295,6 +299,10 @@ class EventoController extends Controller
             }])
             ->withExists('arquivo as tem_arquivo');
 
+        if ($request->has('id') && $request->id != '') {
+            $query->where('id', $request->id);
+        }
+
         if ($request->has('titulo') && $request->titulo != '') {
             $query->where('titulo', 'ilike', '%' . $request->titulo . '%');
         }
@@ -366,6 +374,10 @@ class EventoController extends Controller
         $perPage = 50;
 
         $query = Trabalho::whereIn('modalidadeId', $modalidades->pluck('id'));
+
+        if ($request->has('id') && $request->id != '') {
+            $query->where('id', $request->id);
+        }
 
         if ($request->has('search') && !empty($request->search)) {
             $query->where('titulo', 'ILIKE', '%' . $request->search . '%');
@@ -448,6 +460,10 @@ class EventoController extends Controller
                 $q->select(DB::raw('count(distinct revisor_id)'));
             }])
             ->withExists('arquivo as tem_arquivo');
+
+        if ($request->has('id') && $request->id != '') {
+            $query->where('id', $request->id);
+        }
 
         if ($request->has('titulo') && $request->titulo != '') {
             $query->where('titulo', 'ilike', '%' . $request->titulo . '%');
@@ -948,6 +964,10 @@ class EventoController extends Controller
             $query->where('titulo', 'ilike', '%' . $request->titulo . '%');
         }
 
+        if ($request->has('id') && $request->id != '') {
+            $query->where('id', $request->id);
+        }
+
         if ($column == 'autor') {
             $query->orderBy(User::select('name')->whereColumn('autorId', 'users.id'), $direction);
         } elseif ($column == 'data') {
@@ -1015,6 +1035,10 @@ class EventoController extends Controller
 
         if ($request->filled('titulo')) {
             $query->where('titulo', 'ilike', '%' . $request->titulo . '%');
+        }
+
+        if ($request->has('id') && $request->id != '') {
+            $query->where('id', $request->id);
         }
 
         if ($column == 'autor') {
@@ -1435,6 +1459,10 @@ class EventoController extends Controller
         $perPage = 50;
 
         $query = Trabalho::where('modalidadeId', $request->modalidadeId);
+
+        if ($request->has('id') && $request->id != '') {
+            $query->where('id', $request->id);
+        }
 
         if ($request->has('search') && !empty($request->search)) {
             $query->where('titulo', 'ILIKE', '%' . $request->search . '%');

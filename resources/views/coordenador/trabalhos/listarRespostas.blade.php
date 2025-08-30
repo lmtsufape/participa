@@ -7,22 +7,37 @@
             </div>
         </div>
         <div class="row mb-3">
-            <div class="col-9">
-                <form method="GET" action="{{ route('coord.listarAvaliacoes', ['eventoId' => $evento->id]) }}">
-                    <input type="hidden" name="eventoId" value="{{ $evento->id }}">
-                    <input type="hidden" name="column" value="{{ request('column', 'titulo') }}">
-                    <input type="hidden" name="direction" value="{{ request('direction', 'asc') }}">
-                    <input type="hidden" name="status" value="{{ request('status', 'rascunho') }}">
-                    <div class="input-group">
-                        <input class="form-control" type="search" name="search" value="{{ request('search') }}" placeholder="Pesquisar por título" aria-label="Pesquisar">
-                        <div class="input-group-append">
-                            <button class="btn btn-outline-info" type="submit">Pesquisar</button>
-                            @if(request('search'))
-                                <a href="{{ route('coord.listarAvaliacoes', ['eventoId' => $evento->id, 'column' => request('column', 'titulo'), 'direction' => request('direction', 'asc'), 'status' => request('status', 'rascunho')]) }}" class="btn btn-outline-success">Limpar</a>
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <form method="GET" action="{{ route('coord.listarAvaliacoes', ['eventoId' => $evento->id]) }}">
+                            <input type="hidden" name="eventoId" value="{{ $evento->id }}">
+                            <input type="hidden" name="column" value="{{ request('column', 'titulo') }}">
+                            <input type="hidden" name="direction" value="{{ request('direction', 'asc') }}">
+                            <input type="hidden" name="status" value="{{ request('status', 'rascunho') }}">
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <label for="id" class="form-label">Buscar por ID</label>
+                                    <input type="number" class="form-control" name="id" value="{{ request('id') }}" placeholder="Digite o ID...">
+                                </div>
+                                <div class="col-md-8">
+                                    <label for="search" class="form-label">Buscar por Título</label>
+                                    <input type="text" class="form-control" name="search" value="{{ request('search') }}" placeholder="Digite o título do trabalho...">
+                                </div>
+                                <div class="col-md-2 d-flex align-items-end">
+                                    <button class="btn btn-primary w-100" type="submit">Buscar</button>
+                                </div>
+                            </div>
+                            @if(request('search') || request('id'))
+                                <div class="row mt-2">
+                                    <div class="col-12">
+                                        <a href="{{ route('coord.listarAvaliacoes', ['eventoId' => $evento->id, 'column' => request('column', 'titulo'), 'direction' => request('direction', 'asc'), 'status' => request('status', 'rascunho')]) }}" class="btn btn-outline-success btn-sm">Limpar filtros</a>
+                                    </div>
+                                </div>
                             @endif
-                        </div>
+                        </form>
                     </div>
-                </form>
+                </div>
             </div>
         </div>
         <div class="btn-group mb-2" role="group" aria-label="Button group with nested dropdown">
