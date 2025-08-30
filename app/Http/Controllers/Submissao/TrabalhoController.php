@@ -1409,20 +1409,15 @@ class TrabalhoController extends Controller
     //tirar lógica de avaliçao deste controller e inserir em um controller de avaliação
 
     public function destroyAvaliacao(Request $request, $trabalho_id){
-        $trabalho = Trabalho::findOrFail($trabalho_id);
-        $evento = $trabalho->evento;
-
-        if (! Gate::any([
-            'isCoordenadorOrCoordenadorDaComissaoCientifica',
-            'isCoordenadorEixo'
-        ], $evento) && !Gate::allows('isAdmin', Administrador::class)) {
-            abort(403, 'Acesso negado');
-        }
-
         DB::beginTransaction();
         try {
+            $trabalho = Trabalho::findOrFail($trabalho_id);
 
-            // $trabalho->atribuicoes()->detach($request->revisor_id);
+            Parecer::where('trabalhoId', $trabalho->id)
+                ->where('revisorId', $request->revisor_id)
+                ->delete();
+
+            $trabalho->atribuicoes()->detach($request->revisor_id);
 
             Resposta::where('trabalho_id', $trabalho->id)
                     ->where('revisor_id', $request->revisor_id)->delete();
@@ -1442,14 +1437,16 @@ class TrabalhoController extends Controller
 
             DB::commit();
 
-            return redirect()->back()->with('success', 'Avaliação deletada com sucesso!')->with('goBack', 2);
+            return redirect()->route('coord.listarAvaliacoes', ['eventoId' => $trabalho->eventoId])
+                            ->with('success', 'Avaliação deletada com sucesso!');
 
         } catch (\Exception $e) {
             DB::rollBack();
 
-            return back()->with('error', 'Erro: ' . $e->getMessage());//Definir um component global para exibição de mensagens
+            return back()->with('error', 'Erro: ' . $e->getMessage());
         }
     }
+
     public function validarTipoDoArquivo($arquivo, $tiposExtensao)
     {
         if ($tiposExtensao->arquivo == true) {
