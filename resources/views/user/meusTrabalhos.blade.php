@@ -1152,6 +1152,10 @@
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 
                         </div>
+                        <div class="alert alert-warning" role="alert" style="border-radius: 5px; margin-bottom: 15px;">
+                            <strong>⚠️ Não esqueça!</strong> Nessa segunda submissão as credenciais/vínculo (nome, instituição/organização/coletivo e e-mail) dos autores devem ser inseridas.
+                        </div>
+
                         <div class="modal-body">
                             <form id="formCorrecaoTrabalho{{ $trabalho->id }}"
                                 action="{{ route('trabalho.correcao', ['id' => $trabalho->id]) }}" method="POST"
