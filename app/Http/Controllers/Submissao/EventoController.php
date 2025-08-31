@@ -157,6 +157,7 @@ class EventoController extends Controller
 
    public function listarTrabalhos(Request $request, $column = 'titulo', $direction = 'asc', $status = 'rascunho')
     {
+        $status = $request->input('status', $status);
         $evento = Evento::find($request->eventoId);
         $this->authorize('isCoordenadorOrCoordCientificaOrCoordEixo', $evento);
 
@@ -259,6 +260,7 @@ class EventoController extends Controller
 
     public function listarTrabalhosPorEixo(Request $request, $column = 'titulo', $direction = 'asc', $status = 'rascunho')
     {
+        $status = $request->input('status', $status);
         $evento = Evento::find($request->eventoId);
         $this->authorize('isCoordenadorOrCoordCientificaOrCoordEixo', $evento);
         $areas = Area::where('eventoId', $evento->id)->orderBy('ordem')->get();
@@ -442,6 +444,7 @@ class EventoController extends Controller
 
     public function listarTrabalhosModalidades(Request $request, $column = 'titulo', $direction = 'asc', $status = 'rascunho')
     {
+        $status = $request->input('status', $status);
         $evento = Evento::find($request->eventoId);
         $this->authorize('isCoordenadorOrCoordCientificaOrCoordEixo', $evento);
         $modalidade = Modalidade::find($request->modalidadeId);

@@ -34,6 +34,7 @@
                 <form method="GET" action="{{ route('coord.listarTrabalhosPorEixo') }}">
                     <input type="hidden" name="eventoId" value="{{ $evento->id }}">
                     <input type="hidden" name="eixo_id" value="{{ $eixoSelecionado }}">
+                    <input type="hidden" name="status" value="{{ $status }}">
                     <div class="row">
                         <div class="col-md-2">
                             <label for="id" class="form-label">Buscar por ID</label>

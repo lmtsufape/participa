@@ -53,6 +53,7 @@
             <div class="card-body">
                 <form method="GET" action="{{ route('coord.listarTrabalhos') }}">
                     <input type="hidden" name="eventoId" value="{{ $evento->id }}">
+                    <input type="hidden" name="status" value="{{ $status }}">
                     <div class="row">
                         <div class="col-md-2">
                             <label for="id" class="form-label">Buscar por ID</label>
