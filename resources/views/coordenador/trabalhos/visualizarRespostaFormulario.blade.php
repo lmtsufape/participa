@@ -112,7 +112,7 @@
             </button>
 
             <button type="submit" class="btn btn-md btn-primary" form="editarRespostas" id="submeterFormBotao">
-                {{ __('Atualizar Avaliação') }}
+                {{ __('Editar Avaliação') }}
             </button>
 
             @if ($arquivoAvaliacao != null)
