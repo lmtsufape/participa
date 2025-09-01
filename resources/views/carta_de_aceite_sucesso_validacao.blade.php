@@ -35,6 +35,13 @@
                 <dt class="col-sm-4">Autor(a)</dt>
                 <dd class="col-sm-8">{{ $trabalho->autor->name ?? '—' }}</dd>
 
+                <dt class="col-sm-4">Coautores(as)</dt>
+                <dd class="col-sm-8">
+                    @foreach ($trabalho->coautors as $coautor)
+                        <li class="list-unstyled">{{Str::title($coautor->user->name)}}</li>
+                    @endforeach
+                </dd>
+
                 <dt class="col-sm-4">Modalidade</dt>
                 <dd class="col-sm-8">{{ $trabalho->modalidade->nome ?? '—' }}</dd>
 
