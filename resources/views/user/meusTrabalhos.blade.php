@@ -140,7 +140,6 @@
                                 <th>Evento</th>
                                 <th>ID</th>
                                 <th>Título</th>
-                                <th>Apresentação</th>
                                 <th style="text-align:center">Coautores</th>
                                 <th style="text-align:center">Baixar</th>
                                 <th style="text-align:center">Editar</th>
@@ -156,7 +155,6 @@
                                     <td>{{ $trabalho->evento->nome }}</td>
                                     <td>{{ $trabalho->id }}</td>
                                     <td>{{ $trabalho->titulo }}</td>
-                                    <td>{{ $trabalho->tipo_apresentacao }}</td>
                                     <td style="text-align:center">
                                         <a data-bs-toggle="modal"
                                             data-bs-target="#modalCoautoresTrabalho_{{ $trabalho->id }}"
@@ -261,6 +259,10 @@
                                             || $trabalho->modalidade->estaEmPeriodoExtraDeCorrecao()) && ($trabalho->getOriginal('aprovado') === null && $trabalho->permite_correcao && !in_array($trabalho->avaliado, ['corrigido', 'corrigido_parcialmente', 'nao_corrigido'])))
                                             <a href="#" data-bs-toggle="modal" data-bs-target="#modalCorrecaoTrabalho_{{$trabalho->id}}" style="color:#114048ff">
                                                 <img class="" src="{{asset('img/icons/file-upload-solid.svg')}}" style="width:20px">
+                                            </a>
+                                        @elseif($trabalho->getOriginal('aprovado') === true || $trabalho->getOriginal('aprovado') === false || in_array($trabalho->avaliado, ['corrigido', 'corrigido_parcialmente']))
+                                            <a href="#" onclick="return false;" data-bs-toggle="popover" data-trigger="focus" data-placement="bottom" title="O(A) avaliador(a) do trabalho já validou esta correção." data-content="O(A) avaliador(a) do trabalho já validou esta correção. Não é possível enviar nova versão." style="color:#6c757d">
+                                                <img class="" src="{{asset('img/icons/file-upload-solid.svg')}}" style="width:20px; opacity: 0.5;">
                                             </a>
                                         @endif
                                     </td>
@@ -1154,6 +1156,10 @@
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 
                         </div>
+                        <div class="alert alert-warning" role="alert" style="border-radius: 5px; margin-bottom: 15px;">
+                            <strong>⚠️ Não esqueça!</strong> Nessa segunda submissão as credenciais/vínculo (nome, instituição/organização/coletivo e e-mail) dos autores devem ser inseridas.
+                        </div>
+
                         <div class="modal-body">
                             <form id="formCorrecaoTrabalho{{ $trabalho->id }}"
                                 action="{{ route('trabalho.correcao', ['id' => $trabalho->id]) }}" method="POST"

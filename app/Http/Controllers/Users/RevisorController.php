@@ -585,7 +585,13 @@ class RevisorController extends Controller
         $paragrafo_checkBox = $request->paragrafo_checkBox;
         $visivilidade_opcoes = $request->visivilidade_opcoes;
         $trabalho = Trabalho::find($data['trabalho_id']);
-        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $trabalho->evento);
+
+        if (! (Gate::allows('isCoordenadorOrCoordenadorDasComissoes', $trabalho->evento) ||
+               Gate::allows('isCoordenadorEixo', $trabalho->evento) ||
+               Gate::allows('isAdmin', Administrador::class))) {
+            abort(403, 'Acesso negado');
+        }
+        
         if ($request->arquivoAvaliacao != null) {
             if ($this->validarTipoDoArquivo($request->arquivoAvaliacao, $trabalho->modalidade)) {
                 return redirect()->back()->withErrors(['message' => 'Extensão de arquivo enviado é diferente do permitido.']);

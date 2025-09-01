@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\TrabalhoPostRequest;
 use App\Http\Requests\TrabalhoUpdateRequest;
 use App\Mail\CartaDeAceiteMail;
+use App\Mail\EmailCorrecaoTrabalho;
 use App\Mail\EmailParaUsuarioNaoCadastrado;
 use App\Mail\EmailParecerDisponivel;
 use App\Mail\SubmissaoTrabalho;
@@ -1189,6 +1190,11 @@ class TrabalhoController extends Controller
             ]);
         }
 
+        $revisores = $trabalho->atribuicoes;
+        foreach ($revisores as $revisor) {
+            Mail::to($revisor->user->email)->send(new EmailCorrecaoTrabalho($evento, $trabalho, $revisor));
+        }
+
         return redirect()->back()->with(['success' => 'Correção de ' . $trabalho->titulo . ' enviada com sucesso!']);
     }
 
@@ -1407,6 +1413,10 @@ class TrabalhoController extends Controller
         try {
             $trabalho = Trabalho::findOrFail($trabalho_id);
 
+            Parecer::where('trabalhoId', $trabalho->id)
+                ->where('revisorId', $request->revisor_id)
+                ->delete();
+
             $trabalho->atribuicoes()->detach($request->revisor_id);
 
             Resposta::where('trabalho_id', $trabalho->id)
@@ -1427,14 +1437,16 @@ class TrabalhoController extends Controller
 
             DB::commit();
 
-            return redirect()->route('coord.listarAvaliacoes')->with('success', 'Avaliação deleta com sucesso!');
+            return redirect()->route('coord.listarAvaliacoes', ['eventoId' => $trabalho->eventoId])
+                            ->with('success', 'Avaliação deletada com sucesso!');
 
         } catch (\Exception $e) {
             DB::rollBack();
 
-            return back()->with('error', 'Erro: ' . $e->getMessage());//Definir um component global para exibição de mensagens
+            return back()->with('error', 'Erro: ' . $e->getMessage());
         }
     }
+
     public function validarTipoDoArquivo($arquivo, $tiposExtensao)
     {
         if ($tiposExtensao->arquivo == true) {
