@@ -56,8 +56,8 @@
                             <p style="margin:0 0 14px 0;font-size:16px; text-align:justify;">
                                 Temos a satisfação de comunicar que, após análise da Comissão Científica, o trabalho
                                 intitulado
-                                <strong>{{ $trabalho->titulo }}</strong>,
-                                de autoria de <strong>{{ $trabalho->autor->name}}</strong>,
+                                "<strong>{{ $trabalho->titulo }}</strong>",
+                                de autoria de <strong>{{ $trabalho->autor->name}}</strong>@if ($trabalho->coautors->count()), com os coautores/as <strong>{{ $trabalho->coautors->pluck('user.name')->join(', ', ' e ') }}</strong>@endif,
                                 foi <strong>aprovado</strong> na modalidade
                                 <strong>{{$trabalho->modalidade->nome}}</strong> para apresentação no
                                 evento

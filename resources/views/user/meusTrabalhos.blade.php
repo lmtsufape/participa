@@ -260,6 +260,10 @@
                                             <a href="#" data-bs-toggle="modal" data-bs-target="#modalCorrecaoTrabalho_{{$trabalho->id}}" style="color:#114048ff">
                                                 <img class="" src="{{asset('img/icons/file-upload-solid.svg')}}" style="width:20px">
                                             </a>
+                                        @elseif($trabalho->getOriginal('aprovado') === true || $trabalho->getOriginal('aprovado') === false || in_array($trabalho->avaliado, ['corrigido', 'corrigido_parcialmente']))
+                                            <a href="#" onclick="return false;" data-bs-toggle="popover" data-trigger="focus" data-placement="bottom" title="O(A) avaliador(a) do trabalho já validou esta correção." data-content="O(A) avaliador(a) do trabalho já validou esta correção. Não é possível enviar nova versão." style="color:#6c757d">
+                                                <img class="" src="{{asset('img/icons/file-upload-solid.svg')}}" style="width:20px; opacity: 0.5;">
+                                            </a>
                                         @endif
                                     </td>
                                 </tr>

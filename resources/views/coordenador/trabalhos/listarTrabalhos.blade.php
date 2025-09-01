@@ -1,6 +1,9 @@
-@extends('coordenador.detalhesEvento')
+@extends('layouts.app')
+@section('sidebar')
 
-@section('menu')
+
+@endsection
+@section('content')
     <div id="divListarTrabalhos" style="display: block">
 
         <div class="row ">
@@ -137,9 +140,11 @@
                                                     <td>{{ $trabalho->quantidade_avaliacoes }}</td>
                                                     <td>{{ $trabalho->created_at?->format('d/m/Y H:i') }}</td>
                                                     <td style="text-align:center">
-                                                        <a href="#" data-bs-toggle="modal" data-bs-target="#modalTrabalho{{ $trabalho->id }}">
-                                                            <img src="{{ asset('img/icons/documento.svg') }}" class="icon-card" width="20" alt="atribuir">
-                                                        </a>
+                                                        <livewire:buttons.ver-trabalho-btn
+                                                            :trabalho-id="$trabalho->id"
+                                                            :evento-id="$evento->id"
+                                                        />
+
                                                     </td>
                                                         <td style="text-align:center">
                                                             @if ($trabalho->status == 'arquivado')
@@ -169,7 +174,6 @@
         @endforeach
 
         @foreach ($trabalhos as $trabalho)
-            <x-modal-adicionar-revisor :trabalho="$trabalho" :evento="$evento" />
             <x-modal-excluir-trabalho :trabalho="$trabalho" />
         @endforeach
 
