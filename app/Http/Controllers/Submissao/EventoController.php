@@ -369,6 +369,7 @@ class EventoController extends Controller
 
     public function listarAvaliacoes(Request $request, $column = 'titulo', $direction = 'asc', $status = 'rascunho')
     {
+        $status = $request->input('status', $status);
         $evento = Evento::find($request->eventoId);
         $this->authorize('isCoordenadorOrCoordCientificaOrCoordEixo', $evento);
         $modalidades = Modalidade::where('evento_id', $evento->id)->orderBy('nome')->get();
@@ -563,33 +564,44 @@ class EventoController extends Controller
     {
         $evento = Evento::find($request->eventoId);
 
-        if (! Gate::any([
-            'isCoordenadorOrCoordenadorDaComissaoCientifica',
-            'isCoordenadorEixo'
-        ], $evento)) {
+        if (! (Gate::any(['isCoordenadorOrCoordenadorDaComissaoCientifica', 'isCoordenadorEixo'], $evento) || auth()->user()->administradors()->exists()) ) {
             abort(403, 'Acesso negado');
         }
-        $revisores = User::whereHas('revisor', function (Builder $query) use ($evento) {
+
+        $query = User::whereHas('revisor', function (Builder $query) use ($evento) {
             $query->where('evento_id', $evento->id);
-        })->orderBy('name')->get();
-        $contadores = $evento->revisors()->withCount([
-            'trabalhosAtribuidos as avaliados_count' => function (Builder $query) {
-                $query->where('parecer', 'avaliado')->orWhere('parecer', 'encaminhado');
-            },
-            'trabalhosAtribuidos as processando_count' => function (Builder $query) {
-                $query->where('parecer', 'processando');
-            },
-        ])->get();
+        });
+
+        if ($request->filled('search')) {
+            $searchTerm = '%' . $request->search . '%';
+            $query->where(function (Builder $q) use ($searchTerm) {
+                $q->where('name', 'ilike', $searchTerm)
+                ->orWhere('email', 'ilike', $searchTerm);
+            });
+        }
+        
+        $query->with(['revisor' => function ($q) use ($evento) {
+            $q->where('evento_id', $evento->id)
+            ->withCount([
+                'trabalhosAtribuidos as avaliados_count' => function (Builder $query) {
+                    $query->where('parecer', 'avaliado')->orWhere('parecer', 'encaminhado');
+                },
+                'trabalhosAtribuidos as processando_count' => function (Builder $query) {
+                    $query->where('parecer', 'processando');
+                },
+            ]);
+        }]);
+
+        $revisores = $query->orderBy('name')->simplePaginate(15)->withQueryString();
+
         $areas = $evento->areas;
         $modalidades = $evento->modalidades;
 
         return view('coordenador.revisores.listarRevisores', [
             'evento' => $evento,
             'revisores' => $revisores,
-            // 'revs'                    => $revisores,
             'areas' => $areas,
             'modalidades' => $modalidades,
-            'contadores' => $contadores,
         ]);
     }
 
@@ -1451,6 +1463,7 @@ class EventoController extends Controller
 
     public function listarRespostasTrabalhos(Request $request, $column = 'titulo', $direction = 'asc', $status = 'rascunho')
     {
+        $status = $request->input('status', $status);
         $evento = Evento::find($request->eventoId);
         $this->authorize('isCoordenadorOrCoordCientificaOrCoordEixo', $evento);
         // $users = $evento->usuariosDaComissao;
