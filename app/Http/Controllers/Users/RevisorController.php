@@ -681,11 +681,24 @@ class RevisorController extends Controller
         }
     }
 
-    public function verificarCorrecao(Request $request, $trabalho_id) {
+    public function verificarCorrecao(Request $request, $trabalho_id){
         $trabalho = Trabalho::find($trabalho_id);
+        $user = auth()->user();
+        $revisorDaAtribuicao = $trabalho->atribuicoes()->where('user_id', $user->id)->exists();
 
-        $statusCorrecao = $request->input('status_correcao_'. $trabalho->id);
-        
+        if (!($revisorDaAtribuicao || Gate::any(['isCoordenadorOrCoordenadorDasComissoes', 'isCoordenadorEixo'], $trabalho->evento))) {
+            abort(403, 'Acesso não autorizado');
+        }
+
+        if (!$revisorDaAtribuicao && $user->eventosComoCoordEixo()->exists() && !Gate::allows('isCoordenadorOrCoordenadorDasComissoes', $trabalho->evento)) {
+            $areasCoordEixo = $user->areasComoCoordEixoNoEvento($trabalho->evento->id)->pluck('id');
+            if (!$areasCoordEixo->contains($trabalho->areaId)) {
+                abort(403, 'Você só pode gerenciar trabalhos do seu eixo temático.');
+            }
+        }
+
+        $statusCorrecao = $request->input('status_correcao_' . $trabalho->id) ?? $request->input('status_correcao');
+
         $trabalho->avaliado = $statusCorrecao;
 
         if ($statusCorrecao == 'corrigido_parcialmente' || $statusCorrecao == 'nao_corrigido') {
@@ -699,6 +712,6 @@ class RevisorController extends Controller
 
         $trabalho->update();
 
-        return redirect()->back()->with('success', 'Status de correção do trabalho alterado com sucesso!');
+        return redirect()->back()->with('success', 'Validação da correção realizada com sucesso!');
     }
 }

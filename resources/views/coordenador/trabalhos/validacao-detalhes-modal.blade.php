@@ -45,10 +45,23 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <button type="submit" class="btn btn-primary" form="validacao-correcao-coordenador-{{$trabalho->id}}">
-                    Salvar Alterações
-                </button>
+                <div>
+                    <form id="reset-validacao-form-{{$trabalho->id}}"
+                        action="{{ route('coord.trabalho.resetarValidacao', $trabalho->id) }}"
+                        method="POST"
+                        onsubmit="return confirm('Tem certeza que deseja resetar a validação deste trabalho? O avaliador precisará validar a correção novamente.');">
+                        @csrf
+                        <button type="submit" class="btn btn-outline-danger">
+                            Apagar Validação
+                        </button>
+                    </form>
+                </div>
+                <div>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary" form="validacao-correcao-coordenador-{{$trabalho->id}}">
+                        Salvar Alterações
+                    </button>
+                </div>
             </div>
         </div>
     </div>

@@ -237,7 +237,7 @@ class User extends Authenticatable
 
     public function areasComoCoordEixoNoEvento($evento_id)
     {
-        return $this->hasManyThrough(
+        $query = $this->hasManyThrough(
             Area::class,
             CoordEixoTematico::class,
             'user_id',
@@ -245,5 +245,9 @@ class User extends Authenticatable
             'id',
             'area_id'
         )->where('coordenadores_eixos_tematicos.evento_id', $evento_id);
+
+        $query->select('areas.*'); 
+
+        return $query;
     }
 }
