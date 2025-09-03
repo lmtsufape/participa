@@ -579,7 +579,7 @@ class EventoController extends Controller
                 ->orWhere('email', 'ilike', $searchTerm);
             });
         }
-        
+
         $query->with(['revisor' => function ($q) use ($evento) {
             $q->where('evento_id', $evento->id)
             ->withCount([
@@ -2235,8 +2235,9 @@ class EventoController extends Controller
         $trabalhos = Trabalho::whereIn('id', $request['trabalhosSelecionados'])->get();
 
         foreach ($trabalhos as $trabalho) {
+            $coautorsWithEmail = $trabalho->coautors()->with('user')->get()->map(fn($coautor) => $coautor->user)->filter(fn($user) => $user->email);
             Mail::to($trabalho->autor)
-                ->cc($trabalho->coautors()->with('user')->get()->map(fn($coautor) => $coautor->user))
+                ->cc($coautorsWithEmail)
                 ->send(new AvisoPeriodoCorrecao($trabalho->autor, $trabalho));
             $trabalho->lembrete_enviado = true;
             $trabalho->save();

@@ -247,7 +247,7 @@
                                         </div>
                                     @endif
                                         <td class="d-flex flex-column align-items-center">
-                                            @if ($trabalho->arquivoCorrecao != null)
+                                            @if ($trabalho->arquivoCorrecao()->exists())
                                                 <a href="{{route('downloadCorrecao', ['id' => $trabalho->id])}}"><img src="{{asset('img/icons/file-download-solid-black.svg')}}" style="width:20px"></a>
 
 
