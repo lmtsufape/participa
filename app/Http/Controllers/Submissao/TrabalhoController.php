@@ -684,12 +684,11 @@ class TrabalhoController extends Controller
 
         if ($request->file('arquivo' . $id) != null) {
             if ($trabalho->modalidade->submissaoUnica == false || $request->user()->can('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento)) {
-                $path = "trabalhos/{$evento->id}/{$trabalho->id}";
-                $file = $request->file('arquivo' . $id);
-                $path = $this->salvarArquivoComNomeOriginal($file, $path);
 
-                //É necessário excluir o arquivo da tabela de arquivo também ao editar um trabalho
-                //Não só fazer o Storage::delete() do arquivo
+                $file = $request->file('arquivo' . $id);
+                $nome = now()->format('Ymd_His') . '-' . $file->hashName();
+                $novoPath = $file->storeAs("trabalhos/{$evento->id}/{$trabalho->id}",$nome );
+
                 $arquivosTrabalho = $trabalho->arquivo()->where('versaoFinal', true)->get();
                 foreach ($arquivosTrabalho as $arquivoTrabalho) {
                     if (Storage::disk()->exists($arquivoTrabalho->nome)) {
@@ -699,7 +698,7 @@ class TrabalhoController extends Controller
                 }
 
                 $arquivo = Arquivo::create([
-                    'nome' => $path,
+                    'nome' => $novoPath,
                     'trabalhoId' => $trabalho->id,
                     'versaoFinal' => true,
                 ]);
