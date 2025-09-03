@@ -785,31 +785,34 @@ class TrabalhoController extends Controller
             ||
             (auth()->user()->can('isCoordenadorOrCoordenadorDaComissaoCientifica', $trabalho->evento) && $trabalho->status == 'arquivado')
             ) {
-            $coautores = $trabalho->coautors;
-            foreach ($coautores as $coautor) {
-                $coautor->trabalhos()->detach($trabalho->id);
+            if(auth()->user()->id == $trabalho->autorId){
+                $coautores = $trabalho->coautors;
+                foreach ($coautores as $coautor) {
+                    $coautor->trabalhos()->detach($trabalho->id);
 
-                if (count($coautor->trabalhos) <= 0) {
-                    $coautor->delete();
-                }
-            }
-
-            if ($trabalho->arquivo != null) {
-                foreach ($trabalho->arquivo as $key => $value) {
-                    if (Storage::disk()->exists($value->nome)) {
-                        Storage::delete($value->nome);
+                    if (count($coautor->trabalhos) <= 0) {
+                        $coautor->delete();
                     }
                 }
-                $trabalho->arquivo()->delete();
-            }
 
-            if ($trabalho->atribuicoes != null && $trabalho->atribuicoes->count() > 0) {
-                foreach ($trabalho->atribuicoes as $atrib) {
-                    $trabalho->atribuicoes()->detach($atrib->revisor_id);
+                if ($trabalho->arquivo != null) {
+                    foreach ($trabalho->arquivo as $key => $value) {
+                        if (Storage::disk()->exists($value->nome)) {
+                            Storage::delete($value->nome);
+                        }
+                    }
+                    $trabalho->arquivo()->delete();
                 }
-            }
 
-            $trabalho->delete();
+                if ($trabalho->atribuicoes != null && $trabalho->atribuicoes->count() > 0) {
+                    foreach ($trabalho->atribuicoes as $atrib) {
+                        $trabalho->atribuicoes()->detach($atrib->revisor_id);
+                    }
+                }
+                $trabalho->forceDelete();
+            }else{
+                $trabalho->delete();
+            }
 
             return redirect()->back()->with(['success' => 'Trabalho deletado com sucesso!']);
         }
