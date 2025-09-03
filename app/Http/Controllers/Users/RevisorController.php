@@ -683,21 +683,35 @@ class RevisorController extends Controller
 
     public function verificarCorrecao(Request $request, $trabalho_id){
         $trabalho = Trabalho::find($trabalho_id);
-        switch ($request->status_correcao) {
-            case 'corrigido':
-                $trabalho->update(['avaliado' => 'corrigido']);
-                // Lógica específica para "completamente"
-                break;
-            case 'corrigido_parcialmente':
-                $trabalho->update(['avaliado' => 'corrigido_parcialmente']);
-                // Lógica específica para "parcialmente"
-                break;
-            case 'nao_corrigido':
-                $trabalho->update(['avaliado' => 'nao_corrigido']);
-                // Lógica específica para "nao"
-                break;
+        $user = auth()->user();
+        $revisorDaAtribuicao = $trabalho->atribuicoes()->where('user_id', $user->id)->exists();
+
+        if (!($revisorDaAtribuicao || Gate::any(['isCoordenadorOrCoordenadorDasComissoes', 'isCoordenadorEixo'], $trabalho->evento))) {
+            abort(403, 'Acesso não autorizado');
         }
 
-        return redirect()->back()->with('success', 'Status de trabalho alterado com sucesso');
+        if (!$revisorDaAtribuicao && $user->eventosComoCoordEixo()->exists() && !Gate::allows('isCoordenadorOrCoordenadorDasComissoes', $trabalho->evento)) {
+            $areasCoordEixo = $user->areasComoCoordEixoNoEvento($trabalho->evento->id)->pluck('id');
+            if (!$areasCoordEixo->contains($trabalho->areaId)) {
+                abort(403, 'Você só pode gerenciar trabalhos do seu eixo temático.');
+            }
+        }
+
+        $statusCorrecao = $request->input('status_correcao_' . $trabalho->id) ?? $request->input('status_correcao');
+
+        $trabalho->avaliado = $statusCorrecao;
+
+        if ($statusCorrecao == 'corrigido_parcialmente' || $statusCorrecao == 'nao_corrigido') {
+            $request->validate([
+                'justificativa_correcao' => 'nullable|string|max:2000',
+            ]);
+            $trabalho->justificativa_correcao = $request->justificativa_correcao;
+        } else {
+            $trabalho->justificativa_correcao = null;
+        }
+
+        $trabalho->update();
+
+        return redirect()->back()->with('success', 'Validação da correção realizada com sucesso!');
     }
 }

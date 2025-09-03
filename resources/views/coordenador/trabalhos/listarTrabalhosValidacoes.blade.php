@@ -140,17 +140,23 @@
                                                 <td class="text-center">
                                                     @switch($trabalho->avaliado)
                                                         @case('corrigido')
-                                                            Finalizado: aprovado
+                                                            <span class="badge bg-success">Aprovado</span>
                                                             @break
                                                         @case('corrigido_parcialmente')
-                                                            Finalizado: aprovado parcialmente
+                                                            <span class="badge bg-warning text-dark">Aprovado Parcialmente</span>
                                                             @break
                                                         @case('nao_corrigido')
-                                                            Finalizado: reprovado
+                                                            <span class="badge bg-danger">Reprovado</span>
                                                             @break
                                                         @default
-                                                            Em análise
+                                                            <span class="badge bg-secondary">Em Análise</span>
                                                     @endswitch
+
+                                                    @if(in_array($trabalho->avaliado, ['corrigido', 'corrigido_parcialmente', 'nao_corrigido']))
+                                                        <a href="#" data-bs-toggle="modal" data-bs-target="#modalValidacaoDetalhes{{$trabalho->id}}">
+                                                            <img src="{{asset('img/icons/eye-regular.svg')}}" style="width:20px; margin-left: 5px;" title="Ver/Editar Validação">
+                                                        </a>
+                                                    @endif
                                                 </td>
                                                 <td style="text-align:center">
                                                     <div class="d-flex justify-content-center gap-3">
@@ -190,6 +196,11 @@
                                                     </div>
                                                 </td>
                                             </tr>
+                                            @push('modais')
+                                                @if(in_array($trabalho->avaliado, ['corrigido', 'corrigido_parcialmente', 'nao_corrigido']))
+                                                    @include('coordenador.trabalhos.validacao-detalhes-modal', ['trabalho' => $trabalho])
+                                                @endif
+                                            @endpush
                                             @endforeach
                                         </tbody>
                                     </table>
