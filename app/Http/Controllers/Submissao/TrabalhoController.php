@@ -812,6 +812,8 @@ class TrabalhoController extends Controller
                 }
                 $trabalho->forceDelete();
             }else{
+                $trabalho->deleted_by_id = Auth::user()->id;
+                $trabalho->save();
                 $trabalho->delete();
             }
 
