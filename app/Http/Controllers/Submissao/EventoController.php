@@ -1106,6 +1106,25 @@ class EventoController extends Controller
         ]);
     }
 
+    public function resetarValidacao(Request $request, Trabalho $trabalho)
+    {
+        if (!Gate::any(['isCoordenadorOrCoordenadorDasComissoes', 'isCoordenadorEixo'], $trabalho->evento)) {
+            abort(403, 'Acesso não autorizado');
+        }
+
+        if (auth()->user()->eventosComoCoordEixo()->exists()) {
+            $areasCoordEixo = auth()->user()->areasComoCoordEixoNoEvento($trabalho->evento->id)->pluck('id');
+            if (!$areasCoordEixo->contains($trabalho->areaId)) {
+                abort(403, 'Você só pode gerenciar trabalhos do seu eixo temático.');
+            }
+        }
+
+        $trabalho->avaliado = 'Avaliado';
+        $trabalho->justificativa_correcao = null;
+        $trabalho->save();
+        return redirect()->back()->with('success', 'Validação apagada com sucesso!');
+    }
+
 
     private function verificarPagamentoAutores($trabalho)
     {
