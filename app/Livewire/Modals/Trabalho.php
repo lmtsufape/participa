@@ -143,7 +143,7 @@ class Trabalho extends Component
     {
         $modalidadeid = SubmissaoTrabalho::find($trabalhoId)->modalidadeId;
         $modalidade = Modalidade::find($modalidadeid);
-        $prazoCorrecao = now()->addDays(10);
+        $prazoCorrecao = now()->addDays(10)->startOfDay();
         if($prazoCorrecao > $modalidade->fimRevisao) {
             $prazoCorrecao = $modalidade->fimRevisao;
         }
