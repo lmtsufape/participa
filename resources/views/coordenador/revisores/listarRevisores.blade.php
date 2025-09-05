@@ -4,9 +4,6 @@
 @section('menu')
 
     <div id="divListarRevisores" style="display: block">
-        @error('errorRevisor')
-          @include('componentes.mensagens')
-        @enderror
         <div class="row">
             <div class="col-sm-12">
                 <h1 class="titulo-detalhes">Listar Avaliadores</h1>
@@ -138,12 +135,16 @@
           <div class="modal-content">
               <div class="modal-header" style="background-color: #114048ff; color: white;">
               <h5 class="modal-title" id="#label">Confirmação</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
-                  <span aria-hidden="true">&times;</span>
+              <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close" style="color: white;">
+
               </button>
               </div>
                   <div class="modal-body">
-                      Tem certeza que deseja remover esse avaliador do evento?
+                    <form id="removerRevisor{{$revisor->id}}" action="{{route('remover.revisor', ['id' => $revisor->id, 'evento_id' => $evento->id])}}" method="POST">
+                        @csrf
+                        Tem certeza que deseja remover esse avaliador do evento?
+
+                    </form>
                   </div>
               <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-dismiss="modal">Não</button>
