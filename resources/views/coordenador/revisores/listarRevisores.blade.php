@@ -135,7 +135,7 @@
           <div class="modal-content">
               <div class="modal-header" style="background-color: #114048ff; color: white;">
               <h5 class="modal-title" id="#label">Confirmação</h5>
-              <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close" style="color: white;">
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="color: white;">
 
               </button>
               </div>
@@ -147,7 +147,7 @@
                     </form>
                   </div>
               <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Não</button>
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Não</button>
                   <button type="submit" class="btn btn-primary" form="removerRevisor{{$revisor->id}}">Sim</button>
               </div>
           </div>
@@ -181,7 +181,7 @@
           <div class="modal-content">
             <div class="modal-header" style="background-color: #114048ff; color: white;">
               <h5 class="modal-title" id="exampleModalCenterTitle">Visualizar revisor</h5>
-              <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close" style="color: white;">
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="color: white;">
 
               </button>
             </div>
