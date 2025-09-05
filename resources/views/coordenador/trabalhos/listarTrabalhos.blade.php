@@ -106,8 +106,10 @@
                                                 <th>Avaliações</th>
                                                 <th>Data</th>
                                                 <th>Atribuir</th>
-                                                <th>Arquivar</th>
-                                                <th>Excluir</th>
+                                                @can('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento)
+                                                    <th>Arquivar</th>
+                                                    <th>Excluir</th>
+                                                @endcan
                                                 <th>Editar</th>
                                             </tr>
                                         </thead>
@@ -146,6 +148,7 @@
                                                         />
 
                                                     </td>
+                                                    @can('isCoordenadorOrCoordenadorDaComissaoCientifica', $trabalho->evento)
                                                         <td style="text-align:center">
                                                             @if ($trabalho->status == 'arquivado')
                                                                 <a href="{{ route('trabalho.status', [$trabalho->id, 'rascunho']) }}" title="Desarquivar"><img src="{{ asset('img/icons/archive.png') }}" width="20" alt="Desarquivar"></a>
@@ -153,11 +156,12 @@
                                                                 <a href="{{ route('trabalho.status', [$trabalho->id, 'arquivado']) }}" title="Arquivar"><img src="{{ asset('img/icons/archive.png') }}" width="20" alt="Arquivar"></a>
                                                             @endif
                                                         </td>
-                                                        <td style="text-align:center">
-                                                            @if ($trabalho->status == 'arquivado')
-                                                                <a href="#" data-bs-toggle="modal" data-bs-target="#modalExcluirTrabalho_{{ $trabalho->id }}"><img src="{{ asset('img/icons/lixo.png') }}" width="20" alt="Excluir"></a>
-                                                            @endif
-                                                        </td>
+                                                            <td style="text-align:center">
+                                                                @if ($trabalho->status == 'arquivado')
+                                                                    <a href="#" data-bs-toggle="modal" data-bs-target="#modalExcluirTrabalho_{{ $trabalho->id }}"><img src="{{ asset('img/icons/lixo.png') }}" width="20" alt="Excluir"></a>
+                                                                @endif
+                                                            </td>
+                                                    @endcan
                                                         <td style="text-align:center">
                                                             <a href="{{ route('coord.trabalho.edit', ['id' => $trabalho->id]) }}"><img src="{{ asset('img/icons/edit-regular.svg') }}" width="20" alt="Editar"></a>
                                                         </td>

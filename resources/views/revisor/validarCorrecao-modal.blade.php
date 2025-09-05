@@ -36,6 +36,10 @@
 
                     <div class="mb-3" id="justificativa-div-{{$trabalho->id}}" style="display: none;">
                         <label for="justificativa_correcao_{{$trabalho->id}}" class="form-label pt-0 h5">Justificativa</label>
+                        <p class="text-danger small mt-1">
+                            <i class="bi bi-exclamation-circle-fill"></i>
+                            <strong>Lembrete:</strong> sugerimos fortemente a inclusão de uma justificativa no caso de <em>Sim, parcialmente</em> ou <em>Não</em>.
+                        </p>
                         <textarea class="form-control"
                                   id="justificativa_correcao_{{$trabalho->id}}"
                                   name="justificativa_correcao"
@@ -63,12 +67,12 @@
         const textareaJustificativa = document.getElementById(`justificativa_correcao_${trabalhoId}`);
 
         if (status === 'corrigido_parcialmente' || status === 'nao_corrigido') {
-            divJustificativa.style.display = 'block';   
+            divJustificativa.style.display = 'block';
         } else {
             divJustificativa.style.display = 'none';
         }
     }
-    
+
     document.addEventListener('DOMContentLoaded', function() {
     });
 </script>
