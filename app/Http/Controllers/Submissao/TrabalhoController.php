@@ -477,13 +477,13 @@ class TrabalhoController extends Controller
         if ($trabalho->getParecerAtribuicao($revisor->user) == 'encaminhado') {
             $trabalho->atribuicoes()->where('revisor_id', $revisor->id)->first()->pivot->update(['parecer' => 'avaliado']);
 
-            return redirect()->back()->with(['message' => 'Encaminhamento desfeito com sucesso!', 'class' => 'success']);
+            return redirect()->back()->with(['success' => 'Encaminhamento desfeito com sucesso!']);
         } else {
             if ($trabalho->avaliado($revisor->user)) {
                 $trabalho->atribuicoes()->where('revisor_id', $revisor->id)->first()->pivot->update(['parecer' => 'encaminhado']);
                 Mail::to($trabalho->autor->email)->send(new EmailParecerDisponivel($trabalho->evento, $trabalho));
 
-                return redirect()->back()->with(['message' => 'Trabalho encaminhado ao autor com sucesso!', 'class' => 'success']);
+                return redirect()->back()->with(['success' => 'Trabalho encaminhado ao autor com sucesso!']);
             }
 
             return back();
