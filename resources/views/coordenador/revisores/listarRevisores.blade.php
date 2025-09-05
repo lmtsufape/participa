@@ -181,8 +181,8 @@
           <div class="modal-content">
             <div class="modal-header" style="background-color: #114048ff; color: white;">
               <h5 class="modal-title" id="exampleModalCenterTitle">Visualizar revisor</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
-                <span aria-hidden="true">&times;</span>
+              <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close" style="color: white;">
+
               </button>
             </div>
             <div class="modal-body">
@@ -235,23 +235,27 @@
                           <table class="table table-hover table-responsive-lg table-sm">
                             <thead>
                               <tr>
+                                <th scope="col" class="col-1">ID</th>
                                 <th scope="col" class="col-7">Título</th>
-                                <th scope="col" class="col-5">Status</th>
+                                <th scope="col" class="col-4">Status</th>
 
                               </tr>
                             </thead>
                             <tbody>
                               @foreach ($revisorDosTrabalhos->trabalhosAtribuidos()->orderBy('titulo')->get() as $trabalho)
                                 <tr>
-                                  <td>
-                                      <a href="{{route('coord.listarTrabalhos', [ 'eventoId' => $evento->id, 'titulo', 'asc', 'rascunho'])}}#trab{{$trabalho->id}}">{{$trabalho->titulo}}</a></td>
-                                  <td>
-                                    @if ($trabalho->avaliado($revisor))
-                                      Avaliado
-                                    @else
-                                      Processando
-                                    @endif
-                                  </td>
+                                    <td>
+                                        {{$trabalho->id}}
+                                    </td>
+                                    <td>
+                                        <a href="{{route('coord.listarTrabalhos', [ 'eventoId' => $evento->id, 'titulo', 'asc', 'rascunho'])}}#trab{{$trabalho->id}}">{{$trabalho->titulo}}</a></td>
+                                    <td>
+                                        @if ($trabalho->avaliado($revisor))
+                                            Avaliado
+                                        @else
+                                            Processando
+                                        @endif
+                                    </td>
                                 </tr>
                               @endforeach
                             </tbody>
