@@ -17,7 +17,7 @@
                     <a class="btn btn-primary col-sm" href="{{ route('evento.downloadResumos', $evento) }}">Baixar resumos</a>
                 </div>
                 <div class="row mt-1">
-                    <a class="btn btn-primary col-sm" href="{{ route('evento.downloadTrabalhos', $evento) }}">Exportar trabalhos .csv</a>
+                    <a class="btn btn-primary col-sm" href="{{ route('evento.downloadTrabalhos', $evento) }}">Exportar trabalhos .xlsx</a>
                 </div>
                 <div class="row mt-1">
                     <a class="btn btn-primary col-sm" href="{{ route('evento.downloadTrabalhosAprovadosPDF', $evento) }}">

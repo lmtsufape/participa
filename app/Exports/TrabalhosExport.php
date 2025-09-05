@@ -39,13 +39,4 @@ class TrabalhosExport implements FromCollection, WithHeadings
     {
         return $this->trabalhos;
     }
-
-    public function getCsvSettings(): array
-    {
-        return [
-            'delimiter' => ';',
-            'line_ending' => ";\n",
-            'enclosure' => '',
-        ];
-    }
 }
