@@ -183,11 +183,11 @@
                                         @endif
                                     </td>
                                     <td style="text-align:center">
-                                        <a href="#" onclick="return false;"
+                                        <!-- <a href="#" onclick="return false;"
                                             @if ($trabalho->modalidade->estaEmPeriodoDeSubmissao()) data-bs-toggle="modal" data-bs-target="#modalEditarTrabalho_{{ $trabalho->id }}" style="color:#114048ff" @else data-bs-toggle="popover" data-trigger="focus" data-placement="bottom" title="Não permitido" data-content="A edição do trabalho só é permitida durante o periodo de submissão." @endif>
                                             <img class="" src="{{ asset('img/icons/edit-regular.svg') }}"
                                                 style="width:20px">
-                                        </a>
+                                        </a> -->
                                     </td>
                                     <td style="text-align:center">
                                         <a href="#" onclick="return false;"

@@ -7,6 +7,7 @@ use App\Exports\InscritosExport;
 use App\Exports\ParticipantesExportXLSX;
 use App\Exports\TrabalhosExport;
 use App\Exports\TrabalhosExportForCertifica;
+use App\Exports\RelatorioGeralExport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreEventoRequest;
 use App\Http\Requests\UpdateEventoRequest;
@@ -2327,4 +2328,12 @@ class EventoController extends Controller
         return view('coordenador.evento.eventosProximos', compact('proximosEventos'));
     }
 
+    public function exportarRelatorioGeral(Evento $evento)
+    {
+        $this->authorize('isCoordenadorOrCoordCientificaOrCoordEixo', $evento);
+
+        $nomeArquivo = Str::slug($evento->nome) . '-relatorio-geral-trabalhos.xlsx';
+
+        return Excel::download(new RelatorioGeralExport($evento->id), $nomeArquivo, \Maatwebsite\Excel\Excel::XLSX);
+    }
 }
