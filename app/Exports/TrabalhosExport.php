@@ -15,6 +15,7 @@ class TrabalhosExport implements FromCollection, WithHeadings
     public function headings(): array
     {
         return [
+            'Id',
             'Área/Eixo',
             'Modalidade',
             'Título do trabalho',
@@ -37,14 +38,5 @@ class TrabalhosExport implements FromCollection, WithHeadings
     public function collection()
     {
         return $this->trabalhos;
-    }
-
-    public function getCsvSettings(): array
-    {
-        return [
-            'delimiter' => ';',
-            'line_ending' => ";\n",
-            'enclosure' => '',
-        ];
     }
 }

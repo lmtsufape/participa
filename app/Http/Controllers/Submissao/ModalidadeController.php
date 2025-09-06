@@ -183,11 +183,9 @@ class ModalidadeController extends Controller
         $evento = $modalidadeEdit->evento;
         $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
 
-        // dd($request);
-        $validatedData = $request->validate([
+
+        $rules = [
             'nome' . $request->modalidadeEditId => ['required', 'string'],
-            'nome_en' . $request->modalidadeEditId => ['required', 'string'],
-            'nome_es' . $request->modalidadeEditId => ['required', 'string'],
             'inícioSubmissão' . $request->modalidadeEditId => ['required', 'date'],
             'fimSubmissão' . $request->modalidadeEditId => ['required', 'date', 'after:inícioSubmissão' . $request->modalidadeEditId],
 
@@ -241,7 +239,14 @@ class ModalidadeController extends Controller
             'arquivoInstrucoes' . $request->modalidadeEditId => ['nullable', 'file', 'max:2048', 'mimes:pdf'],
             'arquivoModelos' . $request->modalidadeEditId => ['nullable', 'file', 'max:2048', 'mimes:odt,ott,docx,doc,rtf,txt,pdf,pptx'],
             'arquivoTemplates' . $request->modalidadeEditId => ['nullable', 'file', 'max:2048', 'mimes:odt,ott,docx,doc,rtf,txt,pdf,pptx'],
-        ]);
+        ];
+
+        if($evento->is_multilingual){
+            $rules['nome_en' . $request->modalidadeEditId] = ['required','string'];
+            $rules['nome_es' . $request->modalidadeEditId] = ['required','string'];
+        }
+
+        $validatedData = $request->validate($rules);
 
         if ($request->has('avaliacaoDuranteSubmissao')) {
             $validatedData += $request->validate(['inícioRevisão' . $request->modalidadeEditId => ['nullable', 'date']]);
@@ -718,5 +723,15 @@ class ModalidadeController extends Controller
         }
 
         return abort(404);
+    }
+
+    public function reorder(Request $request)
+    {
+        $order = $request->input('order', []);
+        foreach ($order as $item) {
+            Modalidade::where('id', $item['id'])
+                ->update(['ordem' => $item['position']]);
+        }
+        return response()->json(['status' => 'ok']);
     }
 }

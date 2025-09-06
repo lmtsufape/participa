@@ -339,6 +339,13 @@
                                 <span>{{ __('Inscritos') }}</span>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link d-flex align-items-center gap-2"
+                                href="{{ route('coord.inscricoes.pcd.listar', ['eventoId' => $evento->id]) }}">
+                                <img src="{{ asset('img/icons/list.svg') }}" alt="" width="20px">
+                                <span>{{ __('Inscritos PCD') }}</span>
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </li>
@@ -410,6 +417,12 @@
                                             <span>{{ __('Todos os trabalhos') }}</span>
                                         </a>
                                     </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link d-flex align-items-center gap-2"
+                                            href="{{ route('coord.listarTrabalhosPorEixo', ['eventoId' => $evento->id, 'titulo', 'asc', 'rascunho']) }}">
+                                            <span>{{ __('Filtrar trabalhos por eixo') }}</span>
+                                        </a>
+                                    </li>
                                     @foreach ($evento->modalidades()->get() as $modalidade)
                                         <li class="nav-item">
                                             <a class="nav-link d-flex align-items-center gap-2"
@@ -448,9 +461,16 @@
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link d-flex align-items-center gap-2" id="correcoesTrabalhos"
-                                    href="{{ route('coord.listarCorrecoes', ['eventoId' => $evento->id, 'titulo', 'asc']) }}">
+                                    href="{{ route('coord.listarCorrecoes', [$evento->id, 'titulo', 'asc']) }}">
                                     <img src="{{ asset('img/icons/list.svg') }}" alt="" width="20px">
                                     <span>{{ __('Listar correções') }}</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link d-flex align-items-center gap-2" id="validacoesTrabalhos"
+                                    href="{{ route('coord.listarValidacoes', [$evento->id, 'titulo', 'asc']) }}">
+                                    <img src="{{ asset('img/icons/list.svg') }}" alt="" width="20px">
+                                    <span>{{ __('Listar validações') }}</span>
                                 </a>
                             </li>
                         @endcan

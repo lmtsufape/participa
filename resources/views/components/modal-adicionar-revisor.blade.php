@@ -82,6 +82,32 @@
                                         <h6 class="card-title">{{ $revisor->user->name }}</h6>
                                         <strong>E-mail</strong>
                                         <p class="card-text">{{ $revisor->user->email }}</p>
+
+                                        @php
+                                            $pivot = $trabalho->atribuicoes->where('id', $revisor->id)->first()->pivot;
+                                            $status = '';
+                                            $statusClass = '';
+
+                                            if ($pivot->confirmacao === true) {
+                                                $status = 'Convite aceito';
+                                                $statusClass = 'text-success';
+                                            } elseif ($pivot->justificativa_recusa) {
+                                                $status = 'Convite recusado';
+                                                $statusClass = 'text-danger';
+                                            }
+                                        @endphp
+
+                                        <p class="card-text">
+                                            <strong class="{{ $statusClass }}">{{ $status }}</strong>
+                                        </p>
+
+                                        @if(isset($pivot->created_at))
+                                            <p class="card-text">
+                                                <strong>{{ __('Atribuído em') }}:</strong>
+                                                {{ \Carbon\Carbon::parse($pivot->created_at)->format('d/m/Y H:i') }}
+                                            </p>
+                                        @endif
+
                                         <form action="{{ route('atribuicao.delete', ['id' => $revisor->id]) }}" method="post">
                                             @csrf
                                             <input type="hidden" name="eventoId" value="{{ $evento->id }}">

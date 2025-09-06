@@ -13,8 +13,13 @@ class Area extends Model
      * @var array
      */
     protected $fillable = [
-        'nome', 'eventoId', 'resumo', 'resumo_en', 'resumo_es', 'nome_en', 'nome_es'
+        'nome', 'eventoId', 'resumo', 'resumo_en', 'resumo_es', 'nome_en', 'nome_es','ordem'
     ];
+
+    public function scopeOrdered($query)
+    {
+        return $query->orderBy('ordem');
+    }
 
     public function modalidade()
     {

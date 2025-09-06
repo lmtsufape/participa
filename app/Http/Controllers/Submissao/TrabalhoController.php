@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Submissao;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TrabalhoPostRequest;
 use App\Http\Requests\TrabalhoUpdateRequest;
+use App\Mail\CartaDeAceiteMail;
+use App\Mail\EmailCorrecaoTrabalho;
 use App\Mail\EmailParaUsuarioNaoCadastrado;
 use App\Mail\EmailParecerDisponivel;
 use App\Mail\SubmissaoTrabalho;
@@ -51,28 +53,24 @@ class TrabalhoController extends Controller
     public function index($id, $idModalidade)
     {
         $evento = Evento::find($id);
-        $areas = Area::where('eventoId', $evento->id)->orderBy('nome')->get();
-        $areas = $areas->sortBy('nome', SORT_NATURAL)->values()->all();
-        $modalidades = Modalidade::where('evento_id', $evento->id)->orderBy('nome')->get();
-        $modalidades = $modalidades->sortBy('nome', SORT_NATURAL)->values()->all();
+        $areas = Area::where('eventoId', $evento->id)->orderBy('ordem')->get();
+        $modalidades = Modalidade::where('evento_id', $evento->id)
+            ->where('inicioSubmissao', '<=', Carbon::now())
+            ->where('fimSubmissao', '>=', Carbon::now())
+            ->orderBy('ordem')
+            ->get();
         $formSubTraba = FormSubmTraba::where('eventoId', $evento->id)->first();
         $regra = RegraSubmis::where('modalidadeId', $idModalidade)->first();
         $template = TemplateSubmis::where('modalidadeId', $idModalidade)->first();
         $ordemCampos = explode(',', $formSubTraba->ordemCampos);
+        $modalidade = Modalidade::find($idModalidade);
+
         array_splice($ordemCampos, 6, 0, 'midiaExtra');
         array_splice($ordemCampos, 5, 0, 'apresentacao');
         $user = Auth::user();
 
         $mytime = Carbon::now('America/Recife');
-        foreach ($modalidades as $key => $modalidade){
-            if (!$modalidade->estaEmPeriodoDeSubmissao()) {
-                if($user->can('isCoordenadorOrCoordCientificaOrCoordEixo', $evento)){
-                    $this->authorize('isCoordenadorOrCoordCientificaOrCoordEixo', $evento);
-                } else {
-                     unset($modalidades[$key]);
-                }
-            }
-        }
+
         // dd($formSubTraba);
         return view('evento.submeterTrabalho', [
             'evento' => $evento,
@@ -91,6 +89,7 @@ class TrabalhoController extends Controller
             'regras' => $regra,
             'templates' => $template,
             'modalidades' => $modalidades,
+            'modalidade' => $modalidade,
         ]);
     }
 
@@ -216,21 +215,41 @@ class TrabalhoController extends Controller
                 return redirect()->back()->withErrors(['numeroMax' => 'Número máximo de trabalhos permitidos atingido.'])->withInput($validatedData);
             }
 
-            if ($request->emailCoautor != null) {
-                foreach ($request->emailCoautor as $key => $value) {
-                    if ($value == $autor->email) {
+            $coautoresIds = [];
+
+            if ($request->has('nomeCoautor')) {
+                $total = count($request->nomeCoautor);
+
+                for ($key = 1; $key < $total; $key++) {
+                    $value = $request->emailCoautor[$key] ?? null;
+                    $nome = $request->nomeCoautor[$key];
+                    $cadastrado = $request->coautorCadastrado[$key] ?? 'sim';
+                    $vinculo = $request->vinculoCoautor[$key] ?? null;
+
+                    if ($cadastrado === 'sim') {
+                        if ($value && $value !== $autor->email) {
+                            $userCoautor = User::where('email', $value)->first();
+                            if ($userCoautor == null) {
+                                return back()->withErrors(['coautorNaoCadastrado' => "Coautor $value não cadastrado. Se deseja inserir um coautor não cadastrado, clique em 'Inserir coautor(a) sem cadastro.'"])->withInput($validatedData);
+                            }
+                            $coautoresIds[$key] = $userCoautor->id;
+                        } else {
+                            continue;
+                        }
                     } else {
-                        $userCoautor = User::where('email', $value)->first();
-                        if ($userCoautor == null) {
-                            $passwordTemporario = Str::random(8);
+                        $passwordTemporario = Str::random(8);
+                        $userCoautor = User::create([
+                            'email' => $value ?: null,
+                            'password' => bcrypt($passwordTemporario),
+                            'usuarioTemp' => true,
+                            'name' => $nome,
+                            'instituicao' => $vinculo
+                        ]);
+                        $coautoresIds[$key] = $userCoautor->id;
+
+                        if ($value) {
                             $coord = User::find($evento->coordenadorId);
                             Mail::to($value)->send(new EmailParaUsuarioNaoCadastrado(Auth()->user()->name, '  ', 'Coautor', $evento->nome, $passwordTemporario, $value, $coord));
-                            $usuario = User::create([
-                                'email' => $value,
-                                'password' => bcrypt($passwordTemporario),
-                                'usuarioTemp' => true,
-                                'name' => $request->nomeCoautor[$key],
-                            ]);
                         }
                     }
                 }
@@ -321,11 +340,10 @@ class TrabalhoController extends Controller
             $trabalho->save();
             // dd($trabalho->id);
 
-            if ($request->emailCoautor != null) {
-                foreach (array_unique($request->emailCoautor) as $key => $value) {
-                    if ($value == $autor->email) {
-                    } else {
-                        $userCoautor = User::where('email', $value)->first();
+            if ($request->has('nomeCoautor') && !empty($coautoresIds)) {
+                foreach ($coautoresIds as $key => $userId) {
+                    $userCoautor = User::find($userId);
+                    if ($userCoautor) {
                         $coauntor = $userCoautor->coautor;
                         if ($coauntor == null) {
                             $coauntor = Coautor::create([
@@ -407,9 +425,11 @@ class TrabalhoController extends Controller
                     if ($value == $autor->email) {
                     } else {
                         $userCoautor = User::where('email', $value)->first();
-                        // Mail::to($userCoautor->email)
-                        //     ->send(new SubmissaoTrabalho($userCoautor, $subject, $trabalho));
-                        Notification::send($userCoautor, new SubmissaoTrabalhoNotification($userCoautor, $subject, $trabalho));
+                        if ($userCoautor) {
+                            // Mail::to($userCoautor->email)
+                            //     ->send(new SubmissaoTrabalho($userCoautor, $subject, $trabalho));
+                            Notification::send($userCoautor, new SubmissaoTrabalhoNotification($userCoautor, $subject, $trabalho));
+                        }
                     }
                 }
             }
@@ -427,7 +447,8 @@ class TrabalhoController extends Controller
     {
         $trabalho = Trabalho::find($id);
         $evento = $trabalho->evento;
-        $this->authorize('isCoordenadorOrCoordCientificaOrCoordEixo', $evento);
+        // $this->authorize('isCoordenadorOrCoordCientificaOrCoordEixo', $evento);
+        $this->authorize('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento);
         if ($trabalho->status == 'avaliado' && $status == 'rascunho') {
             $trabalho->update(['status' => $status]);
 
@@ -456,13 +477,13 @@ class TrabalhoController extends Controller
         if ($trabalho->getParecerAtribuicao($revisor->user) == 'encaminhado') {
             $trabalho->atribuicoes()->where('revisor_id', $revisor->id)->first()->pivot->update(['parecer' => 'avaliado']);
 
-            return redirect()->back()->with(['message' => 'Encaminhamento desfeito com sucesso!', 'class' => 'success']);
+            return redirect()->back()->with(['success' => 'Encaminhamento desfeito com sucesso!']);
         } else {
             if ($trabalho->avaliado($revisor->user)) {
                 $trabalho->atribuicoes()->where('revisor_id', $revisor->id)->first()->pivot->update(['parecer' => 'encaminhado']);
                 Mail::to($trabalho->autor->email)->send(new EmailParecerDisponivel($trabalho->evento, $trabalho));
 
-                return redirect()->back()->with(['message' => 'Trabalho encaminhado ao autor com sucesso!', 'class' => 'success']);
+                return redirect()->back()->with(['success' => 'Trabalho encaminhado ao autor com sucesso!']);
             }
 
             return back();
@@ -664,12 +685,11 @@ class TrabalhoController extends Controller
 
         if ($request->file('arquivo' . $id) != null) {
             if ($trabalho->modalidade->submissaoUnica == false || $request->user()->can('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento)) {
-                $path = "trabalhos/{$evento->id}/{$trabalho->id}";
-                $file = $request->file('arquivo' . $id);
-                $path = $this->salvarArquivoComNomeOriginal($file, $path);
 
-                //É necessário excluir o arquivo da tabela de arquivo também ao editar um trabalho
-                //Não só fazer o Storage::delete() do arquivo
+                $file = $request->file('arquivo' . $id);
+                $nome = now()->format('Ymd_His') . '-' . $file->hashName();
+                $novoPath = $file->storeAs("trabalhos/{$evento->id}/{$trabalho->id}",$nome );
+
                 $arquivosTrabalho = $trabalho->arquivo()->where('versaoFinal', true)->get();
                 foreach ($arquivosTrabalho as $arquivoTrabalho) {
                     if (Storage::disk()->exists($arquivoTrabalho->nome)) {
@@ -679,7 +699,7 @@ class TrabalhoController extends Controller
                 }
 
                 $arquivo = Arquivo::create([
-                    'nome' => $path,
+                    'nome' => $novoPath,
                     'trabalhoId' => $trabalho->id,
                     'versaoFinal' => true,
                 ]);
@@ -766,31 +786,36 @@ class TrabalhoController extends Controller
             ||
             (auth()->user()->can('isCoordenadorOrCoordenadorDaComissaoCientifica', $trabalho->evento) && $trabalho->status == 'arquivado')
             ) {
-            $coautores = $trabalho->coautors;
-            foreach ($coautores as $coautor) {
-                $coautor->trabalhos()->detach($trabalho->id);
+            if(auth()->user()->id == $trabalho->autorId){
+                $coautores = $trabalho->coautors;
+                foreach ($coautores as $coautor) {
+                    $coautor->trabalhos()->detach($trabalho->id);
 
-                if (count($coautor->trabalhos) <= 0) {
-                    $coautor->delete();
-                }
-            }
-
-            if ($trabalho->arquivo != null) {
-                foreach ($trabalho->arquivo as $key => $value) {
-                    if (Storage::disk()->exists($value->nome)) {
-                        Storage::delete($value->nome);
+                    if (count($coautor->trabalhos) <= 0) {
+                        $coautor->delete();
                     }
                 }
-                $trabalho->arquivo()->delete();
-            }
 
-            if ($trabalho->atribuicoes != null && $trabalho->atribuicoes->count() > 0) {
-                foreach ($trabalho->atribuicoes as $atrib) {
-                    $trabalho->atribuicoes()->detach($atrib->revisor_id);
+                if ($trabalho->arquivo != null) {
+                    foreach ($trabalho->arquivo as $key => $value) {
+                        if (Storage::disk()->exists($value->nome)) {
+                            Storage::delete($value->nome);
+                        }
+                    }
+                    $trabalho->arquivo()->delete();
                 }
-            }
 
-            $trabalho->delete();
+                if ($trabalho->atribuicoes != null && $trabalho->atribuicoes->count() > 0) {
+                    foreach ($trabalho->atribuicoes as $atrib) {
+                        $trabalho->atribuicoes()->detach($atrib->revisor_id);
+                    }
+                }
+                $trabalho->forceDelete();
+            }else{
+                $trabalho->deleted_by_id = Auth::user()->id;
+                $trabalho->save();
+                $trabalho->delete();
+            }
 
             return redirect()->back()->with(['success' => 'Trabalho deletado com sucesso!']);
         }
@@ -1005,6 +1030,46 @@ class TrabalhoController extends Controller
         return abort(403);
     }
 
+    public function downloadArquivoExtra($trabalhoId, $arquivoExtraId)
+    {
+        $trabalho = Trabalho::find($trabalhoId);
+        $arquivoExtra = $trabalho->arquivosExtras()->where('id', $arquivoExtraId)->first();
+
+        if (!$arquivoExtra) {
+            return abort(404, 'Arquivo extra não encontrado');
+        }
+
+        $ehRevisor = Revisor::where([
+                ['evento_id', '=', $trabalho->eventoId],
+                ['user_id', '=', auth()->user()->id],
+                ['areaId', '=', $trabalho->area->id],
+                ['modalidadeId', '=', $trabalho->modalidade->id],
+            ])
+            ->whereHas('trabalhosAtribuidos', fn($query) => $query->where('trabalho_id', $trabalho->id))
+            ->exists();
+        $usuarioLogado = User::find(auth()->user()->id);
+
+        $ehCoautor = $usuarioLogado->coautor?->trabalhos()->where('trabalhos.id', $trabalho->id)->exists();
+
+        $evento = $trabalho->evento;
+
+        if (
+            Gate::any(['isUsuarioDaComissao'], $evento)
+            || $trabalho->autorId == $usuarioLogado->id
+            || $ehCoautor
+            || $usuarioLogado->administradors()->exists()
+            || $ehRevisor
+        ) {
+            if (Storage::disk()->exists($arquivoExtra->nome)) {
+                return Storage::download($arquivoExtra->nome);
+            }
+
+            return redirect()->back()->with('error', 'Arquivo extra não existe');
+        }
+
+        return abort(403);
+    }
+
     public function downloadArquivoAvaliacao(Request $request)
     {
         $trabalho = Trabalho::find($request->trabalhoId);
@@ -1043,20 +1108,62 @@ class TrabalhoController extends Controller
 
     public function aprovacaoTrabalho(Request $request)
     {
-        $trabalho = Trabalho::find($request->trabalho_id);
-        $mensagem = '';
+        $resultado = DB::transaction(function () use ($request){
+            $trabalho = Trabalho::lockForUpdate()->find($request->trabalho_id);
 
-        if ($request->aprovacao == 'true') {
-            $trabalho->aprovado = true;
-            $mensagem = 'Trabalho aprovado com sucesso!';
-        } elseif ($request->aprovacao == 'false') {
-            $trabalho->aprovado = false;
-            $mensagem = 'Trabalho reprovado com sucesso!';
-        }
+            switch ($request->aprovado) {
+                case 'true':
+                    if($trabalho->coautors->count() <= $trabalho->modalidade->numMaxCoautores){
+                        $autor_inscrito = Inscricao::where('user_id', $trabalho->autor->id)
+                            ->where('evento_id', $trabalho->eventoId)
+                            ->where('finalizada', true)
+                            ->exists();
 
-        $trabalho->update();
+                        if(!$autor_inscrito){
+                            $coautor_inscrito = $trabalho->coautors()
+                                ->whereHas('user.inscricaos', function ($query) use ($trabalho) {
+                                    $query->where('evento_id', $trabalho->eventoId)
+                                        ->where('finalizada', true);
+                                })
+                                ->exists();
+                        }
 
-        return redirect()->back()->with(['message' => $mensagem, 'class' => 'success']);
+                        if($autor_inscrito || ($coautor_inscrito ?? false)){
+                            $codigo = Trabalho::gerarCodigo();
+
+                            $trabalho->aprovado                 = true;
+                            $trabalho->hash_codigo_aprovacao    = hash('sha256', str_replace('-', '', $codigo));
+                            $trabalho->aprovacao_emitida_em   = now();
+                            $trabalho->saveOrFail();
+
+                            Mail::to($trabalho->autor->email)->send(new CartaDeAceiteMail($trabalho, $codigo));
+                            return ['flash' => 'success', 'msg' => 'Trabalho aprovado com sucesso!'];
+
+                        }else{
+                            return ['flash' => 'error', 'msg' => 'Nenhum autor ou coautor com inscrição no evento paga'];
+                        }
+                    }
+                    return ['flash' => 'error', 'msg' => 'Número de coautores superior ao permitido na modalidade do trabalho'];
+
+                case 'false':
+                    $trabalho->update(['aprovado' => false]);
+                    return ['flash' => 'success', 'msg' => 'Trabalho reprovado com sucesso!'];
+
+                case 'null':
+                    if(!$trabalho->permite_correcao){
+                        $trabalho->update(['permite_correcao' => true]);
+
+                        return ['flash' => 'success', 'msg' => 'Trabalho liberado para correção com sucesso!'];
+                    }else{
+                        $trabalho->update(['permite_correcao' => false]);
+
+                        return ['flash' => 'success', 'msg' => 'Trabalho bloqueado para correção com sucesso!'];
+                    }
+
+            }
+
+        });
+        return back()->with([$resultado['flash'] => $resultado['msg']]);
     }
 
     public function correcaoTrabalho(Request $request)
@@ -1070,7 +1177,7 @@ class TrabalhoController extends Controller
             }
 
             $validatedData = $request->validate([
-                'arquivoCorrecao' => ['required', 'file', 'max:2048'],
+                'arquivoCorrecao' => ['required', 'file', 'max:5120'],
             ]);
 
             $arquivoCorrecao = $trabalho->arquivoCorrecao()->first();
@@ -1086,6 +1193,11 @@ class TrabalhoController extends Controller
                 'caminho' => $path,
                 'trabalhoId' => $trabalho->id,
             ]);
+        }
+
+        $revisores = $trabalho->atribuicoes;
+        foreach ($revisores as $revisor) {
+            Mail::to($revisor->user->email)->send(new EmailCorrecaoTrabalho($evento, $trabalho, $revisor));
         }
 
         return redirect()->back()->with(['success' => 'Correção de ' . $trabalho->titulo . ' enviada com sucesso!']);
@@ -1306,6 +1418,10 @@ class TrabalhoController extends Controller
         try {
             $trabalho = Trabalho::findOrFail($trabalho_id);
 
+            Parecer::where('trabalhoId', $trabalho->id)
+                ->where('revisorId', $request->revisor_id)
+                ->delete();
+
             $trabalho->atribuicoes()->detach($request->revisor_id);
 
             Resposta::where('trabalho_id', $trabalho->id)
@@ -1326,14 +1442,16 @@ class TrabalhoController extends Controller
 
             DB::commit();
 
-            return redirect()->route('coord.listarAvaliacoes')->with('success', 'Avaliação deleta com sucesso!');
+            return redirect()->route('coord.listarAvaliacoes', ['eventoId' => $trabalho->eventoId])
+                            ->with('success', 'Avaliação deletada com sucesso!');
 
         } catch (\Exception $e) {
             DB::rollBack();
 
-            return back()->with('error', 'Erro: ' . $e->getMessage());//Definir um component global para exibição de mensagens
+            return back()->with('error', 'Erro: ' . $e->getMessage());
         }
     }
+
     public function validarTipoDoArquivo($arquivo, $tiposExtensao)
     {
         if ($tiposExtensao->arquivo == true) {

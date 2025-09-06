@@ -5,15 +5,48 @@
     <div id="divListarTrabalhos" style="display: block">
 
       <div class="row ">
-        <div class="col-sm-9">
+        <div class="col-sm-6">
             <h2 class="">Avaliações da modalidade {{$trabalhos->first()->modalidade->nome ?? ''}} </h2>
+        </div>
+        <div class="col-sm-6">
+          <div class="card">
+            <div class="card-body">
+              <form method="GET" action="{{ route('coord.respostasTrabalhos', ['eventoId' => request('eventoId'), 'modalidadeId' => request('modalidadeId')]) }}">
+                  <input type="hidden" name="eventoId" value="{{ request('eventoId') }}">
+                  <input type="hidden" name="modalidadeId" value="{{ request('modalidadeId') }}">
+                  <input type="hidden" name="column" value="{{ request('column', 'titulo') }}">
+                  <input type="hidden" name="direction" value="{{ request('direction', 'asc') }}">
+                  <input type="hidden" name="status" value="{{ request('status', 'rascunho') }}">
+                  <div class="row">
+                      <div class="col-md-2">
+                          <label for="id" class="form-label">ID</label>
+                          <input type="number" class="form-control" name="id" value="{{ request('id') }}" placeholder="ID...">
+                      </div>
+                      <div class="col-md-8">
+                          <label for="search" class="form-label">Título</label>
+                          <input type="text" class="form-control" name="search" value="{{ request('search') }}" placeholder="Digite o título do trabalho...">
+                      </div>
+                      <div class="col-md-2 d-flex align-items-end">
+                          <button class="btn btn-primary w-100" type="submit">Buscar</button>
+                      </div>
+                  </div>
+                  @if(request('search') || request('id'))
+                      <div class="row mt-2">
+                          <div class="col-12">
+                              <a href="{{ route('coord.respostasTrabalhos', ['eventoId' => request('eventoId'), 'modalidadeId' => request('modalidadeId'), 'column' => request('column', 'titulo'), 'direction' => request('direction', 'asc'), 'status' => request('status', 'rascunho')]) }}" class="btn btn-outline-success btn-sm">Limpar filtros</a>
+                          </div>
+                      </div>
+                  @endif
+              </form>
+            </div>
+          </div>
         </div>
         <div class="col-sm-3 mt-1">
           <div class="btn-group mb-2" role="group" aria-label="Button group with nested dropdown">
 
             <div class="btn-group" role="group">
               <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Exportar avaliações .csv
+                Exportar avaliações .xlsx
               </button>
               <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
                 @if($trabalhos->first() != null)
@@ -53,6 +86,7 @@
           <table class="table table-hover table-responsive-lg table-sm table-striped">
             <thead>
               <tr>
+                <th scope="col">ID</th>
                 <th scope="col">
                   Trabalho
                   <a href="{{route('coord.respostasTrabalhos',[ 'eventoId' => $evento->id, 'modalidadeId' => $trabalhos->first()->modalidade->id ?? '', 'titulo', 'asc', 'rascunho'])}}">
@@ -98,9 +132,10 @@
 
             <tbody>
               @php $i = 0; @endphp
-              @foreach($trabalhos as $trabalho)
+              @forelse($trabalhos as $trabalho)
 
               <tr>
+                    <td>{{$trabalho->id}}</td>
                   <td>
                     @if ($trabalho->arquivo && count($trabalho->arquivo) > 0)
                         <a href="{{route('downloadTrabalho', ['id' => $trabalho->id])}}">
@@ -168,9 +203,25 @@
                     @endforeach
                   </td>
                 </tr>
-              @endforeach
+              @empty
+                <tr>
+                  <td colspan="6" class="text-center">Nenhum trabalho encontrado.</td>
+                </tr>
+              @endforelse
             </tbody>
           </table>
+          <div class="d-flex justify-content-between align-items-center mt-3">
+            <div>
+              <p class="text-muted">
+                Mostrando {{ $trabalhos->firstItem() ?? 0 }} até {{ $trabalhos->lastItem() ?? 0 }}
+                de {{ $trabalhos->total() }} resultados
+              </p>
+            </div>
+            <div>
+              {{ $trabalhos->links() }}
+            </div>
+          </div>
+
         </form>
       </div>
 

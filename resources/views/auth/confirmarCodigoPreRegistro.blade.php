@@ -116,11 +116,11 @@
         $('#cep').mask('00000-000');
       }
       $(".apenasLetras").mask("#", {
-        maxlength: false,
-        translation: {
-            '#': {pattern: /[A-zÀ-ÿ ]/, recursive: true}
-        }
-      });
+            maxlength: false,
+            translation: {
+                '#': {pattern: /[A-zÀ-ÿ0-9\s\-\.\(\)\[\]\{\}\/\\,;&@#$%*+=|<>!?~`'"]/, recursive: true}
+            }
+        });
       //$('#numero').mask('0000000000000');
 
     });

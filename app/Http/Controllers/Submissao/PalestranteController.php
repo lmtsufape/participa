@@ -46,9 +46,7 @@ class PalestranteController extends Controller
 
     public function exportar(Evento $evento)
     {
-        return Excel::download(new PalestrasExport($evento), $evento->nome.'.csv', \Maatwebsite\Excel\Excel::CSV, [
-            'Content-Type' => 'text/csv',
-        ]);
+        return Excel::download(new PalestrasExport($evento), $evento->nome.'.xlsx', \Maatwebsite\Excel\Excel::XLSX);
     }
 
     public function update(Request $request)

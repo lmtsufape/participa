@@ -37,14 +37,34 @@
         </style>
 
         @if(session('sucesso'))
-            <div class="alert alert-success">
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <img src="{{ asset('img/icons/check-solid.svg') }}" alt="Sucesso" class="me-2" style="width: 16px; height: 16px; filter: brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(100%) contrast(100%);">
                 {{ session('sucesso') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         @endif
 
         @if(session('erro'))
-            <div class="alert alert-danger">
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <img src="{{ asset('img/icons/calendar-times-solid.svg') }}" alt="Erro" class="me-2" style="width: 16px; height: 16px; filter: brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(100%) contrast(100%);">
                 {{ session('erro') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+
+        @if(session('warning'))
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <img src="{{ asset('img/icons/calendar-times-solid.svg') }}" alt="Aviso" class="me-2" style="width: 16px; height: 16px; filter: brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(100%) contrast(100%);">
+                {{ session('warning') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+
+        @if(session('info'))
+            <div class="alert alert-info alert-dismissible fade show" role="alert">
+                <img src="{{ asset('img/icons/info-circle-solid.svg') }}" alt="Informação" class="me-2" style="width: 16px; height: 16px; filter: brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(100%) contrast(100%);">
+                {{ session('info') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         @endif
 
@@ -109,18 +129,18 @@
                                     <div class="col-md-6">
                                         @if($user->cpf != null)
                                             <div class="custom-control custom-radio custom-control-inline col-form-label">
-                                                <input type="radio" id="customRadioInline1" name="customRadioInline" class="custom-control-input" checked>
+                                                <input type="radio" id="customRadioInline1" name="customRadioInline" class="custom-control-input" @if($errors->has('cpf') || (!$errors->has('cnpj') && !$errors->has('passaporte'))) checked @endif>
                                                 <label class="custom-control-label me-2" for="customRadioInline1"><strong>CPF</strong></label>
 
-                                                <input type="radio" @error('passaporte') checked @enderror id="customRadioInline2" name="customRadioInline" class="custom-control-input">
+                                                <input type="radio" id="customRadioInline2" name="customRadioInline" class="custom-control-input" @if($errors->has('cnpj')) checked @endif>
                                                 <label class="custom-control-label me-2" for="customRadioInline2"><strong>{{__('CNPJ')}}</strong></label>
 
-                                                <input type="radio" @error('passaporte') checked @enderror id="customRadioInline3" name="customRadioInline" class="custom-control-input">
+                                                <input type="radio" id="customRadioInline3" name="customRadioInline" class="custom-control-input" @if($errors->has('passaporte')) checked @endif>
                                                 <label class="custom-control-label " for="customRadioInline3"><strong>{{__('Passaporte')}}</strong></label>
                                             </div>
 
-                                            <div id="fieldCPF" @error('cpf') style="display: none" @enderror>
-                                                <input id="cpf" type="text" class="form-control @error('cpf') is-invalid @enderror" name="cpf" @if(old('cpf') != null) @else value="{{$user->cpf}}" @endif autocomplete="cpf" placeholder="CPF" autofocus >
+                                            <div id="fieldCPF" style="display: {{ $errors->has('cpf') || (!$errors->has('cnpj') && !$errors->has('passaporte')) ? 'block' : 'none' }}">
+                                                <input id="cpf" type="text" class="form-control @error('cpf') is-invalid @enderror" name="cpf" @if(old('cpf') != null) value="{{old('cpf')}}" @else value="{{$user->cpf}}" @endif autocomplete="cpf" placeholder="CPF" autofocus >
 
                                                 @error('cpf')
                                                 <span class="invalid-feedback" role="alert">
@@ -749,7 +769,7 @@
             $(".apenasLetras").mask("#", {
                 maxlength: false,
                 translation: {
-                    '#': {pattern: /[A-zÀ-ÿ ]/, recursive: true}
+                    '#': {pattern: /[A-zÀ-ÿ0-9\s\-\.\(\)\[\]\{\}\/\\,;&@#$%*+=|<>!?~`'"]/, recursive: true}
                 }
             });
             //$('#numero').mask('0000000000000');
@@ -828,6 +848,11 @@
 
     <script type="text/javascript">
         $(document).ready(function(){
+            // Auto-hide alerts after 5 seconds
+            setTimeout(function() {
+                $('.alert').fadeOut('slow');
+            }, 5000);
+
             // $("#fieldPassaporte").hide();
             $("#customRadioInline1").click(function(){
                 $("#fieldPassaporte").hide();

@@ -13,6 +13,7 @@ use App\Models\Users\Revisor;
 use App\Models\Users\User;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Auth;
 use App\Exports\CandidatosAvaliadoresExport;
@@ -68,8 +69,16 @@ class CandidatoAvaliadorController extends Controller
     {
         $evento = Evento::findOrFail($eventoId);
 
-        $query = CandidatoAvaliador::with(['user','area'])
-            ->where('evento_id', $evento->id);
+        $query = CandidatoAvaliador::select(DB::raw(
+            'DISTINCT ON (user_id, evento_id, area_id) candidatos_avaliadores.*'
+        ))
+            ->with(['user','area'])
+            ->where('evento_id', $evento->id)
+
+            ->orderBy('user_id')
+            ->orderBy('evento_id')
+            ->orderBy('area_id')
+            ->orderBy('id');
 
         $allAxes = CandidatoAvaliador::where('evento_id', $evento->id)
             ->with('area')
@@ -196,11 +205,23 @@ class CandidatoAvaliadorController extends Controller
             ->with('sucesso', 'Candidatura aprovada e candidato notificado.');
     }
 
-    public function exportar(Evento $evento)
+    public function exportar(Request $request, Evento $evento)
     {
         $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
 
-        return Excel::download(new CandidatosAvaliadoresExport($evento->id), 'candidatos-avaliadores-'.$evento->nome.'.xlsx');
+        $eixos = $request->input('axis');
+        if ($eixos && !is_array($eixos)) {
+            $eixos = [$eixos];
+        }
+
+        if ($eixos) {
+            $eixos = Area::whereIn('nome', $eixos)->pluck('id')->toArray();
+        }
+
+        return Excel::download(
+            new CandidatosAvaliadoresExport($evento->id, $eixos),
+            'candidatos-avaliadores-' . $evento->nome . '.xlsx'
+        );
     }
 
     public function rejeitar(Request $request)
@@ -208,6 +229,7 @@ class CandidatoAvaliadorController extends Controller
         $eventoId = $request->input('evento_id');
         $userId   = $request->input('user_id');
         $eixo     = $request->input('eixo');
+        $justificativa = $request->input('justificativa');
         $area     = Area::where('nome', $eixo)->firstOrFail();
 
         CandidatoAvaliador::where('evento_id', $eventoId)
@@ -216,6 +238,7 @@ class CandidatoAvaliadorController extends Controller
             ->update([
                 'aprovado'   => false,
                 'em_analise' => false,
+                'justificativa' => $justificativa,
             ]);
 
         $usuario = User::findOrFail($userId);
@@ -226,7 +249,9 @@ class CandidatoAvaliadorController extends Controller
                 $usuario,
                 $evento,
                 'rejeitada',
-                $area->nome
+                $area->nome,
+                null,
+                $justificativa
             ));
 
         // 5) redireciona com feedback

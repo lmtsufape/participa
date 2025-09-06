@@ -22,8 +22,17 @@ class Trabalho extends Model
         'titulo', 'autores', 'data', 'modalidadeId', 'areaId', 'autorId', 'eventoId', 'resumo', 'avaliado',
         'campoextra1simples', 'campoextra2simples', 'campoextra3simples', 'campoextra4simples',
         'campoextra5simples', 'campoextra1grande', 'campoextra2grande', 'campoextra3grande',
-        'campoextra4grande', 'campoextra5grande', 'status',
+        'campoextra4grande', 'campoextra5grande', 'status', 'aprovado', 'permite_correcao'
     ];
+
+    protected $casts = [
+        'aprovacao_emitida_em' => 'datetime',
+        'permite_correcao' => 'boolean'
+    ];
+
+    public static function gerarCodigo(){
+        return strtoupper(implode('-', str_split(bin2hex(random_bytes(16)), 4)));
+    }
 
     public function recurso()
     {
@@ -72,7 +81,7 @@ class Trabalho extends Model
 
     public function atribuicoes()
     {
-        return $this->belongsToMany('App\Models\Users\Revisor', 'atribuicaos', 'trabalho_id', 'revisor_id')->withPivot('confirmacao', 'parecer','prazo_correcao')->withTimestamps();
+        return $this->belongsToMany('App\Models\Users\Revisor', 'atribuicaos', 'trabalho_id', 'revisor_id')->withPivot('confirmacao', 'parecer','prazo_correcao', 'justificativa_recusa')->withTimestamps();
     }
 
     public function evento()

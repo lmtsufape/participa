@@ -38,7 +38,15 @@ class CheckoutController extends Controller
         $categoria = $inscricao?->categoria;
 
         if ($inscricao->pagamento != null) {
-            return redirect()->route('checkout.statusPagamento', ['evento' => $evento->id]);
+            $pagamento = $inscricao->pagamento;
+
+            $statusPermitemTentativa = ['rejected', 'cancelled', 'expired', 'refunded', 'charged_back'];
+
+            if (in_array($pagamento->status, $statusPermitemTentativa)) {
+                return view('inscricao.pagamento.brick', compact('evento', 'inscricao', 'user', 'categoria', 'key'));
+            } else {
+                return redirect()->route('checkout.statusPagamento', ['evento' => $evento->id]);
+            }
         }
 
         return view('inscricao.pagamento.brick', compact('evento', 'inscricao', 'user', 'categoria', 'key'));
@@ -54,7 +62,22 @@ class CheckoutController extends Controller
             return redirect()->route('evento.visualizar', ['id' => $evento->id])->with('message', 'Não existe um pagamento para esse evento.');
         }
 
+        // PAra boletos
+        if ($pagamento->status === 'pending' && $this->pagamentoExpirado($pagamento)) {
+            $pagamento->status = 'expired';
+            $pagamento->save();
+        }
+
         return view('inscricao.pagamento.status', compact('pagamento', 'key'));
+    }
+
+    private function pagamentoExpirado($pagamento)
+    {
+        // validade do boleto sao 10 dias
+        $dataCriacao = $pagamento->created_at;
+        $dataExpiracao = $dataCriacao->addDays(10);
+
+        return now()->isAfter($dataExpiracao);
     }
 
     public function listarPagamentos($id)
@@ -197,6 +220,53 @@ class CheckoutController extends Controller
             case "payment":
                 $payment = $client->get($contents["data"]["id"]);
                 $pagamento = Pagamento::where('codigo', $contents["data"]["id"])->first();
+
+                $fee = 0.0;
+
+                try {
+                    $paymentArr = json_decode(json_encode($payment), true) ?: [];
+                    $gross  = (float) data_get($paymentArr, 'transaction_amount', 0);
+                    $status = (string) data_get($paymentArr, 'status', '');
+
+                    $fee = null;
+
+                    if (in_array($status, ['approved', 'accredited'], true)) {
+                        $netReceivedRaw = data_get($paymentArr, 'transaction_details.net_received_amount');
+                        if ($netReceivedRaw !== null) {
+                            $fee = max(0.0, $gross - (float) $netReceivedRaw);
+                        }
+                    }
+
+                    if ($fee === null) {
+                        $fee = 0.0;
+                        foreach ((array) data_get($paymentArr, 'fee_details', []) as $fd) {
+                            if (($fd['fee_payer'] ?? null) === 'collector'
+                                && ($fd['type'] ?? null) === 'mercadopago_fee') {
+                                $fee += (float) ($fd['amount'] ?? 0);
+                            }
+                        }
+
+                        if ($fee <= 0) {
+                            foreach ((array) data_get($paymentArr, 'charges_details', []) as $ch) {
+                                if (($ch['type'] ?? null) === 'fee'
+                                    && ($ch['name'] ?? null) === 'mercadopago_fee') {
+                                    $original = (float) data_get($ch, 'amounts.original', 0);
+                                    $refunded = (float) data_get($ch, 'amounts.refunded', 0);
+                                    $fee += max(0.0, $original - $refunded);
+                                }
+                            }
+                        }
+                    }
+
+                    $pagamento->taxa = round((float) $fee, 2);
+                } catch (\Throwable $e) {
+
+                    logger()->warning('Falha ao calcular taxa MP', [
+                        'payment_id' => $contents["data"]["id"] ?? null,
+                        'error'      => $e->getMessage(),
+                    ]);
+                }
+
                 if ($payment->status == 'approved') {
                     $inscricao = $pagamento->inscricao;
                     $inscricao->finalizada = true;
@@ -244,6 +314,31 @@ class CheckoutController extends Controller
     public function obrigado()
     {
         return view('coordenador.programacao.obrigado');
+    }
+
+
+
+    public function novaTentativa(Evento $evento)
+    {
+        $user = auth()->user();
+        $inscricao = $evento->inscricaos()->where('user_id', $user->id)->first();
+
+        if (!$inscricao || !$inscricao->pagamento) {
+            return redirect()->back()->with('error', 'Nenhum pagamento encontrado.');
+        }
+
+        $statusPermitemRetry = ['rejected', 'cancelled', 'expired', 'refunded', 'charged_back'];
+
+        if (!in_array($inscricao->pagamento->status, $statusPermitemRetry)) {
+            return redirect()->back()->with('error', 'Este pagamento não permite nova tentativa.');
+        }
+
+        $inscricao->pagamento_id = null;
+        $inscricao->save();
+
+        $inscricao->pagamento->delete();
+
+        return redirect()->route('checkout.telaPagamento', ['evento' => $evento->id])->with('success', 'Você pode tentar um novo pagamento.');
     }
 
     public function proccess(Request $request)
