@@ -392,7 +392,7 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
         //
 
         Route::get('/evento/{evento}/downloadResumos', [EventoController::class, 'resumosToPdf'])->name('evento.downloadResumos');
-
+        Route::get('/evento/{evento}/exportar-relatorio-geral', [EventoController::class, 'exportarRelatorioGeral'])->name('evento.exportarRelatorioGeral');
         Route::get('/evento/{evento}/downloadInscritos', [EventoController::class, 'exportInscritos'])->name('evento.downloadInscritos');
         Route::get('/evento/{evento}/exportar-inscritos-xlsx', [EventoController::class, 'exportarInscritosXLSX'])->name('evento.exportarInscritosXLSX');
         Route::get('/evento/{evento}/downloadInscritosCertifica', [EventoController::class, 'exportInscritosCertifica'])->name('evento.downloadInscritosCertifica');
