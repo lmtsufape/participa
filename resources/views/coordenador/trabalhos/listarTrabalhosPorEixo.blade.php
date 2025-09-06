@@ -123,7 +123,12 @@
                                                         <td>{{ $trabalho->atribuicoes_count }}</td>
                                                         <td>{{ $trabalho->quantidade_avaliacoes }}</td>
                                                         <td>{{ $trabalho->created_at?->format('d/m/Y H:i') }}</td>
-                                                        <td style="text-align:center"><a href="#" data-bs-toggle="modal" data-bs-target="#modalTrabalho{{$trabalho->id}}"><img src="{{ asset('img/icons/documento.svg') }}" width="20" alt="atribuir"></a></td>
+                                                        <td style="text-align:center">
+                                                            <livewire:buttons.ver-trabalho-btn
+                                                                :trabalho-id="$trabalho->id"
+                                                                :evento-id="$evento->id"
+                                                            />
+                                                        </td>
                                                         <td style="text-align:center">
                                                              @if ($trabalho->status == 'arquivado')
                                                                 <a href="{{ route('trabalho.status', [$trabalho->id, 'rascunho']) }}"><img src="{{ asset('img/icons/archive.png') }}" width="20" alt="Desarquivar"></a>
@@ -156,7 +161,6 @@
 
         @if($trabalhos && $trabalhos->isNotEmpty())
             @foreach ($trabalhos as $trabalho)
-                <x-modal-adicionar-revisor :trabalho="$trabalho" :evento="$evento" />
                 <x-modal-excluir-trabalho :trabalho="$trabalho" />
             @endforeach
 
@@ -172,12 +176,5 @@
 
 @section('javascript')
     @parent
-    <script>
-        const id = {!! json_encode(old('trabalhoId')) !!};
-        $(document).ready(function(){
-            if(id != null){
-                $('#modalTrabalho'+id).modal('show');
-            }
-        });
-    </script>
+
 @endsection
