@@ -46,7 +46,7 @@
 
             <div class="btn-group" role="group">
               <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Exportar avaliações .csv
+                Exportar avaliações .xlsx
               </button>
               <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
                 @if($trabalhos->first() != null)
@@ -86,6 +86,7 @@
           <table class="table table-hover table-responsive-lg table-sm table-striped">
             <thead>
               <tr>
+                <th scope="col">ID</th>
                 <th scope="col">
                   Trabalho
                   <a href="{{route('coord.respostasTrabalhos',[ 'eventoId' => $evento->id, 'modalidadeId' => $trabalhos->first()->modalidade->id ?? '', 'titulo', 'asc', 'rascunho'])}}">
@@ -134,6 +135,7 @@
               @forelse($trabalhos as $trabalho)
 
               <tr>
+                    <td>{{$trabalho->id}}</td>
                   <td>
                     @if ($trabalho->arquivo && count($trabalho->arquivo) > 0)
                         <a href="{{route('downloadTrabalho', ['id' => $trabalho->id])}}">
