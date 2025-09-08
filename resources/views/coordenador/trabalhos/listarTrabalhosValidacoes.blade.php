@@ -162,27 +162,27 @@
                                                 </td>
                                                 <td style="text-align:center">
                                                     <div class="d-flex justify-content-center gap-3">
-                                                        @if($trabalho->aprovado === true)
+                                                        @if(!$trabalho->tem_pagamento)
+                                                            <button class="btn btn-warning btn-sm" disabled
+                                                                title="Nenhum autor ou coautor possui inscrição paga no evento">
+                                                                <strong>Aprovar Trabalho</strong>
+                                                            </button>
+                                                        @elseif($trabalho->aprovado === true)
                                                             <button class="btn btn-success btn-sm" disabled>
                                                                 Trabalho Aprovado
                                                             </button>
-                                                        @elseif($trabalho->aprovado === false)
+                                                            @elseif(($trabalho->aprovado === false && auth()->user()->can('isCoordenadorOrCoordenadorDaComissaoCientifica', $trabalho->evento)) || (is_null($trabalho->aprovado)))
+                                                            <button class="btn btn-success btn-sm" name="btn-avaliacao-aprovar-{{$trabalho->id}}"
+                                                                data-bs-toggle="modal" data-bs-target="#avaliacao-aprovar-{{$trabalho->id}}">
+                                                                Aprovar Trabalho
+                                                            </button>
+                                                        @endif
+
+                                                        @if($trabalho->aprovado === false)
                                                             <button class="btn btn-danger btn-sm" disabled>
                                                                 Trabalho Reprovado
                                                             </button>
-                                                        @else
-                                                            @if(!$trabalho->tem_pagamento)
-                                                                <button class="btn btn-warning btn-sm" disabled
-                                                                    title="Nenhum autor ou coautor possui inscrição paga no evento">
-                                                                    <strong>Aprovar Trabalho</strong>
-                                                                </button>
-                                                            @else
-                                                                <button class="btn btn-success btn-sm" name="btn-avaliacao-aprovar-{{$trabalho->id}}"
-                                                                    data-bs-toggle="modal" data-bs-target="#avaliacao-aprovar-{{$trabalho->id}}">
-                                                                    Aprovar Trabalho
-                                                                </button>
-                                                            @endif
-
+                                                        @elseif(($trabalho->aprovado === true && auth()->user()->can('isCoordenadorOrCoordenadorDaComissaoCientifica', $trabalho->evento)) || (is_null($trabalho->aprovado)))
                                                             <button class="btn btn-danger btn-sm" name="btn-avaliacao-reprovar-{{$trabalho->id}}"
                                                                 data-bs-toggle="modal" data-bs-target="#avaliacao-reprovar-{{$trabalho->id}}">
                                                                 Reprovar Trabalho
