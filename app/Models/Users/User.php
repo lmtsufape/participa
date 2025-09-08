@@ -3,6 +3,7 @@
 namespace App\Models\Users;
 
 use App\Models\CandidatoAvaliador;
+use App\Models\PerfilIdentitario;
 use App\Models\Submissao\Area;
 use App\Models\Submissao\Atividade;
 use App\Models\Submissao\Certificado;
@@ -249,5 +250,10 @@ class User extends Authenticatable
         $query->select('areas.*'); 
 
         return $query;
+    }
+
+    public function perfilIdentitario()
+    {
+        return $this->hasOne(PerfilIdentitario::class, 'userId', 'id');
     }
 }
