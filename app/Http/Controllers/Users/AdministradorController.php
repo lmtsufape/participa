@@ -101,7 +101,7 @@ class AdministradorController extends Controller
 
     public function eventos()
     {
-        $eventos = Evento::all();
+        $eventos = Evento::latest()->get();
 
         return view('coordenador.index', ['eventos' => $eventos]);
     }
