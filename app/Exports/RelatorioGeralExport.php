@@ -3,13 +3,13 @@
 namespace App\Exports;
 
 use App\Models\Submissao\Trabalho;
-use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\FromQuery;
+use Illuminate\Database\Eloquent\Builder;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
-use Illuminate\Support\Collection;
 
-class RelatorioGeralExport implements FromCollection, WithHeadings, WithMapping, ShouldAutoSize
+class RelatorioGeralExport implements FromQuery, WithHeadings, WithMapping, ShouldAutoSize
 {
     protected $eventoId;
 
@@ -18,10 +18,7 @@ class RelatorioGeralExport implements FromCollection, WithHeadings, WithMapping,
         $this->eventoId = $eventoId;
     }
 
-    /**
-    * @return \Illuminate\Support\Collection
-    */
-    public function collection()
+    public function query(): Builder
     {
         return Trabalho::where('eventoId', $this->eventoId)
             ->with([
@@ -31,8 +28,7 @@ class RelatorioGeralExport implements FromCollection, WithHeadings, WithMapping,
                 'coautors.user',
                 'atribuicoes.user',
                 'arquivoCorrecao'
-            ])
-            ->get();
+            ]);
     }
 
     /**
@@ -58,7 +54,7 @@ class RelatorioGeralExport implements FromCollection, WithHeadings, WithMapping,
             "Status da avaliação",
             "Data de envio para avaliação",
             "Parecer do(s) avaliador(es)",
-            "Avaliação liberada para os autores", // Coluna adicionada conforme solicitação
+            "Avaliação liberada para os autores",
             "Correção",
             "Lembrete enviado",
             "Validação pelo avaliador",
@@ -69,33 +65,32 @@ class RelatorioGeralExport implements FromCollection, WithHeadings, WithMapping,
     /**
      * Mapeia os dados de cada trabalho para as colunas correspondentes.
      *
-     * @param mixed $trabalho
+     * @param mixed $trabalho O Eloquent Model do Trabalho.
      * @return array
      */
+
     public function map($trabalho): array
     {
-        // --- Processamento de Coautores ---
         $nomesCoautores = [];
         $emailsCoautores = [];
         foreach ($trabalho->coautors as $coautor) {
-            if ($coautor->user) {
+            if ($coautor && $coautor->user) {
                 $nomesCoautores[] = $coautor->user->name;
                 $emailsCoautores[] = $coautor->user->email;
             }
         }
 
-        // --- Processamento de Avaliadores e Avaliações ---
         $nomesAvaliadores = [];
         $emailsAvaliadores = [];
         $statusConvites = [];
-        $statusAvaliacoesRastreio = []; // Para controle interno
+        $statusAvaliacoesRastreio = [];
         $datasEnvioAvaliacao = [];
-        $pareceresFinais = []; // Array para armazenar apenas os pareceres finais
+        $pareceresFinais = [];
 
-        $avaliacaoLiberada = "Não"; // Valor padrão para a nova coluna
+        $avaliacaoLiberada = "Não";
 
         foreach ($trabalho->atribuicoes as $revisor) {
-            if ($revisor->user) {
+            if ($revisor && $revisor->user) {
                 $nomesAvaliadores[] = $revisor->user->name;
                 $emailsAvaliadores[] = $revisor->user->email;
             } else {
@@ -103,63 +98,54 @@ class RelatorioGeralExport implements FromCollection, WithHeadings, WithMapping,
                 $emailsAvaliadores[] = '';
             }
 
-            // Status do Convite
-            if ($revisor->pivot->confirmacao === true) {
-                $statusConvites[] = "Aceito";
-            } elseif ($revisor->pivot->confirmacao === false) {
-                $statusConvites[] = "Recusado";
-            } else {
-                $statusConvites[] = "Pendente";
-            }
-
-            // Status da Avaliação e Parecer Final (Ajuste conforme feedback)
-            if ($revisor->pivot->parecer != 'processando') {
-                $statusAvaliacoesRastreio[] = "Avaliado";
-                $avaliacaoLiberada = "Sim"; // Se qualquer avaliação estiver completa, libera para o autor
-
-                switch ($revisor->pivot->parecer) {
-                    case 'aprovado':
-                        $pareceresFinais[] = 'Aceito na íntegra';
-                        break;
-                    case 'aprovado_com_correcoes':
-                        $pareceresFinais[] = 'Aceito com correções';
-                        break;
-                    case 'reprovado':
-                        $pareceresFinais[] = 'Não aceito';
-                        break;
-                    // Outros status de parecer finalizados (se houver) não serão incluídos
-                    // para atender à restrição de "apenas esses 3".
+            if (isset($revisor->pivot)) {
+                if ($revisor->pivot->confirmacao === true) {
+                    $statusConvites[] = "Aceito";
+                } elseif ($revisor->pivot->confirmacao === false) {
+                    $statusConvites[] = "Recusado";
+                } else {
+                    $statusConvites[] = "Pendente";
                 }
-            } else {
-                $statusAvaliacoesRastreio[] = "Processando";
+
+                if ($revisor->pivot->parecer != 'processando') {
+                    $statusAvaliacoesRastreio[] = "Avaliado";
+                    $avaliacaoLiberada = "Sim";
+
+                    switch ($revisor->pivot->parecer) {
+                        case 'aprovado':
+                            $pareceresFinais[] = 'Aceito na íntegra';
+                            break;
+                        case 'aprovado_com_correcoes':
+                            $pareceresFinais[] = 'Aceito com correções';
+                            break;
+                        case 'reprovado':
+                            $pareceresFinais[] = 'Não aceito';
+                            break;
+                    }
+                } else {
+                    $statusAvaliacoesRastreio[] = "Processando";
+                }
+                $datasEnvioAvaliacao[] = optional($revisor->pivot->created_at)->format('d/m/Y H:i') ?? '';
             }
-            $datasEnvioAvaliacao[] = $revisor->pivot->created_at ? $revisor->pivot->created_at->format('d/m/Y H:i') : '';
         }
         
-        // Determina o status geral da avaliação para a coluna "Status da avaliação"
         $statusAvaliacaoFinal = in_array("Processando", $statusAvaliacoesRastreio) ? "Processando" : "Avaliado";
         if (empty($statusAvaliacoesRastreio)) {
             $statusAvaliacaoFinal = "Sem avaliador";
         }
 
-        // --- Status da Correção ---
         $statusCorrecao = 'N/A';
         if ($trabalho->permite_correcao) {
             $statusCorrecao = $trabalho->arquivoCorrecao ? 'Trabalho revisado enviado' : 'Aguardando envio';
         }
 
-        // --- Status de Validação e Aprovação Final ---
         $validacaoAvaliador = '';
         switch ($trabalho->status) {
             case 'corrigido':
                 $validacaoAvaliador = 'Finalizado: aprovado';
                 break;
             case 'avaliado':
-                if ($trabalho->permite_correcao) {
-                    $validacaoAvaliador = 'Em análise de correção';
-                } else {
-                    $validacaoAvaliador = 'Finalizado';
-                }
+                $validacaoAvaliador = $trabalho->permite_correcao ? 'Em análise de correção' : 'Finalizado';
                 break;
             default:
                 $validacaoAvaliador = 'Pendente';
@@ -172,16 +158,17 @@ class RelatorioGeralExport implements FromCollection, WithHeadings, WithMapping,
             $aprovacaoFinal = 'Reprovado';
         }
 
+        
         return [
             $trabalho->id,
-            $trabalho->modalidade->nome ?? '',
+            optional($trabalho->modalidade)->nome ?? '', 
             $trabalho->titulo,
-            $trabalho->autor->name ?? '',
-            $trabalho->autor->email ?? '',
+            optional($trabalho->autor)->name ?? '',     
+            optional($trabalho->autor)->email ?? '',   
             implode('; ', array_unique($nomesCoautores)),
             implode('; ', array_unique($emailsCoautores)),
-            $trabalho->area->nome ?? '',
-            $trabalho->created_at ? $trabalho->created_at->format('d/m/Y H:i') : '',
+            optional($trabalho->area)->nome ?? '',       
+            optional($trabalho->created_at)->format('d/m/Y H:i') ?? '', 
             implode('; ', array_unique($nomesAvaliadores)),
             implode('; ', array_unique($emailsAvaliadores)),
             implode('; ', array_unique($statusConvites)),
