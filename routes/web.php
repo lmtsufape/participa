@@ -207,6 +207,7 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
             Route::get('trabalhos/edit/{id}', [TrabalhoController::class, 'edit'])->name('trabalho.edit');
 
             Route::get('trabalhos/listarAvaliacoes/{column?}/{direction?}/{status?}', [EventoController::class, 'listarAvaliacoes'])->name('listarAvaliacoes');
+            Route::get('trabalhos/listarAvaliacoesPorEixo/{column?}/{direction?}/{status?}', [EventoController::class, 'listarAvaliacoesPorEixo'])->name('listarAvaliacoesPorEixo');
             Route::delete('avaliacao/trabalho/{trabalho_id}', [TrabalhoController::class, 'destroyAvaliacao'])->name('avaliacao.destroy');
             Route::get('trabalhos/form/listarRepostasTrabalhos/{column?}/{direction?}/{status?}', [EventoController::class, 'listarRespostasTrabalhos'])->name('respostasTrabalhos');
             Route::get('trabalhos/form/visualizarRespostaFormulario', [EventoController::class, 'visualizarRespostaFormulario'])->name('visualizarRespostaFormulario');

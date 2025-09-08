@@ -444,6 +444,97 @@ class EventoController extends Controller
         );
     }
 
+    public function listarAvaliacoesPorEixo(Request $request, $column = 'titulo', $direction = 'asc', $status = 'rascunho')
+    {
+        $status = $request->input('status', $status);
+        $evento = Evento::find($request->eventoId);
+        $this->authorize('isCoordenadorOrCoordCientificaOrCoordEixo', $evento);
+        $areas = Area::where('eventoId', $evento->id)->orderBy('ordem')->get();
+        $eixoSelecionado = $request->get('eixo_id');
+        $user_logado = auth()->user();
+        $perPage = 50;
+
+        if (!$eixoSelecionado) {
+            return view('coordenador.trabalhos.listarAvaliacoesPorEixo', [
+                'evento' => $evento,
+                'areas' => $areas,
+                'eixoSelecionado' => null,
+                'trabalhosPorModalidade' => collect(),
+                'trabalhosPaginados' => null,
+                'status' => $status,
+            ]);
+        }
+
+        $query = Trabalho::where('eventoId', $evento->id)
+                        ->where('areaId', $eixoSelecionado);
+
+        if ($request->has('id') && $request->id != '') {
+            $query->where('id', $request->id);
+        }
+        if ($request->has('search') && !empty($request->search)) {
+            $query->where('titulo', 'ILIKE', '%' . $request->search . '%');
+        }
+
+        if ($status == 'rascunho') {
+            $query->where('status', '!=', 'arquivado');
+        } else {
+            $query->where('status', '=', $status);
+        }
+
+        if ($user_logado->eventosComoCoordEixo()->pluck('eventos.id')->contains($evento->id) &&
+            !$user_logado->administradors &&
+            !$user_logado->coordComissaoCientifica()->where('eventos_id', $evento->id)->exists()
+        ) {
+            $areasCoordEixo = $user_logado->areasComoCoordEixoNoEvento($evento->id)->pluck('areas.id');
+            $query->whereIn('areaId', $areasCoordEixo);
+        }
+
+        if ($column == 'autor') {
+            $query->join('users', 'trabalhos.autorId', '=', 'users.id')
+                ->orderBy('users.name', $direction)
+                ->select('trabalhos.*');
+        } elseif ($column == 'area') {
+            $query->orderBy($column, $direction);
+        } else {
+            $query->orderBy($column, $direction);
+        }
+
+        $trabalhosPaginados = $query->with(['modalidade', 'autor', 'area', 'atribuicoes.user'])
+                                    ->paginate($perPage)
+                                    ->appends(request()->query()); 
+
+        $trabalhosPorModalidade = collect();
+        $modalidadesDoEixo = Modalidade::where('evento_id', $evento->id)
+                                    ->whereHas('trabalho', function ($q) use ($eixoSelecionado, $status) {
+                                        $q->where('areaId', $eixoSelecionado);
+                                        if ($status == 'rascunho') {
+                                            $q->where('status', '!=', 'arquivado');
+                                        } else {
+                                            $q->where('status', '=', $status);
+                                        }
+                                    })->orderBy('nome')->get();
+
+        foreach ($modalidadesDoEixo as $modalidade) {
+            $trabalhosModalidade = $trabalhosPaginados->filter(function ($trabalho) use ($modalidade) {
+                return $trabalho->modalidadeId == $modalidade->id;
+            });
+
+            if ($trabalhosModalidade->isNotEmpty()) {
+                $modalidade->trabalhos_da_modalidade = $trabalhosModalidade;
+                $trabalhosPorModalidade->push($modalidade);
+            }
+        }
+
+        return view('coordenador.trabalhos.listarAvaliacoesPorEixo', [
+            'evento' => $evento,
+            'areas' => $areas,
+            'eixoSelecionado' => $eixoSelecionado,
+            'trabalhosPorModalidade' => $trabalhosPorModalidade,
+            'trabalhosPaginados' => $trabalhosPaginados,
+            'status' => $status,
+        ]);
+    }
+
     public function listarTrabalhosModalidades(Request $request, $column = 'titulo', $direction = 'asc', $status = 'rascunho')
     {
         $status = $request->input('status', $status);
