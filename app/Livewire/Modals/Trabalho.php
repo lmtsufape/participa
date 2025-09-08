@@ -111,17 +111,13 @@ class Trabalho extends Component
         }
 
         if (! Gate::any([
-            'isCoordenadorOrCoordenadorDaComissaoCientifica',
+            'isCoordenadorOrCoordenadorDasComissoes',
             'isCoordenadorEixo',
         ], $evento)) {
             session()->flash('error', 'Acesso negado.');
             return;
         }
 
-        if ($trabalho->avaliado($revisor->user)) {
-            session()->flash('error', 'O revisor já deu início à avaliação do trabalho, ele não pode ser removido.');
-            return;
-        }
 
         DB::transaction(function () use ($trabalho, $revisor, $revisorId) {
             $revisor->decrement('correcoesEmAndamento');
