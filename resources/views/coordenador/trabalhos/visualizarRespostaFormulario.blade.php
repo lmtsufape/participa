@@ -121,16 +121,18 @@
                 </a>
             @endif
             @if ($trabalho->avaliado($revisor->user))
-                <form class="d-none" action="{{route('coord.evento.avisoCorrecao', $evento->id)}}" method="POST" id="avisoCorrecao">
-                    @csrf
-                    <input type="hidden" name="trabalhosSelecionados[]" value="{{$trabalho->id}}">
-                </form>
-                <button class="btn btn-md btn-primary" form="avisoCorrecao" type="submit">Lembrete de envio de versão corrigida do texto</button>
                 @if ($trabalho->getParecerAtribuicao($revisor->user) != "encaminhado")
                     <a href="{{ route('trabalho.encaminhar', [$trabalho->id, $revisor]) }}" class="btn btn-md btn-success">
                         Encaminhar parecer para autor/a
                     </a>
                 @else
+                    @if($trabalho->aprovado === null)
+                        <form class="d-none" action="{{route('coord.evento.avisoCorrecao', $evento->id)}}" method="POST" id="avisoCorrecao">
+                            @csrf
+                            <input type="hidden" name="trabalhosSelecionados[]" value="{{$trabalho->id}}">
+                        </form>
+                        <button class="btn btn-md btn-primary" form="avisoCorrecao" type="submit">Lembrete de envio de versão corrigida do texto</button>
+                    @endif
                     <a href="{{ route('trabalho.encaminhar', [$trabalho->id, $revisor]) }}" class="btn btn-md btn-secondary">
                         Desfazer encaminhamento da avaliação
                     </a>
