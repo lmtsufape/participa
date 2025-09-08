@@ -306,7 +306,7 @@
                             <div class="col justify-content-end d-flex">
                                 <form action="{{route('coord.palestrantes.exportar', [$evento])}}" method="POST">
                                     @csrf
-                                    <button type="submit" class="btn btn-primary float-md-right">Exportar .csv</button>
+                                    <button type="submit" class="btn btn-primary float-md-right">Exportar .xlsx</button>
                                 </form>
                             </div>
 

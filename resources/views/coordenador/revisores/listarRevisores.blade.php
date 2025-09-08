@@ -4,9 +4,6 @@
 @section('menu')
 
     <div id="divListarRevisores" style="display: block">
-        @error('errorRevisor')
-          @include('componentes.mensagens')
-        @enderror
         <div class="row">
             <div class="col-sm-12">
                 <h1 class="titulo-detalhes">Listar Avaliadores</h1>
@@ -138,15 +135,19 @@
           <div class="modal-content">
               <div class="modal-header" style="background-color: #114048ff; color: white;">
               <h5 class="modal-title" id="#label">Confirmação</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
-                  <span aria-hidden="true">&times;</span>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="color: white;">
+
               </button>
               </div>
                   <div class="modal-body">
-                      Tem certeza que deseja remover esse avaliador do evento?
+                    <form id="removerRevisor{{$revisor->id}}" action="{{route('remover.revisor', ['id' => $revisor->id, 'evento_id' => $evento->id])}}" method="POST">
+                        @csrf
+                        Tem certeza que deseja remover esse avaliador do evento?
+
+                    </form>
                   </div>
               <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Não</button>
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Não</button>
                   <button type="submit" class="btn btn-primary" form="removerRevisor{{$revisor->id}}">Sim</button>
               </div>
           </div>
@@ -180,8 +181,8 @@
           <div class="modal-content">
             <div class="modal-header" style="background-color: #114048ff; color: white;">
               <h5 class="modal-title" id="exampleModalCenterTitle">Visualizar revisor</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
-                <span aria-hidden="true">&times;</span>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="color: white;">
+
               </button>
             </div>
             <div class="modal-body">
@@ -234,23 +235,27 @@
                           <table class="table table-hover table-responsive-lg table-sm">
                             <thead>
                               <tr>
+                                <th scope="col" class="col-1">ID</th>
                                 <th scope="col" class="col-7">Título</th>
-                                <th scope="col" class="col-5">Status</th>
+                                <th scope="col" class="col-4">Status</th>
 
                               </tr>
                             </thead>
                             <tbody>
                               @foreach ($revisorDosTrabalhos->trabalhosAtribuidos()->orderBy('titulo')->get() as $trabalho)
                                 <tr>
-                                  <td>
-                                      <a href="{{route('coord.listarTrabalhos', [ 'eventoId' => $evento->id, 'titulo', 'asc', 'rascunho'])}}#trab{{$trabalho->id}}">{{$trabalho->titulo}}</a></td>
-                                  <td>
-                                    @if ($trabalho->avaliado($revisor))
-                                      Avaliado
-                                    @else
-                                      Processando
-                                    @endif
-                                  </td>
+                                    <td>
+                                        {{$trabalho->id}}
+                                    </td>
+                                    <td>
+                                        <a href="{{route('coord.listarTrabalhos', [ 'eventoId' => $evento->id, 'titulo', 'asc', 'rascunho'])}}#trab{{$trabalho->id}}">{{$trabalho->titulo}}</a></td>
+                                    <td>
+                                        @if ($trabalho->avaliado($revisor))
+                                            Avaliado
+                                        @else
+                                            Processando
+                                        @endif
+                                    </td>
                                 </tr>
                               @endforeach
                             </tbody>

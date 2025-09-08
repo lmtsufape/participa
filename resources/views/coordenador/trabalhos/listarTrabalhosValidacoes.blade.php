@@ -89,6 +89,7 @@
                                         <thead>
                                             <tr>
                                                 <th><input type="checkbox" onchange="alterarSelecionados(this)"></th>
+                                                <th scope="col">ID</th>
                                                 <th scope="col">Trabalho inicial</th>
                                                 <th scope="col">Trabalho revisado</th>
                                                 <th scope="col">Autor</th>
@@ -102,6 +103,7 @@
                                             @foreach($modalidade->trabalho as $trabalho)
                                             <tr>
                                                 <td><input type="checkbox" name="trabalhosSelecionados[]" value="{{$trabalho->id}}"></td>
+                                                <td> {{ $trabalho->id }}</td>
                                                 <td>
                                                     @if ($trabalho->arquivo)
                                                         <a href="{{route('downloadTrabalho', ['id' => $trabalho->id])}}">

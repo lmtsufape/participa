@@ -674,9 +674,7 @@ class EventoController extends Controller
     {
         $nome = $this->somenteLetrasNumeros($evento->nome);
 
-        return (new InscritosExport($evento))->download($nome . '.csv', \Maatwebsite\Excel\Excel::CSV, [
-            'Content-Type' => 'text/csv',
-        ]);
+        return (new InscritosExport($evento))->download($nome . '.xlsx', \Maatwebsite\Excel\Excel::XLSX);
     }
 
     public function exportarInscritosXLSX(Evento $evento)
@@ -732,9 +730,7 @@ class EventoController extends Controller
 
         $nome = $this->somenteLetrasNumeros($evento->nome);
 
-        return (new TrabalhosExport($trabalhos))->download($nome . '- Trabalhos.csv', \Maatwebsite\Excel\Excel::CSV, [
-            'Content-Type' => 'text/csv',
-        ]);
+        return (new TrabalhosExport($trabalhos))->download($nome . '-Trabalhos.xlsx', \Maatwebsite\Excel\Excel::XLSX);
     }
 
     public function exportTrabalhosCertifica(Evento $evento, Request $request)
@@ -858,9 +854,7 @@ class EventoController extends Controller
 
         $nome = $this->somenteLetrasNumeros($evento->nome);
 
-        return (new AvaliacoesExport($trabalhosCollect, $this->makeHeadingsExportAvaliacoes($form)))->download($nome . ' - Avaliacões - ' . $modalidade->nome . ' - ' . $form->titulo . '.csv', \Maatwebsite\Excel\Excel::CSV, [
-            'Content-Type' => 'text/csv',
-        ]);
+        return (new AvaliacoesExport($trabalhosCollect, $this->makeHeadingsExportAvaliacoes($form)))->download($nome . ' - Avaliacões - ' . $modalidade->nome . ' - ' . $form->titulo . '.xlsx', \Maatwebsite\Excel\Excel::XLSX);
     }
 
     private function makeHeadingsExportAvaliacoes($form)
