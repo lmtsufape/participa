@@ -1422,8 +1422,6 @@ class TrabalhoController extends Controller
                 ->where('revisorId', $request->revisor_id)
                 ->delete();
 
-            $trabalho->atribuicoes()->detach($request->revisor_id);
-
             Resposta::where('trabalho_id', $trabalho->id)
                     ->where('revisor_id', $request->revisor_id)->delete();
 
