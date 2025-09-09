@@ -501,7 +501,7 @@ class EventoController extends Controller
 
         $trabalhosPaginados = $query->with(['modalidade', 'autor', 'area', 'atribuicoes.user'])
                                     ->paginate($perPage)
-                                    ->appends(request()->query()); 
+                                    ->appends(request()->query());
 
         $trabalhosPorModalidade = collect();
         $modalidadesDoEixo = Modalidade::where('evento_id', $evento->id)
@@ -2321,6 +2321,13 @@ class EventoController extends Controller
         $trabalhos = Trabalho::whereIn('id', $request['trabalhosSelecionados'])->get();
 
         foreach ($trabalhos as $trabalho) {
+            $temcorrecao = $trabalho->arquivo()->where('versaoFinal', true)->first();
+            $temEncaminhado = $trabalho->atribuicoes()
+            ->wherePivot('parecer', 'encaminhado')
+            ->exists();
+            if (! $temEncaminhado || $temcorrecao) {
+                continue;
+            }
             $coautorsWithEmail = $trabalho->coautors()->with('user')->get()->map(fn($coautor) => $coautor->user)->filter(fn($user) => $user->email);
             Mail::to($trabalho->autor)
                 ->cc($coautorsWithEmail)
