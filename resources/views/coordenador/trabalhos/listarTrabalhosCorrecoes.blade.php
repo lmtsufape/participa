@@ -118,7 +118,7 @@
                                         <tbody>
                                             @foreach($modalidade->trabalho as $trabalho)
                                             <tr>
-                                                @if($trabalho->atribuicoes()->wherePivot('parecer', 'encaminhado')->exists() &&  ! $trabalho->arquivo()->where('versaoFinal', true)->exists())
+                                                @if($trabalho->atribuicoes()->wherePivot('parecer', 'encaminhado')->exists() &&  ! $trabalho->arquivoCorrecao()->exists())
                                                     <td><input type="checkbox" name="trabalhosSelecionados[]" value="{{$trabalho->id}}"></td>
                                                 @else
                                                     <td></td>
