@@ -2321,7 +2321,7 @@ class EventoController extends Controller
         $trabalhos = Trabalho::whereIn('id', $request['trabalhosSelecionados'])->get();
 
         foreach ($trabalhos as $trabalho) {
-            $temcorrecao = $trabalho->arquivo()->where('versaoFinal', true)->first();
+            $temcorrecao = $trabalho->arquivoCorrecao()->exists();
             $temEncaminhado = $trabalho->atribuicoes()
             ->wherePivot('parecer', 'encaminhado')
             ->exists();
