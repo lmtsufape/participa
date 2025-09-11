@@ -35,6 +35,14 @@
         @if($eixoSelecionado)
             <div class="card mb-3">
                 <div class="card-body">
+                    <div class="row mt-3">
+                        <div class="col-12 text-end">
+                            <a href="{{ route('evento.exportarAvaliadoresEixos', ['evento' => $evento->id, 'eixo' => $eixoSelecionado]) }}"
+                               class="btn btn-outline-primary">
+                                Exportar Avaliadores do Eixo (XLSX)
+                            </a>
+                        </div>
+                    </div>
                     <form method="GET" action="{{ route('coord.listarAvaliacoesPorEixo') }}">
                         <input type="hidden" name="eventoId" value="{{ $evento->id }}">
                         <input type="hidden" name="eixo_id" value="{{ $eixoSelecionado }}">
