@@ -495,11 +495,25 @@
                                 </ul>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link d-flex align-items-center gap-2" id="validacoesTrabalhos"
-                                    href="{{ route('coord.listarValidacoes', [$evento->id, 'titulo', 'asc']) }}">
+                                <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" id="validacoesTrabalhosDropdown"
+                                    href="#collapseValidacoes" role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="collapseValidacoes">
                                     <img src="{{ asset('img/icons/list.svg') }}" alt="" width="20px">
                                     <span>{{ __('Listar validações') }}</span>
                                 </a>
+                                <ul class="collapse" id="collapseValidacoes">
+                                    <li class="nav-item">
+                                        <a class="nav-link d-flex align-items-center gap-2"
+                                            href="{{ route('coord.listarValidacoes', ['eventoId' => $evento->id, 'titulo', 'asc']) }}">
+                                            <span>{{ __('Todas as validações') }}</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link d-flex align-items-center gap-2"
+                                            href="{{ route('coord.listarValidacoesPorEixo', ['eventoId' => $evento->id, 'titulo', 'asc']) }}">
+                                            <span>{{ __('Filtrar validações por eixo') }}</span>
+                                        </a>
+                                    </li>
+                                </ul>
                             </li>
                         @endcan
                     </ul>
