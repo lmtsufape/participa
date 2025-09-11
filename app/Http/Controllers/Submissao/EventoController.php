@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Submissao;
 use App\Exports\AvaliacoesExport;
 use App\Exports\InscritosExport;
 use App\Exports\ParticipantesExportXLSX;
+use App\Exports\AvaliadoresPorEixoExport;
 use App\Exports\TrabalhosExport;
 use App\Exports\TrabalhosExportForCertifica;
 use App\Exports\RelatorioGeralExport;
@@ -774,6 +775,19 @@ class EventoController extends Controller
         $nomeArquivo = Str::slug($evento->nome) . '-inscritos.xlsx';
 
         return Excel::download(new InscritosExport($evento), $nomeArquivo, \Maatwebsite\Excel\Excel::XLSX);
+    }
+
+    public function exportarAvaliadoresXLSX(Evento $evento, $eixo)
+    {
+
+        if (! (Gate::any(['isCoordenadorOrCoordenadorDaComissaoCientifica', 'isCoordenadorEixo'], $evento) || auth()->user()->administradors()->exists()) ) {
+            abort(403, 'Acesso negado');
+        }
+        
+        $nomeEixo = Area::find($eixo)->nome;
+        $nomeArquivo = Str::slug($evento->nome) . '-avaliadores-eixo-' . $nomeEixo . '.xlsx';
+
+        return Excel::download(new AvaliadoresPorEixoExport($evento->id, $eixo), $nomeArquivo, \Maatwebsite\Excel\Excel::XLSX);
     }
 
 
