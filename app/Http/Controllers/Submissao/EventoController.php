@@ -1395,6 +1395,63 @@ class EventoController extends Controller
         ]);
     }
 
+    public function listarValidacoesPorModalidade(Request $request, $column = 'titulo', $direction = 'asc')
+    {
+        $evento = Evento::find($request->eventoId);
+        $this->authorize('isCoordenadorOrCoordCientificaOrCoordEixo', $evento);
+
+        $modalidade = Modalidade::find($request->modalidadeId);
+        if (!$modalidade) {
+            return redirect()->back()->withErrors(['modalidadeInvalida' => 'Modalidade não encontrada.']);
+        }
+
+        $column = $request->get('column', 'titulo');
+        $direction = $request->get('direction', 'asc');
+
+        // Valida se a direção é 'asc' ou 'desc' para evitar erros
+        if (!in_array($direction, ['asc', 'desc'])) {
+            $direction = 'asc';
+        }
+
+        $query = Trabalho::where('modalidadeId', $request->modalidadeId)
+            ->where('status', '!=', 'arquivado')
+            ->with(['modalidade', 'area', 'autor', 'arquivoCorrecao', 'atribuicoes.user']);
+
+        if ($request->filled('id')) {
+            $query->where('id', $request->id);
+        }
+        if ($request->filled('titulo')) {
+            $query->where('titulo', 'ilike', '%' . $request->titulo . '%');
+        }
+
+        $user_logado = auth()->user();
+        if($user_logado->eventosComoCoordEixo()->pluck('eventos.id')->contains($evento->id) &&
+            !$user_logado->administradors &&
+            !$user_logado->coordComissaoCientifica()->where('eventos_id', $evento->id)->exists()
+        ){
+            $areasCoordEixo = $user_logado->areasComoCoordEixoNoEvento($evento->id)->pluck('areas.id');
+            $query->whereIn('areaId', $areasCoordEixo);
+        }
+
+        if ($column == 'autor') {
+            $query->orderBy(User::select('name')->whereColumn('autorId', 'users.id'), $direction);
+        } else {
+            $query->orderBy($column, $direction);
+        }
+
+        $trabalhos = $query->simplePaginate(15)->withQueryString();
+
+        foreach ($trabalhos as $trabalho) {
+            $trabalho->tem_pagamento = $this->verificarPagamentoAutores($trabalho);
+        }
+
+        return view('coordenador.trabalhos.listarValidacoesPorModalidade', [
+            'evento' => $evento,
+            'modalidade' => $modalidade,
+            'trabalhos' => $trabalhos,
+        ]);
+    }
+
     public function resetarValidacao(Request $request, Trabalho $trabalho)
     {
         if (!Gate::any(['isCoordenadorOrCoordenadorDasComissoes', 'isCoordenadorEixo'], $trabalho->evento)) {

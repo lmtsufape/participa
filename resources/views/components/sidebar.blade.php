@@ -513,6 +513,14 @@
                                             <span>{{ __('Filtrar validações por eixo') }}</span>
                                         </a>
                                     </li>
+                                    @foreach ($evento->modalidades()->get() as $modalidade)
+                                        <li class="nav-item">
+                                            <a class="nav-link d-flex align-items-center gap-2"
+                                                href="{{ route('coord.listarValidacoesPorModalidade', ['eventoId' => $evento->id, 'modalidadeId' => $modalidade->id, 'column' => 'titulo', 'direction' => 'asc']) }}">
+                                                <span>{{ $modalidade->nome }}</span>
+                                            </a>
+                                        </li>
+                                    @endforeach
                                 </ul>
                             </li>
                         @endcan
