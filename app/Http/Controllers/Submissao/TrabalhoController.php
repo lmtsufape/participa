@@ -540,13 +540,8 @@ class TrabalhoController extends Controller
 
         $trabalho->titulo = $request->input('nomeTrabalho' . $id);
         $trabalho->resumo = $request->input('resumo' . $id);
-        if ($request->input('modalidade' . $id) != $trabalho->modalidadeId && $trabalho->avaliado == 'Avaliado') {
-            return redirect()->back()->withErrors(['modalidadeError' . $id => 'Não é possível alterar a modalidade de um trabalho avaliado.'])->withInput($validatedData);
-        } elseif ($request->input('modalidade' . $id) != $trabalho->modalidadeId && $trabalho->atribuicoes->count() > 0) {
-            return redirect()->back()->withErrors(['modalidadeError' . $id => 'Não é possível alterar a modalidade de um trabalho com revisores atribuídos.'])->withInput($validatedData);
-        } else {
-            $trabalho->modalidadeId = $request->input('modalidade' . $id);
-        }
+        $trabalho->modalidadeId = $request->input('modalidade' . $id);
+        
         if ($request->input('area'.$id) != $trabalho->area->id && $trabalho->atribuicoes()->exists())
         {
             return redirect()->back()->withErrors(['area' . $id => 'Não é possível alterar '.$evento->formSubTrab->etiquetaareatrabalho.' de um trabalho com revisores atribuídos.'])->withInput($validatedData);
