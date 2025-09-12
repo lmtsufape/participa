@@ -207,7 +207,7 @@ class Evento extends Model
                             'Associado - Pessoa com Deficiência (PCD)',
                         ],
                         'Indígena'       => [
-                            'Associado - Agriculturas/es, povos e comunidades tradicionais',
+                            'Associado - Agricultoras/es, povos e comunidades tradicionais',
                             'Associado - Pessoa com Deficiência (PCD)',
                         ],
                         'Outras categorias de povos e comunidades tradicionais' => [
@@ -231,7 +231,7 @@ class Evento extends Model
                             'Associado - Agricultoras/es, povos e comunidades tradicionais',
                         ],
                         'Indígena'       => [
-                            'Associado - Agriculturas/es, povos e comunidades tradicionais',
+                            'Associado - Agricultoras/es, povos e comunidades tradicionais',
                         ],
                         'Outras categorias de povos e comunidades tradicionais' => [
                             'Associado - Agricultoras/es, povos e comunidades tradicionais',
@@ -242,17 +242,17 @@ class Evento extends Model
                 return $baseCats->whereIn('nome', $tiposPermitidos);
             }
         }
-        
+
         // Mostra APENAS a categoria "Pessoa com Deficiência (PCD)"
         if ($isPCDAprovado) {
-            return $baseCats->filter(fn($cat) => 
+            return $baseCats->filter(fn($cat) =>
                 strtolower(trim($cat->nome)) === 'pessoa com deficiência (pcd)'
             );
         }
 
          // não associado: remove categorias que começam com "Associado" ou a categoria "Pessoa com Deficiência (PCD)"
-        return $baseCats->reject(fn($cat) => 
-            Str::startsWith($cat->nome, 'Associado') || 
+        return $baseCats->reject(fn($cat) =>
+            Str::startsWith($cat->nome, 'Associado') ||
             strtolower(trim($cat->nome)) === 'pessoa com deficiência (pcd)'
         );
     }

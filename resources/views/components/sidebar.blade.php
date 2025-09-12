@@ -466,18 +466,62 @@
                                 </ul>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link d-flex align-items-center gap-2" id="correcoesTrabalhos"
-                                    href="{{ route('coord.listarCorrecoes', [$evento->id, 'titulo', 'asc']) }}">
+                                <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" id="correcoesTrabalhosDropdown"
+                                    href="#collapseCorrecoes" role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="collapseCorrecoes">
                                     <img src="{{ asset('img/icons/list.svg') }}" alt="" width="20px">
                                     <span>{{ __('Listar correções') }}</span>
                                 </a>
+                                <ul class="collapse" id="collapseCorrecoes">
+                                    <li class="nav-item">
+                                        <a class="nav-link d-flex align-items-center gap-2"
+                                            href="{{ route('coord.listarCorrecoes', [$evento->id, 'titulo', 'asc']) }}">
+                                            <span>{{ __('Todas as correções') }}</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link d-flex align-items-center gap-2" id="correcoesPorEixo"
+                                            href="{{ route('coord.listarCorrecoesPorEixo', ['eventoId' => $evento->id]) }}">
+                                            <span>{{ __('Filtrar correções por eixo') }}</span>
+                                        </a>
+                                    </li>
+                                    @foreach ($evento->modalidades()->get() as $modalidade)
+                                        <li class="nav-item">
+                                            <a class="nav-link d-flex align-items-center gap-2"
+                                                href="{{ route('coord.listarCorrecoesPorModalidade', ['eventoId' => $evento->id, 'modalidadeId' => $modalidade->id, 'titulo', 'asc']) }}">
+                                                <span>{{ $modalidade->nome }}</span>
+                                            </a>
+                                        </li>
+                                    @endforeach
+                                </ul>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link d-flex align-items-center gap-2" id="validacoesTrabalhos"
-                                    href="{{ route('coord.listarValidacoes', [$evento->id, 'titulo', 'asc']) }}">
+                                <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" id="validacoesTrabalhosDropdown"
+                                    href="#collapseValidacoes" role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="collapseValidacoes">
                                     <img src="{{ asset('img/icons/list.svg') }}" alt="" width="20px">
                                     <span>{{ __('Listar validações') }}</span>
                                 </a>
+                                <ul class="collapse" id="collapseValidacoes">
+                                    <li class="nav-item">
+                                        <a class="nav-link d-flex align-items-center gap-2"
+                                            href="{{ route('coord.listarValidacoes', ['eventoId' => $evento->id, 'titulo', 'asc']) }}">
+                                            <span>{{ __('Todas as validações') }}</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link d-flex align-items-center gap-2"
+                                            href="{{ route('coord.listarValidacoesPorEixo', ['eventoId' => $evento->id, 'titulo', 'asc']) }}">
+                                            <span>{{ __('Filtrar validações por eixo') }}</span>
+                                        </a>
+                                    </li>
+                                    @foreach ($evento->modalidades()->get() as $modalidade)
+                                        <li class="nav-item">
+                                            <a class="nav-link d-flex align-items-center gap-2"
+                                                href="{{ route('coord.listarValidacoesPorModalidade', ['eventoId' => $evento->id, 'modalidadeId' => $modalidade->id, 'column' => 'titulo', 'direction' => 'asc']) }}">
+                                                <span>{{ $modalidade->nome }}</span>
+                                            </a>
+                                        </li>
+                                    @endforeach
+                                </ul>
                             </li>
                         @endcan
                     </ul>

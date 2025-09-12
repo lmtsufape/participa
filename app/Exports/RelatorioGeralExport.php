@@ -48,16 +48,16 @@ class RelatorioGeralExport implements FromQuery, WithHeadings, WithMapping, Shou
             "e-mail dos coautores",
             "Área Temática",
             "Data de submissão",
+            "Status da submissão",
             "Nome do(s) avaliador(es)",
             "Email do(s) avaliador(es)",
             "Status do convite de avaliação",
             "Status da avaliação",
             "Data de envio para avaliação",
-            "Parecer do(s) avaliador(es)",
             "Avaliação liberada para os autores",
             "Correção",
             "Lembrete enviado",
-            "Validação pelo avaliador",
+            "Validação da correção pelo avaliador",
             "Aprovação final",
         ];
     }
@@ -101,7 +101,7 @@ class RelatorioGeralExport implements FromQuery, WithHeadings, WithMapping, Shou
             if (isset($revisor->pivot)) {
                 if ($revisor->pivot->confirmacao === true) {
                     $statusConvites[] = "Aceito";
-                } elseif ($revisor->pivot->confirmacao === false) {
+                } elseif ($revisor->pivot->confirmacao === false && $revisor->pivot->justificativa_recusa != null) {
                     $statusConvites[] = "Recusado";
                 } else {
                     $statusConvites[] = "Pendente";
@@ -128,7 +128,7 @@ class RelatorioGeralExport implements FromQuery, WithHeadings, WithMapping, Shou
                 $datasEnvioAvaliacao[] = optional($revisor->pivot->created_at)->format('d/m/Y H:i') ?? '';
             }
         }
-        
+
         $statusAvaliacaoFinal = in_array("Processando", $statusAvaliacoesRastreio) ? "Processando" : "Avaliado";
         if (empty($statusAvaliacoesRastreio)) {
             $statusAvaliacaoFinal = "Sem avaliador";
@@ -140,9 +140,15 @@ class RelatorioGeralExport implements FromQuery, WithHeadings, WithMapping, Shou
         }
 
         $validacaoAvaliador = '';
-        switch ($trabalho->status) {
+        switch ($trabalho->avaliado) {
             case 'corrigido':
-                $validacaoAvaliador = 'Finalizado: aprovado';
+                $validacaoAvaliador = 'Sim, completamente';
+                break;
+            case 'corrigido_parcialmente':
+                $validacaoAvaliador = 'Sim, parcialmente';
+                break;
+            case 'nao_corrigido':
+                $validacaoAvaliador = 'Não corrigido';
                 break;
             case 'avaliado':
                 $validacaoAvaliador = $trabalho->permite_correcao ? 'Em análise de correção' : 'Finalizado';
@@ -158,24 +164,24 @@ class RelatorioGeralExport implements FromQuery, WithHeadings, WithMapping, Shou
             $aprovacaoFinal = 'Reprovado';
         }
 
-        
+
         return [
             $trabalho->id,
-            optional($trabalho->modalidade)->nome ?? '', 
+            optional($trabalho->modalidade)->nome ?? '',
             $trabalho->titulo,
-            optional($trabalho->autor)->name ?? '',     
-            optional($trabalho->autor)->email ?? '',   
+            optional($trabalho->autor)->name ?? '',
+            optional($trabalho->autor)->email ?? '',
             implode('; ', array_unique($nomesCoautores)),
             implode('; ', array_unique($emailsCoautores)),
-            optional($trabalho->area)->nome ?? '',       
-            optional($trabalho->created_at)->format('d/m/Y H:i') ?? '', 
+            optional($trabalho->area)->nome ?? '',
+            optional($trabalho->created_at)->format('d/m/Y H:i') ?? '',
+            $trabalho->status,
             implode('; ', array_unique($nomesAvaliadores)),
             implode('; ', array_unique($emailsAvaliadores)),
             implode('; ', array_unique($statusConvites)),
             $statusAvaliacaoFinal,
             implode('; ', array_unique($datasEnvioAvaliacao)),
-            implode('; ', array_unique($pareceresFinais)), 
-            $avaliacaoLiberada, 
+            $avaliacaoLiberada,
             $statusCorrecao,
             $trabalho->lembrete_enviado ? 'Sim' : 'Não',
             $validacaoAvaliador,

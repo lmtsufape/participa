@@ -212,7 +212,11 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
             Route::get('trabalhos/form/listarRepostasTrabalhos/{column?}/{direction?}/{status?}', [EventoController::class, 'listarRespostasTrabalhos'])->name('respostasTrabalhos');
             Route::get('trabalhos/form/visualizarRespostaFormulario', [EventoController::class, 'visualizarRespostaFormulario'])->name('visualizarRespostaFormulario');
             Route::get('trabalhos/listarCorrecoes/{eventoId}/{column?}/{direction?}', [EventoController::class, 'listarCorrecoes'])->name('listarCorrecoes');
+            Route::get('trabalhos/listarCorrecoesPorEixo', [EventoController::class, 'listarCorrecoesPorEixo'])->name('listarCorrecoesPorEixo');
+            Route::get('trabalhos/listarCorrecoesPorModalidade/{column?}/{direction?}', [EventoController::class, 'listarCorrecoesPorModalidade'])->name('listarCorrecoesPorModalidade');
             Route::get('trabalhos/listarValidacoes/{eventoId}/{column?}/{direction?}', [EventoController::class, 'listarValidacoes'])->name('listarValidacoes');
+            Route::get('/evento/{eventoId}/validacoes/modalidade/{modalidadeId}', [EventoController::class, 'listarValidacoesPorModalidade'])->name('listarValidacoesPorModalidade');
+            Route::get('trabalhos/listarValidacoesPorEixo', [EventoController::class, 'listarValidacoesPorEixo'])->name('listarValidacoesPorEixo');
             Route::post('/coordenador/trabalho/{trabalho}/resetar-validacao', [EventoController::class, 'resetarValidacao'])->name('trabalho.resetarValidacao');
 
             Route::get('areas/cadastrarAreas', [EventoController::class, 'cadastrarAreas'])->name('cadastrarAreas');
@@ -401,6 +405,7 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
         Route::get('/evento/{evento}/downloadTrabalhosAprovadosPDF', [EventoController::class, 'downloadTrabalhosAprovadosPDF'])->name('evento.downloadTrabalhosAprovadosPDF');
         Route::post('/evento/{evento}/downloadTrabalhosCertifica', [EventoController::class, 'exportTrabalhosCertifica'])->name('evento.downloadTrabalhosCertifica');
         Route::get('/evento/{evento}/downloadAvaliacoes/{modalidade}/form/{form}', [EventoController::class, 'exportAvaliacoes'])->name('evento.downloadAvaliacoes');
+        Route::get('/evento/{evento}/exportar-avaliadores-eixos/{eixo}', [EventoController::class, 'exportarAvaliadoresXLSX'])->name('evento.exportarAvaliadoresEixos');
 
         // Encontrar resumo especifico para trabalhos
         Route::get('/encontrarResumo', [TrabalhoController::class, 'findResumo'])->name('trabalhoResumo');
