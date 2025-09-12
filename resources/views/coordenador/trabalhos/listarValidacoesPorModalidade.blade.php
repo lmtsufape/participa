@@ -24,7 +24,7 @@
                 <form method="GET" action="{{ route('coord.listarValidacoesPorModalidade', ['eventoId' => $evento->id, 'modalidadeId' => $modalidade->id]) }}">
                     <input type="hidden" name="column" value="{{ request('column', 'titulo') }}">
                     <input type="hidden" name="direction" value="{{ request('direction', 'asc') }}">
-                    
+
                     <div class="row">
                         <div class="col-md-2">
                             <label for="id" class="form-label">Buscar por ID</label>
@@ -193,7 +193,7 @@
                                                         </button>
                                                     @endif
 
-                                                    @if($trabalho->aprovado === null)
+                                                    @if($trabalho->aprovado === null || auth()->user()->can('isCoordenadorOrCoordenadorDaComissaoCientifica', $trabalho->evento))
                                                         @push('modais')
                                                             @include('coordenador.trabalhos.avaliacao-modal', ['trabalho' => $trabalho, 'valor' => 'true', 'descricao' => 'aprovar'])
                                                             @include('coordenador.trabalhos.avaliacao-modal', ['trabalho' => $trabalho, 'valor' => 'false', 'descricao' => 'reprovar'])
