@@ -1408,6 +1408,7 @@ class TrabalhoController extends Controller
     }
     //tirar lógica de avaliçao deste controller e inserir em um controller de avaliação
 
+    
     public function destroyAvaliacao(Request $request, $trabalho_id){
         DB::beginTransaction();
         try {
@@ -1418,11 +1419,18 @@ class TrabalhoController extends Controller
                 ->delete();
 
             Resposta::where('trabalho_id', $trabalho->id)
-                    ->where('revisor_id', $request->revisor_id)->delete();
+                    ->where('revisor_id', $request->revisor_id)
+                    ->delete();
 
-            if($trabalho->atribuicoes()->count() == 0){
+            DB::table('atribuicaos')
+                ->where('trabalho_id', $trabalho->id)
+                ->where('revisor_id', $request->revisor_id)
+                ->update(['parecer' => 'processando']);
+
+            if ($trabalho->atribuicoes()->where('parecer', '!=', 'processando')->count() == 0) {
                 $trabalho->avaliado = 'nao';
             }
+
             $avaliacao = ArquivoAvaliacao::where('trabalhoId', $trabalho->id)
                                         ->where('revisorId', $request->revisor_id)->first();
             if($avaliacao){
@@ -1431,61 +1439,18 @@ class TrabalhoController extends Controller
                 }
                 $avaliacao->delete();
             }
+
             $trabalho->save();
 
             DB::commit();
 
             return redirect()->route('coord.listarAvaliacoes', ['eventoId' => $trabalho->eventoId])
-                            ->with('success', 'Avaliação deletada com sucesso!');
+                            ->with('success', 'Avaliação deletada com sucesso! Agora você pode remover o avaliador.');
 
         } catch (\Exception $e) {
             DB::rollBack();
 
             return back()->with('error', 'Erro: ' . $e->getMessage());
-        }
-    }
-
-    public function validarTipoDoArquivo($arquivo, $tiposExtensao)
-    {
-        if ($tiposExtensao->arquivo == true) {
-            $tiposcadastrados = [];
-            if ($tiposExtensao->pdf == true) {
-                array_push($tiposcadastrados, 'pdf');
-            }
-            if ($tiposExtensao->jpg == true) {
-                array_push($tiposcadastrados, 'jpg');
-            }
-            if ($tiposExtensao->jpeg == true) {
-                array_push($tiposcadastrados, 'jpeg');
-            }
-            if ($tiposExtensao->png == true) {
-                array_push($tiposcadastrados, 'png');
-            }
-            if ($tiposExtensao->docx == true) {
-                array_push($tiposcadastrados, 'docx');
-            }
-            if ($tiposExtensao->odt == true) {
-                array_push($tiposcadastrados, 'odt');
-            }
-            if ($tiposExtensao->zip == true) {
-                array_push($tiposcadastrados, 'zip');
-            }
-            if ($tiposExtensao->svg == true) {
-                array_push($tiposcadastrados, 'svg');
-            }
-            if ($tiposExtensao->mp4 == true) {
-                array_push($tiposcadastrados, 'mp4');
-            }
-            if ($tiposExtensao->mp3 == true) {
-                array_push($tiposcadastrados, 'mp3');
-            }
-
-            $extensao = $arquivo->getClientOriginalExtension();
-            if (!in_array($extensao, $tiposcadastrados)) {
-                return true;
-            }
-
-            return false;
         }
     }
 }
