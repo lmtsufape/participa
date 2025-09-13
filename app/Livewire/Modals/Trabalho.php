@@ -120,7 +120,7 @@ class Trabalho extends Component
 
         $atribuicao = $trabalho->atribuicoes()->whereKey($revisor->id)->first();
 
-        if ($atribuicao && $atribuicao->pivot->parecer != 'processando') {
+        if ($atribuicao) {
             session()->flash('error', 'Não é possível remover avaliador/a que possua um parecer já emitido. Para isso, é necessário apagar o parecer, e daí, realizar a exclusão.');
             return;
         }
