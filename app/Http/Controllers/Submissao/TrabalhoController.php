@@ -1408,6 +1408,49 @@ class TrabalhoController extends Controller
     }
     //tirar lógica de avaliçao deste controller e inserir em um controller de avaliação
 
+    public function validarTipoDoArquivo($arquivo, $tiposExtensao)
+    {
+        if ($tiposExtensao->arquivo == true) {
+            $tiposcadastrados = [];
+            if ($tiposExtensao->pdf == true) {
+                array_push($tiposcadastrados, 'pdf');
+            }
+            if ($tiposExtensao->jpg == true) {
+                array_push($tiposcadastrados, 'jpg');
+            }
+            if ($tiposExtensao->jpeg == true) {
+                array_push($tiposcadastrados, 'jpeg');
+            }
+            if ($tiposExtensao->png == true) {
+                array_push($tiposcadastrados, 'png');
+            }
+            if ($tiposExtensao->docx == true) {
+                array_push($tiposcadastrados, 'docx');
+            }
+            if ($tiposExtensao->odt == true) {
+                array_push($tiposcadastrados, 'odt');
+            }
+            if ($tiposExtensao->zip == true) {
+                array_push($tiposcadastrados, 'zip');
+            }
+            if ($tiposExtensao->svg == true) {
+                array_push($tiposcadastrados, 'svg');
+            }
+            if ($tiposExtensao->mp4 == true) {
+                array_push($tiposcadastrados, 'mp4');
+            }
+            if ($tiposExtensao->mp3 == true) {
+                array_push($tiposcadastrados, 'mp3');
+            }
+
+            $extensao = $arquivo->getClientOriginalExtension();
+            if (!in_array($extensao, $tiposcadastrados)) {
+                return true;
+            }
+
+            return false;
+        }
+    }
     
     public function destroyAvaliacao(Request $request, $trabalho_id){
         DB::beginTransaction();
