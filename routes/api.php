@@ -29,4 +29,6 @@ Route::namespace('Users')->group(function () {
     Route::get('/numeroRevisoresPorArea', 'RevisorController@numeroDeRevisoresAjax')->name('numeroDeRevisoresAjax');
 });
 
+Route::get('/api/{cpf}', ApiController::class, 'inscricao')->middleware('apiInscricaoAba');
+
 Route::post('/checkout/notifications', [CheckoutController::class, 'notifications'])->name('checkout.notifications');
