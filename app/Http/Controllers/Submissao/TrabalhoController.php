@@ -541,13 +541,37 @@ class TrabalhoController extends Controller
         $trabalho->titulo = $request->input('nomeTrabalho' . $id);
         $trabalho->resumo = $request->input('resumo' . $id);
         $trabalho->modalidadeId = $request->input('modalidade' . $id);
-        
+
         if ($request->input('area'.$id) != $trabalho->area->id && $trabalho->atribuicoes()->exists())
         {
-            return redirect()->back()->withErrors(['area' . $id => 'Não é possível alterar '.$evento->formSubTrab->etiquetaareatrabalho.' de um trabalho com revisores atribuídos.'])->withInput($validatedData);
-        } else {
-            $trabalho->areaId = $request->input('area' . $id);
+            $novaAreaId = $request->input('area' . $id);
+
+            $revisoresAtribuidos = $trabalho->atribuicoes;
+            $revisoresIncompatíveis = collect();
+
+            foreach ($revisoresAtribuidos as $revisor) {
+                $revisorNaNovaArea = Revisor::where([
+                    ['user_id', $revisor->user_id],
+                    ['evento_id', $trabalho->evento->id],
+                    ['areaId', $novaAreaId]
+                ])->first();
+
+                if (!$revisorNaNovaArea) {
+                    $revisoresIncompatíveis->push($revisor);
+                }
+            }
+
+            if ($revisoresIncompatíveis->count() > 0) {
+                $quantidade = $revisoresIncompatíveis->count();
+                $mensagem = $quantidade == 1
+                    ? '1 avaliador não faz parte da área selecionada.'
+                    : $quantidade . ' avaliadores não fazem parte da área selecionada.';
+
+                return redirect()->back()->withErrors(['area' . $id => 'Não é possível alterar '.$evento->formSubTrab->etiquetaareatrabalho.': ' . $mensagem])->withInput($validatedData);
+            }
         }
+
+        $trabalho->areaId = $request->input('area' . $id);
 
         if ($trabalho->modalidade->apresentacao && !$request->tipo_apresentacao) {
             return redirect()->back()->withErrors(['tipo_apresentacao' => 'Selecione a forma de apresentação do trabalho.'])->withInput($validatedData);
@@ -1451,7 +1475,7 @@ class TrabalhoController extends Controller
             return false;
         }
     }
-    
+
     public function destroyAvaliacao(Request $request, $trabalho_id){
         DB::beginTransaction();
         try {
