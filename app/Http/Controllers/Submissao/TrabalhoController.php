@@ -541,7 +541,7 @@ class TrabalhoController extends Controller
         $trabalho->titulo = $request->input('nomeTrabalho' . $id);
         $trabalho->resumo = $request->input('resumo' . $id);
         $trabalho->modalidadeId = $request->input('modalidade' . $id);
-        
+
         if ($request->input('area'.$id) != $trabalho->area->id && $trabalho->atribuicoes()->exists())
         {
             return redirect()->back()->withErrors(['area' . $id => 'Não é possível alterar '.$evento->formSubTrab->etiquetaareatrabalho.' de um trabalho com revisores atribuídos.'])->withInput($validatedData);
@@ -1143,6 +1143,18 @@ class TrabalhoController extends Controller
                 case 'false':
                     $trabalho->update(['aprovado' => false]);
                     return ['flash' => 'success', 'msg' => 'Trabalho reprovado com sucesso!'];
+
+                case 'restaurar':
+                    if(in_array($trabalho->aprovado, [true, false], true)){
+                        $trabalho->aprovado                 = null;
+                        $trabalho->hash_codigo_aprovacao    = null;
+                        $trabalho->aprovacao_emitida_em   = null;
+                        $trabalho->saveOrFail();
+
+                        return ['flash' => 'success', 'msg' => 'Trabalho restaurado com sucesso!'];
+                    }
+
+                    return ['flash' => 'success', 'msg' => 'Este trabalho já se encontra no status inicial!'];
 
                 case 'null':
                     if(!$trabalho->permite_correcao){
