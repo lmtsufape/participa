@@ -52,7 +52,9 @@
                     @php
                         $inscricaoPaga = $evento->inscricaos
                             ->where('user_id', auth()->id())
-                            ->filter(function($i){ return $i->pagamento && $i->pagamento->status === 'approved'; })
+                            ->filter(function($i){ 
+                                return ($i->pagamento && $i->pagamento->status === 'approved') || $i->finalizada; 
+                            })
                             ->first();
                     @endphp
                     @if($inscricaoPaga)
