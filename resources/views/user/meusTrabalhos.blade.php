@@ -146,7 +146,7 @@
                                 <th style="text-align:center">Excluir</th>
                                 <th style="text-align:center">Pareceres</th>
                                 <th style="text-align:center">Correção</th>
-                                {{-- <th style="text-align:center">Arquivar</th> --}}
+                                <th class="text-center">Resultado</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -266,6 +266,15 @@
                                             <a href="#" onclick="return false;" data-bs-toggle="popover" data-trigger="focus" data-placement="bottom" title="O(A) avaliador(a) do trabalho já validou esta correção." data-content="O(A) avaliador(a) do trabalho já validou esta correção. Não é possível enviar nova versão." style="color:#6c757d">
                                                 <img class="" src="{{asset('img/icons/file-upload-solid.svg')}}" style="width:20px; opacity: 0.5;">
                                             </a>
+                                        @endif
+                                    </td>
+                                    <td class="text-center">
+                                        @if($trabalho->aprovado === true)
+                                            <p class="py-2 px-2 bg-success text-white rounded-pill shadow">Aprovado</p>
+                                        @elseif($trabalho->aprovado === false)
+                                            <p class="py-2 px-2 bg-danger text-white rounded-pill shadow">Reprovado</p>
+                                        @else
+                                            <p class="py-2 px-2 bg-warning text-white rounded-pill shadow">Em andamento</p>
                                         @endif
                                     </td>
                                 </tr>
