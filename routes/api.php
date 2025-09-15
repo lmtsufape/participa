@@ -3,6 +3,7 @@
 use App\Http\Controllers\Inscricao\CheckoutController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\InscricaoApiController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,6 +23,11 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/credenciamento/inscrito', [InscricaoApiController::class, 'buscarInscritoPorCpf']);
+});
+
 Route::namespace('Submissao')->group(function () {
     Route::get('/detalhesTrabalho', 'TrabalhoController@detalhesAjax')->name('detalhesTrabalho');
 });
