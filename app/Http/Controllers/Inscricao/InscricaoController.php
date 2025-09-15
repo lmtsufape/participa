@@ -863,7 +863,7 @@ class InscricaoController extends Controller
 
         $data = [
             'nome' => $inscricao->user->name,
-            'valor' => $inscricao->pagamento ? $inscricao->pagamento->valor : 0,
+            'valor' => $inscricao->categoria ? $inscricao->categoria->valor_total : 0,
             'data' => now(),
             'codigo_validacao' => $inscricao->codigo_validacao,
         ];
