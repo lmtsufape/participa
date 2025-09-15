@@ -544,10 +544,34 @@ class TrabalhoController extends Controller
 
         if ($request->input('area'.$id) != $trabalho->area->id && $trabalho->atribuicoes()->exists())
         {
-            return redirect()->back()->withErrors(['area' . $id => 'Não é possível alterar '.$evento->formSubTrab->etiquetaareatrabalho.' de um trabalho com revisores atribuídos.'])->withInput($validatedData);
-        } else {
-            $trabalho->areaId = $request->input('area' . $id);
+            $novaAreaId = $request->input('area' . $id);
+
+            $revisoresAtribuidos = $trabalho->atribuicoes;
+            $revisoresIncompatíveis = collect();
+
+            foreach ($revisoresAtribuidos as $revisor) {
+                $revisorNaNovaArea = Revisor::where([
+                    ['user_id', $revisor->user_id],
+                    ['evento_id', $trabalho->evento->id],
+                    ['areaId', $novaAreaId]
+                ])->first();
+
+                if (!$revisorNaNovaArea) {
+                    $revisoresIncompatíveis->push($revisor);
+                }
+            }
+
+            if ($revisoresIncompatíveis->count() > 0) {
+                $quantidade = $revisoresIncompatíveis->count();
+                $mensagem = $quantidade == 1
+                    ? '1 avaliador não faz parte da área selecionada.'
+                    : $quantidade . ' avaliadores não fazem parte da área selecionada.';
+
+                return redirect()->back()->withErrors(['area' . $id => 'Não é possível alterar '.$evento->formSubTrab->etiquetaareatrabalho.': ' . $mensagem])->withInput($validatedData);
+            }
         }
+
+        $trabalho->areaId = $request->input('area' . $id);
 
         if ($trabalho->modalidade->apresentacao && !$request->tipo_apresentacao) {
             return redirect()->back()->withErrors(['tipo_apresentacao' => 'Selecione a forma de apresentação do trabalho.'])->withInput($validatedData);
@@ -1420,43 +1444,6 @@ class TrabalhoController extends Controller
     }
     //tirar lógica de avaliçao deste controller e inserir em um controller de avaliação
 
-    public function destroyAvaliacao(Request $request, $trabalho_id){
-        DB::beginTransaction();
-        try {
-            $trabalho = Trabalho::findOrFail($trabalho_id);
-
-            Parecer::where('trabalhoId', $trabalho->id)
-                ->where('revisorId', $request->revisor_id)
-                ->delete();
-
-            Resposta::where('trabalho_id', $trabalho->id)
-                    ->where('revisor_id', $request->revisor_id)->delete();
-
-            if($trabalho->atribuicoes()->count() == 0){
-                $trabalho->avaliado = 'nao';
-            }
-            $avaliacao = ArquivoAvaliacao::where('trabalhoId', $trabalho->id)
-                                        ->where('revisorId', $request->revisor_id)->first();
-            if($avaliacao){
-                if(Storage::exists($avaliacao->nome)){
-                    Storage::delete($avaliacao->nome);
-                }
-                $avaliacao->delete();
-            }
-            $trabalho->save();
-
-            DB::commit();
-
-            return redirect()->route('coord.listarAvaliacoes', ['eventoId' => $trabalho->eventoId])
-                            ->with('success', 'Avaliação deletada com sucesso!');
-
-        } catch (\Exception $e) {
-            DB::rollBack();
-
-            return back()->with('error', 'Erro: ' . $e->getMessage());
-        }
-    }
-
     public function validarTipoDoArquivo($arquivo, $tiposExtensao)
     {
         if ($tiposExtensao->arquivo == true) {
@@ -1498,6 +1485,51 @@ class TrabalhoController extends Controller
             }
 
             return false;
+        }
+    }
+
+    public function destroyAvaliacao(Request $request, $trabalho_id){
+        DB::beginTransaction();
+        try {
+            $trabalho = Trabalho::findOrFail($trabalho_id);
+
+            Parecer::where('trabalhoId', $trabalho->id)
+                ->where('revisorId', $request->revisor_id)
+                ->delete();
+
+            Resposta::where('trabalho_id', $trabalho->id)
+                    ->where('revisor_id', $request->revisor_id)
+                    ->delete();
+
+            DB::table('atribuicaos')
+                ->where('trabalho_id', $trabalho->id)
+                ->where('revisor_id', $request->revisor_id)
+                ->update(['parecer' => 'processando']);
+
+            if ($trabalho->atribuicoes()->where('parecer', '!=', 'processando')->count() == 0) {
+                $trabalho->avaliado = 'nao';
+            }
+
+            $avaliacao = ArquivoAvaliacao::where('trabalhoId', $trabalho->id)
+                                        ->where('revisorId', $request->revisor_id)->first();
+            if($avaliacao){
+                if(Storage::exists($avaliacao->nome)){
+                    Storage::delete($avaliacao->nome);
+                }
+                $avaliacao->delete();
+            }
+
+            $trabalho->save();
+
+            DB::commit();
+
+            return redirect()->route('coord.listarAvaliacoes', ['eventoId' => $trabalho->eventoId])
+                            ->with('success', 'Avaliação deletada com sucesso! Agora você pode remover o avaliador.');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return back()->with('error', 'Erro: ' . $e->getMessage());
         }
     }
 }

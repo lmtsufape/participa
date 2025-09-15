@@ -308,9 +308,7 @@ class UserController extends Controller
 
         $eventos = Evento::whereHas('inscricaos', function($query) use ($user) {
                 $query->where('user_id', $user->id)
-                      ->whereHas('pagamento', function($subQuery) {
-                          $subQuery->where('status', 'approved');
-                      });
+                      ->where('finalizada', true);
             });
 
         if ($request->filled('busca')) {
