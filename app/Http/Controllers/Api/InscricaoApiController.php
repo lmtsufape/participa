@@ -159,7 +159,7 @@ class InscricaoApiController extends Controller
         switch ($tipoDocumento) {
             case 'cpf':
                 $cpf = $this->maskCpf($documentoOriginal);
-                return User::where('cpf', $cpf)->first();
+                return User::where('cpf', $documentoOriginal)->orWhere('cpf', $cpf)->first();
             case 'cnpj':
                 return User::where('cnpj', $documentoOriginal)->first();
             case 'passaporte':
