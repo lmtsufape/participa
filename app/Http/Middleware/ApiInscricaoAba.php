@@ -19,13 +19,11 @@ class ApiInscricaoAba
         $apiKey = $request->header('X-API-KEY');
         $ip = $request->ip();
         $rota = $request->path();
-        $cpf = $request->route('cpf');
 
         if($apiKey !== config('app.api_key')) {
             Log::warning('Acesso negado (API key inválida)', [
                 'ip'    => $ip,
                 'rota'  => $rota,
-                'cpf'   => $cpf,
                 'data'  => now()->toDateTimeString(),
             ]);
 

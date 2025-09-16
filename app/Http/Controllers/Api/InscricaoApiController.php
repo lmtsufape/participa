@@ -18,30 +18,52 @@ class InscricaoApiController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function buscarInscritoPorCpf(Request $request): JsonResponse
+    public function buscarInscritoPorDocumento(Request $request): JsonResponse
     {
-        $validator = Validator::make($request->all(), [
-            'cpf' => ['required', 'cpf'],
-        ], [
-            'cpf.required' => 'O campo CPF é obrigatório.',
-            'cpf.cpf'      => 'O CPF informado não é válido.',
-        ]);
+        $cpf = $request->input('cpf');
+        $cnpj = $request->input('cnpj');
+        $passaporte = $request->input('passaporte');
 
-        if ($validator->fails()) {
+        if (!$cpf && !$cnpj && !$passaporte) {
             return response()->json([
                 'status' => 'error',
-                'mensagem' => $validator->errors(),
+                'mensagem' => 'É obrigatório informar pelo menos um documento: CPF, CNPJ ou Passaporte.'
             ], 422);
         }
 
-        $cpfLimpo = preg_replace('/[^0-9]/', '', $request->cpf);
+        $documentosFornecidos = array_filter([$cpf, $cnpj, $passaporte]);
+        if (count($documentosFornecidos) > 1) {
+            return response()->json([
+                'status' => 'error',
+                'mensagem' => 'Informe apenas um documento: CPF, CNPJ ou Passaporte.'
+            ], 422);
+        }
 
-        $user = User::where('cpf', $request->cpf)->orWhere('cpf', $cpfLimpo)->first();
+        if ($cpf) {
+            $documento = $cpf;
+            $tipoDocumento = 'cpf';
+        } elseif ($cnpj) {
+            $documento = $cnpj;
+            $tipoDocumento = 'cnpj';
+        } else {
+            $documento = $passaporte;
+            $tipoDocumento = 'passaporte';
+        }
+
+        $validacao = $this->validarDocumento($documento, $tipoDocumento);
+        if ($validacao !== true) {
+            return response()->json([
+                'status' => 'error',
+                'mensagem' => $validacao
+            ], 422);
+        }
+
+        $user = $this->buscarUsuarioPorDocumento($documento, $tipoDocumento);
 
         if (!$user) {
             return response()->json([
                 'status' => 'error',
-                'mensagem' => 'Usuário não encontrado com o CPF informado.'
+                'mensagem' => 'Usuário não encontrado com o documento informado.'
             ], 404);
         }
 
@@ -68,10 +90,81 @@ class InscricaoApiController extends Controller
             'mensagem' => 'Inscrito encontrado e qualificado para credenciamento.',
             'dados' => [
                 'nome_completo' => $inscricao->user->name,
-                'cpf' => $inscricao->user->cpf,
+                'documento' => $this->obterDocumentoUsuario($inscricao->user, $tipoDocumento),
+                'tipo_documento' => $tipoDocumento,
                 'organizacao' => $inscricao->user->instituicao,
                 'tipo_inscricao' => $inscricao->categoria->nome,
             ]
         ], 200);
+    }
+
+    private function validarDocumento(string $documento, string $tipoDocumento): string|bool
+    {
+        $rules = [];
+        $messages = [];
+
+        switch ($tipoDocumento) {
+            case 'cpf':
+                $rules['documento'] = ['required', 'cpf'];
+                $messages = [
+                    'documento.required' => 'O campo CPF é obrigatório.',
+                    'documento.cpf' => 'O CPF informado não é válido.'
+                ];
+                break;
+
+            case 'cnpj':
+                $rules['documento'] = ['required', 'string', 'min:14', 'max:18'];
+                $messages = [
+                    'documento.required' => 'O campo CNPJ é obrigatório.',
+                    'documento.min' => 'O CNPJ deve ter pelo menos 14 dígitos.',
+                    'documento.max' => 'O CNPJ deve ter no máximo 18 caracteres.'
+                ];
+                break;
+
+            case 'passaporte':
+                $rules['documento'] = ['required', 'string', 'min:6', 'max:10', 'regex:/^[A-Za-z0-9]{6,10}$/'];
+                $messages = [
+                    'documento.required' => 'O campo Passaporte é obrigatório.',
+                    'documento.min' => 'O Passaporte deve ter pelo menos 6 caracteres.',
+                    'documento.max' => 'O Passaporte deve ter no máximo 10 caracteres.',
+                    'documento.regex' => 'O Passaporte deve conter apenas letras e números.'
+                ];
+                break;
+        }
+
+        $validator = Validator::make(['documento' => $documento], $rules, $messages);
+
+        if ($validator->fails()) {
+            return $validator->errors()->first('documento');
+        }
+
+        return true;
+    }
+
+    private function buscarUsuarioPorDocumento(string $documentoOriginal, string $tipoDocumento): ?User
+    {
+        switch ($tipoDocumento) {
+            case 'cpf':
+                return User::where('cpf', $documentoOriginal)->first();
+            case 'cnpj':
+                return User::where('cnpj', $documentoOriginal)->first();
+            case 'passaporte':
+                return User::where('passaporte', $documentoOriginal)->first();
+        }
+        return null;
+    }
+
+    private function obterDocumentoUsuario(User $user, string $tipoDocumento): string
+    {
+        switch ($tipoDocumento) {
+            case 'cpf':
+                return $user->cpf;
+            case 'cnpj':
+                return $user->cnpj;
+            case 'passaporte':
+                return $user->passaporte;
+            default:
+                return '';
+        }
     }
 }
