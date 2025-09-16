@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Inscricao\Inscricao;
 use App\Models\Users\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -17,26 +18,29 @@ class InscricaoApiController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function buscarInscritoPorCpf(Request $request)
+    public function buscarInscritoPorCpf(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
-            'cpf' => 'required|string|regex:/^\d{11}$/',
+            'cpf' => ['required', 'cpf'],
+        ], [
+            'cpf.required' => 'O campo CPF é obrigatório.',
+            'cpf.cpf'      => 'O CPF informado não é válido.',
         ]);
 
         if ($validator->fails()) {
             return response()->json([
-                'status' => 'erro',
-                'mensagem' => 'O campo CPF é obrigatório e deve conter 11 dígitos numéricos.'
+                'status' => 'error',
+                'mensagem' => $validator->errors(),
             ], 422);
         }
 
         $cpfLimpo = preg_replace('/[^0-9]/', '', $request->cpf);
 
-        $user = User::where('cpf', $cpfLimpo)->first();
+        $user = User::where('cpf', $request->cpf)->orWhere('cpf', $cpfLimpo)->first();
 
         if (!$user) {
             return response()->json([
-                'status' => 'erro',
+                'status' => 'error',
                 'mensagem' => 'Usuário não encontrado com o CPF informado.'
             ], 404);
         }
@@ -54,7 +58,7 @@ class InscricaoApiController extends Controller
                 ], 400);
             }
             return response()->json([
-                'status' => 'erro',
+                'status' => 'error',
                 'mensagem' => 'Nenhuma inscrição finalizada encontrada para o usuário.'
             ], 404);
         }

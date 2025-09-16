@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
 
 class ApiInscricaoAba
@@ -20,7 +21,7 @@ class ApiInscricaoAba
         $rota = $request->path();
         $cpf = $request->route('cpf');
 
-        $if($apiKey !== config('API_KEY')){
+        if($apiKey !== config('app.api_key')) {
             Log::warning('Acesso negado (API key inválida)', [
                 'ip'    => $ip,
                 'rota'  => $rota,
@@ -29,10 +30,10 @@ class ApiInscricaoAba
             ]);
 
             return response()->json(['message' => 'API Key inválida'], 401);
-        }
 
+        }
         Log::info('Acesso autorizado à API', [
-            'ip' => $clientIp,
+            'ip' => $ip,
             'rota' => $rota,
             'data' => now()->toDateTimeString(),
         ]);
