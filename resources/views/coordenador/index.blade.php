@@ -73,7 +73,7 @@
 
                                 <div class="card-title text-justify">
                                     <h5>{{ Str::limit($titulo, 60, '...') }}</h5>
-                                    <p>{{ Str::limit(strip_tags($descricao), 100, '...') }}</p>
+                                    <p>{!! Str::limit(strip_tags($descricao), 100, '...') !!}</p>
                                 </div>
 
                                 {{-- SEU CÓDIGO DE DATAS E ENDEREÇO AQUI (sem alterações) --}}
