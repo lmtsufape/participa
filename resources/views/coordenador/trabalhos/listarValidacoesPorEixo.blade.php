@@ -102,7 +102,8 @@
                                             <thead>
                                                 <tr>
                                                     <th>ID</th>
-                                                    <th>Trabalho</th>
+                                                    <th>Trabalho inicial</th>
+                                                    <th>Trabalho revisado</th>
                                                     <th>Autor</th>
                                                     <th class="text-center">Validado</th>
                                                     <th style="text-align:center;">Ações</th>
@@ -122,6 +123,19 @@
                                                             @else
                                                                 <span class="d-inline-block text-truncate" class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" title="{{$trabalho->titulo}}" style="max-width: 150px;">
                                                                     {{$trabalho->titulo}}
+                                                                </span>
+                                                            @endif
+                                                        </td>
+                                                        <td>
+                                                            @if ($trabalho->arquivoCorrecao)
+                                                                <a href="{{route('downloadCorrecao', ['id' => $trabalho->id])}}">
+                                                                    <span class="d-inline-block text-truncate" class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" title="{{$trabalho->titulo}}" style="max-width: 150px;">
+                                                                        {{$trabalho->titulo}}
+                                                                    </span>
+                                                                </a>
+                                                            @else
+                                                                <span class="d-inline-block text-truncate" class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" title="Aguardando envio da correção" style="max-width: 150px;">
+                                                                    Aguardando envio
                                                                 </span>
                                                             @endif
                                                         </td>
