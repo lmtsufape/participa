@@ -141,11 +141,25 @@ class InscricaoApiController extends Controller
         return true;
     }
 
+    private function maskCpf($cpf)
+    {
+        // Remove tudo que não é número
+        $cpf = preg_replace('/\D/', '', $cpf);
+
+        // Aplica a máscara se tiver 11 dígitos
+        if (strlen($cpf) === 11) {
+            return preg_replace("/(\d{3})(\d{3})(\d{3})(\d{2})/", "$1.$2.$3-$4", $cpf);
+        }
+
+        return $cpf; // retorna como está se não for válido
+    }
+
     private function buscarUsuarioPorDocumento(string $documentoOriginal, string $tipoDocumento): ?User
     {
         switch ($tipoDocumento) {
             case 'cpf':
-                return User::where('cpf', $documentoOriginal)->first();
+                $cpf = $this->maskCpf($documentoOriginal);
+                return User::where('cpf', $documentoOriginal)->orWhere('cpf', $cpf)->first();
             case 'cnpj':
                 return User::where('cnpj', $documentoOriginal)->first();
             case 'passaporte':
