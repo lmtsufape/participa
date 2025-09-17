@@ -17,7 +17,7 @@
                 {{ session('success') }}
             </div>
         @endif
-        
+
         <div class="card mb-3">
             <div class="card-body">
                 <h5 class="card-title">Filtrar por Eixo</h5>
@@ -157,9 +157,11 @@
                                                             </td>
                                                             <td style="text-align:center">
                                                                 @foreach ($trabalho->atribuicoes as $revisor)
-                                                                    <a href="{{ route('coord.visualizarRespostaFormulario', ['eventoId' => $evento->id, 'modalidadeId' => $trabalho->modalidadeId, 'trabalhoId' => $trabalho->id, 'revisorId' => $revisor->id]) }}">
-                                                                        <img src="{{ asset('img/icons/eye-regular.svg') }}" style="width:20px">
-                                                                    </a>
+                                                                    @if($trabalho->avaliado($revisor->user))
+                                                                        <a href="{{ route('coord.visualizarRespostaFormulario', ['eventoId' => $evento->id, 'modalidadeId' => $trabalho->modalidadeId, 'trabalhoId' => $trabalho->id, 'revisorId' => $revisor->id]) }}">
+                                                                            <img src="{{ asset('img/icons/eye-regular.svg') }}" style="width:20px">
+                                                                        </a>
+                                                                    @endif
                                                                     <br>
                                                                 @endforeach
                                                             </td>
