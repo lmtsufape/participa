@@ -100,6 +100,7 @@
                                                 <th scope="col">Trabalho revisado</th>
                                                 <th scope="col">Autor</th>
                                                 <th scope="col">Parecer</th>
+                                                <th scope="col" class="text-center">Situação</th>
                                                 <th scope="col" class="text-center">Validação</th>
                                                 <th scope="col" style="text-align:center;">Ações</th>
 
@@ -145,25 +146,54 @@
                                                         <br>
                                                     @endforeach
                                                 </td>
+                                                <td data-col="situacao" class="text-center">
+                                                    @if($trabalho->aprovado === true)
+                                                        <span style="
+                                                            display:inline-block; padding:.32rem .6rem; border-radius:999px;
+                                                            background:#198754; border:1px solid #146C43; color:#FFFFFF;
+                                                            font:600 12.5px/1.1 system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+                                                            letter-spacing:.2px; "
+                                                        >Aprovado</span>
+
+                                                    @elseif($trabalho->aprovado === false)
+                                                        <span style="
+                                                            display:inline-block; padding:.32rem .6rem; border-radius:999px;
+                                                            background:#DC3545; border:1px solid #B02A37; color:#FFFFFF;
+                                                            font:600 12.5px/1.1 system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+                                                            letter-spacing:.2px; "
+                                                        >Reprovado</span>
+
+                                                    @else
+                                                        <span style="
+                                                            display:inline-block; padding:.32rem .6rem; border-radius:999px;
+                                                            background:#F6C445; border:1px solid #E0AE2E; color:#5A3D00;
+                                                            font:600 12.5px/1.1 system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+                                                            letter-spacing:.2px; "
+                                                        >Em andamento</span>
+
+                                                    @endif
+                                                </td>
                                                 <td class="text-center">
                                                     @switch($trabalho->avaliado)
                                                         @case('corrigido')
-                                                            <span class="badge bg-success">Aprovado</span>
+                                                            <span class="badge text-success border border-success bg-transparent">Completamente</span>
                                                             @break
                                                         @case('corrigido_parcialmente')
-                                                            <span class="badge bg-warning text-dark">Aprovado Parcialmente</span>
+                                                            <span class="badge text-warning border border-warning bg-transparent">Parcialmente</span>
                                                             @break
                                                         @case('nao_corrigido')
-                                                            <span class="badge bg-danger">Reprovado</span>
+                                                            <span class="badge text-danger border border-danger bg-transparent">Não corrigido</span>
                                                             @break
                                                         @default
-                                                            <span class="badge bg-secondary">Em Análise</span>
+                                                            <span class="badge text-info border border-info bg-transparent">Pendente</span>
                                                     @endswitch
 
                                                     @if(in_array($trabalho->avaliado, ['corrigido', 'corrigido_parcialmente', 'nao_corrigido']))
-                                                        <a href="#" data-bs-toggle="modal" data-bs-target="#modalValidacaoDetalhes{{$trabalho->id}}">
-                                                            <img src="{{asset('img/icons/eye-regular.svg')}}" style="width:20px; margin-left: 5px;" title="Ver/Editar Validação">
-                                                        </a>
+                                                        <div>
+                                                            <a href="#" data-bs-toggle="modal" data-bs-target="#modalValidacaoDetalhes{{$trabalho->id}}">
+                                                                <img src="{{asset('img/icons/eye-regular.svg')}}" style="width:20px; margin-left: 5px;" title="Ver/Editar Validação">
+                                                            </a>
+                                                        </div>
                                                     @endif
                                                 </td>
                                                 <td style="text-align:center">

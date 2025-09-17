@@ -105,8 +105,9 @@
                                                     <th>Trabalho inicial</th>
                                                     <th>Trabalho revisado</th>
                                                     <th>Autor</th>
+                                                    <th class="text-center">Situação</th>
                                                     <th class="text-center">Validado</th>
-                                                    <th style="text-align:center;">Ações</th>
+                                                    <th class="text-center">Decisão final</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -140,19 +141,53 @@
                                                             @endif
                                                         </td>
                                                         <td>{{$trabalho->autor->name}}</td>
-                                                        <td class="text-center">
+                                                        <td data-col="situacao" class="text-center">
                                                             @if($trabalho->aprovado === true)
-                                                                <span class="badge bg-success">Aprovado</span>
-                                                            @elseif($trabalho->aprovado === false)
-                                                                <span class="badge bg-danger">Reprovado</span>
-                                                            @else
-                                                                <span class="badge bg-secondary">Em Análise</span>
-                                                            @endif
+                                                                <span style="
+                                                                    display:inline-block; padding:.32rem .6rem; border-radius:999px;
+                                                                    background:#198754; border:1px solid #146C43; color:#FFFFFF;
+                                                                    font:600 12.5px/1.1 system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+                                                                    letter-spacing:.2px; "
+                                                                >Aprovado</span>
 
-                                                            @if(in_array($trabalho->aprovado, [true, false]))
-                                                                <a href="#" data-bs-toggle="modal" data-bs-target="#modalValidacaoDetalhes{{$trabalho->id}}">
-                                                                    <img src="{{asset('img/icons/eye-regular.svg')}}" style="width:20px; margin-left: 5px;" title="Ver/Editar Validação">
-                                                                </a>
+                                                            @elseif($trabalho->aprovado === false)
+                                                                <span style="
+                                                                    display:inline-block; padding:.32rem .6rem; border-radius:999px;
+                                                                    background:#DC3545; border:1px solid #B02A37; color:#FFFFFF;
+                                                                    font:600 12.5px/1.1 system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+                                                                    letter-spacing:.2px; "
+                                                                >Reprovado</span>
+
+                                                            @else
+                                                                <span style="
+                                                                    display:inline-block; padding:.32rem .6rem; border-radius:999px;
+                                                                    background:#F6C445; border:1px solid #E0AE2E; color:#5A3D00;
+                                                                    font:600 12.5px/1.1 system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+                                                                    letter-spacing:.2px; "
+                                                                >Em andamento</span>
+                                                            @endif
+                                                        </td>
+                                                        <td class="text-center">
+                                                            @switch($trabalho->avaliado)
+                                                                @case('corrigido')
+                                                                    <span class="badge text-success border border-success bg-transparent">Completamente</span>
+                                                                    @break
+                                                                @case('corrigido_parcialmente')
+                                                                    <span class="badge text-warning border border-warning bg-transparent">Parcialmente</span>
+                                                                    @break
+                                                                @case('nao_corrigido')
+                                                                    <span class="badge text-danger border border-danger bg-transparent">Não corrigido</span>
+                                                                    @break
+                                                                @default
+                                                                    <span class="badge text-info border border-info bg-transparent">Pendente</span>
+                                                            @endswitch
+
+                                                            @if(in_array($trabalho->avaliado, ['corrigido', 'corrigido_parcialmente', 'nao_corrigido']))
+                                                                <div>
+                                                                    <a href="#" data-bs-toggle="modal" data-bs-target="#modalValidacaoDetalhes{{$trabalho->id}}">
+                                                                        <img src="{{asset('img/icons/eye-regular.svg')}}" style="width:20px; margin-left: 5px;" title="Ver/Editar Validação">
+                                                                    </a>
+                                                                </div>
                                                             @endif
                                                         </td>
                                                         <td style="text-align:center">
