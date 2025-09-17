@@ -84,8 +84,7 @@
                                                 <select class="form-control" :name="'participantes[' + index + '][categoria]'"
                                                     x-model="participante.categoria">
                                                     <option value="0" disabled>-- Escolha a categoria --</option>
-                                                    @foreach ($evento->categoriasParticipantes()->where('permite_inscricao',
-                                                    true)->get() as $categoria)
+                                                    @foreach ($evento->categoriasParticipantes()->get() as $categoria)
                                                     <option value="{{$categoria->id}}">{{$categoria->nome}}</option>
                                                     @endforeach
                                                 </select>
