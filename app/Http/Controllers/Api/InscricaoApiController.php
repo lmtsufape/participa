@@ -69,7 +69,7 @@ class InscricaoApiController extends Controller
 
         $inscricao = Inscricao::where('user_id', $user->id)
             ->where('finalizada', true)
-            ->with(['categoria', 'user'])
+            ->with(['categoria', 'user', 'user.perfilIdentitario', 'user.endereco'])
             ->first();
 
         if (!$inscricao) {
@@ -90,8 +90,13 @@ class InscricaoApiController extends Controller
             'mensagem' => 'Inscrito encontrado e qualificado para credenciamento.',
             'dados' => [
                 'nome_completo' => $inscricao->user->name,
+                'nome_social'   => $inscricao->user->perfilIdentitario->nomeSocial,
                 'documento' => $this->obterDocumentoUsuario($inscricao->user, $tipoDocumento),
                 'tipo_documento' => $tipoDocumento,
+                'email' => $inscricao->user->email,
+                'telefone'  => $inscricao->celular,
+                'cidade'    => $inscricao->user->endereco->cidade,
+                'uf'    => $inscricao->user->endereco->uf,
                 'organizacao' => $inscricao->user->instituicao,
                 'tipo_inscricao' => $inscricao->categoria->nome,
             ]
