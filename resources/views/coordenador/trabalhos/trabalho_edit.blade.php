@@ -48,13 +48,6 @@
                   </div>
                 </div>
               @enderror
-            @if($errors->any())
-                <div class="alert alert-danger">
-                @foreach ($errors->all() as $error)
-                    <p>{{$error}}</p>
-                @endforeach
-                </div>
-            @endif
               @foreach ($ordem as $indice)
                 @if ($indice == "etiquetatitulotrabalho")
                   <div class="row justify-content-center">
@@ -94,15 +87,15 @@
                                             <label>Nome Completo</label>
                                             <input type="text" style="margin-bottom:10px" value="{{$nomeCoautor}}" class="form-control emailCoautor" name="nomeCoautor_{{$trabalho->id}}[]" required placeholder="Nome">
                                         </div>
-                                        <div class="col-sm-3">
-                                            <a style="color: #d30909;" href="#" onclick="deletarCoautor(this, {{$trabalho->id}}, event)" class="delete pr-2">
-                                                <img src="{{asset('img/icons/trash-alt-regular.svg')}}" class="icon-card" width="24" alt="Remover">
+                                        <div class="col-sm-3 d-flex align-items-center gap-3">
+                                            <a style="color: #d30909;" href="#" onclick="deletarCoautor(this, {{$trabalho->id}}, event)" class="delete text-decoration-none pr-2">
+                                                <i class="bi bi-trash3 fs-4 icon-card"></i>
                                             </a>
-                                            <a href="#" onclick="mover(this.parentElement.parentElement.parentElement, 1, {{$trabalho->id}}, event)">
-                                                <img src="{{asset('img/icons/sobe.png')}}" class="icon-card" width="24" alt="Subir">
+                                            <a href="#" class="text-decoration-none text-success" onclick="mover(this.parentElement.parentElement.parentElement, 1, {{$trabalho->id}}, event)">
+                                                <i class="bi bi-arrow-up-circle fs-4"></i>
                                             </a>
-                                            <a href="#" onclick="mover(this.parentElement.parentElement.parentElement, 0, {{$trabalho->id}}, event)">
-                                                <img src="{{asset('img/icons/desce.png')}}" class="icon-card" width="24" alt="Descer">
+                                            <a href="#" class="text-decoration-none text-success" onclick="mover(this.parentElement.parentElement.parentElement, 0, {{$trabalho->id}}, event)">
+                                                <i class="bi bi-arrow-down-circle fs-4"></i>
                                             </a>
                                         </div>
                                     </div>
