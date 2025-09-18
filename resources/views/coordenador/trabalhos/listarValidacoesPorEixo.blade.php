@@ -62,19 +62,25 @@
             <div class="card-body">
                 <h6 class="card-title mb-3 text-center">Legenda dos Botões de Ação</h6>
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <div class="d-flex align-items-center mb-2">
                             <button class="btn btn-success btn-sm me-2" disabled>Aprovar</button>
                             <small class="text-muted">Trabalho pode ser aprovado (inscrição paga por autor e/ou coautor)</small>
                         </div>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <div class="d-flex align-items-center mb-2">
                             <button class="btn btn-danger btn-sm me-2" disabled>Reprovar</button>
                             <small class="text-muted">Trabalho pode ser reprovado</small>
                         </div>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
+                        <div class="d-flex align-items-center mb-2">
+                            <button class="btn btn-secondary btn-sm me-2" disabled>Restaurar</button>
+                            <small class="text-muted">Trabalho volta ao estado inicial, nem reprovado, nem aprovado.</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
                         <div class="d-flex align-items-center mb-2">
                             <button class="btn btn-warning btn-sm me-2" disabled>Aprovar</button>
                             <small class="text-muted">Não pode aprovar (nenhum autor/coautor pagou a inscrição)</small>
@@ -176,7 +182,7 @@
                                                                     <span class="badge text-warning border border-warning bg-transparent">Parcialmente</span>
                                                                     @break
                                                                 @case('nao_corrigido')
-                                                                    <span class="badge text-danger border border-danger bg-transparent">Não corrigido</span>
+                                                                    <span class="badge text-danger border border-danger bg-transparent">Não aprovado</span>
                                                                     @break
                                                                 @default
                                                                     <span class="badge text-info border border-info bg-transparent">Pendente</span>
@@ -195,39 +201,42 @@
                                                                 @if(!$trabalho->tem_pagamento)
                                                                     <button class="btn btn-warning btn-sm" disabled
                                                                         title="Nenhum autor ou coautor possui inscrição paga no evento">
-                                                                        <strong>Aprovar Trabalho</strong>
+                                                                        <strong>Aprovar</strong>
                                                                     </button>
-                                                                @elseif($trabalho->aprovado === true)
-                                                                    <button class="btn btn-success btn-sm" disabled>
-                                                                        Trabalho Aprovado
-                                                                    </button>
-                                                                @else
+                                                                @elseif( (is_null($trabalho->aprovado)))
                                                                     <button class="btn btn-success btn-sm" name="btn-avaliacao-aprovar-{{$trabalho->id}}"
                                                                         data-bs-toggle="modal" data-bs-target="#avaliacao-aprovar-{{$trabalho->id}}">
-                                                                        Aprovar Trabalho
+                                                                        Aprovar
                                                                     </button>
                                                                 @endif
 
-                                                                @if($trabalho->aprovado === false)
-                                                                    <button class="btn btn-danger btn-sm" disabled>
-                                                                        Trabalho Reprovado
+                                                                @if(auth()->user()->can('isCoordenadorOrCoordenadorDaComissaoCientifica', $trabalho->evento) && (!is_null($trabalho->aprovado)))
+                                                                    <button class="btn btn-secondary btn-sm" name="btn-avaliacao-restaurar-{{$trabalho->id}}"
+                                                                        data-bs-toggle="modal" data-bs-target="#avaliacao-restaurar-{{$trabalho->id}}">
+                                                                        Restaurar
                                                                     </button>
-                                                                @else
+                                                                @endif
+
+                                                                @if((is_null($trabalho->aprovado)))
                                                                     <button class="btn btn-danger btn-sm" name="btn-avaliacao-reprovar-{{$trabalho->id}}"
                                                                         data-bs-toggle="modal" data-bs-target="#avaliacao-reprovar-{{$trabalho->id}}">
-                                                                        Reprovar Trabalho
+                                                                        Reprovar
                                                                     </button>
+                                                                @endif
+
+                                                                @if($trabalho->aprovado === null || auth()->user()->can('isCoordenadorOrCoordenadorDaComissaoCientifica', $trabalho->evento))
+                                                                    @push('modais')
+                                                                        @include('coordenador.trabalhos.avaliacao-modal', ['trabalho' => $trabalho, 'valor' => 'true', 'descricao' => 'aprovar'])
+                                                                        @include('coordenador.trabalhos.avaliacao-modal', ['trabalho' => $trabalho, 'valor' => 'false', 'descricao' => 'reprovar'])
+                                                                        @include('coordenador.trabalhos.avaliacao-modal', ['trabalho' => $trabalho, 'valor' => 'restaurar', 'descricao' => 'restaurar'])
+                                                                        @if(in_array($trabalho->avaliado, ['corrigido', 'corrigido_parcialmente', 'nao_corrigido']))
+                                                                            @include('coordenador.trabalhos.validacao-detalhes-modal', ['trabalho' => $trabalho])
+                                                                        @endif
+                                                                    @endpush
                                                                 @endif
                                                             </div>
                                                         </td>
                                                     </tr>
-                                                    @push('modais')
-                                                        @include('coordenador.trabalhos.avaliacao-modal', ['trabalho' => $trabalho, 'valor' => 'true', 'descricao' => 'aprovar'])
-                                                        @include('coordenador.trabalhos.avaliacao-modal', ['trabalho' => $trabalho, 'valor' => 'false', 'descricao' => 'reprovar'])
-                                                        @if(in_array($trabalho->aprovado, [true, false]))
-                                                            @include('coordenador.trabalhos.validacao-detalhes-modal', ['trabalho' => $trabalho])
-                                                        @endif
-                                                    @endpush
                                                 @endforeach
                                             </tbody>
                                         </table>
