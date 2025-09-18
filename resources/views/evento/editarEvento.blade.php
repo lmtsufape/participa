@@ -30,6 +30,31 @@
             color: #D44100;
             margin-left: 2px;
         }
+        .upload-area:hover {
+            border-color: #0d6efd !important;
+            background-color: #f8f9ff;
+        }
+
+        .upload-area.dragover {
+            border-color: #0d6efd !important;
+            background-color: #f8f9ff;
+            transform: scale(1.01);
+        }
+
+        .upload-content {
+            pointer-events: none;
+        }
+
+        .upload-area {
+            position: relative;
+            z-index: 1;
+        }
+
+        label {
+            position: relative;
+            z-index: 3;
+            display: block;
+        }
     </style>
 
     <div class="container">
@@ -243,16 +268,22 @@
                     <br>
                     <div class="form-group row">
                         <div class="col-md-6">
-                            <div class="custom-control custom-radio custom-control-inline col-form-label">
-                                <span class="fw-bold mb-3">{{ __('O seu evento será:') }}</span> <br>
-                                <input type="radio" id="customRadioInline1" name="customRadioInline" class="custom-control-input" checked>
-                                <label class="custom-control-label me-2" for="customRadioInline1">{{ __('Online') }}</label>
-
-                                <input type="radio" name="customRadioInline" class="custom-control-input">
-                                <label class="custom-control-label me-2" for="customRadioInline2">{{__('Presencial')}}</label>
-
-                                <input type="radio" name="customRadioInline" class="custom-control-input">
-                                <label class="custom-control-label" for="customRadioInline3">{{__('Híbrido')}}</label>
+                            <div class="col-form-label">
+                                <span class="fw-bold mb-3 d-block">{{ __('O seu evento será:') }}</span>
+                                <div class="d-flex gap-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="tipoEvento" id="online" value="online" checked>
+                                        <label class="form-check-label" for="online">{{ __('Online') }}</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="tipoEvento" id="presencial" value="presencial">
+                                        <label class="form-check-label" for="presencial">{{ __('Presencial') }}</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="tipoEvento" id="hibrido" value="hibrido">
+                                        <label class="form-check-label" for="hibrido">{{ __('Híbrido') }}</label>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="col-md-6 d-flex justify-content-end align-items-center">
@@ -336,18 +367,40 @@
 
                     <div class="form-group row">
                         <div class="col-md-6">
-                            <label for="fotoEvento" class="fw-bold mb-2">{{ __('Banner (tamanho: 1024 x 425, formato: JPEG, JPG e PNG):') }}</label>
-                            <div id="imagem-loader" class="imagem-loader">
-                                @if ($evento->fotoEvento != null)
-                                        <img id="logo-preview" class="img-fluid" src="{{asset('storage/'.$evento->fotoEvento)}}" alt="">
-                                    @else
-                                        <img id="logo-preview" class="img-fluid" src="{{asset('/img/nova_imagem.PNG')}}" alt="">
-                                    @endif
+                            <label for="fotoEvento" class="fw-bold mb-2 required-field">{{ __('Banner (tamanho: 1024 x 425, formato: JPEG, JPG e PNG):') }}</label>
+
+                            <div class="upload-area border border-2 border-dashed rounded-3 p-3 text-center position-relative"
+                                style="min-height: 200px; border-color: #dee2e6 !important; cursor: pointer; transition: all 0.3s ease; z-index: 1;"
+                                onclick="document.getElementById('logo-input').click()">
+
+                                <div id="logo-placeholder" class="upload-content d-flex flex-column align-items-center justify-content-center h-100 @if($evento->fotoEvento) d-none @endif">
+                                    <i class="bi bi-cloud-upload fs-1 text-primary mb-2"></i>
+                                    <h6 class="text-primary mb-2">Arraste sua imagem aqui</h6>
+                                    <p class="text-muted small mb-2">ou clique para selecionar</p>
+                                    <button type="button" class="btn btn-outline-primary btn-sm">
+                                        <i class="bi bi-upload me-1"></i>Escolher Banner
+                                    </button>
+                                    <small class="text-muted mt-2">1024 x 425px - JPEG, JPG, PNG</small>
+                                </div>
+
+                                <div id="logo-preview-container" class="@if(!$evento->fotoEvento) d-none @endif">
+                                    <img id="logo-preview" class="img-fluid rounded" style="max-height: 180px;"
+                                        src="@if($evento->fotoEvento){{asset('storage/'.$evento->fotoEvento)}}@else{{asset('/img/nova_imagem.PNG')}}@endif" alt="Preview Banner">
+                                    <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 m-2"
+                                            onclick="removeImage('logo')" style="opacity: 0.8; z-index: 10;">
+                                        <i class="bi bi-x"></i>
+                                    </button>
+                                    <div class="mt-2">
+                                        <small class="text-success"><i class="bi bi-check-circle me-1"></i>Banner carregado</small>
+                                    </div>
+                                </div>
                             </div>
+
                             <div style="display: none;">
                                 <input type="file" id="logo-input" class="form-control @error('fotoEvento') is-invalid @enderror"
-                                    name="fotoEvento" value="{{ old('fotoEvento') }}" id="fotoEvento">
+                                    name="fotoEvento" value="{{ old('fotoEvento') }}" accept=".jpeg,.jpg,.png">
                             </div>
+
                             @error('fotoEvento')
                                 <br>
                                 <span class="invalid-feedback" role="alert">
@@ -357,18 +410,40 @@
                         </div>
 
                         <div class="col-md-6">
-                            <label for="icone" class="fw-bold mb-3">{{ __('Ícone (tamanho: 600 x 600, formato: JPEG, JPG e PNG):') }}</label>
-                            <div id="imagem-loader-icone" class="imagem-loader">
-                                @if ($evento->icone != null)
-                                        <img id="icone-preview" class="img-fluid" src="{{asset('storage/'.$evento->icone)}}" alt="">
-                                    @else
-                                        <img id="icone-preview" class="img-fluid" src="{{asset('/img/nova_imagem.PNG')}}" alt="">
-                                @endif
+                            <label for="icone" class="fw-bold mb-2 required-field">{{ __('Ícone (tamanho: 600 x 600, formato: JPEG, JPG e PNG):') }}</label>
+
+                            <div class="upload-area border border-2 border-dashed rounded-3 p-3 text-center position-relative"
+                                style="min-height: 200px; border-color: #dee2e6 !important; cursor: pointer; transition: all 0.3s ease; z-index: 1;"
+                                onclick="document.getElementById('icone-input').click()">
+
+                                <div id="icone-placeholder" class="upload-content d-flex flex-column align-items-center justify-content-center h-100 @if($evento->icone) d-none @endif">
+                                    <i class="bi bi-cloud-upload fs-1 text-success mb-2"></i>
+                                    <h6 class="text-success mb-2">Arraste seu ícone aqui</h6>
+                                    <p class="text-muted small mb-2">ou clique para selecionar</p>
+                                    <button type="button" class="btn btn-outline-success btn-sm">
+                                        <i class="bi bi-upload me-1"></i>Escolher Ícone
+                                    </button>
+                                    <small class="text-muted mt-2">600 x 600px - JPEG, JPG, PNG</small>
+                                </div>
+
+                                <div id="icone-preview-container" class="@if(!$evento->icone) d-none @endif">
+                                    <img id="icone-preview" class="img-fluid rounded" style="max-height: 180px;"
+                                        src="@if($evento->icone){{asset('storage/'.$evento->icone)}}@else{{asset('/img/nova_imagem.PNG')}}@endif" alt="Preview Ícone">
+                                    <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 m-2"
+                                            onclick="removeImage('icone')" style="opacity: 0.8; z-index: 10;">
+                                        <i class="bi bi-x"></i>
+                                    </button>
+                                    <div class="mt-2">
+                                        <small class="text-success"><i class="bi bi-check-circle me-1"></i>Ícone carregado</small>
+                                    </div>
+                                </div>
                             </div>
+
                             <div style="display: none;">
                                 <input type="file" id="icone-input" class="form-control @error('icone') is-invalid @enderror"
-                                    name="icone" value="{{ old('icone') }}" id="icone">
+                                    name="icone" value="{{ old('icone') }}" accept=".jpeg,.jpg,.png">
                             </div>
+
                             @error('icone')
                                 <br>
                                 <span class="invalid-feedback" role="alert">
@@ -379,19 +454,42 @@
                     </div>
 
                     <div class="form-group row multilingual_fields" style="display: none;">
+                        <!-- BANNER INGLÊS -->
                         <div class="col-md-6">
-                            <label for="fotoEvento_en" class="fw-bold mb-1">{{ __('Banner Inglês') }}</label>
-                            <div id="imagem-loader-en" class="imagem-loader">
-                                @if ($evento->fotoEvento_en != null)
-                                        <img id="logo-preview" class="img-fluid" src="{{asset('storage/'.$evento->fotoEvento_en)}}" alt="">
-                                    @else
-                                        <img id="logo-preview" class="img-fluid" src="{{asset('/img/nova_imagem.PNG')}}" alt="">
-                                @endif
+                            <label for="fotoEvento_en" class="fw-bold mb-2 required-field">{{ __('Banner Inglês (tamanho: 1024 x 425, formato: JPEG, JPG e PNG):') }}</label>
+
+                            <div class="upload-area border border-2 border-dashed rounded-3 p-3 text-center position-relative"
+                                style="min-height: 200px; border-color: #dee2e6 !important; cursor: pointer; transition: all 0.3s ease; z-index: 1;"
+                                onclick="document.getElementById('logo-input-en').click()">
+
+                                <div id="logo-en-placeholder" class="upload-content d-flex flex-column align-items-center justify-content-center h-100 @if($evento->fotoEvento_en) d-none @endif">
+                                    <i class="bi bi-cloud-upload fs-1 text-primary mb-2"></i>
+                                    <h6 class="text-primary mb-2">Banner em Inglês</h6>
+                                    <p class="text-muted small mb-2">Arraste ou clique para selecionar</p>
+                                    <button type="button" class="btn btn-outline-primary btn-sm">
+                                        <i class="bi bi-upload me-1"></i>Escolher Banner EN
+                                    </button>
+                                    <small class="text-muted mt-2">1024 x 425px - JPEG, JPG, PNG</small>
+                                </div>
+
+                                <div id="logo-en-preview-container" class="@if(!$evento->fotoEvento_en) d-none @endif">
+                                    <img id="logo-preview-en" class="img-fluid rounded" style="max-height: 180px;"
+                                        src="@if($evento->fotoEvento_en){{asset('storage/'.$evento->fotoEvento_en)}}@else{{asset('/img/nova_imagem.PNG')}}@endif" alt="Preview Banner EN">
+                                    <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 m-2"
+                                            onclick="removeImage('logo-en')" style="opacity: 0.8; z-index: 10;">
+                                        <i class="bi bi-x"></i>
+                                    </button>
+                                    <div class="mt-2">
+                                        <small class="text-success"><i class="bi bi-check-circle me-1"></i>Banner EN carregado</small>
+                                    </div>
+                                </div>
                             </div>
+
                             <div style="display: none;">
                                 <input type="file" id="logo-input-en" class="form-control @error('fotoEvento_en') is-invalid @enderror"
-                                    name="fotoEvento_en" value="{{ old('fotoEvento_en') }}" id="fotoEvento_en">
+                                    name="fotoEvento_en" value="{{ old('fotoEvento_en') }}" accept=".jpeg,.jpg,.png">
                             </div>
+
                             @error('fotoEvento_en')
                                 <br>
                                 <span class="invalid-feedback" role="alert">
@@ -400,20 +498,44 @@
                             @enderror
                         </div>
 
+                        <!-- ÍCONE INGLÊS -->
                         <div class="col-md-6">
-                            <label for="icone_en" class="fw-bold mb-1">{{ __('Ícone inglês') }}</label>
-                            <div id="imagem-loader-icone-en" class="imagem-loader">
-                                @if ($evento->icone_en != null)
-                                        <img id="icone-preview" class="img-fluid" src="{{asset('storage/'.$evento->icone_en)}}" alt="">
-                                    @else
-                                        <img id="icone-preview" class="img-fluid" src="{{asset('/img/nova_imagem.PNG')}}" alt="">
-                                @endif
+                            <label for="icone_en" class="fw-bold mb-2 required-field">{{ __('Ícone Inglês (tamanho: 600 x 600, formato: JPEG, JPG e PNG):') }}</label>
+
+                            <div class="upload-area border border-2 border-dashed rounded-3 p-3 text-center position-relative"
+                                style="min-height: 200px; border-color: #dee2e6 !important; cursor: pointer; transition: all 0.3s ease; z-index: 1;"
+                                onclick="document.getElementById('icone-input-en').click()">
+
+                                <div id="icone-en-placeholder" class="upload-content d-flex flex-column align-items-center justify-content-center h-100 @if($evento->icone_en) d-none @endif">
+                                    <i class="bi bi-cloud-upload fs-1 text-success mb-2"></i>
+                                    <h6 class="text-success mb-2">Ícone em Inglês</h6>
+                                    <p class="text-muted small mb-2">Arraste ou clique para selecionar</p>
+                                    <button type="button" class="btn btn-outline-success btn-sm">
+                                        <i class="bi bi-upload me-1"></i>Escolher Ícone EN
+                                    </button>
+                                    <small class="text-muted mt-2">600 x 600px - JPEG, JPG, PNG</small>
+                                </div>
+
+                                <div id="icone-en-preview-container" class="@if(!$evento->icone_en) d-none @endif">
+                                    <img id="icone-preview-en" class="img-fluid rounded" style="max-height: 180px;"
+                                        src="@if($evento->icone_en){{asset('storage/'.$evento->icone_en)}}@else{{asset('/img/nova_imagem.PNG')}}@endif" alt="Preview Ícone EN">
+                                    <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 m-2"
+                                            onclick="removeImage('icone-en')" style="opacity: 0.8; z-index: 10;">
+                                        <i class="bi bi-x"></i>
+                                    </button>
+                                    <div class="mt-2">
+                                        <small class="text-success"><i class="bi bi-check-circle me-1"></i>Ícone EN carregado</small>
+                                    </div>
+                                </div>
                             </div>
+
                             <div style="display: none;">
                                 <input type="file" id="icone-input-en" class="form-control @error('icone_en') is-invalid @enderror"
-                                    name="icone_en" value="{{ old('icone_en') }}" id="icone_en">
+                                    name="icone_en" value="{{ old('icone_en') }}" accept=".jpeg,.jpg,.png">
                             </div>
-                            <small style="position: relative; top: 5px;">{{ __('O arquivo será redimensionado para') }} 600 x 600;<br>{{ __('Formato') }}: JPEG, JPG, PNG</small>
+
+                            <small class="text-muted mt-2 d-block">{{ __('O arquivo será redimensionado para') }} 600 x 600<br>{{ __('Formato') }}: JPEG, JPG, PNG</small>
+
                             @error('icone_en')
                                 <br>
                                 <span class="invalid-feedback" role="alert">
@@ -423,21 +545,47 @@
                         </div>
                     </div>
 
+                    <br>
+
                     <div class="form-group row multilingual_fields" style="display: none;">
+                        <!-- BANNER ESPANHOL -->
                         <div class="col-md-6">
-                            <label for="fotoEvento_es" class="fw-bold mb-1">{{ __('Banner Espanhol') }}</label>
-                            <div id="imagem-loader-es" class="imagem-loader">
-                                @if ($evento->fotoEvento_es != null)
-                                        <img id="logo-preview" class="img-fluid" src="{{asset('storage/'.$evento->fotoEvento_es)}}" alt="">
-                                    @else
-                                        <img id="logo-preview" class="img-fluid" src="{{asset('/img/nova_imagem.PNG')}}" alt="">
-                                @endif
+                            <label for="fotoEvento_es" class="fw-bold mb-2 required-field">{{ __('Banner Espanhol (tamanho: 1024 x 425, formato: JPEG, JPG e PNG):') }}</label>
+
+                            <div class="upload-area border border-2 border-dashed rounded-3 p-3 text-center position-relative"
+                                style="min-height: 200px; border-color: #dee2e6 !important; cursor: pointer; transition: all 0.3s ease; z-index: 1;"
+                                onclick="document.getElementById('logo-input-es').click()">
+
+                                <div id="logo-es-placeholder" class="upload-content d-flex flex-column align-items-center justify-content-center h-100 @if($evento->fotoEvento_es) d-none @endif">
+                                    <i class="bi bi-cloud-upload fs-1 text-primary mb-2"></i>
+                                    <h6 class="text-primary mb-2">Banner en Español</h6>
+                                    <p class="text-muted small mb-2">Arrastra o haz clic para seleccionar</p>
+                                    <button type="button" class="btn btn-outline-primary btn-sm">
+                                        <i class="bi bi-upload me-1"></i>Elegir Banner ES
+                                    </button>
+                                    <small class="text-muted mt-2">1024 x 425px - JPEG, JPG, PNG</small>
+                                </div>
+
+                                <div id="logo-es-preview-container" class="@if(!$evento->fotoEvento_es) d-none @endif">
+                                    <img id="logo-preview-es" class="img-fluid rounded" style="max-height: 180px;"
+                                        src="@if($evento->fotoEvento_es){{asset('storage/'.$evento->fotoEvento_es)}}@else{{asset('/img/nova_imagem.PNG')}}@endif" alt="Preview Banner ES">
+                                    <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 m-2"
+                                            onclick="removeImage('logo-es')" style="opacity: 0.8; z-index: 10;">
+                                        <i class="bi bi-x"></i>
+                                    </button>
+                                    <div class="mt-2">
+                                        <small class="text-success"><i class="bi bi-check-circle me-1"></i>Banner ES cargado</small>
+                                    </div>
+                                </div>
                             </div>
+
                             <div style="display: none;">
                                 <input type="file" id="logo-input-es" class="form-control @error('fotoEvento_es') is-invalid @enderror"
-                                    name="fotoEvento_es" value="{{ old('fotoEvento_es') }}" id="fotoEvento_es">
+                                    name="fotoEvento_es" value="{{ old('fotoEvento_es') }}" accept=".jpeg,.jpg,.png">
                             </div>
-                            <small style="position: relative; top: 5px;">{{ __('Tamanho minimo') }}: 1024 x 425;<br>{{ __('Formato') }}: JPEG, JPG, PNG</small>
+
+                            <small class="text-muted mt-2 d-block">{{ __('Tamanho minimo') }}: 1024 x 425<br>{{ __('Formato') }}: JPEG, JPG, PNG</small>
+
                             @error('fotoEvento_es')
                                 <br>
                                 <span class="invalid-feedback" role="alert">
@@ -446,20 +594,44 @@
                             @enderror
                         </div>
 
+                        <!-- ÍCONE ESPANHOL -->
                         <div class="col-md-6">
-                            <label for="icone_es" class="fw-bold mb-1">{{__('Ícone espanhol')}}</label>
-                            <div id="imagem-loader-icone-es" class="imagem-loader">
-                                @if ($evento->icone_es != null)
-                                        <img id="icone-preview" class="img-fluid" src="{{asset('storage/'.$evento->icone_es)}}" alt="">
-                                    @else
-                                        <img id="icone-preview" class="img-fluid" src="{{asset('/img/nova_imagem.PNG')}}" alt="">
-                                @endif
+                            <label for="icone_es" class="fw-bold mb-2 required-field">{{ __('Ícone Espanhol (tamanho: 600 x 600, formato: JPEG, JPG e PNG):') }}</label>
+
+                            <div class="upload-area border border-2 border-dashed rounded-3 p-3 text-center position-relative"
+                                style="min-height: 200px; border-color: #dee2e6 !important; cursor: pointer; transition: all 0.3s ease; z-index: 1;"
+                                onclick="document.getElementById('icone-input-es').click()">
+
+                                <div id="icone-es-placeholder" class="upload-content d-flex flex-column align-items-center justify-content-center h-100 @if($evento->icone_es) d-none @endif">
+                                    <i class="bi bi-cloud-upload fs-1 text-success mb-2"></i>
+                                    <h6 class="text-success mb-2">Ícono en Español</h6>
+                                    <p class="text-muted small mb-2">Arrastra o haz clic para seleccionar</p>
+                                    <button type="button" class="btn btn-outline-success btn-sm">
+                                        <i class="bi bi-upload me-1"></i>Elegir Ícono ES
+                                    </button>
+                                    <small class="text-muted mt-2">600 x 600px - JPEG, JPG, PNG</small>
+                                </div>
+
+                                <div id="icone-es-preview-container" class="@if(!$evento->icone_es) d-none @endif">
+                                    <img id="icone-preview-es" class="img-fluid rounded" style="max-height: 180px;"
+                                        src="@if($evento->icone_es){{asset('storage/'.$evento->icone_es)}}@else{{asset('/img/nova_imagem.PNG')}}@endif" alt="Preview Ícone ES">
+                                    <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 m-2"
+                                            onclick="removeImage('icone-es')" style="opacity: 0.8; z-index: 10;">
+                                        <i class="bi bi-x"></i>
+                                    </button>
+                                    <div class="mt-2">
+                                        <small class="text-success"><i class="bi bi-check-circle me-1"></i>Ícono ES cargado</small>
+                                    </div>
+                                </div>
                             </div>
+
                             <div style="display: none;">
                                 <input type="file" id="icone-input-es" class="form-control @error('icone_es') is-invalid @enderror"
-                                    name="icone_es" value="{{ old('icone_es') }}" id="icone_es">
+                                    name="icone_es" value="{{ old('icone_es') }}" accept=".jpeg,.jpg,.png">
                             </div>
-                            <small style="position: relative; top: 5px;">{{ __('O arquivo será redimensionado para') }} 600 x 600;<br>{{ __('Formato') }}: JPEG, JPG, PNG</small>
+
+                            <small class="text-muted mt-2 d-block">{{ __('O arquivo será redimensionado para') }} 600 x 600<br>{{ __('Formato') }}: JPEG, JPG, PNG</small>
+
                             @error('icone_es')
                                 <br>
                                 <span class="invalid-feedback" role="alert">
@@ -804,6 +976,15 @@
     </script>
 
     <script type="text/javascript">
+        function removeImage(type) {
+            const input = document.getElementById(type + '-input');
+            const placeholder = document.getElementById(type + '-placeholder');
+            const previewContainer = document.getElementById(type + '-preview-container');
+
+            if (input) input.value = '';
+            if (placeholder) placeholder.classList.remove('d-none');
+            if (previewContainer) previewContainer.classList.add('d-none');
+        }
         $(document).ready(function($) {
 
             // $('#summernote').summernote(

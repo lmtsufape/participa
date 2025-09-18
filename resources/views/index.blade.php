@@ -5,108 +5,8 @@
     <!-- Flickity CSS -->
     <link rel="stylesheet" href="https://unpkg.com/flickity@2/dist/flickity.min.css" />
 
-    <style>
-        /* container do carrossel */
-        .main-carousel {
-            overflow: visible;    /* para que as setas fiquem para fora */
-        }
-
-
-        .carousel-cell-images {
-            width: 60%;
-            margin-right: 2%;
-            display: flex;
-            flex-direction: column;
-        }
-
-
-        .carousel-cell-images {
-            width: 60%;
-            margin-right: 2%;
-            display: flex;
-            flex-direction: column;
-        }
-        @media (max-width: 768px) {
-            .carousel-cell-images {
-                width: 100%; /* Em telas menores, o card ocupa a largura total */
-                margin-right: 0;
-            }
-
-        }
-
-        .carousel-cell-images .img-wrapper {
-            width: 100%; /* Garante que o wrapper ocupe toda a largura do card */
-            height: 320px; /* Altura fixa do card */
-            overflow: hidden; /* Corta qualquer excesso */
-            border-radius: 8px;
-            background: #f0f0f0; /* Cor de fundo enquanto carrega */
-            position: relative;
-        }
-
-        .carousel-cell-images .img-wrapper .img-fixed {
-            display: block;
-            width: 100%;
-            height: 100%;
-            object-fit: cover; /* Preenche o espaço, cortando o excesso */
-            /* Ou use object-fit: contain; para mostrar a imagem inteira */
-            object-position: center; /* Centraliza a imagem */
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
-        }
-
-        .carousel-cell-images .card-text {
-            margin-top: 0.75rem;
-        }
-        /* título e legenda */
-        .tit-carrossel-home {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: #000;          /* título sempre visível */
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .sub-carrossel-home {
-            font-size: 0.9rem;
-            color: #555;
-            display: flex;
-            align-items: center;
-            gap: .5rem;
-        }
-
-        /* customização das setas */
-        .flickity-prev-next-button {
-            width: 3rem;
-            height: 3rem;
-            background: #fff;
-            opacity: 0.9;
-            border-radius: 50%;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-        }
-        .flickity-prev-next-button:hover {
-            background: #fff;
-            opacity: 1;
-        }
-        .flickity-prev-next-button.previous { left: -1.5rem; }
-        .flickity-prev-next-button.next     { right: -1.5rem; }
-        .flickity-button-icon { fill: #333; }
-
-        /* paginação (bolinhas) */
-        .flickity-page-dots {
-            bottom: -2rem;
-        }
-        .flickity-page-dots .dot {
-            width: 0.75rem;
-            height: 0.75rem;
-            margin: 0 0.25rem;
-            opacity: 0.5;
-            background: #888;
-        }
-        .flickity-page-dots .dot.is-selected {
-            background: #337ab7;
-            opacity: 1;
-        }
-    </style>
+    <!-- CSS Personalizado do Carrossel -->
+    <link rel="stylesheet" href="{{ asset('css/home-carousel.css') }}" />
 @endsection
 
 @section('content')
@@ -116,10 +16,15 @@
                 <h2 class="text-my-primary position-absolute start-50 translate-middle-x" style="white-space: nowrap;">
                     {{ __('Eventos com inscrições abertas ou em realização') }}
                 </h2>
-                <a href="{{ route('eventos.proximos') }}"
-                   class="btn btn-my-outline-primary rounded-5 ms-auto">
-                    {{ __('Ver todos') }}
-                </a>
+            </div>
+
+            <div class="container d-flex flex-column pb-5">
+                <div class="d-flex align-items-center mb-3 position-relative">
+                    <a href="{{ route('eventos.proximos') }}"
+                    class="btn btn-my-outline-primary rounded-5 ms-auto">
+                        {{ __('Ver todos') }}
+                    </a>
+                </div>
             </div>
 
             <!-- carrossel Flickity -->
@@ -209,12 +114,12 @@
             ])
         </div>
     @endif
-
-
+@endsection
 
     <script src="https://unpkg.com/flickity@2/dist/flickity.pkgd.min.js"></script>
     <script>
-        const slideCount = {{ $eventos_destaques->count() }};
+
+    const slideCount = {{ $eventos_destaques->count() }};
         new Swiper('.mySwiper', {
             loop: slideCount > 1,
             slidesPerView: 1,
@@ -231,4 +136,3 @@
             },
         });
     </script>
-@endsection
