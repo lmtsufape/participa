@@ -179,7 +179,7 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
     });
 
     Route::get('search/user', [UserController::class, 'searchUser'])->name('search.user');
-
+    Route::get('search/userInscricao', [UserController::class, 'searchUserInscricao'])->name('search.userInscricao');
     // rotas de teste
     Route::get('/downloadArquivo', [HomeController::class, 'downloadArquivo'])->name('download');
     Route::namespace('Submissao')->group(function () {
@@ -474,7 +474,7 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
     Route::post('/inscricoes/salvar-campo-formulario', [CampoFormularioController::class, 'store'])->name('campo.formulario.store');
     Route::post('/inscricoes/campo-excluir/{id}', [CampoFormularioController::class, 'destroy'])->name('campo.destroy');
     Route::post('inscricoes/editar-campo/{id}', [CampoFormularioController::class, 'update'])->name('campo.edit');
-    Route::post('/inscricoes/inscreverParticipante', [InscricaoController::class, 'inscreverParticipante'])->name('inscricao.inscreverParticipante');
+    Route::post('/inscricoes/inscreverParticipante/{evento_id}', [InscricaoController::class, 'inscreverParticipante'])->name('inscricao.inscreverParticipante');
     Route::put('/inscricoes/{inscricao}/alterar-categoria', [InscricaoController::class, 'alterarCategoria'])->name('inscricao.alterarCategoria');
     Route::get('/inscricoes/{inscricao}/recibo', [InscricaoController::class, 'recibo'])->name('inscricao.recibo');
     Route::get('/validar/recibo/{codigo}', [InscricaoController::class, 'validarRecibo'])->name('validar.recibo');
