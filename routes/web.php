@@ -106,6 +106,9 @@ Auth::routes(['verify' => true, 'register' => false]);
                 return view('auth.register', compact('pais'));
             });
             Route::post('/register', [RegisterController::class, 'register'])->name('register');
+            Route::get('/admin/cadastrar-usuario', function ($locale) {
+                return view('administrador.cadastrarUsuario');
+            })->name('admin.cadastrarUsuario');
             Route::post('/criarUsuario', [AdministradorController::class, 'criarUsuario'])->name('administrador.criarUsuario');
         });
 
@@ -180,6 +183,7 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
 
     Route::get('search/user', [UserController::class, 'searchUser'])->name('search.user');
     Route::get('search/userInscricao', [UserController::class, 'searchUserInscricao'])->name('search.userInscricao');
+
     // rotas de teste
     Route::get('/downloadArquivo', [HomeController::class, 'downloadArquivo'])->name('download');
     Route::namespace('Submissao')->group(function () {
