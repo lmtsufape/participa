@@ -94,7 +94,7 @@ class InscricaoApiController extends Controller
                 'documento' => $this->obterDocumentoUsuario($inscricao->user, $tipoDocumento),
                 'tipo_documento' => $tipoDocumento,
                 'email' => $inscricao->user->email,
-                'telefone'  => $inscricao->celular,
+                'telefone'  => $user->celular,
                 'cidade'    => $inscricao->user->endereco->cidade,
                 'uf'    => $inscricao->user->endereco->uf,
                 'organizacao' => $inscricao->user->instituicao,
