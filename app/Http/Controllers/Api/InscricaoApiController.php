@@ -166,7 +166,17 @@ class InscricaoApiController extends Controller
                 $cpf = $this->maskCpf($documentoOriginal);
                 return User::where('cpf', $documentoOriginal)->orWhere('cpf', $cpf)->first();
             case 'cnpj':
-                return User::where('cnpj', $documentoOriginal)->first();
+                $cnpj = preg_replace('/\D/', '', $documentoOriginal);
+
+                if (strlen($cnpj) === 14) {
+                    $cnpj = preg_replace(
+                        '/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/',
+                        '$1.$2.$3/$4-$5',
+                        $cnpj
+                    );
+                }
+                
+                return User::where('cnpj', $cnpj)->first();
             case 'passaporte':
                 return User::where('passaporte', $documentoOriginal)->first();
         }
