@@ -45,6 +45,11 @@
                                     <label class="form-check-label">
                                         <input class="form-check-input" type="checkbox" @if($modulos->modvalidarinscricao) checked @endif name="modvalidarinscricao">
                                         Validar inscrição
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-left: 5px; cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top" title="Eventos que precisam da integração com o Mercado Pago precisam estar com esse módulo ativado. Também é necessário para aprovar inscrições no painel de inscritos do coordenador.">
+                                            <circle cx="12" cy="12" r="10" fill="#dc3545" stroke="#b02a37" stroke-width="1"/>
+                                            <path d="M12 8c-1.1 0-2 .9-2 2h1.5c0-.3.2-.5.5-.5s.5.2.5.5c0 .3-.2.5-.5.5-.6 0-1 .4-1 1v.5h1.5v-.5c0-.3.2-.5.5-.5s.5.2.5.5c0 1.1-.9 2-2 2z" fill="white"/>
+                                            <circle cx="12" cy="16.5" r="0.75" fill="white"/>
+                                        </svg>
                                     </label>
                                 </div>
 
@@ -212,4 +217,16 @@
     {{-- Fim --}}
 
 </div>
+@endsection
+
+@section('javascript')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Inicializar tooltips do Bootstrap
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+});
+</script>
 @endsection

@@ -9,6 +9,7 @@ use App\Exports\AvaliadoresPorEixoExport;
 use App\Exports\TrabalhosExport;
 use App\Exports\TrabalhosExportForCertifica;
 use App\Exports\RelatorioGeralExport;
+use App\Exports\ComissaoCientificaExport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreEventoRequest;
 use App\Http\Requests\UpdateEventoRequest;
@@ -177,9 +178,9 @@ class EventoController extends Controller
             }
         };
 
-        $modalidades = Modalidade::where('evento_id', $evento->id)
-            ->withCount(['trabalho as trabalhos_count' => $statusFilter])
-            ->orderBy('nome')->get();
+                $modalidades = Modalidade::where('evento_id', $evento->id)
+             ->withCount(['trabalho as trabalhos_count' => $statusFilter])
+             ->orderBy('nome')->get();
 
         $query = Trabalho::where('eventoId', $evento->id)
             ->with([
@@ -2696,5 +2697,25 @@ class EventoController extends Controller
         $nomeArquivo = Str::slug($evento->nome) . '-relatorio-geral-trabalhos.xlsx';
 
         return Excel::download(new RelatorioGeralExport($evento->id), $nomeArquivo, \Maatwebsite\Excel\Excel::XLSX);
+    }
+
+    public function exportarComissaoCientificaXLSX(Evento $evento)
+    {
+        if (! (Gate::any(['isCoordenadorOrCoordenadorDaComissaoCientifica', 'isCoordenadorDasComissoes'], $evento) || auth()->user()->administradors()->exists()) ) {
+            abort(403, 'Acesso negado');
+        }
+
+        $nomeArquivo = Str::slug($evento->nome) . '-comissao-cientifica.xlsx';
+        return Excel::download(new ComissaoCientificaExport($evento), $nomeArquivo, \Maatwebsite\Excel\Excel::XLSX);
+    }
+
+    public function exportarRevisoresXLSX(Evento $evento)
+    {
+        if (! (Gate::any(['isCoordenadorOrCoordenadorDaComissaoCientifica', 'isCoordenadorDasComissoes'], $evento) || auth()->user()->administradors()->exists()) ) {
+            abort(403, 'Acesso negado');
+        }
+
+        $nomeArquivo = Str::slug($evento->nome) . '-revisores.xlsx';
+        return Excel::download(new \App\Exports\RevisoresExport($evento), $nomeArquivo, \Maatwebsite\Excel\Excel::XLSX);
     }
 }

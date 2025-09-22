@@ -621,9 +621,9 @@ class InscricaoController extends Controller
         return abort(403);
     }
 
-    public function inscreverParticipante(Request $request)
+    public function inscreverParticipante(Request $request, $evento_id)
     {
-        $evento = Evento::find($request->evento_id);
+        $evento = Evento::find($evento_id);
 
         $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
 

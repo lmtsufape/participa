@@ -291,6 +291,46 @@ class UserController extends Controller
         ]);
     }
 
+    public function searchUserInscricao(Request $request)
+    {
+        $user = null;
+        $inscricaoFinalizada = null;
+
+        if ($request->has('email') && !empty($request->email)) {
+            $user = User::where('email', $request->email)->first(['id', 'name', 'email']);
+
+            if($user && $request->has('evento_id')){
+                $inscricao = $user->inscricaos()->where('evento_id', $request->evento_id)->first();
+                $inscricaoFinalizada = $inscricao ? $inscricao->finalizada : null;
+            }
+
+            $response = [
+                'user' => [$user],
+                'inscricaoFinalizada' => $inscricaoFinalizada
+            ];
+            return response()->json($response);
+        }
+
+        if ($request->has('cpf') && !empty($request->cpf)) {
+            $user = User::where('cpf', $request->cpf)->first(['id', 'name', 'cpf']);
+            if($user && $request->has('evento_id')){
+                $inscricao = $user->inscricaos()->where('evento_id', $request->evento_id)->first();
+                $inscricaoFinalizada = $inscricao ? $inscricao->finalizada : null;
+            }
+
+            $response = [
+                'user' => [$user],
+                'inscricaoFinalizada' => $inscricaoFinalizada
+            ];
+            return response()->json($response);
+        }
+
+        return response()->json([
+            'user' => [null],
+            'inscricaoFinalizada' => null
+        ]);
+    }
+
     public function areaParticipante(){
         $user = Auth::user();
 
