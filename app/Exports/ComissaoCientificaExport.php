@@ -43,7 +43,9 @@ class ComissaoCientificaExport implements FromCollection, WithHeadings, ShouldAu
                 $user->celular,
                 $funcao,
             ];
-        });
+        })->sortBy(function ($row) {
+            return $row[4]; //ordenação pela função na tabela
+        })->values();
 
         return new Collection($rows);
     }
