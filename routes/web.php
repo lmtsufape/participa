@@ -249,6 +249,7 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
             Route::get('comissaoCientifica/definirCoordComissao', [EventoController::class, 'definirCoordComissao'])->name('definirCoordComissao');
             Route::get('comissaoCientifica/definirCoordEixo', [EventoController::class, 'definirCoordEixo'])->name('definirCoordEixo');
             Route::get('comissaoCientifica/listarComissao', [EventoController::class, 'listarComissao'])->name('listarComissao');
+            Route::get('/evento/{evento}/exportar-comissao-cientifica', [EventoController::class, 'exportarComissaoCientificaXLSX'])->name('evento.exportarComissaoCientifica');
             //Outras comissoes
             Route::get('/{evento}/tipocomissao/{comissao}', [TipoComissaoController::class, 'show'])->name('tipocomissao.show');
             Route::get('/{evento}/tipocomissao', [TipoComissaoController::class, 'create'])->name('tipocomissao.create');
