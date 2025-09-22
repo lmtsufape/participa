@@ -36,9 +36,12 @@
                           <h5 class="card-title">Avaliadores</h5>
                           <h6 class="card-subtitle mb-2 text-muted">Avaliadores cadastrados no seu evento</h6>
                         </div>
-                        <div class="col-sm-3" style="text-align: right;">
-                          <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalCadastrarRevisor">+ Cadastrar revisor</button>
-                        </div>
+                        @canany(['isCoordenadorOrCoordenadorDaComissaoCientifica', 'isCoordenadorDasComissoes'], $evento)
+                          <div class="col-sm-3" style="text-align: right;">
+                            <a href="{{ route('coord.evento.exportarRevisores', ['evento' => $evento->id]) }}" class="btn btn-success me-2">Exportar XLSX</a>
+                            <button class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#modalCadastrarRevisor">+ Cadastrar revisor</button>
+                          </div>
+                        @endcanany
                       </div>
                       <p class="card-text">
                         <table class="table table-hover table-responsive-lg table-sm">
