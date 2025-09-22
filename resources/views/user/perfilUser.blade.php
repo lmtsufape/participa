@@ -36,38 +36,6 @@
             }
         </style>
 
-        @if(session('sucesso'))
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                <img src="{{ asset('img/icons/check-solid.svg') }}" alt="Sucesso" class="me-2" style="width: 16px; height: 16px; filter: brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(100%) contrast(100%);">
-                {{ session('sucesso') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        @endif
-
-        @if(session('erro'))
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <img src="{{ asset('img/icons/calendar-times-solid.svg') }}" alt="Erro" class="me-2" style="width: 16px; height: 16px; filter: brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(100%) contrast(100%);">
-                {{ session('erro') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        @endif
-
-        @if(session('warning'))
-            <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                <img src="{{ asset('img/icons/calendar-times-solid.svg') }}" alt="Aviso" class="me-2" style="width: 16px; height: 16px; filter: brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(100%) contrast(100%);">
-                {{ session('warning') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        @endif
-
-        @if(session('info'))
-            <div class="alert alert-info alert-dismissible fade show" role="alert">
-                <img src="{{ asset('img/icons/info-circle-solid.svg') }}" alt="Informação" class="me-2" style="width: 16px; height: 16px; filter: brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(100%) contrast(100%);">
-                {{ session('info') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        @endif
-
         <div class="row titulo text-center mt-3" style="color: #034652;">
             <h2 style="font-weight: bold;">{{__('Meu Perfil')}}</h2>
         </div>
