@@ -106,6 +106,9 @@ Auth::routes(['verify' => true, 'register' => false]);
                 return view('auth.register', compact('pais'));
             });
             Route::post('/register', [RegisterController::class, 'register'])->name('register');
+            Route::get('/admin/cadastrar-usuario', function ($locale) {
+                return view('administrador.cadastrarUsuario');
+            })->name('admin.cadastrarUsuario');
             Route::post('/criarUsuario', [AdministradorController::class, 'criarUsuario'])->name('administrador.criarUsuario');
         });
 
@@ -179,6 +182,7 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
     });
 
     Route::get('search/user', [UserController::class, 'searchUser'])->name('search.user');
+    Route::get('search/userInscricao', [UserController::class, 'searchUserInscricao'])->name('search.userInscricao');
 
     // rotas de teste
     Route::get('/downloadArquivo', [HomeController::class, 'downloadArquivo'])->name('download');
@@ -245,6 +249,7 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
             Route::get('comissaoCientifica/definirCoordComissao', [EventoController::class, 'definirCoordComissao'])->name('definirCoordComissao');
             Route::get('comissaoCientifica/definirCoordEixo', [EventoController::class, 'definirCoordEixo'])->name('definirCoordEixo');
             Route::get('comissaoCientifica/listarComissao', [EventoController::class, 'listarComissao'])->name('listarComissao');
+            Route::get('/evento/{evento}/exportar-comissao-cientifica', [EventoController::class, 'exportarComissaoCientificaXLSX'])->name('evento.exportarComissaoCientifica');
             //Outras comissoes
             Route::get('/{evento}/tipocomissao/{comissao}', [TipoComissaoController::class, 'show'])->name('tipocomissao.show');
             Route::get('/{evento}/tipocomissao', [TipoComissaoController::class, 'create'])->name('tipocomissao.create');
@@ -474,7 +479,7 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
     Route::post('/inscricoes/salvar-campo-formulario', [CampoFormularioController::class, 'store'])->name('campo.formulario.store');
     Route::post('/inscricoes/campo-excluir/{id}', [CampoFormularioController::class, 'destroy'])->name('campo.destroy');
     Route::post('inscricoes/editar-campo/{id}', [CampoFormularioController::class, 'update'])->name('campo.edit');
-    Route::post('/inscricoes/inscreverParticipante', [InscricaoController::class, 'inscreverParticipante'])->name('inscricao.inscreverParticipante');
+    Route::post('/inscricoes/inscreverParticipante/{evento_id}', [InscricaoController::class, 'inscreverParticipante'])->name('inscricao.inscreverParticipante');
     Route::put('/inscricoes/{inscricao}/alterar-categoria', [InscricaoController::class, 'alterarCategoria'])->name('inscricao.alterarCategoria');
     Route::get('/inscricoes/{inscricao}/recibo', [InscricaoController::class, 'recibo'])->name('inscricao.recibo');
     Route::get('/validar/recibo/{codigo}', [InscricaoController::class, 'validarRecibo'])->name('validar.recibo');
