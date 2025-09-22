@@ -2708,4 +2708,14 @@ class EventoController extends Controller
         $nomeArquivo = Str::slug($evento->nome) . '-comissao-cientifica.xlsx';
         return Excel::download(new ComissaoCientificaExport($evento), $nomeArquivo, \Maatwebsite\Excel\Excel::XLSX);
     }
+
+    public function exportarRevisoresXLSX(Evento $evento)
+    {
+        if (! (Gate::any(['isCoordenadorOrCoordenadorDaComissaoCientifica', 'isCoordenadorDasComissoes'], $evento) || auth()->user()->administradors()->exists()) ) {
+            abort(403, 'Acesso negado');
+        }
+
+        $nomeArquivo = Str::slug($evento->nome) . '-revisores.xlsx';
+        return Excel::download(new \App\Exports\RevisoresExport($evento), $nomeArquivo, \Maatwebsite\Excel\Excel::XLSX);
+    }
 }
