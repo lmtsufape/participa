@@ -73,9 +73,10 @@ class UserController extends Controller
 
         $validations = [
             'name' => 'required|string|max:255',
-            'cpf' => ($request->passaporte == null && $request->cnpj == null ? ['bail', 'required', 'cpf'] : 'nullable'),
-            'cnpj' => ($request->passaporte == null && $request->cpf == null ? ['bail', 'required'] : 'nullable'),
-            'passaporte' => ($request->cpf == null && $request->cnpj == null ? ['bail', 'required', 'max:10'] : ['nullable']),
+            'documentos' => ['required', 'in:cpf,cnpj,passaporte'],
+            'cpf' =>  ['exclude_unless:documentos,cpf', 'bail', 'required', 'cpf'],
+            'cnpj' =>  ['exclude_unless:documentos,cnpj', 'bail', 'required', 'cnpj'],
+            'passaporte' => ['exclude_unless:documentos,passaporte', 'bail', 'required'],
             'celular' => '|string|max:20',
             'instituicao' => 'required|string| max:255',
             'rua' => 'required|string|max:255',
