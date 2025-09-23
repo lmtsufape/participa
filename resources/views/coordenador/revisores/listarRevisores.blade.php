@@ -39,7 +39,7 @@
                         @canany(['isCoordenadorOrCoordenadorDaComissaoCientifica', 'isCoordenadorDasComissoes'], $evento)
                           <div class="col-sm-3" style="text-align: right;">
                             <a href="{{ route('coord.evento.exportarRevisores', ['evento' => $evento->id]) }}" class="btn btn-success me-2">Exportar XLSX</a>
-                            <button class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#modalCadastrarRevisor">+ Cadastrar revisor</button>
+                            <button class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#modalCadastrarRevisor">+ Cadastrar avaliador</button>
                           </div>
                         @endcanany
                       </div>
