@@ -428,7 +428,7 @@
                                             <a class="nav-link d-flex align-items-center gap-2"
                                                 id="listarTrabalhos{{ $modalidade->id }}"
                                                 href="{{ route('coord.listarTrabalhosModalidades', ['eventoId' => $evento->id, 'modalidadeId' => $modalidade->id, 'titulo', 'asc', 'rascunho']) }}">
-                                                <span>{{ $modalidade->nome }}</span>
+                                                <span>{{ __('Modalidade') }}: {{ $modalidade->nome }}</span>
                                             </a>
                                         </li>
                                     @endforeach
@@ -459,7 +459,7 @@
                                             <a class="nav-link d-flex align-items-center gap-2"
                                                 id="listarAvaliacoesModalidade{{ $modalidade->id }}"
                                                 href="{{ route('coord.respostasTrabalhos', ['eventoId' => $evento->id, 'modalidadeId' => $modalidade->id]) }}">
-                                                <span>{{ $modalidade->nome }}</span>
+                                                <span>{{ __('Modalidade') }}: {{ $modalidade->nome }}</span>
                                             </a>
                                         </li>
                                     @endforeach
@@ -488,7 +488,7 @@
                                         <li class="nav-item">
                                             <a class="nav-link d-flex align-items-center gap-2"
                                                 href="{{ route('coord.listarCorrecoesPorModalidade', ['eventoId' => $evento->id, 'modalidadeId' => $modalidade->id, 'titulo', 'asc']) }}">
-                                                <span>{{ $modalidade->nome }}</span>
+                                                <span>{{ __('Modalidade') }}: {{ $modalidade->nome }}</span>
                                             </a>
                                         </li>
                                     @endforeach
@@ -517,7 +517,7 @@
                                         <li class="nav-item">
                                             <a class="nav-link d-flex align-items-center gap-2"
                                                 href="{{ route('coord.listarValidacoesPorModalidade', ['eventoId' => $evento->id, 'modalidadeId' => $modalidade->id, 'column' => 'titulo', 'direction' => 'asc']) }}">
-                                                <span>{{ $modalidade->nome }}</span>
+                                                <span>{{ __('Modalidade') }}: {{ $modalidade->nome }}</span>
                                             </a>
                                         </li>
                                     @endforeach
