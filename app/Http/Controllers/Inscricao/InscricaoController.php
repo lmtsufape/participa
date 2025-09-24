@@ -648,10 +648,12 @@ class InscricaoController extends Controller
             return redirect(route('inscricao.inscritos', ['evento' => $evento->id]))->with(['error_message' => 'Participante informado não possui cadastrado no sistema!']);
         }
 
-        if (Inscricao::where('user_id', $participante->id)->where('evento_id', $evento->id)->exists())
+        if (Inscricao::where('user_id', $participante->id)->where('evento_id', $evento->id)->where('finalizada', true)->exists())
         {
             return redirect(route('inscricao.inscritos', ['evento' => $evento->id]))->with(['error_message' => 'Participante informado já está inscrito neste evento!']);
         }
+
+        $preInscricaoCancelada = $this->cancelarPreInscricao($participante->id, $evento->id);
 
         $categoria = CategoriaParticipante::find($request->categoria);
 
@@ -712,6 +714,7 @@ class InscricaoController extends Controller
 
         $sucessos = 0;
         $erros = [];
+        $preInscricoesCanceladas = 0;
         $possuiFormulario = $evento->possuiFormularioDeInscricao();
 
         foreach ($participantes as $index => $dadosParticipante) {
@@ -743,9 +746,14 @@ class InscricaoController extends Controller
                     continue;
                 }
 
-                if (Inscricao::where('user_id', $participante->id)->where('evento_id', $evento->id)->exists()) {
+                if (Inscricao::where('user_id', $participante->id)->where('evento_id', $evento->id)->where('finalizada', true)->exists()) {
                     $erros[] = "Participante " . ($index + 1) . " ({$participante->name}): Já está inscrito neste evento";
                     continue;
+                }
+
+                $preInscricaoCancelada = $this->cancelarPreInscricao($participante->id, $evento->id);
+                if ($preInscricaoCancelada) {
+                    $preInscricoesCanceladas++;
                 }
 
                 $categoria = CategoriaParticipante::find($dadosParticipante['categoria']);
@@ -793,6 +801,9 @@ class InscricaoController extends Controller
         if ($sucessos > 0) {
             $mensagem .= "{$sucessos} participante(s) inscrito(s) com sucesso! ";
         }
+        if ($preInscricoesCanceladas > 0) {
+            $mensagem .= "{$preInscricoesCanceladas} pré-inscrição(ões) cancelada(s) automaticamente. ";
+        }
         if (!empty($erros)) {
             $mensagem .= "Erros: " . implode('; ', $erros);
         }
@@ -800,6 +811,21 @@ class InscricaoController extends Controller
         $tipoMensagem = !empty($erros) ? 'error_message' : 'message';
 
         return redirect(route('inscricao.inscritos', ['evento' => $evento->id]))->with([$tipoMensagem => $mensagem]);
+    }
+
+    private function cancelarPreInscricao($user_id, $evento_id)
+    {
+        $preInscricao = Inscricao::where('user_id', $user_id)
+                                 ->where('evento_id', $evento_id)
+                                 ->where('finalizada', false)
+                                 ->first();
+
+        if ($preInscricao) {
+            $this->destroy($preInscricao->id);
+            return true;
+        }
+
+        return false;
     }
 
     public function alterarCategoria(Request $request, Inscricao $inscricao)

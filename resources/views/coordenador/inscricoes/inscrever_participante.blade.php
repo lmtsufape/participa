@@ -460,7 +460,7 @@
                             if (res.inscricaoFinalizada === true) {
                                 messageElement.textContent += ' - Inscrição já finalizada';
                             } else if (res.inscricaoFinalizada === false) {
-                                messageElement.textContent += ' - Pré-inscrição já realizada';
+                                messageElement.textContent += ' - Pré-inscrição detectada (será cancelada automaticamente)';
                             }
                         }
                         messageElement.className = 'form-text text-success';
@@ -508,7 +508,7 @@
                             if (res.inscricaoFinalizada === true) {
                                 messageElement.textContent += ' - Inscrição já finalizada';
                             } else if (res.inscricaoFinalizada === false) {
-                                messageElement.textContent += ' - Pré-inscrição já realizada';
+                                messageElement.textContent += ' - Pré-inscrição detectada (será cancelada automaticamente)';
                             }
                         }
                         messageElement.className = 'form-text text-success';
