@@ -3,6 +3,7 @@
 namespace App\Exports;
 
 use App\Models\Submissao\Evento;
+use App\Models\Inscricao\Inscricao;
 use App\Models\PerfilIdentitario; 
 use App\Models\User; 
 use Carbon\Carbon;
@@ -14,23 +15,59 @@ use Illuminate\Database\Eloquent\Builder;
 class InscritosExport implements FromQuery, WithHeadings, WithMapping 
 {
     protected $evento;
+    protected $filtros;
 
-    public function __construct(Evento $evento)
+    public function __construct(Evento $evento, array $filtros = [])
     {
         $this->evento = $evento;
+        $this->filtros = $filtros;
     }
 
     /**
-    * @return \Illuminate\Database\Query\Builder
+    * @return \Illuminate\Database\Eloquent\Builder
     */
     public function query()
     {
-        return $this->evento->inscricaos()->with([
+
+        if ($this->evento->subeventos->count() > 0) {
+            $subeventoIds = $this->evento->subeventos->pluck('id')->toArray();
+            $query = Inscricao::where(function($q) use ($subeventoIds) {
+                $q->where('evento_id', $this->evento->id)
+                  ->orWhereIn('evento_id', $subeventoIds);
+            });
+        } else {
+            $query = $this->evento->inscricaos();
+        }
+
+        $query->with([
             'user.endereco',
             'user.perfilIdentitario', 
             'categoria',
             'camposPreenchidos.campoFormulario'
         ]);
+
+        // Aplicar filtros da mesma forma que no controller
+        if (!empty($this->filtros['nome'])) {
+            $query->whereHas('user', function($q) {
+                $q->whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($this->filtros['nome']) . '%']);
+            });
+        }
+
+        if (!empty($this->filtros['email'])) {
+            $query->whereHas('user', function($q) {
+                $q->whereRaw('LOWER(email) LIKE ?', ['%' . strtolower($this->filtros['email']) . '%']);
+            });
+        }
+
+        if (!empty($this->filtros['status'])) {
+            if ($this->filtros['status'] === 'finalizada') {
+                $query->where('finalizada', true);
+            } elseif ($this->filtros['status'] === 'pendente') {
+                $query->where('finalizada', false);
+            }
+        }
+
+        return $query->orderBy('finalizada', 'desc');
     }
 
     /**
