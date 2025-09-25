@@ -247,7 +247,10 @@ class AdministradorController extends Controller
     {
         $this->authorize('isAdmin', Administrador::class);
         $busca = strtolower($request->search);
-        $users = User::whereRaw('LOWER(email) like ?', ['%' . $busca . '%'])->orWhereRaw('LOWER(name) like ?', ['%' . $busca . '%'])->paginate(100);
+        $users = User::whereRaw('LOWER(email) like ?', ['%' . $busca . '%'])
+            ->orWhereRaw('LOWER(name) like ?', ['%' . $busca . '%'])
+            ->orWhereRaw('LOWER(cpf) like ?', ['%' . $busca . '%'])
+            ->paginate(100);
         if ($users->count() == 0) {
             return view('administrador.users', compact('users'))->with(['message' => 'Nenhum Resultado encontrado!']);
         }

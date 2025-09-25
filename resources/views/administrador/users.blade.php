@@ -12,7 +12,7 @@
         <div class="col-auto">
             <form class="form-inline my-2 my-lg-0" method="POST" action="{{ route('admin.search') }}">
                 @csrf
-                <input class="form-control mr-sm-2" type="search" name="search" placeholder="Nome ou email" aria-label="Buscar">
+                <input class="form-control mr-sm-2" type="search" name="search" placeholder="Nome, email ou CPF" aria-label="Buscar">
                 <button class="btn btn-outline-info my-2 my-sm-0 " type="submit">{{ __('Buscar') }}</button>
                 <a href="{{ route('admin.users') }}" class="btn btn-outline-success my-2 my-sm-0 ml-1" type="button">Inicial</a>
             </form>
