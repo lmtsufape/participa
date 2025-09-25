@@ -138,10 +138,11 @@ class Trabalho extends Model
     {
         $revisor = Revisor::where([['user_id', $user->id], ['areaId', $this->area->id],
             ['modalidadeId', $this->modalidade->id], ])->first();
-        if ($this->atribuicoes()->where('revisor_id', $revisor->id)->first()->pivot) {
+        if ($this->atribuicoes()->where('revisor_id', $revisor->id)->first()->pivot == null) {
+            return null;
+        } else {
             return $this->atribuicoes()->where('revisor_id', $revisor->id)->first()->pivot->parecer;
         }
-        return null;
     }
 
     public function getQuantidadeAvaliacoes()
