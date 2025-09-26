@@ -770,12 +770,38 @@ class EventoController extends Controller
         return (new InscritosExport($evento))->download($nome . '.xlsx', \Maatwebsite\Excel\Excel::XLSX);
     }
 
-    public function exportarInscritosXLSX(Evento $evento)
+    public function exportarInscritosXLSX(Evento $evento, Request $request)
     {
         $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
-        $nomeArquivo = Str::slug($evento->nome) . '-inscritos.xlsx';
+        
+        $filtros = [
+            'nome' => $request->get('nome'),
+            'email' => $request->get('email'),
+            'status' => $request->get('status')
+        ];
+        
+        // Remover filtros vazios
+        $filtros = array_filter($filtros, function($value) {
+            return !empty($value);
+        });
+        
+        $nomeArquivo = Str::slug($evento->nome) . '-inscritos';
+        
+        if (!empty($filtros)) {
+            if (!empty($filtros['status'])) {
+                $nomeArquivo .= '-' . $filtros['status'];
+            }
+            if (!empty($filtros['nome'])) {
+                $nomeArquivo .= '-filtrado';
+            }
+            if (!empty($filtros['email'])) {
+                $nomeArquivo .= '-filtrado';
+            }
+        }
+        
+        $nomeArquivo .= '.xlsx';
 
-        return Excel::download(new InscritosExport($evento), $nomeArquivo, \Maatwebsite\Excel\Excel::XLSX);
+        return Excel::download(new InscritosExport($evento, $filtros), $nomeArquivo, \Maatwebsite\Excel\Excel::XLSX);
     }
 
     public function exportarAvaliadoresXLSX(Evento $evento, $eixo)

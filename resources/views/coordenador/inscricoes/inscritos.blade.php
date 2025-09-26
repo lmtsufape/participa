@@ -28,7 +28,7 @@
                       <!--<h6 class="card-subtitle mb-2 text-muted">Obs.: ao exportar o arquivo csv, usar o delimitador , (vírgula) para abrir o arquivo</h6>-->
                     </div>
                     <div class="col-md-6 d-flex gap-2 flex-column align-items-end">
-                        <a href="{{route('evento.exportarInscritosXLSX', $evento)}}" class="btn btn-success">Exportar .xlsx</a>
+                        <a href="{{route('evento.exportarInscritosXLSX', array_merge([$evento], request()->only(['nome', 'email', 'status'])))}}" class="btn btn-success">Exportar .xlsx</a>
                         {{-- <a href="{{route('evento.downloadInscritos', $evento)}}" class="btn btn-primary">Exportar .csv</a>--}}
 {{--                        <a href="{{route('evento.downloadInscritosCertifica', $evento)}}" class="btn btn-primary float-md-right mt-2">Exportar XLSX para o Certifica</a>--}}
                         <button type="button" class="button-prevent-multiple-submits btn btn-outline-success my-2 ml-1" data-bs-toggle="modal" data-bs-target="#modal-inscrever-participante">

@@ -1159,7 +1159,15 @@ class TrabalhoController extends Controller
                             return ['flash' => 'success', 'msg' => 'Trabalho aprovado com sucesso!'];
 
                         }else{
-                            return ['flash' => 'error', 'msg' => 'Nenhum autor ou coautor com inscrição no evento paga'];
+                            $codigo = Trabalho::gerarCodigo();
+
+                            $trabalho->aprovado                 = true;
+                            $trabalho->hash_codigo_aprovacao    = hash('sha256', str_replace('-', '', $codigo));
+                            $trabalho->aprovacao_emitida_em   = now();
+                            $trabalho->saveOrFail();
+
+                            Mail::to($trabalho->autor->email)->send(new CartaDeAceiteMail($trabalho, $codigo));
+                            return ['flash' => 'error', 'msg' => 'Trabalho aprovado, porém o autor ou coautores não estão inscritos no evento.'];
                         }
                     }
                     return ['flash' => 'error', 'msg' => 'Número de coautores superior ao permitido na modalidade do trabalho'];

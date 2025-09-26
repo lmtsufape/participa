@@ -178,8 +178,8 @@
                                             <td class="text-center px-3">
                                                 <div class="d-flex justify-content-center gap-3">
                                                     @if(!$trabalho->tem_pagamento)
-                                                        <button class="btn btn-warning btn-sm" disabled
-                                                            title="Nenhum autor ou coautor possui inscrição paga no evento">
+                                                        <button class="btn btn-warning btn-sm" name="btn-avaliacao-aprovar-{{$trabalho->id}}"
+                                                                data-bs-toggle="modal" data-bs-target="#avaliacao-aprovar-{{$trabalho->id}}">
                                                             <strong>Aprovar</strong>
                                                         </button>
                                                     @elseif( (is_null($trabalho->aprovado)))
