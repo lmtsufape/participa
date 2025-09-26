@@ -152,7 +152,55 @@
                                                     <br>
                                                 @endforeach
                                             </td>
-                                            <td data-col="situacao" class="text-center">
+                                            <td class="text-center">
+                                                @switch($trabalho->avaliado)
+                                                    @case('corrigido')
+                                                        <span class="badge text-success border border-success bg-transparent">Completamente</span>
+                                                        @break
+                                                    @case('corrigido_parcialmente')
+                                                        <span class="badge text-warning border border-warning bg-transparent">Parcialmente</span>
+                                                        @break
+                                                    @case('nao_corrigido')
+                                                        <span class="badge text-danger border border-danger bg-transparent">Não aprovado</span>
+                                                        @break
+                                                    @default
+                                                        <span class="badge text-info border border-info bg-transparent">Pendente</span>
+                                                @endswitch
+
+                                                @if(in_array($trabalho->avaliado, ['corrigido', 'corrigido_parcialmente', 'nao_corrigido']))
+                                                    <div>
+                                                        <a href="#" data-bs-toggle="modal" data-bs-target="#modalValidacaoDetalhes{{$trabalho->id}}">
+                                                            <img src="{{asset('img/icons/eye-regular.svg')}}" style="width:20px; margin-left: 5px;" title="Ver/Editar Validação">
+                                                        </a>
+                                                    </div>
+                                                @endif
+                                            </td>
+                                            <td class="text-center px-3">
+                                                <div class="d-flex justify-content-center gap-3">
+                                                    @if((is_null($trabalho->aprovado)))
+                                                        <button class="btn btn-success btn-sm" name="btn-avaliacao-aprovar-{{$trabalho->id}}"
+                                                            data-bs-toggle="modal" data-bs-target="#avaliacao-aprovar-{{$trabalho->id}}">
+                                                            Aprovar
+                                                        </button>
+                                                    @elseif()
+
+                                                    @if(auth()->user()->can('isCoordenadorOrCoordenadorDaComissaoCientifica', $trabalho->evento) && (!is_null($trabalho->aprovado)))
+                                                        <button class="btn btn-secondary btn-sm" name="btn-avaliacao-restaurar-{{$trabalho->id}}"
+                                                            data-bs-toggle="modal" data-bs-target="#avaliacao-restaurar-{{$trabalho->id}}">
+                                                            Restaurar
+                                                        </button>
+                                                    @endif
+
+                                                    @if((is_null($trabalho->aprovado)))
+                                                        <button class="btn btn-danger btn-sm" name="btn-avaliacao-reprovar-{{$trabalho->id}}"
+                                                            data-bs-toggle="modal" data-bs-target="#avaliacao-reprovar-{{$trabalho->id}}">
+                                                            Reprovar
+                                                        </button>
+                                                    @endif
+
+                                                </div>
+                                            </td>
+                                            <td data-col="decisao" class="text-center px-3">
                                                 @if($trabalho->aprovado === true)
                                                     <span style="
                                                         display:inline-block; padding:.32rem .6rem; border-radius:999px;
@@ -178,64 +226,16 @@
                                                     >Em andamento</span>
                                                 @endif
                                             </td>
-                                            <td class="text-center">
-                                                @switch($trabalho->avaliado)
-                                                    @case('corrigido')
-                                                        <span class="badge text-success border border-success bg-transparent">Completamente</span>
-                                                        @break
-                                                    @case('corrigido_parcialmente')
-                                                        <span class="badge text-warning border border-warning bg-transparent">Parcialmente</span>
-                                                        @break
-                                                    @case('nao_corrigido')
-                                                        <span class="badge text-danger border border-danger bg-transparent">Não aprovado</span>
-                                                        @break
-                                                    @default
-                                                        <span class="badge text-info border border-info bg-transparent">Pendente</span>
-                                                @endswitch
-
-                                                @if(in_array($trabalho->avaliado, ['corrigido', 'corrigido_parcialmente', 'nao_corrigido']))
-                                                    <div>
-                                                        <a href="#" data-bs-toggle="modal" data-bs-target="#modalValidacaoDetalhes{{$trabalho->id}}">
-                                                            <img src="{{asset('img/icons/eye-regular.svg')}}" style="width:20px; margin-left: 5px;" title="Ver/Editar Validação">
-                                                        </a>
-                                                    </div>
-                                                @endif
-                                            </td>
-                                            <td style="text-align:center">
-                                                <div class="d-flex justify-content-center gap-3">
-                                                    @if((is_null($trabalho->aprovado)))
-                                                        <button class="btn btn-success btn-sm" name="btn-avaliacao-aprovar-{{$trabalho->id}}"
-                                                            data-bs-toggle="modal" data-bs-target="#avaliacao-aprovar-{{$trabalho->id}}">
-                                                            Aprovar
-                                                        </button>
-                                                    @elseif()
-
-                                                    @if(auth()->user()->can('isCoordenadorOrCoordenadorDaComissaoCientifica', $trabalho->evento) && (!is_null($trabalho->aprovado)))
-                                                        <button class="btn btn-secondary btn-sm" name="btn-avaliacao-restaurar-{{$trabalho->id}}"
-                                                            data-bs-toggle="modal" data-bs-target="#avaliacao-restaurar-{{$trabalho->id}}">
-                                                            Restaurar
-                                                        </button>
+                                            @if($trabalho->aprovado === null || auth()->user()->can('isCoordenadorOrCoordenadorDaComissaoCientifica', $trabalho->evento))
+                                                @push('modais')
+                                                    @include('coordenador.trabalhos.avaliacao-modal', ['trabalho' => $trabalho, 'valor' => 'true', 'descricao' => 'aprovar'])
+                                                    @include('coordenador.trabalhos.avaliacao-modal', ['trabalho' => $trabalho, 'valor' => 'false', 'descricao' => 'reprovar'])
+                                                    @include('coordenador.trabalhos.avaliacao-modal', ['trabalho' => $trabalho, 'valor' => 'restaurar', 'descricao' => 'restaurar'])
+                                                    @if(in_array($trabalho->avaliado, ['corrigido', 'corrigido_parcialmente', 'nao_corrigido']))
+                                                        @include('coordenador.trabalhos.validacao-detalhes-modal', ['trabalho' => $trabalho])
                                                     @endif
-
-                                                    @if((is_null($trabalho->aprovado)))
-                                                        <button class="btn btn-danger btn-sm" name="btn-avaliacao-reprovar-{{$trabalho->id}}"
-                                                            data-bs-toggle="modal" data-bs-target="#avaliacao-reprovar-{{$trabalho->id}}">
-                                                            Reprovar
-                                                        </button>
-                                                    @endif
-
-                                                    @if($trabalho->aprovado === null || auth()->user()->can('isCoordenadorOrCoordenadorDaComissaoCientifica', $trabalho->evento))
-                                                        @push('modais')
-                                                            @include('coordenador.trabalhos.avaliacao-modal', ['trabalho' => $trabalho, 'valor' => 'true', 'descricao' => 'aprovar'])
-                                                            @include('coordenador.trabalhos.avaliacao-modal', ['trabalho' => $trabalho, 'valor' => 'false', 'descricao' => 'reprovar'])
-                                                            @include('coordenador.trabalhos.avaliacao-modal', ['trabalho' => $trabalho, 'valor' => 'restaurar', 'descricao' => 'restaurar'])
-                                                            @if(in_array($trabalho->avaliado, ['corrigido', 'corrigido_parcialmente', 'nao_corrigido']))
-                                                                @include('coordenador.trabalhos.validacao-detalhes-modal', ['trabalho' => $trabalho])
-                                                            @endif
-                                                        @endpush
-                                                    @endif
-                                                </div>
-                                            </td>
+                                                @endpush
+                                            @endif
                                         </tr>
                                     @empty
                                         <tr>
