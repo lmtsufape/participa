@@ -152,32 +152,6 @@
                                                     <br>
                                                 @endforeach
                                             </td>
-                                            <td data-col="situacao" class="text-center">
-                                                @if($trabalho->aprovado === true)
-                                                    <span style="
-                                                        display:inline-block; padding:.32rem .6rem; border-radius:999px;
-                                                        background:#198754; border:1px solid #146C43; color:#FFFFFF;
-                                                        font:600 12.5px/1.1 system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
-                                                        letter-spacing:.2px; "
-                                                    >Aprovado</span>
-
-                                                @elseif($trabalho->aprovado === false)
-                                                    <span style="
-                                                        display:inline-block; padding:.32rem .6rem; border-radius:999px;
-                                                        background:#DC3545; border:1px solid #B02A37; color:#FFFFFF;
-                                                        font:600 12.5px/1.1 system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
-                                                        letter-spacing:.2px; "
-                                                    >Reprovado</span>
-
-                                                @else
-                                                    <span style="
-                                                        display:inline-block; padding:.32rem .6rem; border-radius:999px;
-                                                        background:#F6C445; border:1px solid #E0AE2E; color:#5A3D00;
-                                                        font:600 12.5px/1.1 system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
-                                                        letter-spacing:.2px; "
-                                                    >Em andamento</span>
-                                                @endif
-                                            </td>
                                             <td class="text-center">
                                                 @switch($trabalho->avaliado)
                                                     @case('corrigido')
@@ -201,7 +175,7 @@
                                                     </div>
                                                 @endif
                                             </td>
-                                            <td style="text-align:center">
+                                            <td class="text-center px-3">
                                                 <div class="d-flex justify-content-center gap-3">
                                                     @if(!$trabalho->tem_pagamento)
                                                         <button class="btn btn-warning btn-sm" disabled
@@ -229,18 +203,44 @@
                                                         </button>
                                                     @endif
 
-                                                    @if($trabalho->aprovado === null || auth()->user()->can('isCoordenadorOrCoordenadorDaComissaoCientifica', $trabalho->evento))
-                                                        @push('modais')
-                                                            @include('coordenador.trabalhos.avaliacao-modal', ['trabalho' => $trabalho, 'valor' => 'true', 'descricao' => 'aprovar'])
-                                                            @include('coordenador.trabalhos.avaliacao-modal', ['trabalho' => $trabalho, 'valor' => 'false', 'descricao' => 'reprovar'])
-                                                            @include('coordenador.trabalhos.avaliacao-modal', ['trabalho' => $trabalho, 'valor' => 'restaurar', 'descricao' => 'restaurar'])
-                                                            @if(in_array($trabalho->avaliado, ['corrigido', 'corrigido_parcialmente', 'nao_corrigido']))
-                                                                @include('coordenador.trabalhos.validacao-detalhes-modal', ['trabalho' => $trabalho])
-                                                            @endif
-                                                        @endpush
-                                                    @endif
                                                 </div>
                                             </td>
+                                            <td data-col="decisao" class="text-center px-3">
+                                                @if($trabalho->aprovado === true)
+                                                    <span style="
+                                                        display:inline-block; padding:.32rem .6rem; border-radius:999px;
+                                                        background:#198754; border:1px solid #146C43; color:#FFFFFF;
+                                                        font:600 12.5px/1.1 system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+                                                        letter-spacing:.2px; "
+                                                    >Aprovado</span>
+
+                                                @elseif($trabalho->aprovado === false)
+                                                    <span style="
+                                                        display:inline-block; padding:.32rem .6rem; border-radius:999px;
+                                                        background:#DC3545; border:1px solid #B02A37; color:#FFFFFF;
+                                                        font:600 12.5px/1.1 system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+                                                        letter-spacing:.2px; "
+                                                    >Reprovado</span>
+
+                                                @else
+                                                    <span style="
+                                                        display:inline-block; padding:.32rem .6rem; border-radius:999px;
+                                                        background:#F6C445; border:1px solid #E0AE2E; color:#5A3D00;
+                                                        font:600 12.5px/1.1 system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+                                                        letter-spacing:.2px; "
+                                                    >Em andamento</span>
+                                                @endif
+                                            </td>
+                                            @if($trabalho->aprovado === null || auth()->user()->can('isCoordenadorOrCoordenadorDaComissaoCientifica', $trabalho->evento))
+                                                @push('modais')
+                                                    @include('coordenador.trabalhos.avaliacao-modal', ['trabalho' => $trabalho, 'valor' => 'true', 'descricao' => 'aprovar'])
+                                                    @include('coordenador.trabalhos.avaliacao-modal', ['trabalho' => $trabalho, 'valor' => 'false', 'descricao' => 'reprovar'])
+                                                    @include('coordenador.trabalhos.avaliacao-modal', ['trabalho' => $trabalho, 'valor' => 'restaurar', 'descricao' => 'restaurar'])
+                                                    @if(in_array($trabalho->avaliado, ['corrigido', 'corrigido_parcialmente', 'nao_corrigido']))
+                                                        @include('coordenador.trabalhos.validacao-detalhes-modal', ['trabalho' => $trabalho])
+                                                    @endif
+                                                @endpush
+                                            @endif
                                         </tr>
                                     @empty
                                         <tr>
