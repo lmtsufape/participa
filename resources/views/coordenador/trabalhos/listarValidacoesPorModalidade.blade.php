@@ -177,17 +177,12 @@
                                             </td>
                                             <td class="text-center px-3">
                                                 <div class="d-flex justify-content-center gap-3">
-                                                    @if(!$trabalho->tem_pagamento)
-                                                        <button class="btn btn-warning btn-sm" name="btn-avaliacao-aprovar-{{$trabalho->id}}"
-                                                                data-bs-toggle="modal" data-bs-target="#avaliacao-aprovar-{{$trabalho->id}}">
-                                                            <strong>Aprovar</strong>
-                                                        </button>
-                                                    @elseif( (is_null($trabalho->aprovado)))
+                                                    @if((is_null($trabalho->aprovado)))
                                                         <button class="btn btn-success btn-sm" name="btn-avaliacao-aprovar-{{$trabalho->id}}"
                                                             data-bs-toggle="modal" data-bs-target="#avaliacao-aprovar-{{$trabalho->id}}">
                                                             Aprovar
                                                         </button>
-                                                    @endif
+                                                    @elseif()
 
                                                     @if(auth()->user()->can('isCoordenadorOrCoordenadorDaComissaoCientifica', $trabalho->evento) && (!is_null($trabalho->aprovado)))
                                                         <button class="btn btn-secondary btn-sm" name="btn-avaliacao-restaurar-{{$trabalho->id}}"
