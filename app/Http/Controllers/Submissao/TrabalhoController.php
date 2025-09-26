@@ -1167,7 +1167,7 @@ class TrabalhoController extends Controller
                             $trabalho->saveOrFail();
 
                             Mail::to($trabalho->autor->email)->send(new CartaDeAceiteMail($trabalho, $codigo));
-                            return ['flash' => 'error', 'msg' => 'Trabalho aprovado, porém o autor ou coautores não estão inscritos no evento.'];
+                            return ['flash' => 'success', 'msg' => 'Trabalho aprovado com sucesso!'];
                         }
                     }
                     return ['flash' => 'error', 'msg' => 'Número de coautores superior ao permitido na modalidade do trabalho'];
