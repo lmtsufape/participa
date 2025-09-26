@@ -172,7 +172,12 @@
                                                         </td>
                                                         <td class="px-3 text-center">
                                                             <div class="d-flex justify-content-center gap-3">
-                                                                @if((is_null($trabalho->aprovado)))
+                                                                @if(!$trabalho->tem_pagamento && (is_null($trabalho->aprovado)))
+                                                                    <button class="btn btn-warning btn-sm" name="btn-avaliacao-aprovar-{{$trabalho->id}}"
+                                                                        data-bs-toggle="modal" data-bs-target="#avaliacao-aprovar-{{$trabalho->id}}">
+                                                                        <strong>Aprovar</strong>
+                                                                    </button>
+                                                                @elseif((is_null($trabalho->aprovado)))
                                                                     <button class="btn btn-success btn-sm" name="btn-avaliacao-aprovar-{{$trabalho->id}}"
                                                                         data-bs-toggle="modal" data-bs-target="#avaliacao-aprovar-{{$trabalho->id}}">
                                                                         Aprovar
