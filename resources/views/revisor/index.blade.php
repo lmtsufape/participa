@@ -246,18 +246,17 @@
                                             </td>
                                         </div>
                                     @endif
-                                        <td class="d-flex flex-column align-items-center">
-                                            @if ($trabalho->arquivoCorrecao()->exists())
-                                                <a href="{{route('downloadCorrecao', ['id' => $trabalho->id])}}"><img src="{{asset('img/icons/file-download-solid-black.svg')}}" style="width:20px"></a>
-
-
-                                                @if(!in_array($trabalho->avaliado, ['corrigido', 'corrigido_parcialmente', 'nao_corrigido']))
-                                                    <a type="button" data-bs-target="#validacaoCorrecaoModal{{$trabalho->id}}" data-bs-toggle="modal" class="btn btn-sm btn-primary mt-2">
-                                                        Fazer validação
-                                                    </a>
+                                        <td>
+                                            <div class="d-flex flex-column align-items-center">
+                                                @if ($trabalho->arquivoCorrecao()->exists())
+                                                    <a href="{{route('downloadCorrecao', ['id' => $trabalho->id])}}"><img src="{{asset('img/icons/file-download-solid-black.svg')}}" style="width:20px"></a>
+                                                    @if(!in_array($trabalho->avaliado, ['corrigido', 'corrigido_parcialmente', 'nao_corrigido']) && $trabalho->modalidade->emPeriodoDeValidacao())
+                                                        <a type="button" data-bs-target="#validacaoCorrecaoModal{{$trabalho->id}}" data-bs-toggle="modal" class="btn btn-sm btn-primary mt-2">
+                                                            Fazer validação
+                                                        </a>
+                                                    @endif
                                                 @endif
-
-                                            @endif
+                                            </div>
                                         </td>
                                         <td style="text-align:center">
                                             {{date('d/m/Y H:i',strtotime($trabalho->atribuicoes->first()->pivot->created_at))}}
