@@ -175,12 +175,17 @@
                     <br>
 
                     @isset($inscricao)
-                        @if(isset($inscricao->pagamento))
+                        @if(isset($inscricao->pagamento) && $inscricao->finalizada)
                             <a href="{{ route('checkout.statusPagamento', $evento->id) }}"
                                 class="text-center mt-2 w-100">{{ __('Visualizar status do pagamento') }}</a>
                         @elseif(!$InscritoSemCategoria && !$inscricao->finalizada)
-                            <a href="{{ route('checkout.telaPagamento', $evento) }}"
-                                    class="text-center mt-2 w-100">{{ __('Realizar pagamento') }}</a>
+                            @if(isset($inscricao->pagamento))
+                                <a href="{{ route('checkout.statusPagamento', $evento->id) }}"
+                                    class="text-center mt-2 w-100">{{ __('Visualizar status do pagamento') }}</a>
+                            @else
+                                <a href="{{ route('checkout.telaPagamento', $evento) }}"
+                                        class="text-center mt-2 w-100">{{ __('Realizar pagamento') }}</a>
+                            @endif
                             
                             <a href="#" class="ms-3" data-bs-toggle="modal" data-bs-target="#modalAlterarCategoria">
                                 {{ __('Alterar categoria') }}

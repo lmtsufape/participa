@@ -846,6 +846,13 @@ class InscricaoController extends Controller
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
+        if ($inscricao->pagamento && $inscricao->pagamento->status !== 'approved') {
+            $pagamentoAntigo = $inscricao->pagamento;
+            $inscricao->pagamento_id = null;
+            $inscricao->save();
+            $pagamentoAntigo->delete();
+        }
+
         $inscricao->categoria_participante_id = $request->categoria;
         $inscricao->save();
 
