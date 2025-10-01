@@ -40,7 +40,7 @@
                     "wrapAround": true
                 }'
             >
-                @foreach ($eventos_destaques->take(7) as $evento)
+                @foreach ($eventos_destaques as $evento)
                     @php
 
                         $inicio = \Carbon\Carbon::parse($evento->dataInicio);
