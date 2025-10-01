@@ -178,7 +178,7 @@
                         @if(isset($inscricao->pagamento))
                             <a href="{{ route('checkout.statusPagamento', $evento->id) }}"
                                 class="text-center mt-2 w-100">{{ __('Visualizar status do pagamento') }}</a>
-                        @elseif(!$InscritoSemCategoria)
+                        @elseif(!$InscritoSemCategoria && $inscricao->categoria->valor_total > 0)
                             <a href="{{ route('checkout.telaPagamento', $evento) }}"
                                     class="text-center mt-2 w-100">{{ __('Realizar pagamento') }}</a>
 
