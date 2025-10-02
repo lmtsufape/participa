@@ -339,6 +339,13 @@
                                 <span>{{ __('Inscritos') }}</span>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link d-flex align-items-center gap-2"
+                               href="{{ route('coord.inscricoes.estudantes.listar', ['eventoId' => $evento->id]) }}">
+                                <img src="{{ asset('img/icons/list.svg') }}" alt="" width="20px">
+                                <span>{{ __('Inscritos Estudantes') }}</span>
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </li>

@@ -190,6 +190,11 @@ class Evento extends Model
         return $this->hasMany('App\Models\Inscricao\Inscricao');
     }
 
+    public function inscricaosEstudantes()
+    {
+        return $this->hasMany(\App\Models\Inscricao\InscricaoEstudante::class, 'evento_id');
+    }
+
     public function subeventos()
     {
         return $this->hasMany('App\Models\Submissao\Evento', 'evento_pai_id');

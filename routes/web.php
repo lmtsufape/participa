@@ -17,6 +17,7 @@ use App\Http\Controllers\Inscricao\CampoFormularioController;
 use App\Http\Controllers\Inscricao\CategoriaController;
 use App\Http\Controllers\Inscricao\CheckoutController;
 use App\Http\Controllers\Inscricao\InscricaoController;
+use App\Http\Controllers\Inscricao\InscricaoEstudanteController;
 use App\Http\Controllers\Inscricao\PromocaoController;
 use App\Http\Controllers\Submissao\AreaController;
 use App\Http\Controllers\Submissao\CandidatoAvaliadorController;
@@ -170,6 +171,14 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
         // rotas do Coordenador de evento
         Route::get('/home/coord', [CoordEventoController::class, 'index'])->name('coord.index');
         Route::get('/home/coord/eventos', [CoordEventoController::class, 'listaEventos'])->name('coord.eventos');
+        Route::post('/evento/{evento}/inscricao-estudante', [InscricaoEstudanteController::class, 'store'])->name('inscricao.estudante.store');
+        // Rotas para o coordenador gerir as solicitações
+        Route::prefix('/coord/evento/')->name('coord.')->group(function () {
+            Route::get('inscricoes-estudantes', [InscricaoEstudanteController::class, 'listar'])->name('inscricoes.estudantes.listar');
+            Route::post('/inscricao-estudante/{solicitacao}/aprovar', [InscricaoEstudanteController::class, 'aprovar'])->name('inscricao.estudantes.aprovar');
+            Route::post('/inscricao-estudante/{solicitacao}/rejeitar', [InscricaoEstudanteController::class, 'rejeitar'])->name('inscricao.estudantes.rejeitar');
+            Route::get('/inscricao-estudante/{solicitacao}/download', [InscricaoEstudanteController::class, 'downloadComprovante'])->name('inscricao.estudantes.download');
+        });
         //Coautor
         Route::get('coautor/index', [CoautorController::class, 'index'])->name('coautor.index');
         Route::get('coautor/listarTrabalhos', [CoautorController::class, 'listarTrabalhos'])->name('coautor.listarTrabalhos');

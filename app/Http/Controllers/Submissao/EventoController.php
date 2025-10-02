@@ -14,6 +14,7 @@ use App\Mail\EmailParaUsuarioNaoCadastrado;
 use App\Mail\EventoCriado;
 use App\Models\CandidatoAvaliador;
 use App\Models\Inscricao\Inscricao;
+use App\Models\Inscricao\InscricaoEstudante;
 use App\Models\Submissao\Area;
 use App\Models\Submissao\AreaModalidade;
 use App\Models\Submissao\Atividade;
@@ -108,6 +109,10 @@ class EventoController extends Controller
             'candidatosAvaliadores as candidaturas_aprovadas_count' => fn($query) => $query->where('aprovado', true)->select(DB::raw('count(distinct user_id)')),
             'candidatosAvaliadores as candidaturas_pendentes_count' => fn($query) => $query->where('em_analise', true)->select(DB::raw('count(distinct user_id)')),
             'candidatosAvaliadores as candidaturas_rejeitadas_count' => fn($query) => $query->where('aprovado', false)->where('em_analise', false)->select(DB::raw('count(distinct user_id)')),
+            'inscricaosEstudantes as solicitacoes_estudantes_count' => fn($query) => $query->select(DB::raw('count(distinct user_id)')),
+            'inscricaosEstudantes as solicitacoes_estudantes_aprovadas_count' => fn($query) => $query->where('status', 'aprovado'),
+            'inscricaosEstudantes as solicitacoes_estudantes_pendentes_count' => fn($query) => $query->where('status', 'pendente'),
+            'inscricaosEstudantes as solicitacoes_estudantes_rejeitadas_count' => fn($query) => $query->where('status', 'rejeitado'),
         ]);
 
         $evento->total_arrecadado = $evento->inscricaos()->where('finalizada', true)->with('categoria')->get()->sum(fn($inscricao) => $inscricao->categoria->valor_total ?? 0);
@@ -582,7 +587,10 @@ class EventoController extends Controller
             ->groupBy('area.nome');
 
         $nomeArquivo = preg_replace('/[^A-Za-z0-9\-]/', '', $evento->nome) . ' - Trabalhos.xlsx';
-
+        if ($trabalhosPorArea->isEmpty()) {
+            return back()
+                ->with('warning', 'Não há trabalhos cadastrados para esse evento.');
+        }
         return (new TrabalhosExport($trabalhosPorArea))->download($nomeArquivo);
 
     }
@@ -1518,6 +1526,7 @@ class EventoController extends Controller
 
             return $agora->between($inicio, $fim);
         });
+        $solicitacaoEstudante = InscricaoEstudante::where('user_id', auth()->id())->where('evento_id', $evento->id)->first();
         $enderecoMap  = urlencode($evento->endereco->getEnderecoFormatado());
         $encerrada = $evento->eventoInscricoesEncerradas();
         $datas = DB::table('atividades')
@@ -1590,7 +1599,7 @@ class EventoController extends Controller
             // dd($evento->categoriasParticipantes()->where('permite_inscricao', true)->get());
             // dd($etiquetas);
 
-            return view('evento.visualizarEvento', compact('evento', 'hasFile', 'mytime', 'etiquetas', 'modalidades', 'formSubTraba', 'atividades', 'atividadesAgrupadas', 'dataInicial', 'datas', 'isInscrito', 'inscricao', 'subeventos', 'encerrada', 'links', 'areas', 'dataInicio','dataFim', 'jaCandidatou', 'InscritoSemCategoria', 'enderecoMap', 'periodoSubmissao'));
+            return view('evento.visualizarEvento', compact('evento', 'hasFile', 'mytime', 'etiquetas', 'modalidades', 'formSubTraba', 'atividades', 'atividadesAgrupadas', 'dataInicial', 'datas', 'isInscrito', 'inscricao', 'subeventos', 'encerrada', 'links', 'areas', 'dataInicio','dataFim', 'jaCandidatou', 'InscritoSemCategoria', 'enderecoMap', 'periodoSubmissao', 'solicitacaoEstudante'));
         } else {
             $subeventos = Evento::where('deletado', false)->where('publicado', true)->where('evento_pai_id', $id)->get();
             $hasTrabalho = false;
@@ -1613,7 +1622,7 @@ class EventoController extends Controller
             }
 
 
-            return view('evento.visualizarEvento', compact('evento', 'trabalhos', 'trabalhosCoautor', 'hasTrabalho', 'hasTrabalhoCoautor', 'hasFile', 'datas', 'mytime', 'etiquetas', 'formSubTraba', 'atividadesAgrupadas', 'atividades', 'dataInicial', 'modalidades', 'isInscrito', 'subeventos', 'encerrada', 'areas', 'dataInicio', 'dataFim', 'enderecoMap', 'periodoSubmissao'));
+            return view('evento.visualizarEvento', compact('evento', 'trabalhos', 'trabalhosCoautor', 'hasTrabalho', 'hasTrabalhoCoautor', 'hasFile', 'datas', 'mytime', 'etiquetas', 'formSubTraba', 'atividadesAgrupadas', 'atividades', 'dataInicial', 'modalidades', 'isInscrito', 'subeventos', 'encerrada', 'areas', 'dataInicio', 'dataFim', 'enderecoMap', 'periodoSubmissao', 'solicitacaoEstudante'));
         }
     }
 

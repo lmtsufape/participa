@@ -9,7 +9,7 @@ class Inscricao extends Model
 {
     use softDeletes;
     protected $fillable = [
-        'user_id', 'evento_id', 'pagamento_id', 'promocao_id', 'cupom_desconto_id', 'finalizada',
+        'user_id', 'evento_id', 'pagamento_id', 'promocao_id', 'cupom_desconto_id', 'finalizada', 'categoria_participante_id',
     ];
 
 
