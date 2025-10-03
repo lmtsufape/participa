@@ -132,6 +132,9 @@
                     <div class="d-flex flex-wrap gap-2">
                         <button id="btn-inscrevase" class="btn btn-my-success w-60 rounded btn-lg" data-bs-toggle="modal" data-bs-target="#modalInscrever"
                             @if (($isInscrito && !$InscritoSemCategoria)  || $encerrada || (isset($inscricao) && $inscricao->finalizada)) disabled @endif>
+                            @if (isset($solicitacaoEstudante) && $solicitacaoEstudante->status == 'pendente')
+
+                            @endif
                             @if ($isInscrito)
                                 @if($inscricao->finalizada)
                                     {{ __('Já inscrito') }}
@@ -144,6 +147,25 @@
                                 {{ __('Encerradas!') }}
                             @else
                                 {{ __('Realize sua inscrição aqui!') }}
+                            @endif
+                        </button>
+                        <button class="btn btn-my-success w-60 rounded btn-lg"
+                                @if (!$encerrada && !($isInscrito && isset($inscricao) && $inscricao->finalizada))
+                                    data-bs-toggle="modal" data-bs-target="#modalInscricaoEstudante"
+                                @endif
+                                @if ($encerrada || ($isInscrito && isset($inscricao) && $inscricao->finalizada))
+                                    style="display: none;"
+                                @endif
+                                @if (isset($solicitacaoEstudante) && $solicitacaoEstudante->status == 'rejeitado' || isset($solicitacaoEstudante) && $solicitacaoEstudante->status == 'aprovado')
+                                    disabled
+                            @endif
+                        >
+                            @if (isset($solicitacaoEstudante) && $solicitacaoEstudante->status == 'rejeitado')
+                                {{ __('Inscrição de estudante rejeitada') }}
+                            @elseif (isset($solicitacaoEstudante) && $solicitacaoEstudante->status == 'pendente')
+                                {{ __('Inscrição de estudante em análise') }}
+                            @else
+                                {{ __('Inscrição de estudante') }}
                             @endif
                         </button>
                     </div>
@@ -527,6 +549,7 @@
                                         </button>
                                     </div>
                                     @include('evento.modal-areas')
+
                                 @endif
                             </div>
                         </div>
@@ -834,13 +857,17 @@
             </div>
         </div>
 
-        @include('evento.modal-inscricao')
+        {{-- Modais --}}
+        @include('evento.modal-inscricao-estudante')
         @include('evento.modal-alterar-categoria')
         @include('evento.modal-submeter-trabalho')
         @include('evento.modal-confirm-inscricao')
         @include('evento.modal-inscricao-avaliador')
+        @include('evento.modal-inscricao')
 
-    </div>
+
+
+
 
 
     @foreach ($atividades as $atv)
@@ -1029,9 +1056,8 @@
         document.addEventListener('DOMContentLoaded', () => {
             const prevBtn  = document.getElementById('prevDates');
             const nextBtn  = document.getElementById('nextDates');
-
             const datesContainer = prevBtn.nextElementSibling;
-            const dateBtns       = Array.from(datesContainer.querySelectorAll('button.carregar-cards'));
+            const dateBtns = Array.from(datesContainer.querySelectorAll('button.carregar-cards'));
 
             function scrollAmount() {
                 const btn = dateBtns[0];
@@ -1040,32 +1066,22 @@
                 return btn.getBoundingClientRect().width + marginRight;
             }
 
-
             function updateArrows() {
                 prevBtn.disabled = datesContainer.scrollLeft <= 0;
                 nextBtn.disabled = datesContainer.scrollLeft + datesContainer.clientWidth >= datesContainer.scrollWidth - 1;
             }
 
-
             prevBtn.addEventListener('click', () => {
                 datesContainer.scrollBy({ left: -scrollAmount(), behavior: 'smooth' });
             });
-
-
             nextBtn.addEventListener('click', () => {
                 datesContainer.scrollBy({ left:  scrollAmount(), behavior: 'smooth' });
             });
-
-
             datesContainer.addEventListener('scroll', updateArrows);
-
-
             updateArrows();
-
 
             dateBtns.forEach(btn => {
                 btn.addEventListener('click', () => {
-                    // 1) Highlight
                     dateBtns.forEach(x => {
                         x.classList.remove('btn-my-secondary','pill');
                         x.classList.add   ('btn-transparent','rounded-0');
@@ -1073,18 +1089,22 @@
                     btn.classList.add   ('btn-my-secondary','pill');
                     btn.classList.remove('btn-transparent','rounded-0');
 
-                    // 2) Carrega as cards via AJAX/Fetch
                     const data = btn.getAttribute('data-data');
-
                 });
             });
+
+            if (dateBtns.length > 0) {
+                const primeiro = dateBtns[0];
+                primeiro.classList.add('btn-my-secondary','pill');
+                primeiro.classList.remove('btn-transparent','rounded-0');
+                primeiro.click();
+                updateArrows();
+            }
         });
         window.initMap = function() {
-            // monta o endereço completo;
             const address = "{{ $evento->endereco->rua }}, {{ $evento->endereco->numero }}, {{ $evento->endereco->cidade }}, {{$evento->endereco->uf}}, Brasil";
 
             const geocoder = new google.maps.Geocoder();
-
             geocoder.geocode({ address }, (results, status) => {
                 if (status === 'OK' && results[0]) {
                     const local = results[0].geometry.location;
@@ -1095,9 +1115,8 @@
                     new google.maps.Marker({ position: local, map: mapa });
                 } else {
                     console.error('Geocode falhou: ' + status);
-                    // fallback: exiba o mapa em São Paulo centro, por exemplo
                     const fallback = { lat: -8.906580454895977, lng: -36.49428189189237 };
-                    const mapa = new google.maps.Map(
+                    new google.maps.Map(
                         document.getElementById("mapaGoogle"),
                         { center: fallback, zoom: 12 }
                     );
@@ -1105,6 +1124,7 @@
             });
         };
     </script>
+
     <script>
         var loginModal = document.getElementById('modalLoginPrompt');
         loginModal.addEventListener('show.bs.modal', function (event) {
@@ -1116,22 +1136,16 @@
 
     <script>
         $(document).ready(function(){
-            // dados vindos do controller
             let atividades = @json($atividadesAgrupadas);
 
             function formatHora(hora) {
                 return hora.slice(0,5);
-
             }
-
-
 
             function gerarCard(ativ, dia) {
                 const dataAtividade = ativ.datas_atividade.find(d => d.data === dia);
-
                 const inicio = formatHora(dataAtividade.hora_inicio);
                 const fim    = formatHora(dataAtividade.hora_fim);
-
 
                 let botVagas = '';
                 if (ativ.vagas != null) {
@@ -1151,27 +1165,26 @@
                 return `
                 <div class="card shadow w-100 d-flex flex-column">
                     <div class="card-body d-flex flex-column justify-content-between align-items-start">
-                <div>
-                    <strong>${inicio} - ${fim}</strong>
-                    <p class="mb-0">${ativ.titulo}</p>
-                </div>
-                <div class="row mt-3 gx-2">
-                    <div class="col-auto">
-                        <button
-                        class="btn btn-my-outline-primary btn-sm px-3 py-1 rounded-pill"
-                        type="button"
-                        data-bs-toggle="modal"
-                        data-bs-target="#modalAtividadeShow${ativ.id}"
-                        >
-                        Saiba mais
-                        </button>
+                        <div>
+                            <strong>${inicio} - ${fim}</strong>
+                            <p class="mb-0">${ativ.titulo}</p>
+                        </div>
+                        <div class="row mt-3 gx-2">
+                            <div class="col-auto">
+                                <button
+                                    class="btn btn-my-outline-primary btn-sm px-3 py-1 rounded-pill"
+                                    type="button"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#modalAtividadeShow${ativ.id}"
+                                >
+                                    Saiba mais
+                                </button>
+                            </div>
+                            ${botVagas}
+                        </div>
                     </div>
-                     ${botVagas}
-                </div>
-            </div>
-            </div>`;
+                </div>`;
             }
-
 
             function equalizeHeights() {
                 const cards = $('#cards-atividade .card');
@@ -1188,68 +1201,46 @@
                 const agrup = atividades[dia] || [];
 
                 $('#cards-atividade').empty();
-
                 agrup.forEach(item => {
                     $('#cards-atividade').append(`
-        <div class="col d-flex align-items-stretch">
-          ${gerarCard(item, dia)}
-        </div>
-      `);
+                        <div class="col d-flex align-items-stretch">
+                            ${gerarCard(item, dia)}
+                        </div>
+                    `);
                 });
                 equalizeHeights();
             });
 
+            // **Gatilho automático no primeiro botão**
+            const $primeiro = $('.carregar-cards').first();
+            if ($primeiro.length) {
+                $primeiro
+                    .addClass('btn-my-secondary pill')
+                    .removeClass('btn-transparent rounded-0')
+                    .trigger('click');
+            }
+
             $(window).on('resize', equalizeHeights);
         });
 
-
-
-        $('#carouselCategorias').carousel({
-            interval: 10000
-        })
-
+        $('#carouselCategorias').carousel({ interval: 10000 });
     </script>
+
     @if (session('abrirmodalinscricao'))
         <script>
             $('#modalInscrever').modal('show')
         </script>
     @endif
+
     <script>
-
-
-
         function changeTrabalho(x) {
             document.getElementById('trabalhoNovaVersaoId').value = x;
         }
     </script>
+
     @if ($dataInicial != '' && $evento->exibir_calendario_programacao)
         <script>
             document.addEventListener('DOMContentLoaded', function() {
-                /* initialize the external events
-                -----------------------------------------------------------------*/
-                // var containerEl = document.getElementById('external-events-list');
-                // new FullCalendar.Draggable(containerEl, {
-                //   itemSelector: '.fc-event',
-                //   eventData: function(eventEl) {
-                //     return {
-                //       title: eventEl.innerText.trim()
-                //     }
-                //   }
-                // });
-                //// the individual way to do it
-                // var containerEl = document.getElementById('external-events-list');
-                // var eventEls = Array.prototype.slice.call(
-                //   containerEl.querySelectorAll('.fc-event')
-                // );
-                // eventEls.forEach(function(eventEl) {
-                //   new FullCalendar.Draggable(eventEl, {
-                //     eventData: {
-                //       title: eventEl.innerText.trim(),
-                //     }
-                //   });
-                // });
-                /* initialize the calendar
-                -----------------------------------------------------------------*/
                 var calendarEl = document.getElementById('calendar');
                 var calendar = new FullCalendar.Calendar(calendarEl, {
                     initialDate: "{{ $dataInicial->data }}",
@@ -1271,5 +1262,4 @@
             });
         </script>
     @endif
-
 @endsection

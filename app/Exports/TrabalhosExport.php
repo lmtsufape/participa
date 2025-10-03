@@ -27,6 +27,7 @@ class TrabalhosExport implements WithMultipleSheets
         $sheets = [];
 
         foreach ($this->trabalhosPorArea as $areaNome => $trabalhos) {
+
             $sheets[] = new TrabalhosPorAreaSheetExport($trabalhos, $areaNome);
         }
 

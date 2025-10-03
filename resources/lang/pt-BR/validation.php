@@ -277,7 +277,7 @@ return [
         'arquivoTemplates*' => [
             'file' => 'O campo arquivo template deve ter um arquivo válido.',
             'mimes' => 'O arquivo deve ser do tipo odt, ott, docx, doc, rtf, txt ou pdf.',
-            'max' => 'O arquivo deve ter no máximo 2mb.',
+            'max' => 'O arquivo deve ter no máximo 5mb.',
         ],
         'area*' => [
             'required' => 'O campo área do trabalho é obrigatório.',
