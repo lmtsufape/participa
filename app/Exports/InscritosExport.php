@@ -22,7 +22,7 @@ class InscritosExport implements FromCollection, WithHeadings, WithMapping
     */
     public function collection()
     {
-        return $this->evento->inscricaos()->with(['user.endereco', 'categoria', 'camposPreenchidos.campoFormulario'])->get();
+        return $this->evento->inscricaos();
     }
 
     /**
