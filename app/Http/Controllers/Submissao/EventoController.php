@@ -565,7 +565,7 @@ class EventoController extends Controller
         $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
         $nomeArquivo = Str::slug($evento->nome) . '-inscritos.xlsx';
 
-        return Excel::download(new InscritosExport($evento), $nomeArquivo, \Maatwebsite\Excel\Excel::XLSX);
+        return Excel::download(new InscritosExport($evento->load( 'inscricaos.user.endereco', 'inscricaos.categoria', 'inscricaos.camposPreenchidos')), $nomeArquivo, \Maatwebsite\Excel\Excel::XLSX);
     }
 
 
