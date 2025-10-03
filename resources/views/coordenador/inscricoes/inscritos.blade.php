@@ -31,6 +31,8 @@
                         <a href="{{route('evento.exportarInscritosXLSX', array_merge([$evento], request()->only(['nome', 'email', 'status'])))}}" class="btn btn-success">Exportar .xlsx</a>
                         {{-- <a href="{{route('evento.downloadInscritos', $evento)}}" class="btn btn-primary">Exportar .csv</a>--}}
 {{--                        <a href="{{route('evento.downloadInscritosCertifica', $evento)}}" class="btn btn-primary float-md-right mt-2">Exportar XLSX para o Certifica</a>--}}
+                        <a href="{{ route('processar-planilha.index') }}" class="btn btn-warning">Processar Planilha de Alimentação</a>
+                        <a href="{{ route('inscricao-automatica.index', ['evento_id' => $evento->id]) }}" class="btn btn-info">Inscrição Automática via Planilha</a>
                         <button type="button" class="button-prevent-multiple-submits btn btn-outline-success my-2 ml-1" data-bs-toggle="modal" data-bs-target="#modal-inscrever-participante">
                             Inscrever participante
                         </button>
