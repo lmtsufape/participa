@@ -87,7 +87,7 @@ class EventoController extends Controller
                     'trabalho as avaliados_count' => fn ($query) => $query->whereHas('atribuicoes', fn ($query) => $query->where('parecer', '!=', 'processando')),
                     'trabalho as pendentes_count' => fn ($query) => $query->where('avaliado', 'processando')->where('status', '!=', 'arquivado'),
                     'trabalho as corrigidos_count' => fn ($query) => $query->whereHas('arquivoCorrecao'),
-                    'trabalho as validados_count' => fn ($query) => $query->whereIn('aprovado', [true, false]),
+                    'trabalho as validados_count' => fn ($query) => $query->whereIn('avaliado', ['corrigido', 'corrigido_parcialmente', 'nao_corrigido']),
                     'trabalho as cartas_emitidas_count' => fn ($query) => $query->where('aprovado', true)->whereNotNull('aprovacao_emitida_em'),
                 ]);
             },
@@ -110,7 +110,7 @@ class EventoController extends Controller
             'trabalhos as avaliados_count' => fn ($query) => $query->whereHas('atribuicoes', fn ($query) => $query->where('parecer', '!=', 'processando')),
             'trabalhos as pendentes_count' => fn ($query) => $query->where('avaliado', 'processando')->where('status', '!=', 'arquivado'),
             'trabalhos as corrigidos_count' => fn ($query) => $query->whereHas('arquivoCorrecao'),
-            'trabalhos as validados_count' => fn ($query) => $query->whereIn('aprovado', [true, false]),
+            'trabalhos as validados_count' => fn ($query) => $query->whereIn('avaliado', ['corrigido', 'corrigido_parcialmente', 'nao_corrigido']),
             'trabalhos as cartas_emitidas_count' => fn ($query) => $query->where('aprovado', true)->whereNotNull('aprovacao_emitida_em'),
             'revisors as revisores_count' => fn ($query) => $query->select(DB::raw('count(distinct user_id)')),
             'usuariosDaComissao as comissao_cientifica_count',
