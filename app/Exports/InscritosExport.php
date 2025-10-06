@@ -4,13 +4,14 @@ namespace App\Exports;
 
 use App\Models\Submissao\Evento;
 use Carbon\Carbon;
+use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 
 class InscritosExport implements FromCollection, WithHeadings, WithMapping
 {
-    protected $evento;
+    protected Evento $evento;
 
     public function __construct(Evento $evento)
     {
@@ -18,11 +19,21 @@ class InscritosExport implements FromCollection, WithHeadings, WithMapping
     }
 
     /**
-    * @return \Illuminate\Support\Collection
-    */
-    public function collection()
+     * @return \Illuminate\Support\Collection
+     */
+    public function collection(): Collection
     {
-        return $this->evento->inscricaos();
+        // Aqui montamos de fato a Collection de inscrições,
+        // evitando retornar o Relation (HasMany) em si
+        return $this->evento
+            ->inscricaos()                            // relation
+            ->with([
+                'user.endereco',
+                'categoria',
+                'camposPreenchidos',
+                'evento.camposFormulario',
+            ])
+            ->get();                                  // agora é Collection
     }
 
     /**
@@ -36,25 +47,29 @@ class InscritosExport implements FromCollection, WithHeadings, WithMapping
             'Rua', 'Número', 'CEP', 'Complemento', 'Categoria', 'Valor (R$)',
         ];
 
-        $camposExtras = $this->evento->camposFormulario()->pluck('titulo')->all();
+        // títulos dos campos extras
+        $camposExtras = $this->evento
+            ->camposFormulario()
+            ->pluck('titulo')
+            ->all();
 
         return array_merge($camposBase, $camposExtras);
     }
 
     /**
-     * @param mixed $inscricao
+     * @param  mixed  $inscricao
      * @return array
      */
     public function map($inscricao): array
     {
-        $user = $inscricao->user;
+        $user      = $inscricao->user;
         $categoria = $inscricao->categoria;
-
-
-
-        $valor = $categoria ? number_format($categoria->valor_total, 2, ',', '.') : 'N/A';
-        $documento = $user->cpf ?? ($user->cnpj ?? $user->passaporte);
-
+        $valor     = $categoria
+            ? number_format($categoria->valor_total, 2, ',', '.')
+            : 'N/A';
+        $documento = $user->cpf
+            ?? $user->cnpj
+            ?? $user->passaporte;
 
         $valoresBase = [
             $inscricao->id,
@@ -79,11 +94,15 @@ class InscritosExport implements FromCollection, WithHeadings, WithMapping
             $valor,
         ];
 
+        // valores dos campos extras preenchidos
         $camposExtrasValores = [];
-        $camposFormulario = $this->evento->camposFormulario;
+        $camposFormulario    = $this->evento->camposFormulario;
         foreach ($camposFormulario as $campo) {
-            $campoPreenchido = $inscricao->camposPreenchidos->firstWhere('id', $campo->id);
-            $camposExtrasValores[] = $campoPreenchido ? $campoPreenchido->pivot->valor : '';
+            $preenchido = $inscricao->camposPreenchidos
+                ->firstWhere('id', $campo->id);
+            $camposExtrasValores[] = $preenchido
+                ? $preenchido->pivot->valor
+                : '';
         }
 
         return array_merge($valoresBase, $camposExtrasValores);
