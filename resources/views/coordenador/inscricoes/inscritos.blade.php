@@ -31,9 +31,11 @@
                         <a href="{{route('evento.exportarInscritosXLSX', array_merge([$evento], request()->only(['nome', 'email', 'status'])))}}" class="btn btn-success">Exportar .xlsx</a>
                         {{-- <a href="{{route('evento.downloadInscritos', $evento)}}" class="btn btn-primary">Exportar .csv</a>--}}
 {{--                        <a href="{{route('evento.downloadInscritosCertifica', $evento)}}" class="btn btn-primary float-md-right mt-2">Exportar XLSX para o Certifica</a>--}}
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-processar-planilha">
+                            Processar Planilha
+                        </button>
                         <button type="button" class="button-prevent-multiple-submits btn btn-outline-success my-2 ml-1" data-bs-toggle="modal" data-bs-target="#modal-inscrever-participante">
                             Inscrever participante
-                        </button>
                         </button>
                     </div>
                 </div>
@@ -96,6 +98,7 @@
                                 <th scope="col">Valor</th>
                                 <th>Status</th>
                                 <th>Aprovada</th>
+                                <th>Alimentação</th>
                                 <th>Recibo</th>
                                 <th></th>
                             </th>
@@ -119,6 +122,11 @@
                                         @endif
                                     </td>
                                     <td data-bs-toggle="modal" data-bs-target="#modal-listar-campos-formulario-{{$inscricao->id}}">{{$inscricao->finalizada ? 'Sim' : 'Não'}}</td>
+                                    @if ($inscricao->alimentacao)
+                                    <td data-bs-toggle="modal" data-bs-target="#modal-listar-campos-formulario-{{$inscricao->id}}">Sim</td>
+                                    @else
+                                    <td data-bs-toggle="modal" data-bs-target="#modal-listar-campos-formulario-{{$inscricao->id}}">Não</td>
+                                    @endif
                                     <td data-bs-toggle="modal" data-bs-target="#modal-listar-campos-formulario-{{$inscricao->id}}"><img src="{{asset('img/icons/eye-regular.svg')}}" alt="" style="width: 14px; fill: #000 !important;"></td>
                                     <td>
                                         <div class="d-flex gap-1">
@@ -423,4 +431,53 @@
 </div>
 
 @endforeach
+
+<div class="modal fade" id="modal-processar-planilha" tabindex="-1" role="dialog" aria-labelledby="modalProcessarPlanilhaLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #114048ff; color: white;">
+                <h5 class="modal-title" id="modalProcessarPlanilhaLabel">Escolher Tipo de Processamento</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card h-100">
+                            <div class="card-body text-center">
+                                <div class="mb-3">
+                                    <img src="{{asset('img/icons/file-alt-regular-black.svg')}}" alt="Alimentação" style="width: 48px; height: 48px;">
+                                </div>
+                                <h5 class="card-title">Planilha de Alimentação</h5>
+                                <p class="card-text">Processar planilha para gerenciar alimentação dos participantes do evento.</p>
+                                <a href="{{ route('processar-planilha.index') }}" class="btn btn-warning w-100">
+                                    <img src="{{asset('img/icons/file-alt-regular.svg')}}" alt="Alimentação" style="width: 16px; height: 16px;" class="me-2">
+                                    Processar Alimentação
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card h-100">
+                            <div class="card-body text-center">
+                                <div class="mb-3">
+                                    <img src="{{asset('img/icons/user-plus-black-solid.svg')}}" alt="Usuários" style="width: 48px; height: 48px;">
+                                </div>
+                                <h5 class="card-title">Inscrição Automática</h5>
+                                <p class="card-text">Inscrever participantes automaticamente via planilha com dados de nome, CPF e email.</p>
+                                <a href="{{ route('inscricao-automatica.index', ['evento_id' => $evento->id]) }}" class="btn btn-info w-100">
+                                    <img src="{{asset('img/icons/user-plus-solid.svg')}}" alt="Usuários" style="width: 16px; height: 16px;" class="me-2">
+                                    Inscrição Automática
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @endsection

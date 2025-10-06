@@ -23,6 +23,11 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\Users\User;
 use App\Models\Users\Administrador;
 use Barryvdh\DomPDF\Facade\Pdf;
+use App\Jobs\ProcessarInscricaoAutomaticaJob;
+use Illuminate\Support\Facades\Cache;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class InscricaoController extends Controller
 {
@@ -923,6 +928,200 @@ class InscricaoController extends Controller
         } while (Inscricao::where('codigo_validacao', $codigo)->exists());
 
         return $codigo;
+    }
+
+    public function inscricaoAutomaticaIndex(Request $request)
+    {
+        $eventoId = $request->get('evento_id');
+        $evento = Evento::find($eventoId);
+
+        $user = auth()->user();
+        $temPermissao = false;
+        
+        if ($user->administradors()->exists()) {
+            $temPermissao = true;
+        } else {
+            $temPermissao = $evento->coordenadores()->where('user_id', $user->id)->exists();
+        }
+
+        if (!$temPermissao) {
+            return redirect()->back()
+                ->with('error', 'Você não tem permissão para acessar este evento.');
+        }
+
+        $categorias = CategoriaParticipante::where('evento_id', $evento->id)->get();
+
+        return view('coordenador.inscricoes.inscricao-automatica', compact('evento', 'categorias'));
+    }
+
+    public function inscricaoAutomaticaProcessar(Request $request)
+    {
+        $request->validate([
+            'arquivo' => 'required|file|mimes:xlsx,xls|max:10240', //10mb
+            'evento_id' => 'required|exists:eventos,id',
+            'categoria_id' => 'required|exists:categoria_participantes,id',
+        ]);
+
+        try {
+            $evento = Evento::find($request->evento_id);
+            $categoria = CategoriaParticipante::find($request->categoria_id);
+
+            $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
+
+            $arquivo = $request->file('arquivo');
+            $caminhoArquivo = $arquivo->store('temp');
+            $caminhoCompleto = storage_path('app/' . $caminhoArquivo);
+
+            // ler a planilha
+            $spreadsheet = IOFactory::load($caminhoCompleto);
+            $worksheet = $spreadsheet->getActiveSheet();
+            $dados = $worksheet->toArray();
+
+            $cabecalho = array_shift($dados);
+
+            $dados = array_filter($dados, function($linha) {
+                return !empty($linha[0]) && (!empty($linha[1]) || !empty($linha[2]));
+            });
+
+            $jobId = uniqid('inscricao_', true);
+
+            ProcessarInscricaoAutomaticaJob::dispatch($dados, $evento->id, $categoria->id, $jobId);
+            
+            \Log::info("Job despachado com ID: {$jobId}, Total de dados: " . count($dados));
+
+            Storage::delete($caminhoArquivo);
+
+            return redirect()->route('inscricao-automatica.progresso', ['job_id' => $jobId])
+                ->with('success', 'Processamento iniciado! Acompanhe o progresso abaixo.');
+
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->with('error', 'Erro ao processar arquivo: ' . $e->getMessage());
+        }
+    }
+
+    private function gerarPlanilhaResultado($usuariosNaoCadastrados, $usuariosJaInscritos, $usuariosInscritosComSucesso, $erros)
+    {
+        $spreadsheet = new Spreadsheet();
+        $worksheet = $spreadsheet->getActiveSheet();
+
+        $worksheet->setCellValue('A1', 'Nome');
+        $worksheet->setCellValue('B1', 'CPF');
+        $worksheet->setCellValue('C1', 'Email');
+        $worksheet->setCellValue('D1', 'Status');
+
+        $linha = 2;
+
+        foreach ($usuariosNaoCadastrados as $usuario) {
+            $worksheet->setCellValue('A' . $linha, $usuario['nome']);
+            $worksheet->setCellValue('B' . $linha, $usuario['cpf']);
+            $worksheet->setCellValue('C' . $linha, $usuario['email']);
+            $worksheet->setCellValue('D' . $linha, $usuario['status']);
+            $linha++;
+        }
+
+        foreach ($usuariosJaInscritos as $usuario) {
+            $worksheet->setCellValue('A' . $linha, $usuario['nome']);
+            $worksheet->setCellValue('B' . $linha, $usuario['cpf']);
+            $worksheet->setCellValue('C' . $linha, $usuario['email']);
+            $worksheet->setCellValue('D' . $linha, $usuario['status']);
+            $linha++;
+        }
+
+        foreach ($usuariosInscritosComSucesso as $usuario) {
+            $worksheet->setCellValue('A' . $linha, $usuario['nome']);
+            $worksheet->setCellValue('B' . $linha, $usuario['cpf']);
+            $worksheet->setCellValue('C' . $linha, $usuario['email']);
+            $worksheet->setCellValue('D' . $linha, $usuario['status']);
+            $linha++;
+        }
+
+        foreach ($erros as $erro) {
+            $worksheet->setCellValue('A' . $linha, $erro['nome']);
+            $worksheet->setCellValue('B' . $linha, $erro['cpf']);
+            $worksheet->setCellValue('C' . $linha, $erro['email']);
+            $worksheet->setCellValue('D' . $linha, $erro['status']);
+            $linha++;
+        }
+
+        // Salvar arquivo temporário
+        $caminhoArquivo = storage_path('app/temp/resultado_inscricao_' . time() . '.xlsx');
+        $writer = new Xlsx($spreadsheet);
+        $writer->save($caminhoArquivo);
+
+        return $caminhoArquivo;
+    }
+
+    public function inscricaoAutomaticaProgresso(Request $request)
+    {
+        $jobId = $request->get('job_id');
+        
+        if (!$jobId) {
+            return redirect()->route('inscricao-automatica.index')
+                ->with('error', 'ID do processamento não encontrado.');
+        }
+
+        return view('coordenador.inscricoes.inscricao-automatica-progresso', compact('jobId'));
+    }
+
+    public function inscricaoAutomaticaStatusProgresso(Request $request)
+    {
+        $jobId = $request->get('job_id');
+        
+        $progresso = Cache::get("inscricao_progress_{$jobId}");
+        $completado = Cache::get("inscricao_completed_{$jobId}");
+        
+        \Log::info("Status request para job {$jobId}: progresso=" . ($progresso ? 'encontrado' : 'não encontrado') . ", completado=" . ($completado ? 'sim' : 'não'));
+
+        if ($completado) {
+            return response()->json([
+                'completado' => true,
+                'progresso' => 100,
+                'dados' => $progresso
+            ]);
+        }
+
+        if ($progresso) {
+            return response()->json([
+                'completado' => false,
+                'progresso' => $progresso['progresso'] ?? 0,
+                'processados' => $progresso['processados'] ?? 0,
+                'total' => $progresso['total'] ?? 0
+            ]);
+        }
+
+        return response()->json([
+            'completado' => false,
+            'progresso' => 0,
+            'processados' => 0,
+            'total' => 0
+        ]);
+    }
+
+    public function inscricaoAutomaticaDownloadResultado(Request $request)
+    {
+        $jobId = $request->get('job_id');
+        
+        $dados = Cache::get("inscricao_progress_{$jobId}");
+        
+        if (!$dados) {
+            return redirect()->route('inscricao-automatica.index')
+                ->with('error', 'Dados do processamento não encontrados.');
+        }
+
+        $planilhaResultado = $this->gerarPlanilhaResultado(
+            $dados['usuariosNaoCadastrados'] ?? [],
+            $dados['usuariosJaInscritos'] ?? [],
+            $dados['usuariosInscritosComSucesso'] ?? [],
+            $dados['erros'] ?? []
+        );
+
+        // Limpar cache
+        Cache::forget("inscricao_progress_{$jobId}");
+        Cache::forget("inscricao_completed_{$jobId}");
+
+        return response()->download($planilhaResultado, 'resultado_inscricao_automatica.xlsx')
+            ->deleteFileAfterSend(true);
     }
 
 }
