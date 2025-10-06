@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request;
+use App\Models\PerfilIdentitario;
 
 class LoginController extends Controller
 {
@@ -44,5 +46,14 @@ class LoginController extends Controller
             return route('perfil.update');
         }
         return route('index');
+    }
+
+    protected function authenticated(Request $request, $user)
+    {
+        $perfil = PerfilIdentitario::where('userId', $user->id)->first();
+
+        if (!$perfil) {
+            session()->flash('missing_identity_profile', true);
+        }
     }
 }

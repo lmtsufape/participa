@@ -110,6 +110,70 @@
 @endsection
 
 @section('content')
+    {{-- Modal exibido quando o usuário finaliza o cadastro informando que ele ainda precisa realizar a inscrição no evento  --}}
+    @if(session('verified'))
+        <div class="modal fade" id="verificationModal" tabindex="-1" role="dialog" aria-labelledby="#label" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header" style="background-color: #114048ff; color: white;">
+                        <h5 class="modal-title" id="#label">{{ __("Parabéns, ") }} {{ Auth::user()->name }}!</h5>
+
+                        {{-- <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
+                            <span aria-hidden="true">&times;</span>
+                        </button> --}}
+                    </div>
+
+                    <div class="modal-body">
+                        <p class="text-justify">{!! __("Sua conta foi criada com sucesso!<br><br>Agora você pode voltar a página do evento do seu interesse e clicar no botão \"Inscrever-se\" para realizar sua inscrição.") !!}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
+
+    @if(session('verified'))
+        <script>
+            $(document).ready(function() {
+                $('#verificationModal').modal('show');
+            });
+        </script>
+    @endif
+    
+    {{-- Modal exibido quando o usuário não possui os dados de perfil identitário cadastrado, informa que ele precisa completar o cadastro  --}}
+    @if(session('missing_identity_profile'))
+        <div class="modal fade" id="verificationModal" tabindex="-1" role="dialog" aria-labelledby="#label" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header" style="background-color: #114048ff; color: white;">
+                        <h5 class="modal-title" id="#label">{{ __("Olá, ") }} {{ Auth::user()->name }}!</h5>
+
+                        {{-- <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
+                            <span aria-hidden="true">&times;</span>
+                        </button> --}}
+                    </div>
+
+                    <div class="modal-body">
+                        <p class="text-justify">
+                            {!! __(
+                                'Identificamos que seu <strong>Perfil Social Identitário</strong> ainda não foi preenchido.<br><br>
+                                Por favor, finalize seu cadastro clicando <a href="' . route('perfil') . '" style="color: #114048; font-weight: bold;">aqui</a>.'
+                            ) !!}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
+
+    @if(session('missing_identity_profile'))
+        <script>
+            $(document).ready(function() {
+                $('#verificationModal').modal('show');
+            });
+        </script>
+    @endif
+
     @if($eventos_destaques->isNotEmpty())
         <div class="container d-flex flex-column pb-5">
             <div class="d-flex align-items-center mb-3 position-relative">
