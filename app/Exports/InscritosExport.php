@@ -31,6 +31,7 @@ class InscritosExport implements FromCollection, WithHeadings, WithMapping
                 'user.endereco',
                 'categoria',
                 'camposPreenchidos',
+                'evento.camposFormulario',
             ])
             ->get();                                  // agora é Collection
     }
