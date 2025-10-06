@@ -19,6 +19,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use App\Models\PerfilIdentitario;
 
 class UserController extends Controller
 {
@@ -40,17 +41,19 @@ class UserController extends Controller
         }
         $areas = Area::orderBy('nome')->get();
 
+        $perfilIdentitario = PerfilIdentitario::query()
+            ->where('userId', $user->id)
+            ->first();
+
         if ($user->usuarioTemp) {
             app()->setLocale('pt-BR');
         }
 
-        return view('user.perfilUser', compact('user', 'end', 'areas', 'pais'));
+        return view('user.perfilUser', compact('user', 'end', 'areas', 'pais', 'perfilIdentitario'));
     }
 
     public function editarPerfil(Request $request)
     {
-
-
         if ($request->passaporte != null && $request->cpf != null ||
             $request->passaporte != null && $request->cnpj != null ) {
 
@@ -63,9 +66,6 @@ class UserController extends Controller
         }
 
         $user = User::find($request->id);
-
-        $temp = $user->usuarioTemp;
-
 
         $validations = [
             'name' => 'required|string|max:255',
@@ -154,12 +154,22 @@ class UserController extends Controller
             $end->update();
         }
 
+        $perfilIdentitario = PerfilIdentitario::query()
+                ->where('userId', $user->id)
+                ->first();
 
-        if($temp){
-            return redirect()->route('index')->with(['message' => 'Perfil atualizado com sucesso!']);
+        if ($perfilIdentitario == null) {
+            $perfilIdentitario = new PerfilIdentitario();
+            $perfilIdentitario->userId = $user->id;
+            $perfilIdentitario->setAttributes($data);
+            $perfilIdentitario->save();
+        }
+        else{
+            $perfilIdentitario->editAttributes($data);
+            $perfilIdentitario->update();
         }
 
-        return back()->with(['message' => 'Atualizado com sucesso!']);
+        return back()->with(['sucesso' => 'Cadastro atualizado!']);
     }
 
     public function meusCertificados()

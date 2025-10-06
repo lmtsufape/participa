@@ -68,21 +68,21 @@ class PerfilIdentitario extends Model
         $this->nomeSocial = $data['nomeSocial'] ?? $this->nomeSocial;
         $this->dataNascimento = $data['dataNascimento'] ?? $this->dataNascimento;
         $this->genero = $data['genero'] ?? $this->genero;
-        $this->outroGenero = $data['outroGenero'] ?? $this->outroGenero;
-        $this->raca = $data['raca'] ?? $this->raca;
-        $this->outraRaca = $data['outraRaca'] ?? $this->outraRaca;
+        $this->outroGenero = $data['outroGenero'];
+        $this->raca = !empty($data['raca']) ? $data['raca'] : [];
+        $this->outraRaca = $data['outraRaca'];
         $this->comunidadeTradicional = $data['comunidadeTradicional'] ?? $this->comunidadeTradicional;
         $this->nomeComunidadeTradicional = $data['nomeComunidadeTradicional'] ?? $this->nomeComunidadeTradicional;
         $this->lgbtqia = $data['lgbtqia'] ?? $this->lgbtqia;
         $this->deficienciaIdoso = $data['deficienciaIdoso'] ?? $this->deficienciaIdoso;
         $this->necessidadesEspeciais = !empty($data['necessidadesEspeciais']) ? $data['necessidadesEspeciais'] : $this->necessidadesEspeciais;
-        $this->outraNecessidadeEspecial = $data['outraNecessidadeEspecial'] ?? $this->outraNecessidadeEspecial;
+        $this->outraNecessidadeEspecial = $data['outraNecessidadeEspecial'];
         $this->associadoCPFreire = $data['associadoCPFreire'] ?? $this->associadoCPFreire;
         $this->receberInfoCPFreire = $data['receberInfoCPFreire'] ?? $this->receberInfoCPFreire;
         $this->participacaoOrganizacao = $data['participacaoOrganizacao'] ?? $this->participacaoOrganizacao;
-        $this->nomeOrganizacao = $data['nomeOrganizacao'] ?? $this->nomeOrganizacao;
+        $this->nomeOrganizacao = $data['nomeOrganizacao'];
         $this->estudoPedagogiaFreiriana = $data['estudoPedagogiaFreiriana'] ?? $this->estudoPedagogiaFreiriana;
-        $this->pedagogiasFreirianas = $data['pedagogiasFreirianas'] ?? $this->pedagogiasFreirianas;
+        $this->pedagogiasFreirianas = $data['pedagogiasFreirianas'];
         $this->participarEstudoPedagogiaFreiriana = $data['participarEstudoPedagogiaFreiriana'] ?? $this->participarEstudoPedagogiaFreiriana;
     }
 }

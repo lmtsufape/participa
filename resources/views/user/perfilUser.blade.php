@@ -37,13 +37,13 @@
         </style>
 
         @if(session('sucesso'))
-            <div class="alert alert-success">
+            <div class="alert alert-success text-center">
                 {{ session('sucesso') }}
             </div>
         @endif
 
         @if(session('erro'))
-            <div class="alert alert-danger">
+            <div class="alert alert-danger text-center">
                 {{ session('erro') }}
             </div>
         @endif
@@ -349,7 +349,7 @@
 
                                 <div class="col-md-6">
                                     <label for="numero" class="col-form-label "><strong>{{ __('Número') }}@if($pais != 'outro') @endif</strong></label>
-                                    <input @if(old('numero') != null) value="{{old('numero')}}" @else value="{{$end?->numero}}" @endif id="numero" type="number" class="form-control @error('numero') is-invalid @enderror" name="numero" autocomplete="numero" maxlength="10">
+                                    <input @if(old('numero') != null) value="{{old('numero')}}" @else value="{{$end?->numero}}" @endif id="numero" type="text" class="form-control @error('numero') is-invalid @enderror" name="numero" autocomplete="numero" maxlength="10">
 
                                     @error('numero')
                                     <span class="invalid-feedback" role="alert">
@@ -462,6 +462,282 @@
                             </div>
                         </div>
 
+                        <div class="container card my-3" style="font-weight: 500;">
+                            <div class="row mt-3">
+                                <div class="col-md-12">
+                                    <span class="h5" style="color: #034652; font-weight: bold;">Perfil social e identitário</span>
+                                </div>
+                            </div>
+
+                            <hr style="border-top: 1px solid #034652">
+
+
+                            <div class="row">
+                                {{-- Gênero --}}
+                                <div class="col-md-6">
+                                    <div>
+                                        <label class="col-form-label"><strong>Gênero</strong></label>
+                                        @php
+                                            $generos = [
+                                                'feminino' => 'Feminino',
+                                                'masculino' => 'Masculino',
+                                                'agênero' => 'Agênero',
+                                                'nao_binario' => 'Não-Binário',
+                                                'nao_conforme_ao_genero' => 'Não-conforme ao Gênero',
+                                                'outro' => 'Outro',
+                                                'prefiro_nao_responder' => 'Prefiro não responder',
+                                            ];
+                                        @endphp
+
+                                        @foreach($generos as $key => $label)
+                                            <div class="form-check">
+                                                <input class="form-check-input"
+                                                       type="radio"
+                                                       name="genero"
+                                                       id="genero_{{ $key }}"
+                                                       value="{{ $key }}"
+                                                       @if (old('genero', $perfilIdentitario?->genero) == $key) checked @endif required>
+                                                <label class="form-check-label" for="genero_{{ $key }}">{{ $label }}</label>
+                                            </div>
+                                        @endforeach
+
+                                        <input type="text" name="outroGenero" id="outroGenero" class="form-control mt-2" placeholder="Se marcou 'Outro', especifique" style="max-width: 300px;"
+                                               value="{{ old('outroGenero', $perfilIdentitario?->outroGenero) }}">
+                                    </div>
+                                </div>
+
+                                {{-- Raça (auto-declaração) --}}
+                                <div class="col-md-6">
+                                    <div class="form-group mt-3">
+                                    <label class="col-form-label"><strong>Raça (auto-declaração)</strong></label>
+                                    <div>
+                                        @php
+                                            $racas = [
+                                                'negra' => 'Negra',
+                                                'parda' => 'Parda',
+                                                'indigena' => 'Indígena',
+                                                'branca' => 'Branca',
+                                                'outra_raca' => 'Outra',
+                                                'prefiro_nao_responder_raca' => 'Prefiro não responder',
+                                            ];
+                                        @endphp
+
+                                        @foreach($racas as $key => $label)
+                                            <div class="form-check">
+                                                <input class="form-check-input"
+                                                        type="checkbox"
+                                                        name="raca[]"
+                                                        id="raca_{{ $key }}"
+                                                        value="{{ $key }}"
+                                                        @if(in_array($key, old('racas', $perfilIdentitario?->raca ?? []))) checked @endif>
+                                                <label class="form-check-label" for="raca_{{ $key }}">{{ $label }}</label>
+                                            </div>
+                                        @endforeach
+
+                                        <input type="text" name="outraRaca" id="outraRaca" class="form-control mt-2" placeholder="Se marcou 'Outra', especifique" style="max-width: 300px;"
+                                            value="{{ old('outraRaca', $perfilIdentitario?->outraRaca) }}">
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                {{-- Comunidade ou povo tradicional --}}
+                                <div class="col-md-6">
+                                    <div class="form-group mt-3">
+                                        <label class="col-form-label"><strong>Você pertence ou atua em alguma comunidade ou povo tradicional?</strong></label>
+                                        <div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="comunidadeTradicional" id="comunidade_sim" value="true"
+                                                       @if ((old('comunidadeTradicional', $perfilIdentitario?->comunidadeTradicional) === 'true') || ($perfilIdentitario?->comunidadeTradicional === true)) checked @endif required>
+                                                <label class="form-check-label" for="comunidade_sim">Sim</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="comunidadeTradicional" id="comunidade_nao" value="false"
+                                                       @if ((old('comunidadeTradicional', $perfilIdentitario?->comunidadeTradicional) === 'false') || ($perfilIdentitario?->comunidadeTradicional === false)) checked @endif>
+                                                <label class="form-check-label" for="comunidade_nao">Não</label>
+                                            </div>
+                                            <input type="text" name="nomeComunidadeTradicional" id="nomeComunidadeTradicional" class="form-control mt-2" placeholder="Se sim, qual?" style="max-width: 400px;"
+                                                   value="{{ old('nomeComunidadeTradicional', $perfilIdentitario?->nomeComunidadeTradicional) }}">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {{-- Pessoa LGBTQIA+ --}}
+                                <div class="col-md-6">
+                                    <div class="form-group mt-3">
+                                        <label class="col-form-label"><strong>Você se identifica como Pessoa LGBTQIA+?</strong></label>
+                                        <div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="lgbtqia" id="lgbtqia_sim" value="true"
+                                                       @if ((old('lgbtqia', $perfilIdentitario?->lgbtqia) === 'true') || ($perfilIdentitario?->lgbtqia === true)) checked @endif required>
+                                                <label class="form-check-label" for="lgbtqia_sim">Sim</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="lgbtqia" id="lgbtqia_nao" value="false"
+                                                       @if ((old('lgbtqia', $perfilIdentitario?->lgbtqia) === 'false') || ($perfilIdentitario?->lgbtqia === false)) checked @endif>
+                                                <label class="form-check-label" for="lgbtqia_nao">Não</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                {{-- Informações sobre necessidades especiais --}}
+                                <div class="col-md-6">
+                                    <div class="form-group mt-3">
+                                        <label class="col-form-label"><strong>Informações sobre necessidades especiais</strong></label>
+                                        <div>
+                                            @php
+                                                $necessidades = [
+                                                    'libras' => 'Libras',
+                                                    'audiodescricao' => 'Audiodescrição',
+                                                    'espaco_acessivel' => 'Espaço acessível',
+                                                    'acompanhante' => 'Acompanhante',
+                                                    'outra_necessidade' => 'Outra',
+                                                    'nenhuma' => 'Nenhuma',
+                                                ];
+                                            @endphp
+                                            @foreach($necessidades as $key => $label)
+                                                <div class="form-check">
+                                                    <input class="form-check-input"
+                                                           type="checkbox"
+                                                           name="necessidadesEspeciais[]"
+                                                           id="necessidade_{{ $key }}"
+                                                           value="{{ $key }}"
+                                                           @if(in_array($key, old('necessidadesEspeciais', $perfilIdentitario?->necessidadesEspeciais ?? []))) checked @endif>
+                                                    <label class="form-check-label" for="necessidade_{{ $key }}">{{ $label }}</label>
+                                                </div>
+                                            @endforeach
+
+                                            <input type="text" name="outraNecessidadeEspecial" id="outraNecessidadeEspecial" class="form-control mt-2" placeholder="Se marcou 'Outra', especifique" style="max-width: 300px;"
+                                                   value="{{ old('outraNecessidadeEspecial', $perfilIdentitario?->outraNecessidadeEspecial) }}"
+                                                   @if(!in_array('outra_necessidade', old('necessidadesEspeciais', $perfilIdentitario?->necessidadesEspeciais ?? []))) style="display:none;" @endif>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {{-- Pessoa com deficiência ou idosos --}}
+                                <div class="col-md-6">
+                                    <div class="form-group mt-3">
+                                        <label class="col-form-label"><strong>Você é uma pessoa idosa ou com deficiência?</strong></label>
+                                        <div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="deficienciaIdoso" id="deficiencia_sim" value="true"
+                                                       @if ((old('deficienciaIdoso', $perfilIdentitario?->deficienciaIdoso) === 'true') || ($perfilIdentitario?->deficienciaIdoso === true)) checked @endif required>
+                                                <label class="form-check-label" for="deficiencia_sim">Sim</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="deficienciaIdoso" id="deficiencia_nao" value="false"
+                                                       @if ((old('deficienciaIdoso', $perfilIdentitario?->deficienciaIdoso) === 'false') || ($perfilIdentitario?->deficienciaIdoso === false)) checked @endif>
+                                                <label class="form-check-label" for="deficiencia_nao">Não</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                {{-- Associado da CPFreire --}}
+                                <div class="col-md-6">
+                                    <div class="form-group mt-3">
+                                        <label class="col-form-label"><strong>Você é uma pessoa associada ao Centro Paulo Freire-Estudos e Pesquisas?</strong></label>
+                                        <div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="associadoCPFreire" id="associadoCPFreire_sim" value="true"
+                                                @if ((old('associadoCPFreire', $perfilIdentitario?->associadoCPFreire) === 'true') || ($perfilIdentitario?->associadoCPFreire === true)) checked @endif required>
+                                                <label class="form-check-label" for="associadoCPFreire_sim">Sim</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="associadoCPFreire" id="associadoCPFreire_nao" value="false"
+                                                @if ((old('associadoCPFreire', $perfilIdentitario?->associadoCPFreire) === 'false') || ($perfilIdentitario?->associadoCPFreire === false)) checked @endif>
+                                                <label class="form-check-label" for="associadoCPFreire_nao">Não</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {{-- Gostaria de receber mais informações sobre o CPFreire --}}
+                                <div class="col-md-6">
+                                    <div class="form-group mt-3">
+                                        <label class="col-form-label "><strong>Se não, gostaria de receber mais informações sobre a associação do CPFreire?</strong></label>
+                                        <div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="receberInfoCPFreire" id="receberInfoCPFreire_sim" value="true"
+                                                @if ((old('receberInfoCPFreire', $perfilIdentitario?->receberInfoCPFreire) === 'true') || ($perfilIdentitario?->receberInfoCPFreire === true)) checked @endif required>
+                                                <label class="form-check-label" for="receberInfoCPFreire_sim">Sim</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="receberInfoCPFreire" id="receberInfoCPFreire_nao" value="false"
+                                                @if ((old('receberInfoCPFreire', $perfilIdentitario?->receberInfoCPFreire) === 'false') || ($perfilIdentitario?->receberInfoCPFreire === false)) checked @endif>
+                                                <label class="form-check-label" for="receberInfoCPFreire_nao">Não</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group mt-3">
+                                        <label class="col-form-label"><strong>Você já participou de algum estudo sobre a Pedagogia Freireana?</strong></label>
+                                        <div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="estudoPedagogiaFreiriana" id="estudoPedagogiaFreiriana_sim" value="true"
+                                                @if ((old('estudoPedagogiaFreiriana', $perfilIdentitario?->estudoPedagogiaFreiriana) === 'true') || ($perfilIdentitario?->estudoPedagogiaFreiriana === true)) checked @endif required>
+                                                <label class="form-check-label" for="estudoPedagogiaFreiriana_sim">Sim</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="estudoPedagogiaFreiriana" id="estudoPedagogiaFreiriana_nao" value="false"
+                                                @if ((old('estudoPedagogiaFreiriana', $perfilIdentitario?->estudoPedagogiaFreiriana) === 'false') || ($perfilIdentitario?->estudoPedagogiaFreiriana === false)) checked @endif>
+                                                <label class="form-check-label" for="estudoPedagogiaFreiriana_nao">Não</label>
+                                            </div>
+                                            <input type="text" name="pedagogiasFreirianas" id="pedagogiasFreirianas" class="form-control mt-2" value="{{ $perfilIdentitario?->pedagogiasFreirianas }}" placeholder="Se sim, qual?" style="max-width: 400px;">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group mt-3">
+                                        <label class="col-form-label"><strong>Se não, gostaria de participar?</strong></label>
+                                        <div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="participarEstudoPedagogiaFreiriana" id="participarEstudoPedagogiaFreiriana_sim" value="true"
+                                                @if ((old('participarEstudoPedagogiaFreiriana', $perfilIdentitario?->participarEstudoPedagogiaFreiriana) === 'true') || ($perfilIdentitario?->participarEstudoPedagogiaFreiriana === true)) checked @endif required>
+                                                <label class="form-check-label" for="participarEstudoPedagogiaFreiriana_sim">Sim</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="participarEstudoPedagogiaFreiriana" id="participarEstudoPedagogiaFreiriana_nao" value="false"
+                                                @if ((old('participarEstudoPedagogiaFreiriana', $perfilIdentitario?->participacaoOrganizacao) === 'false') || ($perfilIdentitario?->participarEstudoPedagogiaFreiriana === false)) checked @endif>
+                                                <label class="form-check-label" for="participarEstudoPedagogiaFreiriana_nao">Não</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group mt-3">
+                                        <label class="col-form-label"><strong>Você participa de alguma organização, rede ou movimento?</strong></label>
+                                        <div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="participacaoOrganizacao" id="participa_sim" value="true"
+                                                @if ((old('participacaoOrganizacao', $perfilIdentitario?->participacaoOrganizacao) === 'true') || ($perfilIdentitario?->participacaoOrganizacao === true)) checked @endif required>
+                                                <label class="form-check-label" for="participa_sim">Sim</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="participacaoOrganizacao" id="participa_nao" value="false"
+                                                @if ((old('participacaoOrganizacao', $perfilIdentitario?->participacaoOrganizacao) === 'false') || ($perfilIdentitario?->participacaoOrganizacao === false)) checked @endif>
+                                                <label class="form-check-label" for="participa_nao">Não</label>
+                                            </div>
+                                            <input type="text" name="nomeOrganizacao" id="nomeOrganizacao" class="form-control mt-2" value="{{ $perfilIdentitario?->nomeOrganizacao }}" placeholder="Se sim, qual?" style="max-width: 400px;">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
 
                             <div class="row form-group my-3">
                                 <div class="col-md-10"></div>
@@ -471,6 +747,7 @@
                                     </button>
                                 </div>
                             </div>
+                        </div>
                     </form>
     </div>
 

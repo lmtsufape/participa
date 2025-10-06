@@ -205,4 +205,10 @@ class RegisterController extends Controller
     {
         return route('index');
     }
+
+    protected function registered($request, $user)
+    {
+        session()->flash('verified', true);
+        return redirect()->route('index');
+    }
 }
