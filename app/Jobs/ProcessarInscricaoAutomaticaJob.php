@@ -47,34 +47,48 @@ class ProcessarInscricaoAutomaticaJob implements ShouldQueue
         $total = count($this->dados);
         $processados = 0;
 
-        // Processar em lotes de 10
+        //lotes de 10
         $lotes = array_chunk($this->dados, 10);
         
         foreach ($lotes as $loteIndex => $lote) {
             foreach ($lote as $index => $linha) {
-                if (empty($linha[0]) || empty($linha[1])) {
+                if (empty($linha[0])) {
                     continue;
                 }
 
                 $nome = $linha[0];
-                $cpf = $this->normalizarCpf($linha[1]);
+                $cpf = !empty($linha[1]) ? $this->normalizarCpf($linha[1]) : null;
                 $email = $linha[2] ?? '';
 
                 try {
-                    // Verificar se o usuário existe pelo CPF
-                    $usuario = User::where('cpf', $cpf)->first();
+                    $usuario = null;
+                    if ($cpf) {
+                        $usuario = User::where('cpf', $cpf)->first();
+                    }
+                    
+                    if (!$usuario && $email) {
+                        $usuario = User::where('email', $email)->first();
+                    }
 
                     if (!$usuario) {
+                        $status = 'Usuário não cadastrado';
+                        if (!$cpf && !$email) {
+                            $status = 'CPF e email não informados';
+                        } elseif (!$cpf) {
+                            $status = 'CPF não informado - Email não encontrado no sistema';
+                        } elseif (!$email) {
+                            $status = 'Email não informado - CPF não encontrado no sistema';
+                        }
+                        
                         $usuariosNaoCadastrados[] = [
                             'nome' => $nome,
-                            'cpf' => $cpf,
-                            'email' => $email,
-                            'status' => 'Usuário não cadastrado'
+                            'cpf' => $cpf ?? 'Não informado',
+                            'email' => $email ?: 'Não informado',
+                            'status' => $status
                         ];
                         continue;
                     }
 
-                    // Verificar se já está inscrito
                     $inscricaoExistente = Inscricao::where('user_id', $usuario->id)
                         ->where('evento_id', $evento->id)
                         ->where('finalizada', true)
@@ -90,10 +104,9 @@ class ProcessarInscricaoAutomaticaJob implements ShouldQueue
                         continue;
                     }
 
-                    // Cancelar pré-inscrição se existir
+                    // Cancela a pré-inscrição se existir
                     $this->cancelarPreInscricao($usuario->id, $evento->id);
 
-                    // Criar nova inscrição
                     $inscricao = new Inscricao();
                     $inscricao->user_id = $usuario->id;
                     $inscricao->evento_id = $evento->id;
@@ -101,7 +114,6 @@ class ProcessarInscricaoAutomaticaJob implements ShouldQueue
                     $inscricao->finalizada = true;
                     $inscricao->save();
 
-                    // Enviar notificação (apenas para os primeiros 10 do lote)
                     if ($index < 10) {
                         try {
                             $usuario->notify(new InscricaoEvento($evento));
@@ -129,7 +141,6 @@ class ProcessarInscricaoAutomaticaJob implements ShouldQueue
                 $processados++;
             }
 
-            // Atualizar progresso
             $progresso = ($processados / $total) * 100;
             Cache::put("inscricao_progress_{$this->jobId}", [
                 'progresso' => $progresso,
@@ -141,13 +152,11 @@ class ProcessarInscricaoAutomaticaJob implements ShouldQueue
                 'erros' => $erros
             ], 3600); // Cache por 1 hora
 
-            // Aguardar 15 segundos entre lotes (exceto no último lote)
             if ($loteIndex < count($lotes) - 1) {
                 sleep(15);
             }
         }
 
-        // Marcar como concluído
         Cache::put("inscricao_completed_{$this->jobId}", true, 3600);
     }
 

@@ -31,7 +31,6 @@
                                 • Coluna A: Nome<br>
                                 • Coluna B: CPF<br>
                                 • Coluna C: Email<br>
-                                • Coluna D: (ignorada)
                             </div>
                         </div>
 
@@ -56,7 +55,7 @@
                         </div>
 
                         <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-upload"></i> Processar Planilha
+                            </i> Processar Planilha
                         </button>
                     </form>
                 </div>

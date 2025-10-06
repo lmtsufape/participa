@@ -10,11 +10,11 @@ use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
-class ProcessarPlanilhaController extends Controller
+class PlanilhaAlimentacaoController extends Controller
 {
     public function index()
     {
-        return view('coordenador.processar-planilha');
+        return view('coordenador.inscricoes.planilha-alimentacao');
     }
 
     public function processar(Request $request)
@@ -28,12 +28,10 @@ class ProcessarPlanilhaController extends Controller
             $caminhoArquivo = $arquivo->store('temp');
             $caminhoCompleto = storage_path('app/' . $caminhoArquivo);
 
-            // Ler a planilha
             $spreadsheet = IOFactory::load($caminhoCompleto);
             $worksheet = $spreadsheet->getActiveSheet();
             $dados = $worksheet->toArray();
 
-            // Remover cabeçalho
             $cabecalho = array_shift($dados);
 
             $usuariosNaoCadastrados = [];
@@ -41,34 +39,47 @@ class ProcessarPlanilhaController extends Controller
             $usuariosComInscricaoPendente = [];
 
             foreach ($dados as $linha) {
-                if (empty($linha[0]) || empty($linha[1])) {
-                    continue; // Pular linhas vazias
+                if (empty($linha[0])) {
+                    continue; 
                 }
 
                 $nome = $linha[0];
-                $cpf = $this->normalizarCpf($linha[1]);
+                $cpf = !empty($linha[1]) ? $this->normalizarCpf($linha[1]) : null;
                 $email = $linha[2] ?? '';
 
-                // Verificar se o usuário existe pelo CPF
-                $usuario = User::where('cpf', $cpf)->first();
+                $usuario = null;
+                if ($cpf) {
+                    $usuario = User::where('cpf', $cpf)->first();
+                }
+                
+                if (!$usuario && $email) {
+                    $usuario = User::where('email', $email)->first();
+                }
 
                 if (!$usuario) {
+                    $status = 'Usuário não cadastrado';
+                    if (!$cpf && !$email) {
+                        $status = 'CPF e email não informados';
+                    } elseif (!$cpf) {
+                        $status = 'CPF não informado - Email não encontrado no sistema';
+                    } elseif (!$email) {
+                        $status = 'Email não informado - CPF não encontrado no sistema';
+                    }
+                    
                     $usuariosNaoCadastrados[] = [
                         'nome' => $nome,
-                        'cpf' => $cpf,
-                        'email' => $email,
-                        'status' => 'Usuário não cadastrado'
+                        'cpf' => $cpf ?? 'Não informado',
+                        'email' => $email ?: 'Não informado',
+                        'status' => $status
                     ];
                     continue;
                 }
 
-                // Verificar status da inscrição
                 $inscricao = Inscricao::where('user_id', $usuario->id)
                     ->where('finalizada', true)
                     ->first();
 
                 if ($inscricao) {
-                    // Atualizar campo alimentação para true
                     $inscricao->update(['alimentacao' => true]);
 
                     $usuariosComAlimentacaoOk[] = [
@@ -87,14 +98,12 @@ class ProcessarPlanilhaController extends Controller
                 }
             }
 
-            // Gerar planilha de resultado
             $planilhaResultado = $this->gerarPlanilhaResultado(
                 $usuariosNaoCadastrados,
                 $usuariosComAlimentacaoOk,
                 $usuariosComInscricaoPendente
             );
 
-            // Limpar arquivo temporário
             Storage::delete($caminhoArquivo);
 
             return response()->download($planilhaResultado, 'resultado_processamento.xlsx')
@@ -108,17 +117,13 @@ class ProcessarPlanilhaController extends Controller
 
     private function normalizarCpf($cpf)
     {
-        // Remover todos os caracteres não numéricos
         $cpf = preg_replace('/[^0-9]/', '', $cpf);
-
-        // Se tiver 11 dígitos, formatar com pontuação
         if (strlen($cpf) === 11) {
             return substr($cpf, 0, 3) . '.' . 
                    substr($cpf, 3, 3) . '.' . 
                    substr($cpf, 6, 3) . '-' . 
                    substr($cpf, 9, 2);
         }
-
         return $cpf;
     }
 
@@ -127,7 +132,6 @@ class ProcessarPlanilhaController extends Controller
         $spreadsheet = new Spreadsheet();
         $worksheet = $spreadsheet->getActiveSheet();
 
-        // Cabeçalho
         $worksheet->setCellValue('A1', 'Nome');
         $worksheet->setCellValue('B1', 'CPF');
         $worksheet->setCellValue('C1', 'Email');
@@ -135,7 +139,6 @@ class ProcessarPlanilhaController extends Controller
 
         $linha = 2;
 
-        // Usuários não cadastrados
         foreach ($usuariosNaoCadastrados as $usuario) {
             $worksheet->setCellValue('A' . $linha, $usuario['nome']);
             $worksheet->setCellValue('B' . $linha, $usuario['cpf']);
@@ -144,7 +147,6 @@ class ProcessarPlanilhaController extends Controller
             $linha++;
         }
 
-        // Usuários com alimentação OK
         foreach ($usuariosComAlimentacaoOk as $usuario) {
             $worksheet->setCellValue('A' . $linha, $usuario['nome']);
             $worksheet->setCellValue('B' . $linha, $usuario['cpf']);
@@ -153,7 +155,6 @@ class ProcessarPlanilhaController extends Controller
             $linha++;
         }
 
-        // Usuários com inscrição pendente
         foreach ($usuariosComInscricaoPendente as $usuario) {
             $worksheet->setCellValue('A' . $linha, $usuario['nome']);
             $worksheet->setCellValue('B' . $linha, $usuario['cpf']);
@@ -162,7 +163,6 @@ class ProcessarPlanilhaController extends Controller
             $linha++;
         }
 
-        // Salvar arquivo temporário
         $caminhoArquivo = storage_path('app/temp/resultado_' . time() . '.xlsx');
         $writer = new Xlsx($spreadsheet);
         $writer->save($caminhoArquivo);

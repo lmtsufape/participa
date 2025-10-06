@@ -19,8 +19,7 @@ use App\Http\Controllers\Inscricao\CheckoutController;
 use App\Http\Controllers\Inscricao\InscricaoController;
 use App\Http\Controllers\Inscricao\PromocaoController;
 use App\Http\Controllers\Inscricao\InscricaoPCDController;
-use App\Http\Controllers\InscricaoAutomaticaController;
-use App\Http\Controllers\ProcessarPlanilhaController;
+use App\Http\Controllers\PlanilhaAlimentacaoController;
 use App\Http\Controllers\Submissao\AreaController;
 use App\Http\Controllers\Submissao\CandidatoAvaliadorController;
 use App\Http\Controllers\Submissao\ArquivoInfoController;
@@ -488,15 +487,15 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
     Route::get('/validar/recibo/{codigo}', [InscricaoController::class, 'validarRecibo'])->name('validar.recibo');
 
     // Processamento de Planilha de Alimentação
-    Route::get('/processar-planilha', [ProcessarPlanilhaController::class, 'index'])->name('processar-planilha.index');
-    Route::post('/processar-planilha', [ProcessarPlanilhaController::class, 'processar'])->name('processar-planilha.processar');
+    Route::get('/processar-planilha', [PlanilhaAlimentacaoController::class, 'index'])->name('processar-planilha.index');
+    Route::post('/processar-planilha', [PlanilhaAlimentacaoController::class, 'processar'])->name('processar-planilha.processar');
 
     // Inscrição Automática via Planilha
-    Route::get('/inscricao-automatica', [InscricaoAutomaticaController::class, 'index'])->name('inscricao-automatica.index');
-    Route::post('/inscricao-automatica', [InscricaoAutomaticaController::class, 'processar'])->name('inscricao-automatica.processar');
-    Route::get('/inscricao-automatica/progresso', [InscricaoAutomaticaController::class, 'progresso'])->name('inscricao-automatica.progresso');
-    Route::get('/inscricao-automatica/status', [InscricaoAutomaticaController::class, 'statusProgresso'])->name('inscricao-automatica.status');
-    Route::get('/inscricao-automatica/download', [InscricaoAutomaticaController::class, 'downloadResultado'])->name('inscricao-automatica.download');
+    Route::get('/inscricao-automatica', [InscricaoController::class, 'inscricaoAutomaticaIndex'])->name('inscricao-automatica.index');
+    Route::post('/inscricao-automatica', [InscricaoController::class, 'inscricaoAutomaticaProcessar'])->name('inscricao-automatica.processar');
+    Route::get('/inscricao-automatica/progresso', [InscricaoController::class, 'inscricaoAutomaticaProgresso'])->name('inscricao-automatica.progresso');
+    Route::get('/inscricao-automatica/status', [InscricaoController::class, 'inscricaoAutomaticaStatusProgresso'])->name('inscricao-automatica.status');
+    Route::get('/inscricao-automatica/download', [InscricaoController::class, 'inscricaoAutomaticaDownloadResultado'])->name('inscricao-automatica.download');
 
     // Checkout
     Route::prefix('checkout')->name('checkout.')->group(function () {

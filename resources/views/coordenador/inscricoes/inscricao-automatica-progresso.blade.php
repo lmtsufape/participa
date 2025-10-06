@@ -52,7 +52,7 @@
                             <div class="d-flex justify-content-center">
                                 <a href="{{ route('inscricao-automatica.download', ['job_id' => $jobId]) }}" 
                                    class="btn btn-success btn-lg">
-                                    <i class="fas fa-download"></i> Baixar Relatório
+                                    Baixar Relatório
                                 </a>
                             </div>
                         </div>

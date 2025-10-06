@@ -24,18 +24,7 @@
                     <form action="{{ route('inscricao-automatica.processar') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         
-                        <div class="mb-3">
-                            <label for="evento_id" class="form-label">Evento</label>
-                            <select class="form-control" id="evento_id" name="evento_id" required>
-                                <option value="">Selecione um evento</option>
-                                @foreach($eventos as $eventoOption)
-                                    <option value="{{ $eventoOption->id }}" 
-                                        @if($evento && $evento->id == $eventoOption->id) selected @endif>
-                                        {{ $eventoOption->nome }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
+                        <input type="hidden" name="evento_id" value="{{ $evento->id }}">
 
                         <div class="mb-3">
                             <label for="categoria_id" class="form-label">Categoria de Participante</label>
@@ -55,7 +44,6 @@
                                 • Coluna A: Nome<br>
                                 • Coluna B: CPF<br>
                                 • Coluna C: Email<br>
-                                • Coluna D: (ignorada)
                             </div>
                         </div>
 
@@ -82,7 +70,7 @@
                         </div>
 
                         <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-upload"></i> Processar Inscrições
+                            Processar Inscrições
                         </button>
                     </form>
                 </div>
@@ -91,13 +79,4 @@
     </div>
 </div>
 
-<script>
-document.getElementById('evento_id').addEventListener('change', function() {
-    const eventoId = this.value;
-    if (eventoId) {
-        // Recarregar a página com o evento selecionado para carregar as categorias
-        window.location.href = '{{ route("inscricao-automatica.index") }}?evento_id=' + eventoId;
-    }
-});
-</script>
 @endsection
