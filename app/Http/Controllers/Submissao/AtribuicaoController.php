@@ -185,15 +185,15 @@ class AtribuicaoController extends Controller
         return redirect()->back()->with(['success' => 'Trabalhos da área '.$area->nome.' distribuidos!']);
     }
 
-    private function atualizarPrazoCorrecaoAtribuicao($trabalhoId)
+    private function atualizarPrazoDeAvaliacaoAvaliador($trabalhoId)
     {
         $modalidadeid = Trabalho::find($trabalhoId)->modalidadeId;
         $modalidade = Modalidade::find($modalidadeid);
-        $prazoCorrecao = now()->addDays(15);
-        if($prazoCorrecao > $modalidade->fimCorrecao) {
-            $prazoCorrecao = $modalidade->fimCorrecao;
+        $prazo_avaliacao = now()->addDays(15);
+        if($prazo_avaliacao > $modalidade->fimRevisao) {
+            $prazo_avaliacao = $modalidade->fimRevisao;
         }
-        return $prazoCorrecao;
+        return $prazo_avaliacao;
     }
 
     public function distribuicaoManual(Request $request)
@@ -226,7 +226,7 @@ class AtribuicaoController extends Controller
             return redirect()->back()->with(['error' => $revisor->user->name.' não pode ser revisor deste trabalho.'])->withInput($validatedData);
         }
 
-        $prazo_correcao = $this->atualizarPrazoCorrecaoAtribuicao($trabalho->id);
+        $prazo_correcao = $this->atualizarPrazoDeAvaliacaoAvaliador($trabalho->id);
         $revisor->trabalhosAtribuidos()->attach($trabalho->id, ['confirmacao' => false, 'parecer' => 'processando', 'prazo_correcao' => $prazo_correcao]);
         $revisor->correcoesEmAndamento = $revisor->correcoesEmAndamento + 1;
         $revisor->save();

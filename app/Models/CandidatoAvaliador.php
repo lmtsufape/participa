@@ -20,7 +20,8 @@ class CandidatoAvaliador extends Model
         'resumo_lattes',
         'ja_avaliou',
         'disponibilidade_idiomas',
-        'aprovado'
+        'aprovado',
+        'em_analise'
     ];
 
     protected array $dates = ['deleted_at'];
