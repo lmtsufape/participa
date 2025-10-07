@@ -99,6 +99,7 @@ class InscricaoApiController extends Controller
                 'uf'    => $inscricao->user->endereco->uf,
                 'organizacao' => $inscricao->user->instituicao,
                 'tipo_inscricao' => $inscricao->categoria->nome,
+                'alimentacao' => $inscricao->alimentacao,
             ]
         ], 200);
     }
