@@ -236,8 +236,8 @@
                                         <div class="d-flex justify-content-between">
                                             <label :for="$id('text-input')" x-text="'Opção ' + (index + 1)"></label>
                                             <div>
-                                                <button type="button" @click="adicionaOpcao(index)" style="color: #117711;" class="btn py-0"><i class="fas fa-plus"></i></button>
-                                                <button type="button" @click="removeOpcao(index)" style="color: #d30909;" class="btn py-0"><i class="fas fa-trash"></i></button>
+                                                <button type="button" @click="adicionaOpcao(index)" style="color: #117711;" class="btn py-0"><i class="bi bi-plus-circle"></i></button>
+                                                <button type="button" @click="removeOpcao(index)" style="color: #d30909;" class="btn py-0"><i class="bi bi-dash-circle"></i></button>
                                             </div>
                                         </div>
                                         <input type="text" class="form-control" :id="$id('text-input')" name="select-text[]">

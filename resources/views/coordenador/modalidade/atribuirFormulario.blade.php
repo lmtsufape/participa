@@ -59,9 +59,9 @@
                                                     <input x-model="opcao.titulo" :name="'opcoes['+index+'][]'" type="text" class="form-control">
                                                 </div>
                                             </div>
-                                            <div class="col-sm-4 col-md-2 d-flex justify-content-center">
-                                                <button type="button" class="btn btn-link" @click="adicionaOpcao(index, j)"><i class="fas fa-plus"></i></button>
-                                                <button type="button" class="btn btn-link" @click="removeOpcao(index, j)"><i class="fas fa-trash-alt"></i></button>
+                                            <div class="col-sm-4 col-md-2 d-flex justify-content-start">
+                                                <button type="button" class="btn btn-link" @click="adicionaOpcao(index, j)"><i class="bi bi-plus-circle text-success fa-lg"></i></button>
+                                                <button type="button" class="btn btn-link" @click="removeOpcao(index, j)"><i class="bi bi-dash-circle text-danger fa-lg"></i></button>
                                             </div>
                                         </div>
                                     </template>
@@ -81,15 +81,15 @@
                                     <option value="radio">Múltipla escolha</option>
                                 </select>
                             </div>
-                            <div class="col-sm-12 col-md-12 col-lg-4 d-flex justify-content-center">
+                            <div class="col-sm-12 col-md-12 col-lg-4 d-flex justify-content-start pt-4">
                                 <button type="button" class="btn btn-link" @click="removePergunta(index)">
-                                    <i class="fas fa-trash-alt fa-2x"></i>
+                                    <i class="bi bi-trash fa-lg text-danger"></i>
                                 </button>
                                 <button type="button" class="btn btn-link" @click="sobePergunta(index)">
-                                    <i class="fas fa-arrow-up fa-2x" id="arrow-up"></i>
+                                    <i class="bi bi-arrow-up-circle fa-lg"></i>
                                 </button>
                                 <button type="button" class="btn btn-link" @click="descePergunta(index)">
-                                    <i class="fas fa-arrow-down fa-2x" id="arrow-down"></i>
+                                    <i class="bi bi-arrow-down-circle fa-lg"></i>
                                 </button>
                             </div>
                         </div>
