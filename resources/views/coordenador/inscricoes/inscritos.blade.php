@@ -37,6 +37,9 @@
                         <button type="button" class="button-prevent-multiple-submits btn btn-outline-success my-2 ml-1" data-bs-toggle="modal" data-bs-target="#modal-inscrever-participante">
                             Inscrever participante
                         </button>
+                        <button type="button" class="btn btn-warning my-2 ml-1" data-bs-toggle="modal" data-bs-target="#modal-gerenciar-alimentacao">
+                            Gerenciar Alimentação
+                        </button>
                     </div>
                 </div>
                 
@@ -476,6 +479,58 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
             </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Gerenciar Alimentação -->
+<div class="modal fade" id="modal-gerenciar-alimentacao" tabindex="-1" role="dialog" aria-labelledby="modal-gerenciar-alimentacao-label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #114048ff; color: white;">
+                <h5 class="modal-title" id="modal-gerenciar-alimentacao-label">Adicionar Alimentação - {{ $evento->nome }}</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <form action="{{ route('inscricao.gerenciarAlimentacao', ['evento_id' => $evento->id]) }}" method="POST">
+                @csrf
+                <div class="modal-body" x-data="{tipo: 'email', email: '', cpf: ''}">
+                    <div class="mb-3">
+                        <label class="form-label">Tipo de identificação:</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="identificador" id="alimentacao-email-radio" value="email" x-model="tipo">
+                            <label class="form-check-label" for="alimentacao-email-radio">
+                                E-mail
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="identificador" id="alimentacao-cpf-radio" value="cpf" x-model="tipo">
+                            <label class="form-check-label" for="alimentacao-cpf-radio">
+                                CPF
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="mb-3" x-show="tipo === 'email'">
+                        <label for="alimentacao-email" class="form-label">E-mail do participante:</label>
+                        <input type="email" class="form-control" id="alimentacao-email" name="email" x-model="email" placeholder="Digite o e-mail do participante" x-bind:required="tipo === 'email'">
+                    </div>
+                    
+                    <div class="mb-3" x-show="tipo === 'cpf'">
+                        <label for="alimentacao-cpf" class="form-label">CPF do participante:</label>
+                        <input type="text" class="form-control cpf-mask" id="alimentacao-cpf" name="cpf" x-model="cpf" placeholder="Digite o CPF do participante" x-bind:required="tipo === 'cpf'">
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-warning button-prevent-multiple-submits">
+                        Adicionar Alimentação
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

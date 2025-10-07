@@ -482,6 +482,7 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
     Route::post('/inscricoes/campo-excluir/{id}', [CampoFormularioController::class, 'destroy'])->name('campo.destroy');
     Route::post('inscricoes/editar-campo/{id}', [CampoFormularioController::class, 'update'])->name('campo.edit');
     Route::post('/inscricoes/inscreverParticipante/{evento_id}', [InscricaoController::class, 'inscreverParticipante'])->name('inscricao.inscreverParticipante');
+    Route::post('/inscricoes/gerenciar-alimentacao/{evento_id}', [InscricaoController::class, 'gerenciarAlimentacao'])->name('inscricao.gerenciarAlimentacao');
     Route::put('/inscricoes/{inscricao}/alterar-categoria', [InscricaoController::class, 'alterarCategoria'])->name('inscricao.alterarCategoria');
     Route::get('/inscricoes/{inscricao}/recibo', [InscricaoController::class, 'recibo'])->name('inscricao.recibo');
     Route::get('/validar/recibo/{codigo}', [InscricaoController::class, 'validarRecibo'])->name('validar.recibo');
