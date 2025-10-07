@@ -1124,4 +1124,64 @@ class InscricaoController extends Controller
             ->deleteFileAfterSend(true);
     }
 
+    public function gerenciarAlimentacao(Request $request, $evento_id)
+    {
+        $evento = Evento::find($evento_id);
+        $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
+
+        $identificador = $request->identificador;
+        $email = $request->email;
+        $cpf = $request->cpf;
+
+        if (empty($email) && empty($cpf)) {
+            return redirect(route('inscricao.inscritos', ['evento' => $evento->id]))
+                ->with(['error_message' => 'E-mail ou CPF é obrigatório.']);
+        }
+
+        try {
+            $participante = null;
+            if ($identificador === 'email' && !empty($email)) {
+                $participante = User::where('email', $email)->first();
+            } elseif ($identificador === 'cpf' && !empty($cpf)) {
+                $participante = User::where('cpf', $cpf)->first();
+            } else {
+                if (!empty($email)) {
+                    $participante = User::where('email', $email)->first();
+                } elseif (!empty($cpf)) {
+                    $participante = User::where('cpf', $cpf)->first();
+                }
+            }
+
+            if (!$participante) {
+                return redirect(route('inscricao.inscritos', ['evento' => $evento->id]))
+                    ->with(['error_message' => 'Usuário não encontrado no sistema.']);
+            }
+
+            $inscricao = Inscricao::where('user_id', $participante->id)
+                ->where('evento_id', $evento->id)
+                ->where('finalizada', true)
+                ->first();
+
+            if (!$inscricao) {
+                return redirect(route('inscricao.inscritos', ['evento' => $evento->id]))
+                    ->with(['error_message' => "O participante {$participante->name} não está inscrito neste evento."]);
+            }
+
+            if ($inscricao->alimentacao) {
+                return redirect(route('inscricao.inscritos', ['evento' => $evento->id]))
+                    ->with(['error_message' => "O participante {$participante->name} já possui alimentação cadastrada."]);
+            }
+
+            $inscricao->alimentacao = true;
+            $inscricao->save();
+
+            return redirect(route('inscricao.inscritos', ['evento' => $evento->id]))
+                ->with(['message' => "Alimentação adicionada com sucesso para {$participante->name}."]);
+
+        } catch (\Exception $e) {
+            return redirect(route('inscricao.inscritos', ['evento' => $evento->id]))
+                ->with(['error_message' => 'Erro ao processar: ' . $e->getMessage()]);
+        }
+    }
+
 }
