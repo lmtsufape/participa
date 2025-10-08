@@ -33,7 +33,7 @@
             @csrf
             <input type="hidden" name="eventoId" value="{{$evento->id}}">
             <div class="form-row">
-                <div class="form-group col-md-12 mt-2">
+                <div class="form-group col-md-12 mt-4 mb-4">
                     <label for="idSelecionarDestinatario" class="h4">Destinatários</label>
                     <select name="destinatario" class="form-control @error('destinatarios') is-invalid @enderror"
                             id="idSelecionarDestinatario" x-on:change="selecionarDestinatario({{$evento->id}})"
@@ -49,7 +49,7 @@
                     </div>
                     @enderror
                 </div>
-                <div class="col-sm-12 form-group" id="outrasComissoesDivSelect" style="display: none;">
+                <div class="col-sm-12 form-group mt-3 mb-3" id="outrasComissoesDivSelect" style="display: none;">
                     <label for="tipo_comissao_id" class="h4">{{__('Comissão')}}</label>
                     <select name="tipo_comissao_id" id="tipo_comissao_id" x-model="comissao"
                             class="form-control @error('tipo_comissao_id') is-invalid @enderror"
@@ -65,7 +65,7 @@
                     </div>
                     @enderror
                 </div>
-                <div class="col-sm-12 form-group" id="atividadeDivSelect" style="display: none;">
+                <div class="col-sm-12 form-group mt-3 mb-3" id="atividadeDivSelect" style="display: none;">
                     <label for="atividade_id" class="h4">{{__('Atividade')}}</label>
                     <select id="atividade_id" x-model="atividade"
                             class="form-control @error('atividade_id') is-invalid @enderror"
@@ -82,17 +82,19 @@
                     </div>
                     @enderror
                 </div>
-                <div class="col-sm-12">
+                <div class="col-sm-12 mt-4 mb-3">
                     <h4>Lista de Destinatários</h4>
                 </div>
-                <div class="form-group col-md-12">
-                    <div style="width:100%; height:250px; display: inline-block; border: 2px solid #f2f2f2; border-radius: 2px; overflow:auto; padding-top: 8px;">
+                <div class="form-group col-md-12 mb-2">
+                    <div class="form-check">
+                        <input type="checkbox" id="selecionartodos" onclick="selecionarTodosDestinatarios(this)">
+                        <label for="selecionartodos">Selecionar todos</label>
+                    </div>
+                </div>
+                <div class="form-group col-md-12 mb-4">
+                    <div style="width:100%; height:250px; display: inline-block; border: 2px solid #f2f2f2; border-radius: 2px; overflow:auto; padding: 15px;">
                         <table id="tabelaDestinatarios">
                             <tbody id="dentroTabelaDestinatarios">
-                                <div class="form-check">
-                                    <input type="checkbox" id="selecionartodos" onclick="selecionarTodosDestinatarios(this)">
-                                    <label for="selecionartodos">Selecionar todos</label>
-                                </div>
                                 <template x-for="(destinatario, index) in destinatarios" :key="index">
                                     <div class="d-flex justify-content-left">
                                         <template x-if="tipo == 1">
@@ -134,10 +136,10 @@
                         </table>
                     </div>
                 </div>
-                <div class="col-sm-12 form-group">
+                <div class="col-sm-12 form-group mt-4 mb-4">
                     <h4>Certificados</h4>
                     <input type="hidden" class="checkbox_certificado @error('certificado') is-invalid @enderror">
-                    <div id="listaCertificados" class="row cards-eventos-index">
+                    <div id="listaCertificados" class="row cards-eventos-index mt-3">
                         <template x-for="(certificado, index) in certificados" :key="index">
                             <div class="card mt-0" style="height: 10rem; width: 10rem;">
                                 <img :src="'/storage/'+certificado.caminho" class="card-img-top h-50" alt="...">
@@ -158,15 +160,15 @@
                         </div>
                     @enderror
                 </div>
-                <div class="form-group col-md-12">
+                <div class="form-group col-md-12 mt-4 mb-4">
                     <div class="custom-control custom-checkbox">
                         <input type="checkbox" class="custom-control-input" id="anexo-checkbox" name="sem_anexo" value="1">
                         <label class="custom-control-label" for="anexo-checkbox">Não enviar arquivo em anexo.</label>
-                        <small>Selecione esta opção se você precisar enviar uma grande quantidade de certificados.</small>
+                        <small class="d-block mt-2">Selecione esta opção se você precisar enviar uma grande quantidade de certificados.</small>
                       </div>
                 </div>
             </div>
-            <div class="row justify-content-center">
+            <div class="row justify-content-center mt-4">
                 <div class="col-md-12">
                     <button type="submit" class="btn btn-primary  button-prevent-multiple-submits" style="width:100%">
                         <i class="spinner fa fa-spinner fa-spin" style="display: none;"></i> {{ __('Enviar') }}
