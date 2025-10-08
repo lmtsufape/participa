@@ -24,6 +24,10 @@
     <div class="row justify-content-center mb-4">
         <div class="col-auto mr-auto"></div>
 
+        <a href="{{ route('admin.cadastro-automatica.index') }}" class="btn btn-info my-2 my-sm-0 ml-1" type="button" style="color: white;">
+            {{ __('Cadastro Automático (Planilha)') }}
+        </a>
+        
         <a href="{{ route('admin.cadastrarUsuario', app()->getLocale()) }}" class="btn btn-outline-success my-2 my-sm-0 ml-1" type="button">{{ __('Cadastrar usuário') }}</a>
     </div>
 
