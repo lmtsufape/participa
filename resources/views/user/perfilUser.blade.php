@@ -548,13 +548,13 @@
                                         <label class="col-form-label"><strong>Você pertence ou atua em alguma comunidade ou povo tradicional?</strong></label>
                                         <div>
                                             <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="comunidadeTradicional" id="comunidade_sim" value="true"
-                                                       @if ((old('comunidadeTradicional', $perfilIdentitario?->comunidadeTradicional) === 'true') || ($perfilIdentitario?->comunidadeTradicional === true)) checked @endif required>
+                                                <input class="form-check-input" type="radio" name="comunidadeTradicional" id="comunidade_sim" value="1"
+                                                       @if ((old('comunidadeTradicional', $perfilIdentitario?->comunidadeTradicional) === '1') || ($perfilIdentitario?->comunidadeTradicional === 1)) checked @endif required>
                                                 <label class="form-check-label" for="comunidade_sim">Sim</label>
                                             </div>
                                             <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="comunidadeTradicional" id="comunidade_nao" value="false"
-                                                       @if ((old('comunidadeTradicional', $perfilIdentitario?->comunidadeTradicional) === 'false') || ($perfilIdentitario?->comunidadeTradicional === false)) checked @endif>
+                                                <input class="form-check-input" type="radio" name="comunidadeTradicional" id="comunidade_nao" value="0"
+                                                       @if ((old('comunidadeTradicional', $perfilIdentitario?->comunidadeTradicional) === '0') || ($perfilIdentitario?->comunidadeTradicional === 0)) checked @endif>
                                                 <label class="form-check-label" for="comunidade_nao">Não</label>
                                             </div>
                                             <input type="text" name="nomeComunidadeTradicional" id="nomeComunidadeTradicional" class="form-control mt-2" placeholder="Se sim, qual?" style="max-width: 400px;"
@@ -569,13 +569,13 @@
                                         <label class="col-form-label"><strong>Você se identifica como Pessoa LGBTQIA+?</strong></label>
                                         <div>
                                             <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="lgbtqia" id="lgbtqia_sim" value="true"
-                                                       @if ((old('lgbtqia', $perfilIdentitario?->lgbtqia) === 'true') || ($perfilIdentitario?->lgbtqia === true)) checked @endif required>
+                                                <input class="form-check-input" type="radio" name="lgbtqia" id="lgbtqia_sim" value="1"
+                                                       @if ((old('lgbtqia', $perfilIdentitario?->lgbtqia) === '1') || ($perfilIdentitario?->lgbtqia === 1)) checked @endif required>
                                                 <label class="form-check-label" for="lgbtqia_sim">Sim</label>
                                             </div>
                                             <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="lgbtqia" id="lgbtqia_nao" value="false"
-                                                       @if ((old('lgbtqia', $perfilIdentitario?->lgbtqia) === 'false') || ($perfilIdentitario?->lgbtqia === false)) checked @endif>
+                                                <input class="form-check-input" type="radio" name="lgbtqia" id="lgbtqia_nao" value="0"
+                                                       @if ((old('lgbtqia', $perfilIdentitario?->lgbtqia) === '0') || ($perfilIdentitario?->lgbtqia === 0)) checked @endif>
                                                 <label class="form-check-label" for="lgbtqia_nao">Não</label>
                                             </div>
                                         </div>
@@ -624,13 +624,13 @@
                                         <label class="col-form-label"><strong>Você é uma pessoa idosa ou com deficiência?</strong></label>
                                         <div>
                                             <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="deficienciaIdoso" id="deficiencia_sim" value="true"
-                                                       @if ((old('deficienciaIdoso', $perfilIdentitario?->deficienciaIdoso) === 'true') || ($perfilIdentitario?->deficienciaIdoso === true)) checked @endif required>
+                                                <input class="form-check-input" type="radio" name="deficienciaIdoso" id="deficiencia_sim" value="1"
+                                                       @if ((old('deficienciaIdoso', $perfilIdentitario?->deficienciaIdoso) === '1') || ($perfilIdentitario?->deficienciaIdoso === 1)) checked @endif required>
                                                 <label class="form-check-label" for="deficiencia_sim">Sim</label>
                                             </div>
                                             <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="deficienciaIdoso" id="deficiencia_nao" value="false"
-                                                       @if ((old('deficienciaIdoso', $perfilIdentitario?->deficienciaIdoso) === 'false') || ($perfilIdentitario?->deficienciaIdoso === false)) checked @endif>
+                                                <input class="form-check-input" type="radio" name="deficienciaIdoso" id="deficiencia_nao" value="0"
+                                                       @if ((old('deficienciaIdoso', $perfilIdentitario?->deficienciaIdoso) === '0') || ($perfilIdentitario?->deficienciaIdoso === 0)) checked @endif>
                                                 <label class="form-check-label" for="deficiencia_nao">Não</label>
                                             </div>
                                         </div>
@@ -645,13 +645,13 @@
                                         <label class="col-form-label"><strong>Você é uma pessoa associada ao Centro Paulo Freire-Estudos e Pesquisas?</strong></label>
                                         <div>
                                             <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="associadoCPFreire" id="associadoCPFreire_sim" value="true"
-                                                @if ((old('associadoCPFreire', $perfilIdentitario?->associadoCPFreire) === 'true') || ($perfilIdentitario?->associadoCPFreire === true)) checked @endif required>
+                                                <input class="form-check-input" type="radio" name="associadoCPFreire" id="associadoCPFreire_sim" value="1"
+                                                @if ((old('associadoCPFreire', $perfilIdentitario?->associadoCPFreire) === '1') || ($perfilIdentitario?->associadoCPFreire === 1)) checked @endif required>
                                                 <label class="form-check-label" for="associadoCPFreire_sim">Sim</label>
                                             </div>
                                             <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="associadoCPFreire" id="associadoCPFreire_nao" value="false"
-                                                @if ((old('associadoCPFreire', $perfilIdentitario?->associadoCPFreire) === 'false') || ($perfilIdentitario?->associadoCPFreire === false)) checked @endif>
+                                                <input class="form-check-input" type="radio" name="associadoCPFreire" id="associadoCPFreire_nao" value="0"
+                                                @if ((old('associadoCPFreire', $perfilIdentitario?->associadoCPFreire) === '0') || ($perfilIdentitario?->associadoCPFreire === 0)) checked @endif>
                                                 <label class="form-check-label" for="associadoCPFreire_nao">Não</label>
                                             </div>
                                         </div>
@@ -664,13 +664,13 @@
                                         <label class="col-form-label "><strong>Se não, gostaria de receber mais informações sobre a associação do CPFreire?</strong></label>
                                         <div>
                                             <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="receberInfoCPFreire" id="receberInfoCPFreire_sim" value="true"
-                                                @if ((old('receberInfoCPFreire', $perfilIdentitario?->receberInfoCPFreire) === 'true') || ($perfilIdentitario?->receberInfoCPFreire === true)) checked @endif required>
+                                                <input class="form-check-input" type="radio" name="receberInfoCPFreire" id="receberInfoCPFreire_sim" value="1"
+                                                @if ((old('receberInfoCPFreire', $perfilIdentitario?->receberInfoCPFreire) === '1') || ($perfilIdentitario?->receberInfoCPFreire === 1)) checked @endif required>
                                                 <label class="form-check-label" for="receberInfoCPFreire_sim">Sim</label>
                                             </div>
                                             <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="receberInfoCPFreire" id="receberInfoCPFreire_nao" value="false"
-                                                @if ((old('receberInfoCPFreire', $perfilIdentitario?->receberInfoCPFreire) === 'false') || ($perfilIdentitario?->receberInfoCPFreire === false)) checked @endif>
+                                                <input class="form-check-input" type="radio" name="receberInfoCPFreire" id="receberInfoCPFreire_nao" value="0"
+                                                @if ((old('receberInfoCPFreire', $perfilIdentitario?->receberInfoCPFreire) === '0') || ($perfilIdentitario?->receberInfoCPFreire === 0)) checked @endif>
                                                 <label class="form-check-label" for="receberInfoCPFreire_nao">Não</label>
                                             </div>
                                         </div>
@@ -684,13 +684,13 @@
                                         <label class="col-form-label"><strong>Você já participou de algum estudo sobre a Pedagogia Freireana?</strong></label>
                                         <div>
                                             <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="estudoPedagogiaFreiriana" id="estudoPedagogiaFreiriana_sim" value="true"
-                                                @if ((old('estudoPedagogiaFreiriana', $perfilIdentitario?->estudoPedagogiaFreiriana) === 'true') || ($perfilIdentitario?->estudoPedagogiaFreiriana === true)) checked @endif required>
+                                                <input class="form-check-input" type="radio" name="estudoPedagogiaFreiriana" id="estudoPedagogiaFreiriana_sim" value="1"
+                                                @if ((old('estudoPedagogiaFreiriana', $perfilIdentitario?->estudoPedagogiaFreiriana) === '1') || ($perfilIdentitario?->estudoPedagogiaFreiriana === 1)) checked @endif required>
                                                 <label class="form-check-label" for="estudoPedagogiaFreiriana_sim">Sim</label>
                                             </div>
                                             <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="estudoPedagogiaFreiriana" id="estudoPedagogiaFreiriana_nao" value="false"
-                                                @if ((old('estudoPedagogiaFreiriana', $perfilIdentitario?->estudoPedagogiaFreiriana) === 'false') || ($perfilIdentitario?->estudoPedagogiaFreiriana === false)) checked @endif>
+                                                <input class="form-check-input" type="radio" name="estudoPedagogiaFreiriana" id="estudoPedagogiaFreiriana_nao" value="0"
+                                                @if ((old('estudoPedagogiaFreiriana', $perfilIdentitario?->estudoPedagogiaFreiriana) === '0') || ($perfilIdentitario?->estudoPedagogiaFreiriana === 0)) checked @endif>
                                                 <label class="form-check-label" for="estudoPedagogiaFreiriana_nao">Não</label>
                                             </div>
                                             <input type="text" name="pedagogiasFreirianas" id="pedagogiasFreirianas" class="form-control mt-2" value="{{ $perfilIdentitario?->pedagogiasFreirianas }}" placeholder="Se sim, qual?" style="max-width: 400px;">
@@ -703,13 +703,13 @@
                                         <label class="col-form-label"><strong>Se não, gostaria de participar?</strong></label>
                                         <div>
                                             <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="participarEstudoPedagogiaFreiriana" id="participarEstudoPedagogiaFreiriana_sim" value="true"
-                                                @if ((old('participarEstudoPedagogiaFreiriana', $perfilIdentitario?->participarEstudoPedagogiaFreiriana) === 'true') || ($perfilIdentitario?->participarEstudoPedagogiaFreiriana === true)) checked @endif required>
+                                                <input class="form-check-input" type="radio" name="participarEstudoPedagogiaFreiriana" id="participarEstudoPedagogiaFreiriana_sim" value="1"
+                                                @if ((old('participarEstudoPedagogiaFreiriana', $perfilIdentitario?->participarEstudoPedagogiaFreiriana) === '1') || ($perfilIdentitario?->participarEstudoPedagogiaFreiriana === 1)) checked @endif required>
                                                 <label class="form-check-label" for="participarEstudoPedagogiaFreiriana_sim">Sim</label>
                                             </div>
                                             <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="participarEstudoPedagogiaFreiriana" id="participarEstudoPedagogiaFreiriana_nao" value="false"
-                                                @if ((old('participarEstudoPedagogiaFreiriana', $perfilIdentitario?->participacaoOrganizacao) === 'false') || ($perfilIdentitario?->participarEstudoPedagogiaFreiriana === false)) checked @endif>
+                                                <input class="form-check-input" type="radio" name="participarEstudoPedagogiaFreiriana" id="participarEstudoPedagogiaFreiriana_nao" value="0"
+                                                @if ((old('participarEstudoPedagogiaFreiriana', $perfilIdentitario?->participacaoOrganizacao) === '0') || ($perfilIdentitario?->participarEstudoPedagogiaFreiriana === 0)) checked @endif>
                                                 <label class="form-check-label" for="participarEstudoPedagogiaFreiriana_nao">Não</label>
                                             </div>
                                         </div>
@@ -723,13 +723,13 @@
                                         <label class="col-form-label"><strong>Você participa de alguma organização, rede ou movimento?</strong></label>
                                         <div>
                                             <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="participacaoOrganizacao" id="participa_sim" value="true"
-                                                @if ((old('participacaoOrganizacao', $perfilIdentitario?->participacaoOrganizacao) === 'true') || ($perfilIdentitario?->participacaoOrganizacao === true)) checked @endif required>
+                                                <input class="form-check-input" type="radio" name="participacaoOrganizacao" id="participa_sim" value="1"
+                                                @if ((old('participacaoOrganizacao', $perfilIdentitario?->participacaoOrganizacao) === '1') || ($perfilIdentitario?->participacaoOrganizacao === 1)) checked @endif required>
                                                 <label class="form-check-label" for="participa_sim">Sim</label>
                                             </div>
                                             <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="participacaoOrganizacao" id="participa_nao" value="false"
-                                                @if ((old('participacaoOrganizacao', $perfilIdentitario?->participacaoOrganizacao) === 'false') || ($perfilIdentitario?->participacaoOrganizacao === false)) checked @endif>
+                                                <input class="form-check-input" type="radio" name="participacaoOrganizacao" id="participa_nao" value="0"
+                                                @if ((old('participacaoOrganizacao', $perfilIdentitario?->participacaoOrganizacao) === '0') || ($perfilIdentitario?->participacaoOrganizacao === 0)) checked @endif>
                                                 <label class="form-check-label" for="participa_nao">Não</label>
                                             </div>
                                             <input type="text" name="nomeOrganizacao" id="nomeOrganizacao" class="form-control mt-2" value="{{ $perfilIdentitario?->nomeOrganizacao }}" placeholder="Se sim, qual?" style="max-width: 400px;">
