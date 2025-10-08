@@ -53,27 +53,27 @@
                         <div>
                             <div>
                                 <a href="{{route('coord.modeloCertificado', $certificado->id)}}">
-                                    <i class="far fa-eye" style="color: black"></i>&nbsp;&nbsp;Atualizar modelo
+                                    <img src="{{asset('img/icons/arrows-rotate-solid-full.svg')}}" alt="Atualizar modelo" style="width: 16px; height: 16px; margin-right: 8px; filter: brightness(0);">Atualizar modelo
                                 </a>
                             </div>
                             <div>
                                 <a href="{{route('coord.editarCertificado', ['eventoId' => $certificado->evento->id, 'id' => $certificado->id])}}">
-                                    <i class="fas fa-cog" style="color: black"></i>&nbsp;&nbsp;Editar
+                                    <img src="{{asset('img/icons/edit-regular.svg')}}" alt="Editar" style="width: 16px; height: 16px; margin-right: 8px;">Editar
                                 </a>
                             </div>
                             <div>
                                 <a data-bs-toggle="modal" data-bs-target="#modalStaticDuplicarCertificado_{{$certificado->id}}" style="color: #3490dc; cursor: pointer;">
-                                    <i class="fas fa-copy" style="color: black"></i>&nbsp;&nbsp;Duplicar
+                                    <img src="{{asset('img/icons/documento.svg')}}" alt="Duplicar" style="width: 16px; height: 16px; margin-right: 8px;">Duplicar
                                 </a>
                             </div>
                             <div>
                                 <a href="{{route('coord.listarEmissoes', $certificado)}}">
-                                    <i class="far fa-eye" style="color: black"></i>&nbsp;&nbsp;Listar certificados emitidos
+                                    <img src="{{asset('img/icons/list.svg')}}" alt="Listar certificados emitidos" style="width: 16px; height: 16px; margin-right: 8px; filter: brightness(0);">Listar certificados emitidos
                                 </a>
                             </div>
                             <div>
                                 <a data-bs-toggle="modal" data-bs-target="#modalStaticDeletarCertificado_{{$certificado->id}}" style="color: red; cursor: pointer;">
-                                    <i class="far fa-trash-alt" style="color: black"></i>&nbsp;&nbsp;Deletar certificado
+                                    <img src="{{asset('img/icons/trash-alt-regular.svg')}}" alt="Deletar certificado" style="width: 16px; height: 16px; margin-right: 8px; filter: brightness(0);">Deletar certificado
                                 </a>
                             </div>
                         </div>
