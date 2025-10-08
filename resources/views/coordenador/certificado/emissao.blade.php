@@ -171,7 +171,7 @@
             <div class="row justify-content-center mt-4">
                 <div class="col-md-12">
                     <button type="submit" class="btn btn-primary  button-prevent-multiple-submits" style="width:100%">
-                        <i class="spinner fa fa-spinner fa-spin" style="display: none;"></i> {{ __('Enviar') }}
+                         {{ __('Enviar') }}
                     </button>
                 </div>
             </div>
