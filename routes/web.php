@@ -164,6 +164,14 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
         Route::get('comissaoCientifica/areas', [CoordComissaoCientificaController::class, 'index'])->name('cientifica.areas');
         Route::post('comissaoCientifica/permissoes', [CoordComissaoCientificaController::class, 'permissoes'])->name('cientifica.permissoes');
         Route::post('comissaoCientifica/novoUsuario', [CoordComissaoCientificaController::class, 'novoUsuario'])->name('cientifica.novoUsuario');
+        
+        // Rotas de cadastro de usuários para coordenadores e comissão científica
+        Route::get('/cadastro-automatica', [CadastroUsuarioAutomaticaController::class, 'index'])->name('cadastro-automatica.index');
+        Route::post('/cadastro-automatica/processar', [CadastroUsuarioAutomaticaController::class, 'processar'])->name('cadastro-automatica.processar');
+        Route::get('/admin/cadastrar-usuario', function () {
+            return view('administrador.cadastrarUsuario');
+        })->name('admin.cadastrarUsuario');
+        Route::post('/criarUsuario', [AdministradorController::class, 'criarUsuario'])->name('administrador.criarUsuario');
         // rotas do Comissao Organizadora
         Route::get('/home/comissaoOrganizadora', [CoordComissaoOrganizadoraController::class, 'index'])->name('home.organizadora');
         Route::post('comissaoOrganizadora/novoUsuario', [ComissaoOrganizadoraController::class, 'store'])->name('cadastrar.comissaoOrganizadora');

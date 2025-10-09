@@ -28,21 +28,11 @@
                       <!--<h6 class="card-subtitle mb-2 text-muted">Obs.: ao exportar o arquivo csv, usar o delimitador , (vírgula) para abrir o arquivo</h6>-->
                     </div>
                     <div class="col-md-6 d-flex gap-2 flex-column align-items-end">
-                        <a href="{{route('evento.exportarInscritosXLSX', array_merge([$evento], request()->only(['nome', 'email', 'status'])))}}" class="btn btn-success">Exportar .xlsx</a>
-                        {{-- <a href="{{route('evento.downloadInscritos', $evento)}}" class="btn btn-primary">Exportar .csv</a>--}}
-{{--                        <a href="{{route('evento.downloadInscritosCertifica', $evento)}}" class="btn btn-primary float-md-right mt-2">Exportar XLSX para o Certifica</a>--}}
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-processar-planilha">
-                            Processar Planilha
-                        </button>
-                        <button type="button" class="button-prevent-multiple-submits btn btn-outline-success my-2 ml-1" data-bs-toggle="modal" data-bs-target="#modal-inscrever-participante">
-                            Inscrever participante
-                        </button>
-                        <button type="button" class="btn btn-warning my-2 ml-1" data-bs-toggle="modal" data-bs-target="#modal-gerenciar-alimentacao">
-                            Gerenciar Alimentação
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-acoes">
+                           Ações
                         </button>
                     </div>
                 </div>
-                
                 <!-- Formulário de Busca -->
                 <div class="row mb-3">
                     <div class="col-md-12">
@@ -69,12 +59,12 @@
                         </form>
                     </div>
                 </div>
-                
+
                 <!-- Informações dos resultados -->
                 <div class="row mb-3">
                     <div class="col-md-12">
                         <div class="alert alert-info">
-                            <strong>Total de inscritos encontrados:</strong> {{ $inscricoes->total() }} 
+                            <strong>Total de inscritos encontrados:</strong> {{ $inscricoes->total() }}
                             @if(request('nome') || request('email') || request('status'))
                                 <span class="text-muted">(com filtros aplicados)</span>
                             @endif
@@ -144,12 +134,12 @@
                             </tbody>
                         @endforeach
                     </table>
-                    
+
                     <!-- Paginação -->
                     <div class="d-flex justify-content-center mt-4">
                         {{ $inscricoes->links() }}
                     </div>
-                    
+
                     </p>
                 </div>
             </div>
@@ -435,53 +425,6 @@
 
 @endforeach
 
-<div class="modal fade" id="modal-processar-planilha" tabindex="-1" role="dialog" aria-labelledby="modalProcessarPlanilhaLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header" style="background-color: #114048ff; color: white;">
-                <h5 class="modal-title" id="modalProcessarPlanilhaLabel">Escolher Tipo de Processamento</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="card h-100">
-                            <div class="card-body text-center">
-                                <div class="mb-3">
-                                    <img src="{{asset('img/icons/file-alt-regular-black.svg')}}" alt="Alimentação" style="width: 48px; height: 48px;">
-                                </div>
-                                <h5 class="card-title">Planilha de Alimentação</h5>
-                                <p class="card-text">Processar planilha para gerenciar alimentação dos participantes do evento.</p>
-                                <a href="{{ route('processar-planilha.index') }}" class="btn btn-warning w-100">
-                                    <img src="{{asset('img/icons/file-alt-regular.svg')}}" alt="Alimentação" style="width: 16px; height: 16px;" class="me-2">
-                                    Processar Alimentação
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="card h-100">
-                            <div class="card-body text-center">
-                                <div class="mb-3">
-                                    <img src="{{asset('img/icons/user-plus-black-solid.svg')}}" alt="Usuários" style="width: 48px; height: 48px;">
-                                </div>
-                                <h5 class="card-title">Inscrição Automática</h5>
-                                <p class="card-text">Inscrever participantes automaticamente via planilha com dados de nome, CPF e email.</p>
-                                <a href="{{ route('inscricao-automatica.index', ['evento_id' => $evento->id]) }}" class="btn btn-info w-100">
-                                    <img src="{{asset('img/icons/user-plus-solid.svg')}}" alt="Usuários" style="width: 16px; height: 16px;" class="me-2">
-                                    Inscrição Automática
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-            </div>
-        </div>
-    </div>
-</div>
 
 <!-- Modal Gerenciar Alimentação -->
 <div class="modal fade" id="modal-gerenciar-alimentacao" tabindex="-1" role="dialog" aria-labelledby="modal-gerenciar-alimentacao-label" aria-hidden="true">
@@ -515,7 +458,6 @@
                         <label for="alimentacao-email" class="form-label">E-mail do participante:</label>
                         <input type="email" class="form-control" id="alimentacao-email" name="email" x-model="email" placeholder="Digite o e-mail do participante" x-bind:required="tipo === 'email'">
                     </div>
-                    
                     <div class="mb-3" x-show="tipo === 'cpf'">
                         <label for="alimentacao-cpf" class="form-label">CPF do participante:</label>
                         <input type="text" class="form-control cpf-mask" id="alimentacao-cpf" name="cpf" x-model="cpf" placeholder="Digite o CPF do participante" x-bind:required="tipo === 'cpf'">
@@ -531,6 +473,129 @@
                     </button>
                 </div>
             </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Ações -->
+<div class="modal fade" id="modal-acoes" tabindex="-1" role="dialog" aria-labelledby="modalAcoesLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #114048ff; color: white;">
+                <h5 class="modal-title" id="modalAcoesLabel">Ações Disponíveis</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+
+                    <div class="col-md-6 mb-3">
+                        <div class="card h-100">
+                            <div class="card-body text-center">
+                                <div class="mb-3">
+                                    <img src="{{asset('img/icons/user-plus-black-solid.svg')}}" alt="Cadastro Individual" style="width: 48px; height: 48px;">
+                                </div>
+                                <h5 class="card-title">Cadastro Individual</h5>
+                                <p class="card-text">Cadastrar um usuário individualmente</p>
+                                <a href="{{ route('admin.cadastrarUsuario') }}" class="btn btn-outline-primary w-100">
+                                    <img src="{{asset('img/icons/user-plus-solid.svg')}}" alt="Cadastro Individual" style="width: 16px; height: 16px;" class="me-2">Cadastro individual de usuário
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <div class="card h-100">
+                            <div class="card-body text-center">
+                                <div class="mb-3">
+                                    <img src="{{asset('img/icons/users-solid-full.svg')}}" alt="Cadastro em Massa" style="width: 48px; height: 48px;">
+                                </div>
+                                <h5 class="card-title">Cadastro em Massa</h5>
+                                <p class="card-text">Cadastrar usuários através de planilha Excel</p>
+                                <a href="{{ route('cadastro-automatica.index') }}" class="btn btn-outline-primary w-100">
+                                    <img src="{{asset('img/icons/file-alt-regular.svg')}}" alt="Planilha" style="width: 16px; height: 16px;" class="me-2">Cadastro de usuários (Planilha)
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <div class="card h-100">
+                            <div class="card-body text-center">
+                                <div class="mb-3">
+                                    <img src="{{asset('img/icons/user-plus-black-solid.svg')}}" alt="Inscrever" style="width: 48px; height: 48px;">
+                                </div>
+                                <h5 class="card-title">Inscrever Participante</h5>
+                                <p class="card-text">Inscrever um participante manualmente no evento</p>
+                                <button type="button" class="btn btn-outline-success w-100" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#modal-inscrever-participante">
+                                    <img src="{{asset('img/icons/user-plus-solid.svg')}}" alt="Inscrever" style="width: 16px; height: 16px;" class="me-2">Inscrever Participante
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="card h-100">
+                            <div class="card-body text-center">
+                                <div class="mb-3">
+                                    <img src="{{asset('img/icons/users-solid-full.svg')}}" alt="Usuários" style="width: 48px; height: 48px;">
+                                </div>
+                                <h5 class="card-title">Inscrição Automática</h5>
+                                <p class="card-text">Inscrever participantes automaticamente via planilha</p>
+                                <a href="{{ route('inscricao-automatica.index', ['evento_id' => $evento->id]) }}" class="btn btn-outline-success w-100">
+                                    <img src="{{asset('img/icons/user-plus-solid.svg')}}" alt="Usuários" style="width: 16px; height: 16px;" class="me-2">Inscrição Automática
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <div class="card h-100">
+                            <div class="card-body text-center">
+                                <div class="mb-3">
+                                    <img src="{{asset('img/icons/food-dinner.svg')}}" alt="Alimentação" style="width: 48px; height: 48px;">
+                                </div>
+                                <h5 class="card-title">Gerenciar Alimentação</h5>
+                                <p class="card-text">Liberação individual para alimentação dos participantes</p>
+                                <button type="button" class="btn btn-outline-warning w-100" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#modal-gerenciar-alimentacao">
+                                    <img src="{{asset('img/icons/file-alt-regular.svg')}}" alt="Alimentação" style="width: 16px; height: 16px;" class="me-2">Gerenciar Alimentação
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <div class="card h-100">
+                            <div class="card-body text-center">
+                                <div class="mb-3">
+                                    <img src="{{asset('img/icons/file-alt-regular-black.svg')}}" alt="Alimentação" style="width: 48px; height: 48px;">
+                                </div>
+                                <h5 class="card-title">Planilha de Alimentação</h5>
+                                <p class="card-text">Processar planilha para gerenciar alimentação dos participantes</p>
+                                <a href="{{ route('processar-planilha.index') }}" class="btn btn-outline-warning w-100">
+                                    <img src="{{asset('img/icons/file-alt-regular.svg')}}" alt="Alimentação" style="width: 16px; height: 16px;" class="me-2">Processar Alimentação
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <div class="card h-100">
+                            <div class="card-body text-center">
+                                <div class="mb-3">
+                                    <img src="{{asset('img/icons/file-download-solid.svg')}}" alt="Exportar" style="width: 48px; height: 48px;">
+                                </div>
+                                <h5 class="card-title">Exportar Dados</h5>
+                                <p class="card-text">Exportar lista de inscritos em formato Excel (.xlsx)</p>
+                                <a href="{{route('evento.exportarInscritosXLSX', array_merge([$evento], request()->only(['nome', 'email', 'status'])))}}" class="btn btn-success w-100">
+                                    <img src="{{asset('img/icons/file-download-solid.svg')}}" alt="Exportar" style="width: 16px; height: 16px;" class="me-2">Exportar .xlsx
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+            </div>
         </div>
     </div>
 </div>
