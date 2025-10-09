@@ -18,6 +18,7 @@ use App\Notifications\InscricaoAprovada;
 use App\Notifications\InscricaoEvento;
 use App\Notifications\PreInscricao;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Users\User;
@@ -935,18 +936,9 @@ class InscricaoController extends Controller
         $eventoId = $request->get('evento_id');
         $evento = Evento::find($eventoId);
 
-        $user = auth()->user();
-        $temPermissao = false;
-        
-        if ($user->administradors()->exists()) {
-            $temPermissao = true;
-        } else {
-            $temPermissao = $evento->coordenadores()->where('user_id', $user->id)->exists();
-        }
-
-        if (!$temPermissao) {
-            return redirect()->back()
-                ->with('error', 'Você não tem permissão para acessar este evento.');
+        if (! (Gate::allows('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento) ||
+               Gate::allows('isAdmin', \App\Models\Users\Administrador::class))) {
+            abort(403, 'Acesso negado');
         }
 
         $categorias = CategoriaParticipante::where('evento_id', $evento->id)->get();
