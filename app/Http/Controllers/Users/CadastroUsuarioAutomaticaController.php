@@ -43,13 +43,13 @@ class CadastroUsuarioAutomaticaController extends Controller
 
     public function index()
     {
-        $this->authorize('isAdmin', \App\Models\Users\Administrador::class);
+        $this->authorize('cadastrarUsuario');
         return view('administrador.cadastro-automatica');
     }
 
     public function processar(Request $request)
     {
-        $this->authorize('isAdmin', \App\Models\Users\Administrador::class);
+        $this->authorize('cadastrarUsuario');
 
         $request->validate([
             'arquivo' => 'required|file|mimes:xlsx,xls|max:10240', // 10mb

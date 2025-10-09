@@ -265,7 +265,7 @@ class AdministradorController extends Controller
             'email' => strtolower($request->email),
         ]);
 
-        $this->authorize('isAdmin', Administrador::class);
+        $this->authorize('cadastrarUsuario');
 
         $users = User::orderBy('updated_at', 'ASC')->paginate(100);
 
