@@ -8,6 +8,7 @@ use App\Models\Users\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 
 class InscricaoApiController extends Controller
@@ -23,20 +24,27 @@ class InscricaoApiController extends Controller
         $cpf = $request->input('cpf');
         $cnpj = $request->input('cnpj');
         $passaporte = $request->input('passaporte');
+        $nome = $request->input('nome');
 
-        if (!$cpf && !$cnpj && !$passaporte) {
+        if (!$cpf && !$cnpj && !$passaporte && !$nome) {
             return response()->json([
                 'status' => 'error',
-                'mensagem' => 'É obrigatório informar pelo menos um documento: CPF, CNPJ ou Passaporte.'
+                'mensagem' => 'É obrigatório informar pelo menos um parâmetro: CPF, CNPJ, Passaporte ou Nome.'
             ], 422);
         }
 
-        $documentosFornecidos = array_filter([$cpf, $cnpj, $passaporte]);
-        if (count($documentosFornecidos) > 1) {
+        $parametrosFornecidos = array_filter([$cpf, $cnpj, $passaporte, $nome], function ($value) {
+            return !empty($value);
+        });
+        if (count($parametrosFornecidos) > 1) {
             return response()->json([
                 'status' => 'error',
-                'mensagem' => 'Informe apenas um documento: CPF, CNPJ ou Passaporte.'
+                'mensagem' => 'Informe apenas um parâmetro: CPF, CNPJ, Passaporte ou Nome.'
             ], 422);
+        }
+
+        if (!empty($nome)) {
+            return $this->buscarPorNome($nome);
         }
 
         if ($cpf) {
@@ -90,13 +98,13 @@ class InscricaoApiController extends Controller
             'mensagem' => 'Inscrito encontrado e qualificado para credenciamento.',
             'dados' => [
                 'nome_completo' => $inscricao->user->name,
-                'nome_social'   => $inscricao->user->perfilIdentitario->nomeSocial,
+                'nome_social' => $inscricao->user->perfilIdentitario?->nomeSocial,
                 'documento' => $this->obterDocumentoUsuario($inscricao->user, $tipoDocumento),
                 'tipo_documento' => $tipoDocumento,
                 'email' => $inscricao->user->email,
-                'telefone'  => $user->celular,
-                'cidade'    => $inscricao->user->endereco->cidade,
-                'uf'    => $inscricao->user->endereco->uf,
+                'telefone' => $user->celular,
+                'cidade' => $inscricao->user->endereco?->cidade,
+                'uf' => $inscricao->user->endereco?->uf,
                 'organizacao' => $inscricao->user->instituicao,
                 'tipo_inscricao' => $inscricao->categoria->nome,
                 'alimentacao' => $inscricao->alimentacao,
@@ -176,7 +184,7 @@ class InscricaoApiController extends Controller
                         $cnpj
                     );
                 }
-                
+
                 return User::where('cnpj', $cnpj)->first();
             case 'passaporte':
                 return User::where('passaporte', $documentoOriginal)->first();
@@ -196,5 +204,147 @@ class InscricaoApiController extends Controller
             default:
                 return '';
         }
+    }
+
+    private function buscarPorNome(string $nome): JsonResponse
+    {
+        if (empty($nome) || strlen(trim($nome)) < 3) {
+            return response()->json([
+                'status' => 'error',
+                'mensagem' => 'O nome deve ter pelo menos 3 caracteres.'
+            ], 422);
+        }
+
+        $nomeNormalizado = $this->normalizarNome($nome);
+
+        try{
+            $users = User::whereNotNull('name')
+            ->whereRaw('unaccent(lower(name)) ILIKE unaccent(lower(?))', ['%' . $nome . '%'])
+            ->get();
+        } catch(\Exception $e) {
+            Log::error('Erro ao usar unaccent: ' . $e->getMessage());
+            $users = User::get()
+            ->filter(function ($user) use ($nomeNormalizado) {
+                if (empty($user->name)) {
+                    return false;
+                }
+                $nomeCompletoNormalizado = $this->normalizarNome($user->name);
+                return str_contains($nomeCompletoNormalizado, $nomeNormalizado);
+            });
+        }
+
+        if ($users->isEmpty()) {
+            return response()->json([
+                'status' => 'error',
+                'mensagem' => 'Nenhum usuário encontrado com o nome informado.'
+            ], 404);
+        }
+
+        $resultados = [];
+        foreach ($users as $user) {
+            $inscricao = Inscricao::where('user_id', $user->id)
+                ->where('finalizada', true)
+                ->with(['categoria'])
+                ->first();
+
+            if ($inscricao) {
+                $resultados[] = [
+                    'nome_completo' => $user->name,
+                    'nome_social' => $user->perfilIdentitario?->nomeSocial,
+                    'documento' => $this->obterPrimeiroDocumento($user),
+                    'tipo_documento' => $this->obterTipoDocumento($user),
+                    'email' => $user->email,
+                    'telefone' => $user->celular,
+                    'cidade' => $user->endereco?->cidade,
+                    'uf' => $user->endereco?->uf,
+                    'organizacao' => $user->instituicao,
+                    'tipo_inscricao' => $inscricao->categoria->nome,
+                    'alimentacao' => $inscricao->alimentacao,
+                ];
+            }
+        }
+
+        if (empty($resultados)) {
+            return response()->json([
+                'status' => 'aviso',
+                'mensagem' => 'Usuários encontrados, mas nenhum possui inscrição finalizada.'
+            ], 400);
+        }
+
+        return response()->json([
+            'status' => 'sucesso',
+            'mensagem' => count($resultados) . ' inscrito(s) encontrado(s) com o nome informado.',
+            'dados' => $resultados
+        ], 200);
+    }
+
+    private function normalizarNome(string $nome): string
+    {
+        if (empty($nome)) {
+            return '';
+        }
+
+        // Remove acentos e converte para minúsculas
+        $nome = strtolower($nome);
+
+        $nome = str_replace(
+            [
+                'á', 'à', 'ã', 'â', 'ä', 'ā', 'ǎ', 'ă', 'ą',
+                'é', 'è', 'ê', 'ë', 'ē', 'ě', 'ĕ', 'ė', 'ę',
+                'í', 'ì', 'î', 'ï', 'ī', 'ǐ', 'ĭ', 'į',
+                'ó', 'ò', 'õ', 'ô', 'ö', 'ō', 'ǒ', 'ŏ', 'ő', 'ø',
+                'ú', 'ù', 'û', 'ü', 'ū', 'ǔ', 'ŭ', 'ů', 'ű',
+                'ç', 'ć', 'č', 'ĉ', 'ċ', 'ç',
+                'ñ', 'ń', 'ň', 'ņ', 'ŋ',
+                'ý', 'ÿ', 'ŷ', 'ỳ', 'ỵ', 'ỷ', 'ỹ',
+                'ß'
+            ],
+            [
+                'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a',
+                'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e',
+                'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i',
+                'o', 'o', 'o', 'o', 'o', 'o', 'o', 'o', 'o', 'o',
+                'u', 'u', 'u', 'u', 'u', 'u', 'u', 'u', 'u',
+                'c', 'c', 'c', 'c', 'c', 'c',
+                'n', 'n', 'n', 'n', 'n',
+                'y', 'y', 'y', 'y', 'y', 'y', 'y',
+                'ss'
+            ],
+            $nome
+        );
+
+        // Remove espaços extras e caracteres especiais
+        $nome = preg_replace('/\s+/', ' ', trim($nome));
+        $nome = preg_replace('/[^\w\s]/', '', $nome);
+
+        return $nome;
+    }
+
+    private function obterPrimeiroDocumento(User $user): string
+    {
+        if ($user->cpf) {
+            return $user->cpf;
+        }
+        if ($user->cnpj) {
+            return $user->cnpj;
+        }
+        if ($user->passaporte) {
+            return $user->passaporte;
+        }
+        return '';
+    }
+
+    private function obterTipoDocumento(User $user): string
+    {
+        if ($user->cpf) {
+            return 'cpf';
+        }
+        if ($user->cnpj) {
+            return 'cnpj';
+        }
+        if ($user->passaporte) {
+            return 'passaporte';
+        }
+        return '';
     }
 }
