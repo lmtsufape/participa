@@ -63,7 +63,7 @@ class CadastroUsuarioAutomaticaController extends Controller
             $spreadsheet = IOFactory::load($caminhoCompleto);
             $worksheet = $spreadsheet->getActiveSheet();
             $dados = $worksheet->toArray();
-            
+
             // Remove as 3 linhas de cabeçalho
             array_shift($dados);
             array_shift($dados);
@@ -74,58 +74,73 @@ class CadastroUsuarioAutomaticaController extends Controller
 
             foreach ($dados as $index => $linha) {
                 // Linha na planilha é o índice do loop + 4 (3 cabeçalhos + índice 0)
-                $numLinha = $index + 4; 
+                $numLinha = $index + 4;
 
                 $data = $this->extrairDadosDaLinha($linha);
                 $data['linha_planilha'] = $numLinha;
                 $senhaGerada = $this->gerarSenhaAleatoria(8);
-                
+
                 if (empty($data['nome']) && empty($data['cpf']) && empty($data['email'])) {
                     continue;
                 }
 
                 $status = 'Erro: Falha na validação';
-                
+
                 try {
                     $validator = $this->validarDados($data);
 
                     if ($validator->fails()) {
                         $status = 'Erro: ' . implode('; ', $validator->errors()->all());
                     } else {
-                        $userExistente = User::where('cpf', $data['cpf'])->orWhere('email', $data['email'])->first();
+                        // Verifica se já existe usuário com o mesmo CPF
+                        $userExistente = User::where('cpf', $data['cpf'])->first();
+
+                        // Se não encontrou por CPF e tem email, verifica por email também
+                        if (!$userExistente && !empty($data['email'])) {
+                            $userExistente = User::where('email', $data['email'])->first();
+                        }
 
                         if ($userExistente) {
                             $status = 'Usuário já cadastrado (CPF/Email encontrado)';
                         } else {
-                            // 1. Criação do Endereço
-                            $enderecoData = $this->buscarCepViaLogradouro($data['cidade'], $data['logradouro_complemento'], $data['uf']);
-                            $enderecoData['numero'] = '1'; 
-                            $enderecoData['complemento'] = $data['logradouro_complemento'];
+                            // Detecta se há dados incompletos
+                            $incompleto = $this->detectarDadosIncompletos($data);
 
-                            $endereco = new Endereco($enderecoData);
-                            $endereco->save();
+                            // 1. Criação do Endereço (pode ser nulo se dados insuficientes)
+                            $enderecoId = null;
+                            if (!empty($data['cidade']) && !empty($data['uf'])) {
+                                $enderecoData = $this->buscarCepViaLogradouro($data['cidade'], $data['logradouro_complemento'] ?? '', $data['uf']);
+                                $enderecoData['numero'] = '1';
+                                $enderecoData['complemento'] = $data['logradouro_complemento'] ?? '';
+
+                                $endereco = new Endereco($enderecoData);
+                                $endereco->save();
+                                $enderecoId = $endereco->id;
+                            }
 
                             // 2. Criação do Usuário
                             $user = new User();
                             $user->name = $data['nome'];
-                            $user->email = $data['email'];
+                            $user->email = !empty($data['email']) ? $data['email'] : null;
                             $user->password = Hash::make($senhaGerada);
                             $user->cpf = $data['cpf'];
-                            // Celular está agora garantido como string limpa
-                            $user->celular = $data['celular']; 
-                            $user->instituicao = $data['instituicao'];
-                            $user->email_verified_at = now();
-                            $user->enderecoId = $endereco->id;
+                            $user->celular = !empty($data['celular']) ? $data['celular'] : null;
+                            $user->instituicao = !empty($data['instituicao']) ? $data['instituicao'] : null;
+                            $user->email_verified_at = !empty($data['email']) ? now() : null;
+                            $user->enderecoId = $enderecoId;
+                            $user->incompleto = $incompleto;
                             $user->save();
-                            
-                            // 3. Criação do Perfil Identitário
-                            $perfilData = $this->formatarDadosPerfilIdentitario($data);
-                            $perfilIdentitario = new PerfilIdentitario();
-                            $perfilIdentitario->setAttributes($perfilData); 
-                            $perfilIdentitario->userId = $user->id;
-                            $perfilIdentitario->save();
 
-                            $status = 'Cadastrado com sucesso';
+                            // 3. Criação do Perfil Identitário (apenas se houver dados suficientes)
+                            if ($this->temDadosPerfilIdentitario($data)) {
+                                $perfilData = $this->formatarDadosPerfilIdentitario($data);
+                                $perfilIdentitario = new PerfilIdentitario();
+                                $perfilIdentitario->setAttributes($perfilData);
+                                $perfilIdentitario->userId = $user->id;
+                                $perfilIdentitario->save();
+                            }
+
+                            $status = $incompleto ? 'Cadastrado com sucesso (dados incompletos)' : 'Cadastrado com sucesso';
                             $sucessoContador++;
                         }
                     }
@@ -148,11 +163,11 @@ class CadastroUsuarioAutomaticaController extends Controller
 
             $mensagem = "Planilha processada com sucesso! {$sucessoContador} cadastros. Baixe o relatório para ver todos os status.";
             session()->flash('success', $mensagem);
-            
+
             // Mantém o download como ação principal
             return response()->download($caminhoPlanilhaResultado, 'resultado_cadastro_usuarios.xlsx')
                 ->deleteFileAfterSend(true);
-                
+
         } catch (\Exception $e) {
             return redirect()->back()
                 ->with('error', 'Erro ao processar arquivo: ' . $e->getMessage());
@@ -181,10 +196,10 @@ class CadastroUsuarioAutomaticaController extends Controller
         $dados['email'] = strtolower(trim($safeString(self::COLUMNS['email'])));
         $dados['cpf'] = $this->normalizarCpf($safeString(self::COLUMNS['cpf']));
         $dados['instituicao'] = trim($safeString(self::COLUMNS['instituicao']));
-        
+
         // CORREÇÃO CRÍTICA DO CELULAR: Mantém o formato original da planilha
         $dados['celular'] = trim($safeString(self::COLUMNS['celular']));
-        
+
         $dados['dataNascimento'] = $this->normalizarData($safeString(self::COLUMNS['dataNascimento']));
         $dados['cidade'] = trim($safeString(self::COLUMNS['cidade']));
         $dados['uf'] = $this->normalizarUF($safeString(self::COLUMNS['uf']));
@@ -194,23 +209,23 @@ class CadastroUsuarioAutomaticaController extends Controller
 
         // Campos complexos (Perfil Identitário)
         $dados['raca'] = $this->normalizarRaca($safeString(self::COLUMNS['raca']));
-        
+
         list($dados['comunidadeTradicional'], $dados['nomeComunidadeTradicional']) = $this->parseSimNaoCampo($safeString(self::COLUMNS['comunidadeTradicionalRaw']));
-        
+
         list($dados['participacaoOrganizacao'], $dados['nomeOrganizacao']) = $this->parseSimNaoCampo($safeString(self::COLUMNS['participacaoOrganizacaoRaw']));
-        
+
         $dados['necessidadesEspeciais'] = $this->parseNecessidadesEspeciais($safeString(self::COLUMNS['necessidadesEspeciaisRaw']));
-        
+
         // Outros campos Booleanos
         $dados['lgbtqia'] = $this->stringToBoolean($safeString(self::COLUMNS['lgbtqiaRaw']));
         $dados['deficienciaIdoso'] = $this->stringToBoolean($safeString(self::COLUMNS['deficienciaIdosoRaw']));
         $dados['associadoAba'] = $this->stringToBoolean($safeString(self::COLUMNS['associadoAbaRaw']));
         $dados['receberInfoAba'] = $this->stringToBoolean($safeString(self::COLUMNS['receberInfoAbaRaw']));
-        
+
         // Colocar valores default
         $dados['outroGenero'] = ''; $dados['outraRaca'] = ''; $dados['outraNecessidadeEspecial'] = '';
         $dados['vinculoInstitucional'] = ''; $dados['passaporte'] = null; $dados['cnpj'] = null; $dados['pais'] = 'brasil';
-        
+
         return $dados;
     }
 
@@ -224,27 +239,27 @@ class CadastroUsuarioAutomaticaController extends Controller
             'dataNascimento' => $data['dataNascimento'],
             'genero' => $data['genero'] ?? 'não informado',
             'outroGenero' => $data['outroGenero'] ?? '',
-            'raca' => is_array($data['raca']) ? $data['raca'] : [$data['raca']], 
+            'raca' => is_array($data['raca']) ? $data['raca'] : [$data['raca']],
             'outraRaca' => $data['outraRaca'] ?? '',
-            
+
             // Comunidade Tradicional (booleano e nome)
             'comunidadeTradicional' => $data['comunidadeTradicional'] ? 'true' : 'false',
             // Garante NULL se não preenchido ou for 'Não'
-            'nomeComunidadeTradicional' => $data['nomeComunidadeTradicional'] ?? null, 
-            
+            'nomeComunidadeTradicional' => $data['nomeComunidadeTradicional'] ?? null,
+
             // Outros campos booleanos
             'lgbtqia' => $data['lgbtqia'] ? 'true' : 'false',
             'deficienciaIdoso' => $data['deficienciaIdoso'] ? 'true' : 'false',
             'associadoAba' => $data['associadoAba'] ? 'true' : 'false',
             'receberInfoAba' => $data['receberInfoAba'] ? 'true' : 'false',
-            
+
             // Organização (booleano e nome)
             'participacaoOrganizacao' => $data['participacaoOrganizacao'] ? 'true' : 'false',
             // Garante NULL se não preenchido ou for 'Não'
-            'nomeOrganizacao' => $data['nomeOrganizacao'] ?? null, 
-            
+            'nomeOrganizacao' => $data['nomeOrganizacao'] ?? null,
+
             // Outros
-            'necessidadesEspeciais' => $data['necessidadesEspeciais'] ?? ['nenhuma'], 
+            'necessidadesEspeciais' => $data['necessidadesEspeciais'] ?? ['nenhuma'],
             'outraNecessidadeEspecial' => $data['outraNecessidadeEspecial'] ?? '',
             'vinculoInstitucional' => $data['vinculoInstitucional'] ?? '',
         ];
@@ -254,12 +269,13 @@ class CadastroUsuarioAutomaticaController extends Controller
 
     /**
      * Lógica de validação de campos chave para a criação de usuários.
+     * Agora permite campos opcionais e detecta dados incompletos.
      */
     private function validarDados(array $data)
     {
         $messages = [
             'required' => 'O campo :attribute é obrigatório.',
-            'cpf' => 'O :attribute não é válido.',
+            'email' => 'O e-mail deve ter um formato válido.',
             'email.unique' => 'O e-mail já possui um cadastro ativo.',
             'cpf.unique' => 'O CPF já possui um cadastro ativo.',
             'instituicao.regex' => 'O campo instituição contém caracteres não permitidos.',
@@ -270,49 +286,56 @@ class CadastroUsuarioAutomaticaController extends Controller
 
         $regras = [
             'nome' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255'],
-            'cpf' => ['required', 'cpf'],
-            // Celular: aceita formatação como (87)99999-9999
-            'celular' => ['required', 'string', 'max:20'], 
-            'instituicao' => ['required', 'string', 'max:255', 'regex:/^[A-Za-zÀ-ÿ0-9\s\-\.\(\)\[\]\{\}\/\\,;&@#$%*+=|<>!?~`\'"]+$/'],
-            'dataNascimento' => ['required', 'date_format:Y-m-d'],
-            'cidade' => ['required', 'string', 'max:255'],
-            'uf' => ['required', 'string', 'max:2'],
-            'logradouro_complemento' => ['required', 'string', 'max:255'],
-            'genero' => ['required', 'string'],
-            'raca' => ['required', 'array'], 
+            'cpf' => ['required', 'string', 'min:11', 'max:14'], // Removida validação de CPF válido
+            // Campos opcionais
+            'email' => ['nullable', 'string', 'email', 'max:255'],
+            'celular' => ['nullable', 'string', 'max:20'],
+            'instituicao' => ['nullable', 'string', 'max:255', 'regex:/^[A-Za-zÀ-ÿ0-9\s\-\.\(\)\[\]\{\}\/\\,;&@#$%*+=|<>!?~`\'"]*$/'],
+            'dataNascimento' => ['nullable', 'date_format:Y-m-d'],
+            'cidade' => ['nullable', 'string', 'max:255'],
+            'uf' => ['nullable', 'string', 'max:2'],
+            'logradouro_complemento' => ['nullable', 'string', 'max:255'],
+            'genero' => ['nullable', 'string'],
+            'raca' => ['nullable', 'array'],
         ];
-        
-        // Adiciona a checagem de unicidade com o soft-deleted
-        $userExistente = \App\Models\Users\User::withTrashed()->where('email', $data['email'])->orWhere('cpf', $data['cpf'])->first();
-        
-        if ($userExistente) {
-            $regras['email'][] = 'unique:users,email,' . $userExistente->id; 
-            $regras['cpf'][] = 'unique:users,cpf,' . $userExistente->id;
+
+        // Adiciona a checagem de unicidade apenas se o email não for nulo
+        if (!empty($data['email'])) {
+            $userExistente = User::withTrashed()->where('email', $data['email'])->orWhere('cpf', $data['cpf'])->first();
+
+            if ($userExistente) {
+                $regras['email'][] = 'unique:users,email,' . $userExistente->id;
+            } else {
+                $regras['email'][] = 'unique:users,email';
+            }
+        }
+
+        // Verifica unicidade do CPF
+        $userExistenteCpf = User::withTrashed()->where('cpf', $data['cpf'])->first();
+        if ($userExistenteCpf) {
+            $regras['cpf'][] = 'unique:users,cpf,' . $userExistenteCpf->id;
         } else {
-            $regras['email'][] = 'unique:users,email';
             $regras['cpf'][] = 'unique:users,cpf';
         }
 
-
         return Validator::make($data, $regras, $messages);
     }
-    
+
     // --- MÉTODOS AUXILIARES CORRIGIDOS ---
-    
+
     private function normalizarUF(string $nomeEstado): string
     {
         $nomeEstado = trim(mb_strtoupper($nomeEstado));
         $estados = [
-            'ACRE' => 'AC', 'ALAGOAS' => 'AL', 'AMAPA' => 'AP', 'AMAZONAS' => 'AM', 
-            'BAHIA' => 'BA', 'CEARA' => 'CE', 'DISTRITO FEDERAL' => 'DF', 'ESPIRITO SANTO' => 'ES', 
-            'GOIAS' => 'GO', 'MARANHAO' => 'MA', 'MATO GROSSO' => 'MT', 'MATO GROSSO DO SUL' => 'MS', 
-            'MINAS GERAIS' => 'MG', 'PARA' => 'PA', 'PARAIBA' => 'PB', 'PARANA' => 'PR', 
-            'PERNAMBUCO' => 'PE', 'PIAUI' => 'PI', 'RIO DE JANEIRO' => 'RJ', 'RIO GRANDE DO NORTE' => 'RN', 
-            'RIO GRANDE DO SUL' => 'RS', 'RONDONIA' => 'RO', 'RORAIMA' => 'RR', 'SANTA CATARINA' => 'SC', 
+            'ACRE' => 'AC', 'ALAGOAS' => 'AL', 'AMAPA' => 'AP', 'AMAZONAS' => 'AM',
+            'BAHIA' => 'BA', 'CEARA' => 'CE', 'DISTRITO FEDERAL' => 'DF', 'ESPIRITO SANTO' => 'ES',
+            'GOIAS' => 'GO', 'MARANHAO' => 'MA', 'MATO GROSSO' => 'MT', 'MATO GROSSO DO SUL' => 'MS',
+            'MINAS GERAIS' => 'MG', 'PARA' => 'PA', 'PARAIBA' => 'PB', 'PARANA' => 'PR',
+            'PERNAMBUCO' => 'PE', 'PIAUI' => 'PI', 'RIO DE JANEIRO' => 'RJ', 'RIO GRANDE DO NORTE' => 'RN',
+            'RIO GRANDE DO SUL' => 'RS', 'RONDONIA' => 'RO', 'RORAIMA' => 'RR', 'SANTA CATARINA' => 'SC',
             'SAO PAULO' => 'SP', 'SERGIPE' => 'SE', 'TOCANTINS' => 'TO'
         ];
-        
+
         return $estados[$nomeEstado] ?? (strlen($nomeEstado) === 2 ? $nomeEstado : '');
     }
 
@@ -333,23 +356,31 @@ class CadastroUsuarioAutomaticaController extends Controller
                 // Falha silenciosa
             }
         }
-        
+
         return null;
     }
 
     private function normalizarCpf($cpf)
     {
         $cpf = preg_replace('/[^0-9]/', '', $cpf);
+
+        // Se o CPF tem menos de 11 dígitos, completa com zeros à direita
+        if (strlen($cpf) < 11) {
+            $cpf = str_pad($cpf, 11, '0', STR_PAD_RIGHT);
+        }
+
+        // Se tem exatamente 11 dígitos, formata
         if (strlen($cpf) === 11) {
             return substr($cpf, 0, 3) . '.' . substr($cpf, 3, 3) . '.' . substr($cpf, 6, 3) . '-' . substr($cpf, 9, 2);
         }
+
         return $cpf;
     }
-    
+
     private function stringToBoolean(string $value): bool
     {
         $value = strtolower(trim($value));
-        return in_array($value, ['sim', 's', 'true', '1']); 
+        return in_array($value, ['sim', 's', 'true', '1']);
     }
 
     /**
@@ -365,14 +396,14 @@ class CadastroUsuarioAutomaticaController extends Controller
 
         // 1. Caso explícito "NÃO" ou Vazio: Retorna FALSO e NULL. (CORREÇÃO PARA NÃO SALVAR O TEXTO 'NÃO')
         if (empty($value) || $valueLower === 'não' || $valueLower === 'nao') {
-            return [false, null]; 
+            return [false, null];
         }
-        
+
         // 2. Tenta identificar se começa com "Sim" e tem vírgula
         if (str_starts_with($valueLower, 'sim,') || str_starts_with($valueLower, 's,')) {
              $parts = explode(',', $value, 2);
              $text = trim($parts[1] ?? '');
-             
+
              if (!empty($text)) {
                  return [true, $text];
              }
@@ -393,12 +424,12 @@ class CadastroUsuarioAutomaticaController extends Controller
         $racas = array_map(function($r) {
             $r = strtolower(trim($r));
             $r = str_replace(' ', '_', $r);
-            
+
             // Mapeia 'preto' (da planilha) para 'negro' (conforme solicitado)
             if ($r === 'preto') {
-                return 'negro'; 
+                return 'negro';
             }
-            
+
             return $r;
         }, $racas);
 
@@ -413,12 +444,12 @@ class CadastroUsuarioAutomaticaController extends Controller
     {
         $value = trim($value);
         $valueLower = strtolower($value);
-        
+
         // Garante que 'Não', 'NENHUMA' ou vazio resultem em ['nenhuma']
         if (empty($value) || $valueLower === 'não' || $valueLower === 'nao' || $valueLower === 'nenhuma') {
             return ['nenhuma'];
         }
-        
+
         $necessidades = explode(',', $value);
         $necessidades = array_map(function($n) {
             $n = strtolower(trim($n));
@@ -437,9 +468,9 @@ class CadastroUsuarioAutomaticaController extends Controller
     private function buscarCepViaLogradouro(string $cidade, string $logradouro_complemento, string $uf): array
     {
         $enderecoSimulado = [
-            'cep'           => '40000-000', 
+            'cep'           => '40000-000',
             'rua'           => 'Rua Principal ' . $logradouro_complemento,
-            'bairro'        => 'Centro', 
+            'bairro'        => 'Centro',
             'cidade'        => $cidade,
             'uf'            => $uf,
             'pais'          => 'Brasil',
@@ -451,7 +482,46 @@ class CadastroUsuarioAutomaticaController extends Controller
     private function gerarSenhaAleatoria(int $length = 8): string
     {
         $chars = 'abcdefghijkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789!@#$%&*';
-        return Str::random($length, $chars);
+        $result = '';
+        for ($i = 0; $i < $length; $i++) {
+            $result .= $chars[random_int(0, strlen($chars) - 1)];
+        }
+        return $result;
+    }
+
+    /**
+     * Detecta se há dados incompletos no cadastro
+     */
+    private function detectarDadosIncompletos(array $data): bool
+    {
+        $camposObrigatorios = [
+            'email', 'celular', 'instituicao', 'dataNascimento',
+            'cidade', 'uf', 'logradouro_complemento', 'genero', 'raca'
+        ];
+
+        foreach ($camposObrigatorios as $campo) {
+            if (empty($data[$campo])) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Verifica se há dados suficientes para criar o perfil identitário
+     */
+    private function temDadosPerfilIdentitario(array $data): bool
+    {
+        $camposMinimos = ['dataNascimento', 'genero', 'raca'];
+
+        foreach ($camposMinimos as $campo) {
+            if (empty($data[$campo])) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     private function gerarPlanilhaResultado(array $resultados)
