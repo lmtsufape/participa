@@ -71,6 +71,7 @@ class CadastroUsuarioAutomaticaController extends Controller
 
             $resultados = [];
             $sucessoContador = 0;
+            $emailsProcessados = []; // Array para armazenar emails já processados nesta planilha
 
             foreach ($dados as $index => $linha) {
                 // Linha na planilha é o índice do loop + 4 (3 cabeçalhos + índice 0)
@@ -83,6 +84,21 @@ class CadastroUsuarioAutomaticaController extends Controller
 
                 $data = $this->extrairDadosDaLinha($linha);
                 $data['linha_planilha'] = $numLinha;
+                
+                // Verifica se o email já foi processado nesta planilha
+                $emailDuplicado = false;
+                $emailOriginal = $data['email']; // Armazena o email original
+                if (!empty($data['email'])) {
+                    if (in_array($data['email'], $emailsProcessados)) {
+                        // Email duplicado na planilha - trata como nulo
+                        $data['email'] = null;
+                        $emailDuplicado = true;
+                    } else {
+                        // Primeira ocorrência do email - adiciona à lista
+                        $emailsProcessados[] = $data['email'];
+                    }
+                }
+                
                 $senhaGerada = $this->gerarSenhaAleatoria(8);
 
                 // Pula linhas completamente vazias
@@ -158,6 +174,9 @@ class CadastroUsuarioAutomaticaController extends Controller
                             }
 
                             $status = $incompleto ? 'Cadastrado com sucesso (dados incompletos)' : 'Cadastrado com sucesso';
+                            if ($emailDuplicado) {
+                                $status .= ' (email duplicado na planilha - removido)';
+                            }
                             $sucessoContador++;
                         }
                     }
@@ -167,9 +186,15 @@ class CadastroUsuarioAutomaticaController extends Controller
                     \Log::error("Erro no cadastro automático, linha {$numLinha}: " . $e->getMessage());
                 }
 
+                // Para mostrar o email original quando foi duplicado
+                $emailParaExibir = $data['email'] ?? 'N/A';
+                if ($emailDuplicado && !empty($emailOriginal)) {
+                    $emailParaExibir = $emailOriginal . ' (duplicado - removido)';
+                }
+                
                 $resultados[] = [
                     'nome' => $data['nome'] ?? 'N/A',
-                    'email' => $data['email'] ?? 'N/A',
+                    'email' => $emailParaExibir,
                     'senha_gerada' => isset($userExistente) ? 'N/A (Existente)' : $senhaGerada,
                     'status' => $status
                 ];
