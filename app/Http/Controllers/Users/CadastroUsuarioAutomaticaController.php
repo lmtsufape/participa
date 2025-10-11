@@ -76,11 +76,28 @@ class CadastroUsuarioAutomaticaController extends Controller
                 // Linha na planilha é o índice do loop + 4 (3 cabeçalhos + índice 0)
                 $numLinha = $index + 4;
 
+                // Verifica se a linha está completamente vazia
+                if (empty(array_filter($linha, function($cell) { return !empty(trim($cell)); }))) {
+                    continue;
+                }
+
                 $data = $this->extrairDadosDaLinha($linha);
                 $data['linha_planilha'] = $numLinha;
                 $senhaGerada = $this->gerarSenhaAleatoria(8);
 
+                // Pula linhas completamente vazias
                 if (empty($data['nome']) && empty($data['cpf']) && empty($data['email'])) {
+                    continue;
+                }
+                
+                // Se não tem nome, pula a linha (nome é obrigatório)
+                if (empty($data['nome'])) {
+                    $resultados[] = [
+                        'nome' => 'N/A',
+                        'email' => $data['email'] ?? 'N/A',
+                        'senha_gerada' => 'N/A',
+                        'status' => 'Erro: Nome é obrigatório'
+                    ];
                     continue;
                 }
 
@@ -364,9 +381,9 @@ class CadastroUsuarioAutomaticaController extends Controller
     {
         $cpf = preg_replace('/[^0-9]/', '', $cpf);
 
-        // Se o CPF tem menos de 11 dígitos, completa com zeros à direita
+        // Se o CPF tem menos de 11 dígitos, completa com zeros à esquerda
         if (strlen($cpf) < 11) {
-            $cpf = str_pad($cpf, 11, '0', STR_PAD_RIGHT);
+            $cpf = str_pad($cpf, 11, '0', STR_PAD_LEFT);
         }
 
         // Se tem exatamente 11 dígitos, formata
