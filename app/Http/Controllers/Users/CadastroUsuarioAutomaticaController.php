@@ -110,6 +110,7 @@ class CadastroUsuarioAutomaticaController extends Controller
                 if (empty($data['nome'])) {
                     $resultados[] = [
                         'nome' => 'N/A',
+                        'cpf' => $data['cpf'] ?? 'N/A',
                         'email' => $data['email'] ?? 'N/A',
                         'senha_gerada' => 'N/A',
                         'status' => 'Erro: Nome é obrigatório'
@@ -194,6 +195,7 @@ class CadastroUsuarioAutomaticaController extends Controller
                 
                 $resultados[] = [
                     'nome' => $data['nome'] ?? 'N/A',
+                    'cpf' => $data['cpf'] ?? 'N/A',
                     'email' => $emailParaExibir,
                     'senha_gerada' => isset($userExistente) ? 'N/A (Existente)' : $senhaGerada,
                     'status' => $status
@@ -572,16 +574,18 @@ class CadastroUsuarioAutomaticaController extends Controller
         $worksheet = $spreadsheet->getActiveSheet();
 
         $worksheet->setCellValue('A1', 'Nome');
-        $worksheet->setCellValue('B1', 'Email');
-        $worksheet->setCellValue('C1', 'Senha Gerada');
-        $worksheet->setCellValue('D1', 'Status');
+        $worksheet->setCellValue('B1', 'CPF');
+        $worksheet->setCellValue('C1', 'Email');
+        $worksheet->setCellValue('D1', 'Senha Gerada');
+        $worksheet->setCellValue('E1', 'Status');
 
         $linha = 2;
         foreach ($resultados as $resultado) {
             $worksheet->setCellValue('A' . $linha, $resultado['nome']);
-            $worksheet->setCellValue('B' . $linha, $resultado['email']);
-            $worksheet->setCellValue('C' . $linha, $resultado['senha_gerada']);
-            $worksheet->setCellValue('D' . $linha, $resultado['status']);
+            $worksheet->setCellValue('B' . $linha, $resultado['cpf']);
+            $worksheet->setCellValue('C' . $linha, $resultado['email']);
+            $worksheet->setCellValue('D' . $linha, $resultado['senha_gerada']);
+            $worksheet->setCellValue('E' . $linha, $resultado['status']);
             $linha++;
         }
 
