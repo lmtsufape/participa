@@ -4,6 +4,10 @@
     <link rel="stylesheet" href="/css/home/home.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <style>
+        #infoModal .modal-header{
+            background-color: #DA2E38;
+            color: #ffffff;
+        }
         .swiper {
             width: 100% !important;
             max-width: 100%;
@@ -93,6 +97,24 @@
 @endsection
 
 @section('content')
+    <div class="modal fade" id="infoModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="infoModalLabel">Aviso Importante</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                </div>
+                <div class="modal-body">
+                    Informamos que a partir de hoje, dia <strong>13/10</strong>, às inscrições efetuadas para o Congresso não contarão com o kit do participante.<br>
+                    <br>
+                    As inscrições seguem abertas normalmente, porém sem a inclusão desse material.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
     @if($eventos_destaques->isNotEmpty())
         <div class="container d-flex flex-column pb-5">
             <div class="container d-flex align-items-center mb-3 position-relative">
@@ -192,7 +214,16 @@
         </div>
     @endif
 
+
+
+
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var infoModal = new bootstrap.Modal(document.getElementById('infoModal'));
+            infoModal.show();
+        });
+    </script>
     <script>
         const slideCount = {{ $eventos_destaques->count() }};
         new Swiper('.mySwiper', {
