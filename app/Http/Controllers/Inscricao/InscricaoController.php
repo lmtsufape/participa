@@ -1192,40 +1192,74 @@ class InscricaoController extends Controller
             $email       = $row['email']       ?? $row[2] ?? null;
             $alimentacao = $row['alimentacao'] ?? $row[3] ?? null;
 
-            $cpf   = $cpf   ? trim( (string) $cpf) : null;
-            $email = $email ? mb_strtolower(trim($email)) : null;
+            $cpfNormalizado = $cpf ? $this->normalizarCpf($cpf) : null;
+
+            $emailNormalizado = $email ? mb_strtolower(trim($email)) : null;
+
 
             return [
                 'nome'        => trim((string) $nome),
-                'cpf'         => $cpf ?: null,
-                'email'       => $email ?: null,
+                'cpf'         => $cpfNormalizado,
+                'email'       => $emailNormalizado,
                 'alimentacao' => $alimentacao,
             ];
         })->filter(fn ($l) => $l['cpf'] || $l['email'])->values();
-        $cpfs = $linhas->pluck('cpf')->filter()
-        ->map(fn($v) => preg_replace('/\D+/', '', $v))
-        ->unique()->values();
 
-    $emails = $linhas->pluck('email')->filter()
-        ->map(fn($v) => mb_strtolower(trim($v)))
-        ->unique()->values();
+        $cpfs = $linhas->pluck('cpf')->filter()->unique()->values();
+        $emails = $linhas->pluck('email')->filter()->unique()->values();
 
-    $users = User::query()
-        ->where(function ($q) use ($cpfs, $emails) {
-            if ($cpfs->isNotEmpty()) {
-                $q->whereIn(DB::raw("REGEXP_REPLACE(cpf, '[^0-9]', '', 'g')"), $cpfs);
+        $users = collect();
+
+        if ($cpfs->isNotEmpty()) {
+            $usersCpf = User::query()
+                ->whereIn('cpf', $cpfs)
+                ->get(['id', 'cpf', 'email']);
+            $users = $users->merge($usersCpf);
+        }
+
+        if ($emails->isNotEmpty()) {
+            $usersEmail = User::query()
+                ->whereIn('email', $emails)
+                ->get(['id', 'cpf', 'email']);
+            $users = $users->merge($usersEmail);
+        }
+
+        $users = $users->unique('id');
+
+        if ($users->isNotEmpty()) {
+            $userIds = $users->pluck('id');
+
+            $users = User::query()
+                ->whereIn('id', $userIds)
+                ->withExists([
+                    'inscricaos as tem_inscricao_confirmada' => function ($q) use ($evento_id) {
+                        $q->when($evento_id, fn ($q) => $q->where('evento_id', $evento_id))
+                        ->where('finalizada', true);
+                    },
+                ])
+                ->addSelect([
+                    'alimentacao' => Inscricao::select('alimentacao')
+                        ->whereColumn('user_id', 'users.id')
+                        ->when($evento_id, fn ($q) => $q->where('evento_id', $evento_id))
+                        ->where('finalizada', true)
+                        ->latest('created_at')
+                        ->limit(1),
+                ])
+                ->get(['id', 'cpf', 'email']);
+        } else {
+            $users = collect();
+        }
+
+
+        $mapaUsuarios = collect();
+        foreach ($users as $user) {
+            if ($user->cpf) {
+                $mapaUsuarios->put($user->cpf, $user);
             }
-            if ($emails->isNotEmpty()) {
-                $q->orWhereIn(DB::raw('LOWER(email)'), $emails);
+            if ($user->email) {
+                $mapaUsuarios->put($user->email, $user);
             }
-        })
-        ->withExists([
-            'inscricaos as tem_inscricao_confirmada' => fn($q) =>
-                $q->where('finalizada', true),
-        ])
-        ->get(['id', 'cpf', 'email']);
-
-        $mapaUsuarios = $users->keyBy(fn ($u) => $u->cpf ?: $u->email);
+        }
 
         $encontrados = collect();
         $naoEncontrados = collect();
@@ -1263,6 +1297,22 @@ class InscricaoController extends Controller
                 'nao_encontrados' => $naoEncontrados->count(),
             ],
         ]);
+    }
+
+    private function normalizarCpf($cpf)
+    {
+        $cpf = preg_replace('/[^0-9]/', '', $cpf);
+        if (strlen($cpf) < 11) {
+            $cpf = str_pad($cpf, 11, '0', STR_PAD_LEFT);
+        }
+        if (strlen($cpf) === 11) {
+            return substr($cpf, 0, 3) . '.' .
+                   substr($cpf, 3, 3) . '.' .
+                   substr($cpf, 6, 3) . '-' .
+                   substr($cpf, 9, 2);
+        }
+
+        return $cpf;
     }
 
 }
