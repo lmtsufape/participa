@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Users;
 
 use App\Http\Controllers\Controller;
+use App\Models\PerfilIdentitario;
 use App\Models\Submissao\Endereco;
 use App\Models\Submissao\Evento;
 use App\Models\Users\Administrador;
@@ -246,7 +247,10 @@ class AdministradorController extends Controller
     {
         $this->authorize('isAdmin', Administrador::class);
         $busca = strtolower($request->search);
-        $users = User::whereRaw('LOWER(email) like ?', ['%' . $busca . '%'])->orWhereRaw('LOWER(name) like ?', ['%' . $busca . '%'])->paginate(100);
+        $users = User::whereRaw('LOWER(email) like ?', ['%' . $busca . '%'])
+            ->orWhereRaw('LOWER(name) like ?', ['%' . $busca . '%'])
+            ->orWhereRaw('LOWER(cpf) like ?', ['%' . $busca . '%'])
+            ->paginate(100);
         if ($users->count() == 0) {
             return view('administrador.users', compact('users'))->with(['message' => 'Nenhum Resultado encontrado!']);
         }
@@ -261,7 +265,7 @@ class AdministradorController extends Controller
             'email' => strtolower($request->email),
         ]);
 
-        $this->authorize('isAdmin', Administrador::class);
+        $this->authorize('cadastrarUsuario');
 
         $users = User::orderBy('updated_at', 'ASC')->paginate(100);
 
@@ -297,6 +301,22 @@ class AdministradorController extends Controller
 
         $user->save();
 
+        // Criar perfil identitário
+        $perfilData = $request->all();
+        
+        // Converter strings "true"/"false" para booleanos
+        $booleanFields = ['comunidadeTradicional', 'lgbtqia', 'deficienciaIdoso', 'associadoAba', 'receberInfoAba', 'participacaoOrganizacao'];
+        foreach ($booleanFields as $field) {
+            if (isset($perfilData[$field])) {
+                $perfilData[$field] = $perfilData[$field] === 'true';
+            }
+        }
+        
+        $perfilIdentitario = new PerfilIdentitario();
+        $perfilIdentitario->setAttributes($perfilData);
+        $perfilIdentitario->userId = $user->id;
+        $perfilIdentitario->save();
+
         app()->setLocale('pt-BR');
 
         return redirect(route('admin.users', compact('users')))->with(['message' => 'Usuário cadastrado com sucesso!']);
@@ -312,7 +332,7 @@ class AdministradorController extends Controller
             'passaporte' => ($request->input('cpf') == null ? 'required|max:10' : 'nullable'),
             'celular' => ['required', 'string', 'max:20'],
             'instituicao' => ['required', 'string', 'max:255', 'regex:/^[A-Za-zÀ-ÿ0-9\s\-\.\(\)\[\]\{\}\/\\,;&@#$%*+=|<>!?~`\'"]+$/'],
-            'pais' => ['required', 'string', 'max:255'],
+            'dataNascimento' => ['required', 'date'],
             'rua' => ['required', 'string', 'max:255'],
             'numero' => ['required', 'string'],
             'bairro' => ['required', 'string', 'max:255'],
@@ -320,6 +340,17 @@ class AdministradorController extends Controller
             'uf' => ['required', 'string'],
             'cep' => ['required', 'string'],
             'complemento' => ['nullable', 'string'],
+            // Campos do perfil identitário
+            'genero' => ['required', 'string'],
+            'raca' => ['required', 'array'],
+            'comunidadeTradicional' => ['required', 'in:true,false'],
+            'lgbtqia' => ['required', 'in:true,false'],
+            'necessidadesEspeciais' => ['required', 'array'],
+            'deficienciaIdoso' => ['required', 'in:true,false'],
+            'associadoAba' => ['required', 'in:true,false'],
+            'receberInfoAba' => ['required', 'in:true,false'],
+            'participacaoOrganizacao' => ['required', 'in:true,false'],
+            'vinculoInstitucional' => ['nullable', 'string', 'max:1000'],
         ]);
     }
 }

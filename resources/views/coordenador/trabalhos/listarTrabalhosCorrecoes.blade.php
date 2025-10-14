@@ -43,9 +43,13 @@
 
         <div class="card mb-3">
             <div class="card-body">
-                <form method="GET" action="{{ route('coord.listarCorrecoes', ['eventoId' => $evento->id]) }}">
+                <form method="GET" action="{{ route('coord.listarCorrecoes', $evento->id) }}">
                     <div class="row">
-                        <div class="col-md-10">
+                        <div class="col-md-2">
+                            <label for="id" class="form-label">Buscar por ID</label>
+                            <input type="number" class="form-control" name="id" value="{{ request('id') }}" placeholder="Digite o ID...">
+                        </div>
+                        <div class="col-md-8">
                             <label for="titulo" class="form-label">Buscar por Título</label>
                             <input type="text" class="form-control" name="titulo" value="{{ request('titulo') }}" placeholder="Digite o título do trabalho...">
                         </div>
@@ -53,6 +57,13 @@
                             <button type="submit" class="btn btn-primary w-100">Buscar</button>
                         </div>
                     </div>
+                    @if(request('titulo') || request('id'))
+                        <div class="row mt-2">
+                            <div class="col-12">
+                                <a href="{{ route('coord.listarCorrecoes', ['eventoId' => $evento->id, 'column' => request('column', 'titulo'), 'direction' => request('direction', 'asc'), 'status' => request('status', 'rascunho')]) }}" class="btn btn-outline-success btn-sm">Limpar filtros</a>
+                            </div>
+                        </div>
+                    @endif
                 </form>
             </div>
         </div>
@@ -86,28 +97,33 @@
                                         <thead>
                                             <tr>
                                                 <th><input type="checkbox" onchange="alterarSelecionados(this)"></th>
+                                                <th scope="col">ID</th>
                                                 <th scope="col">Trabalho inicial</th>
                                                 <th scope="col">Trabalho revisado</th>
                                                 <th scope="col">Autor</th>
                                                 <th scope="col">
                                                     Data de Envio
-                                                    <a href="{{ route('coord.listarCorrecoes', array_merge(request()->query(), ['eventoId' => $evento->id, 'column' => 'data', 'direction' => 'asc'])) }}">
+                                                    <a href="{{ route('coord.listarCorrecoes', array_merge([$evento->id], ['column' => 'data', 'direction' => 'asc'], request()->query())) }}">
                                                         <i class="fas fa-arrow-alt-circle-up"></i>
                                                     </a>
-                                                    <a href="{{ route('coord.listarCorrecoes', array_merge(request()->query(), ['eventoId' => $evento->id, 'column' => 'data', 'direction' => 'desc'])) }}">
+                                                    <a href="{{ route('coord.listarCorrecoes', array_merge([$evento->id], ['column' => 'data', 'direction' => 'desc'], request()->query())) }}">
                                                         <i class="fas fa-arrow-alt-circle-down"></i>
                                                     </a>
                                                 </th>
                                                 <th scope="col">Parecer</th>
                                                 <th scope="col" class="text-center">Lembrete enviado</th>
-                                                <th scope="col" class="text-center">Validação</th>
                                                 <th scope="col" style="text-align:center;">Editar</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @foreach($modalidade->trabalho as $trabalho)
                                             <tr>
-                                                <td><input type="checkbox" name="trabalhosSelecionados[]" value="{{$trabalho->id}}"></td>
+                                                @if($trabalho->atribuicoes()->wherePivot('parecer', 'encaminhado')->exists() &&  ! $trabalho->arquivoCorrecao()->exists())
+                                                    <td><input type="checkbox" name="trabalhosSelecionados[]" value="{{$trabalho->id}}"></td>
+                                                @else
+                                                    <td></td>
+                                                @endif
+                                                <td> {{ $trabalho->id }}</td>
                                                 <td>
                                                     @if ($trabalho->arquivo)
                                                         <a href="{{route('downloadTrabalho', ['id' => $trabalho->id])}}">
@@ -144,29 +160,15 @@
 
                                                 <td style="text-align:center">
                                                     @foreach ($trabalho->atribuicoes as $revisor)
-                                                        <a href="{{route('coord.visualizarRespostaFormulario', ['eventoId' => $evento->id, 'modalidadeId' => $trabalho->modalidadeId, 'trabalhoId' => $trabalho->id, 'revisorId' => $revisor->id])}}">
-                                                            <img src="{{asset('img/icons/eye-regular.svg')}}" style="width:20px">
-                                                        </a>
+                                                        @if($trabalho->avaliado($revisor->user))
+                                                            <a href="{{route('coord.visualizarRespostaFormulario', ['eventoId' => $evento->id, 'modalidadeId' => $trabalho->modalidadeId, 'trabalhoId' => $trabalho->id, 'revisorId' => $revisor->id])}}">
+                                                                <img src="{{asset('img/icons/eye-regular.svg')}}" style="width:20px">
+                                                            </a>
+                                                        @endif
                                                         <br>
                                                     @endforeach
                                                 </td>
                                                 <td class="text-center">{{$trabalho->lembrete_enviado ? 'Sim' : 'Não'}}</td>
-                                                <td class="text-center">
-                                                    @switch($trabalho->avaliado)
-                                                        @case('corrigido')
-                                                            Finalizado: aprovado
-                                                            @break
-                                                        @case('corrigido_parcialmente')
-                                                            Finalizado: aprovado parcialmente
-                                                            @break
-                                                        @case('nao_corrigido')
-                                                            Finalizado: reprovado
-                                                            @break
-                                                        @default
-                                                            Em análise
-                                                    @endswitch
-                                                </td>
-
                                                 <td style="text-align:center">
                                                     <a href="#" data-bs-toggle="modal" data-bs-target="#modalCorrecaoTrabalho_{{$trabalho->id}}" style="color:#114048ff">
                                                         <img src="{{ asset('img/icons/edit-regular.svg') }}" width="20" alt="Editar">

@@ -94,7 +94,7 @@
                                             } elseif ($pivot->justificativa_recusa) {
                                                 $status = 'Convite recusado';
                                                 $statusClass = 'text-danger';
-                                            } 
+                                            }
                                         @endphp
 
                                         <p class="card-text">

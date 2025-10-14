@@ -4,13 +4,27 @@
 @section('menu')
 
     <div id="divListarRevisores" style="display: block">
-        @error('errorRevisor')
-          @include('componentes.mensagens')
-        @enderror
         <div class="row">
             <div class="col-sm-12">
                 <h1 class="titulo-detalhes">Listar Avaliadores</h1>
             </div>
+        </div>
+
+        <div class="card mb-3">
+          <div class="card-body">
+              <form method="GET" action="{{ route('coord.listarRevisores', ['eventoId' => $evento->id]) }}">
+                  <input type="hidden" name="eventoId" value="{{ $evento->id }}">
+                  <div class="row">
+                      <div class="col-md-10">
+                          <label for="search" class="form-label">Buscar por Nome ou E-mail</label>
+                          <input type="text" class="form-control" name="search" id="search" value="{{ request('search') }}" placeholder="Digite o nome ou e-mail do avaliador...">
+                      </div>
+                      <div class="col-md-2 d-flex align-items-end">
+                          <button type="submit" class="btn btn-primary w-100">Buscar</button>
+                      </div>
+                  </div>
+              </form>
+          </div>
         </div>
 
         <div class="row justify-content-center">
@@ -22,9 +36,12 @@
                           <h5 class="card-title">Avaliadores</h5>
                           <h6 class="card-subtitle mb-2 text-muted">Avaliadores cadastrados no seu evento</h6>
                         </div>
-                        <div class="col-sm-3" style="text-align: right;">
-                          <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalCadastrarRevisor">+ Cadastrar revisor</button>
-                        </div>
+                        @canany(['isCoordenadorOrCoordenadorDaComissaoCientifica', 'isCoordenadorDasComissoes'], $evento)
+                          <div class="col-sm-3" style="text-align: right;">
+                            <a href="{{ route('coord.evento.exportarRevisores', ['evento' => $evento->id]) }}" class="btn btn-success me-2">Exportar XLSX</a>
+                            <button class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#modalCadastrarRevisor">+ Cadastrar avaliador</button>
+                          </div>
+                        @endcanany
                       </div>
                       <p class="card-text">
                         <table class="table table-hover table-responsive-lg table-sm">
@@ -41,61 +58,56 @@
                               </tr>
                             </thead>
                             <tbody>
-                              @foreach($revisores as $revisor)
-                                <tr>
-                                  <td data-bs-toggle="modal" data-bs-target="#modalEditarRevisor{{$revisor->id}}">{{$revisor->name}}</td>
-                                  <td data-bs-toggle="modal" data-bs-target="#modalEditarRevisor{{$revisor->id}}">{{$revisor->email}}</td>
-                                  <td data-bs-toggle="modal" data-bs-target="#modalEditarRevisor{{$revisor->id}}" style="text-align:center">
-                                    @if($contadores->where('user_id', $revisor->id)->isNotEmpty())
-                                        {{$contadores->where('user_id', $revisor->id)->sum('processando_count')}}
-                                    @else
-                                        0
-                                    @endif
-                                </td>
-                                  <td data-bs-toggle="modal" data-bs-target="#modalEditarRevisor{{$revisor->id}}" style="text-align:center">
-                                    @if($contadores->where('user_id', $revisor->id)->isNotEmpty())
-                                        {{$contadores->where('user_id', $revisor->id)->sum('avaliados_count')}}
-                                    @else
-                                        0
-                                    @endif
-                                </td>
-                                  <td style="text-align:center">
-                                    <a href="#" data-bs-toggle="modal" data-bs-target="#modalRevisor{{$revisor->id}}">
-                                      <img src="{{asset('img/icons/eye-regular.svg')}}" style="width:20px">
-                                    </a>
-                                  </td>
-                                  <td style="text-align:center">
-                                    <form id="removerRevisor{{$revisor->id}}" action="{{route('remover.revisor', ['id' => $revisor->id, 'evento_id' => $evento->id])}}" method="POST">
-                                      @csrf
-                                      <a href="#" data-bs-toggle="modal" data-bs-target="#modalRemoverRevisor{{$revisor->id}}">
-                                        <img src="{{asset('img/icons/user-times-solid.svg')}}" class="icon-card" style="width:25px">
-                                      </a>
-                                    </form>
-                                  </td>
-                                  <td style="text-align:center">
-                                      {{-- <form action="{{route('revisor.email')}}" method="POST" >
-                                        @csrf
-                                          <input type="hidden" name="user" value= '@json($revisor->user)'>
-                                          <button class="btn btn-primary btn-sm" type="submit">
-                                              Enviar e-mail
-                                          </button>
-                                      </form> --}}
-                                      @component('componentes.modal', ['revisor' => $revisor, 'evento' => $evento])
-
-                                      @endcomponent
-                                  </td>
-                                  <td style="text-align:center">
-                                    <form id="reenviarEmailRevisor{{$revisor->id}}" action="{{route('revisor.reenviarEmail', ['id' => $revisor->id, 'evento_id' => $evento->id])}}" method="POST">
-                                      @csrf
-                                      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalReenviarEmailRevisor{{$revisor->id}}">
-                                        Reenviar cadastro
-                                      </button>
-                                    </form>
-                                  </td>
-                                </tr>
-                              @endforeach
-                            </tbody>
+                              @forelse($revisores as $revisor)
+                                  @php
+                                      $processandoCount = $revisor->revisor->sum('processando_count');
+                                      $avaliadosCount = $revisor->revisor->sum('avaliados_count');
+                                  @endphp
+                                  <tr>
+                                      <td style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#modalEditarRevisor{{$revisor->id}}">{{$revisor->name}}</td>
+                                      <td style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#modalEditarRevisor{{$revisor->id}}">{{$revisor->email}}</td>
+                                      <td style="text-align:center; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#modalEditarRevisor{{$revisor->id}}">
+                                          {{ $processandoCount }}
+                                      </td>
+                                      <td style="text-align:center; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#modalEditarRevisor{{$revisor->id}}">
+                                          {{ $avaliadosCount }}
+                                      </td>
+                                      <td style="text-align:center">
+                                          <a href="#" data-bs-toggle="modal" data-bs-target="#modalRevisor{{$revisor->id}}">
+                                              <img src="{{asset('img/icons/eye-regular.svg')}}" style="width:20px">
+                                          </a>
+                                      </td>
+                                      <td style="text-align:center">
+                                          <a href="#" data-bs-toggle="modal" data-bs-target="#modalRemoverRevisor{{$revisor->id}}">
+                                              <img src="{{asset('img/icons/user-times-solid.svg')}}" class="icon-card" style="width:25px">
+                                          </a>
+                                      </td>
+                                      <td style="text-align:center">
+                                          @component('componentes.modal', ['revisor' => $revisor, 'evento' => $evento])
+                                          @endcomponent
+                                      </td>
+                                      <td style="text-align:center">
+                                          @if($revisor->usuarioTemp)
+                                              <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalReenviarEmailRevisor{{$revisor->id}}">
+                                                  Reenviar
+                                              </a>
+                                          @else
+                                              Completo
+                                          @endif
+                                      </td>
+                                  </tr>
+                              @empty
+                                  <tr>
+                                      <td colspan="8" class="text-center">Nenhum avaliador encontrado.</td>
+                                  </tr>
+                              @endforelse
+                          </tbody>
                           </table>
+                          @if ($revisores->hasPages())
+                              <div class="d-flex justify-content-center mt-3">
+                                  {{ $revisores->links() }}
+                              </div>
+                          @endif
                           @if(count($revisores) > 0 && isset($revisores))
                             <form action="{{route('revisor.emailTodos')}}" method="POST" >
                                 @csrf
@@ -126,15 +138,19 @@
           <div class="modal-content">
               <div class="modal-header" style="background-color: #114048ff; color: white;">
               <h5 class="modal-title" id="#label">Confirmação</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
-                  <span aria-hidden="true">&times;</span>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="color: white;">
+
               </button>
               </div>
                   <div class="modal-body">
-                      Tem certeza que deseja remover esse avaliador do evento?
+                    <form id="removerRevisor{{$revisor->id}}" action="{{route('remover.revisor', ['id' => $revisor->id, 'evento_id' => $evento->id])}}" method="POST">
+                        @csrf
+                        Tem certeza que deseja remover esse avaliador do evento?
+
+                    </form>
                   </div>
               <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Não</button>
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Não</button>
                   <button type="submit" class="btn btn-primary" form="removerRevisor{{$revisor->id}}">Sim</button>
               </div>
           </div>
@@ -168,8 +184,8 @@
           <div class="modal-content">
             <div class="modal-header" style="background-color: #114048ff; color: white;">
               <h5 class="modal-title" id="exampleModalCenterTitle">Visualizar revisor</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
-                <span aria-hidden="true">&times;</span>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="color: white;">
+
               </button>
             </div>
             <div class="modal-body">
@@ -222,23 +238,27 @@
                           <table class="table table-hover table-responsive-lg table-sm">
                             <thead>
                               <tr>
+                                <th scope="col" class="col-1">ID</th>
                                 <th scope="col" class="col-7">Título</th>
-                                <th scope="col" class="col-5">Status</th>
+                                <th scope="col" class="col-4">Status</th>
 
                               </tr>
                             </thead>
                             <tbody>
                               @foreach ($revisorDosTrabalhos->trabalhosAtribuidos()->orderBy('titulo')->get() as $trabalho)
                                 <tr>
-                                  <td>
-                                      <a href="{{route('coord.listarTrabalhos', [ 'eventoId' => $evento->id, 'titulo', 'asc', 'rascunho'])}}#trab{{$trabalho->id}}">{{$trabalho->titulo}}</a></td>
-                                  <td>
-                                    @if ($trabalho->avaliado($revisor))
-                                      Avaliado
-                                    @else
-                                      Processando
-                                    @endif
-                                  </td>
+                                    <td>
+                                        {{$trabalho->id}}
+                                    </td>
+                                    <td>
+                                        <a href="{{route('coord.listarTrabalhos', [ 'eventoId' => $evento->id, 'titulo', 'asc', 'rascunho'])}}#trab{{$trabalho->id}}">{{$trabalho->titulo}}</a></td>
+                                    <td>
+                                        @if ($trabalho->avaliado($revisor))
+                                            Avaliado
+                                        @else
+                                            Processando
+                                        @endif
+                                    </td>
                                 </tr>
                               @endforeach
                             </tbody>

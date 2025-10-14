@@ -22,8 +22,17 @@ class Trabalho extends Model
         'titulo', 'autores', 'data', 'modalidadeId', 'areaId', 'autorId', 'eventoId', 'resumo', 'avaliado',
         'campoextra1simples', 'campoextra2simples', 'campoextra3simples', 'campoextra4simples',
         'campoextra5simples', 'campoextra1grande', 'campoextra2grande', 'campoextra3grande',
-        'campoextra4grande', 'campoextra5grande', 'status',
+        'campoextra4grande', 'campoextra5grande', 'status', 'aprovado', 'permite_correcao'
     ];
+
+    protected $casts = [
+        'aprovacao_emitida_em' => 'datetime',
+        'permite_correcao' => 'boolean'
+    ];
+
+    public static function gerarCodigo(){
+        return strtoupper(implode('-', str_split(bin2hex(random_bytes(16)), 4)));
+    }
 
     public function recurso()
     {
@@ -129,8 +138,19 @@ class Trabalho extends Model
     {
         $revisor = Revisor::where([['user_id', $user->id], ['areaId', $this->area->id],
             ['modalidadeId', $this->modalidade->id], ])->first();
-
-        return $this->atribuicoes()->where('revisor_id', $revisor->id)->first()->pivot->parecer;
+                // Armazena o resultado da consulta em uma variável.
+        $atribuicao = $this->atribuicoes()->where('revisor_id', $revisor->id)->first();
+        
+        // Verifica se a atribuição foi encontrada.
+        if ($atribuicao === null) {
+            return null;
+        }
+        
+        if ($atribuicao->pivot === null) {
+            return null;
+        } else {
+            return $atribuicao->pivot->parecer;
+        }
     }
 
     public function getQuantidadeAvaliacoes()

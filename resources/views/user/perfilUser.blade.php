@@ -36,38 +36,6 @@
             }
         </style>
 
-        @if(session('sucesso'))
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                <img src="{{ asset('img/icons/check-solid.svg') }}" alt="Sucesso" class="me-2" style="width: 16px; height: 16px; filter: brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(100%) contrast(100%);">
-                {{ session('sucesso') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        @endif
-
-        @if(session('erro'))
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <img src="{{ asset('img/icons/calendar-times-solid.svg') }}" alt="Erro" class="me-2" style="width: 16px; height: 16px; filter: brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(100%) contrast(100%);">
-                {{ session('erro') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        @endif
-
-        @if(session('warning'))
-            <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                <img src="{{ asset('img/icons/calendar-times-solid.svg') }}" alt="Aviso" class="me-2" style="width: 16px; height: 16px; filter: brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(100%) contrast(100%);">
-                {{ session('warning') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        @endif
-
-        @if(session('info'))
-            <div class="alert alert-info alert-dismissible fade show" role="alert">
-                <img src="{{ asset('img/icons/info-circle-solid.svg') }}" alt="Informação" class="me-2" style="width: 16px; height: 16px; filter: brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(100%) contrast(100%);">
-                {{ session('info') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        @endif
-
         <div class="row titulo text-center mt-3" style="color: #034652;">
             <h2 style="font-weight: bold;">{{__('Meu Perfil')}}</h2>
         </div>
@@ -127,91 +95,44 @@
 
                                 <div class="form-group row">
                                     <div class="col-md-6">
-                                        @if($user->cpf != null)
-                                            <div class="custom-control custom-radio custom-control-inline col-form-label">
-                                                <input type="radio" id="customRadioInline1" name="customRadioInline" class="custom-control-input" @if($errors->has('cpf') || (!$errors->has('cnpj') && !$errors->has('passaporte'))) checked @endif>
-                                                <label class="custom-control-label me-2" for="customRadioInline1"><strong>CPF</strong></label>
+                                            <fieldset class="custom-control custom-radio custom-control-inline col-form-label">
+                                                <input type="radio" id="documento_cpf" name="documentos" class="custom-control-input" value="cpf" @checked(old('documentos') === 'cpf' || old('cpf', $user->cpf))>
+                                                <label class="custom-control-label me-2" for="documento_cpf"><strong>CPF</strong></label>
 
-                                                <input type="radio" id="customRadioInline2" name="customRadioInline" class="custom-control-input" @if($errors->has('cnpj')) checked @endif>
-                                                <label class="custom-control-label me-2" for="customRadioInline2"><strong>{{__('CNPJ')}}</strong></label>
+                                                <input type="radio" id="documento_cnpj" name="documentos" class="custom-control-input" value="cnpj" @checked(old('documentos') === 'cnpj' || old('cnpj', $user->cnpj))>
+                                                <label class="custom-control-label me-2" for="documento_cnpj"><strong>{{__('CNPJ')}}</strong></label>
 
-                                                <input type="radio" id="customRadioInline3" name="customRadioInline" class="custom-control-input" @if($errors->has('passaporte')) checked @endif>
-                                                <label class="custom-control-label " for="customRadioInline3"><strong>{{__('Passaporte')}}</strong></label>
-                                            </div>
+                                                <input type="radio" id="documento_passaporte" name="documentos" class="custom-control-input" value="passaporte" @checked(old('documentos') === 'passaporte' || old('passaporte', $user->passaporte))>
+                                                <label class="custom-control-label " for="documento_passaporte"><strong>{{__('Passaporte')}}</strong></label>
+                                            </fieldset>
 
-                                            <div id="fieldCPF" style="display: {{ $errors->has('cpf') || (!$errors->has('cnpj') && !$errors->has('passaporte')) ? 'block' : 'none' }}">
-                                                <input id="cpf" type="text" class="form-control @error('cpf') is-invalid @enderror" name="cpf" @if(old('cpf') != null) value="{{old('cpf')}}" @else value="{{$user->cpf}}" @endif autocomplete="cpf" placeholder="CPF" autofocus >
+                                            <div id="div_cpf" class="d-none">
+                                                <input id="cpf" type="text" class="form-control @error('cpf') is-invalid @enderror" name="cpf" value="{{old('cpf', $user->cpf)}}" autocomplete="cpf" placeholder="CPF" autofocus >
 
                                                 @error('cpf')
-                                                <span class="invalid-feedback" role="alert">
-                                        <strong>{{ __($message) }}</strong>
-                                    </span>
+                                                    <span class="invalid-feedback" role="alert">
+                                                        <strong>{{ __($message) }}</strong>
+                                                    </span>
                                                 @enderror
                                             </div>
-                                        @elseif($user->cnpj != null)
-                                            <div class="custom-control custom-radio custom-control-inline col-form-label">
-                                                <input type="radio" id="customRadioInline1" name="customRadioInline" class="custom-control-input">
-                                                <label class="custom-control-label me-2" for="customRadioInline1"><strong>CPF</strong></label>
-
-                                                <input type="radio" @error('passaporte') checked @enderror id="customRadioInline2" name="customRadioInline" class="custom-control-input" checked>
-                                                <label class="custom-control-label me-2" for="customRadioInline2"><strong>{{__('CNPJ')}}</strong></label>
-
-                                                <input type="radio" @error('passaporte') checked @enderror id="customRadioInline3" name="customRadioInline" class="custom-control-input">
-                                                <label class="custom-control-label " for="customRadioInline3"><strong>{{__('Passaporte')}}</strong></label>
-                                            </div>
-
-                                            <div id="fieldCNPJ" @error('cnpj') style="display: block" @enderror style="display: block">
-                                                <input id="cnpj" type="text" class="form-control @error('cnpj') is-invalid @enderror" name="cnpj" @if(old('cnpj') != null) @else value="{{$user->cnpj}}" @endif autocomplete="cnpj" placeholder="CPNJ" autofocus >
-
+                                            <div id="div_cnpj" class="d-none">
+                                                <input id="cnpj" type="text" class="form-control @error('cnpj') is-invalid @enderror" name="cnpj" value="{{old('cnpj', $user->cnpj)}}" autocomplete="cnpj" placeholder="CNPJ" autofocus >
                                                 @error('cnpj')
-                                                <span class="invalid-feedback" role="alert">
-                                        <strong>{{ __($message) }}</strong>
-                                    </span>
+                                                    <span class="invalid-feedback" role="alert">
+                                                        <strong>{{ __($message) }}</strong>
+                                                    </span>
                                                 @enderror
                                             </div>
-                                        @elseif($user->passaporte != null)
-                                            <div class="custom-control custom-radio custom-control-inline col-form-label">
-                                                <input type="radio" id="customRadioInline1" name="customRadioInline" class="custom-control-input">
-                                                <label class="custom-control-label me-2" for="customRadioInline1"><strong>CPF</strong></label>
 
-                                                <input type="radio" @error('passaporte') checked @enderror id="customRadioInline2" name="customRadioInline" class="custom-control-input">
-                                                <label class="custom-control-label me-2" for="customRadioInline2"><strong>{{__('CNPJ')}}</strong></label>
-
-                                                <input type="radio" @error('passaporte') checked @enderror id="customRadioInline3" name="customRadioInline" class="custom-control-input" checked>
-                                                <label class="custom-control-label " for="customRadioInline3"><strong>{{__('Passaporte')}}</strong></label>
-                                            </div>
-
-                                            <div id="fieldPassaporte" @error('passaporte') style="display: block" @enderror style="display: block" >
-                                                <input id="passaporte" type="text" class="form-control @error('passaporte') is-invalid @enderror" name="passaporte" @if(old('passaporte') != null) @else value="{{$user->passaporte}}" @endif autocomplete="passaporte" placeholder="PASSAPORTE" autofocus >
-
-                                                @error('passaporte')
-                                                <span class="invalid-feedback" role="alert">
-                                        <strong>{{ __($message) }}</strong>
-                                    </span>
+                                            <div id="div_passaporte" class="d-none">
+                                                <input id="passaporte" type="text" class="form-control @error('passaporte') is-invalid @enderror" name="passaporte" value="{{old('passaporte', $user->passaporte)}}" autocomplete="passaporte" placeholder="Passaporte" autofocus >
+                                                @error('passporte')
+                                                    <span class="invalid-feedback" role="alert">
+                                                        <strong>{{ __($message) }}</strong>
+                                                    </span>
                                                 @enderror
                                             </div>
-                                        @else
-                                            <div class="custom-control custom-radio custom-control-inline col-form-label">
-                                                <input type="radio" id="customRadioInline1" name="customRadioInline" class="custom-control-input" checked>
-                                                <label class="custom-control-label me-2" for="customRadioInline1"><strong>CPF</strong></label>
 
-                                                <input type="radio" @error('passaporte') checked @enderror id="customRadioInline2" name="customRadioInline" class="custom-control-input">
-                                                <label class="custom-control-label me-2" for="customRadioInline2"><strong>{{__('CNPJ')}}</strong></label>
-
-                                                <input type="radio" @error('passaporte') checked @enderror id="customRadioInline3" name="customRadioInline" class="custom-control-input">
-                                                <label class="custom-control-label " for="customRadioInline3"><strong>{{__('Passaporte')}}</strong></label>
-                                            </div>
-
-                                            <div id="fieldCPF" @error('cpf') style="display: none" @enderror>
-                                                <input id="cpf" type="text" class="form-control @error('cpf') is-invalid @enderror" name="cpf" @if(old('cpf') != null) @else value="{{$user->cpf}}" @endif autocomplete="cpf" placeholder="CPF" autofocus >
-
-                                                @error('cpf')
-                                                <span class="invalid-feedback" role="alert">
-                                        <strong>{{ __($message) }}</strong>
-                                    </span>
-                                                @enderror
-                                            </div>
-                                        @endif
                                     </div>
 
                                     <div class="col-md-6">
@@ -853,25 +774,24 @@
                 $('.alert').fadeOut('slow');
             }, 5000);
 
-            // $("#fieldPassaporte").hide();
-            $("#customRadioInline1").click(function(){
-                $("#fieldPassaporte").hide();
-                $("#fieldCNPJ").hide();
-                $("#fieldCPF").show();
+
+
+            $("#documento_cpf").change(function(){
+                $("#div_passaporte, #div_cnpj").addClass('d-none').find("input").val('');
+                $("#div_cpf").removeClass('d-none');
             });
 
-            $("#customRadioInline2").click(function(){
-                $("#fieldPassaporte").hide();
-                $("#fieldCNPJ").show();
-                $("#fieldCPF").hide();
+            $("#documento_cnpj").change(function(){
+                $("#div_passaporte, #div_cpf").addClass('d-none').find("input").val('');
+                $("#div_cnpj").removeClass('d-none');
             });
 
-            $("#customRadioInline3").click(function(){
-                $("#fieldPassaporte").show();
-                $("#fieldCNPJ").hide();
-                $("#fieldCPF").hide();
+            $("#documento_passaporte").change(function(){
+                $("#div_passaporte").removeClass('d-none');
+                $("#div_cnpj, #div_cpf").addClass('d-none').find("input").val('');
             });
 
+            $("input[name='documentos']:checked").trigger('change')
         });
 
         function proximaEtapa() {

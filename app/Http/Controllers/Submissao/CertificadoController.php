@@ -855,6 +855,33 @@ class CertificadoController extends Controller
 
     public function validar(Request $request)
     {
+        $request->validate([
+            'hash' => ['required','string','max:128'],
+            'tipo' => ['required','in:certificado,aceite'],
+        ]);
+
+        if($request->tipo == 'aceite'){
+            $codigo = trim((string) $request->input('hash'));
+
+            $norm = strtoupper(str_replace(['-', ' '], '', $codigo));
+
+            if (!preg_match('/^[A-F0-9]{32}$/', $norm)) {
+                return back()->withErrors(['hash' => 'Formato inválido.']);
+            }
+
+            $digest = hash('sha256', $norm);
+            $trabalho = Trabalho::where('hash_codigo_aprovacao', $digest)->first();
+
+            if (!$trabalho) {
+                return back()->withErrors(['hash' => 'Código não encontrado.']);
+            }
+
+            return view('carta_de_aceite_sucesso_validacao', [
+                'codigo'   => $codigo,
+                'trabalho' => $trabalho,
+            ]);
+        }
+
         $certificado_user = DB::table('certificado_user')->where([
             ['validacao', '=', $request['hash']],
             ['valido', '=', true],

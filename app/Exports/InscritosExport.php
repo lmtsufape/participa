@@ -3,27 +3,71 @@
 namespace App\Exports;
 
 use App\Models\Submissao\Evento;
-use App\Models\PerfilIdentitario;
+use App\Models\Inscricao\Inscricao;
+use App\Models\PerfilIdentitario; 
+use App\Models\User; 
 use Carbon\Carbon;
-use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\FromQuery; 
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
+use Illuminate\Database\Eloquent\Builder;
 
-class InscritosExport implements FromCollection, WithHeadings, WithMapping
+class InscritosExport implements FromQuery, WithHeadings, WithMapping 
 {
     protected $evento;
+    protected $filtros;
 
-    public function __construct(Evento $evento)
+    public function __construct(Evento $evento, array $filtros = [])
     {
         $this->evento = $evento;
+        $this->filtros = $filtros;
     }
 
     /**
-    * @return \Illuminate\Support\Collection
+    * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function collection()
+    public function query()
     {
-        return $this->evento->inscricaos()->with(['user.endereco', 'categoria', 'camposPreenchidos.campoFormulario'])->get();
+
+        if ($this->evento->subeventos->count() > 0) {
+            $subeventoIds = $this->evento->subeventos->pluck('id')->toArray();
+            $query = Inscricao::where(function($q) use ($subeventoIds) {
+                $q->where('evento_id', $this->evento->id)
+                  ->orWhereIn('evento_id', $subeventoIds);
+            });
+        } else {
+            $query = $this->evento->inscricaos();
+        }
+
+        $query->with([
+            'user.endereco',
+            'user.perfilIdentitario', 
+            'categoria',
+            'camposPreenchidos.campoFormulario'
+        ]);
+
+        // Aplicar filtros da mesma forma que no controller
+        if (!empty($this->filtros['nome'])) {
+            $query->whereHas('user', function($q) {
+                $q->whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($this->filtros['nome']) . '%']);
+            });
+        }
+
+        if (!empty($this->filtros['email'])) {
+            $query->whereHas('user', function($q) {
+                $q->whereRaw('LOWER(email) LIKE ?', ['%' . strtolower($this->filtros['email']) . '%']);
+            });
+        }
+
+        if (!empty($this->filtros['status'])) {
+            if ($this->filtros['status'] === 'finalizada') {
+                $query->where('finalizada', true);
+            } elseif ($this->filtros['status'] === 'pendente') {
+                $query->where('finalizada', false);
+            }
+        }
+
+        return $query->orderBy('finalizada', 'desc');
     }
 
     /**
@@ -51,43 +95,46 @@ class InscritosExport implements FromCollection, WithHeadings, WithMapping
     public function map($inscricao): array
     {
         $user = $inscricao->user;
-        $categoria = $inscricao->categoria;
 
-        $perfil = PerfilIdentitario::where('userId', $user->id)->first();
+        if (!$user) {
+            return [
+                $inscricao->id,
+                'Erro: Usuário não encontrado para esta inscrição.',
+                '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '' 
+            ];
+        }
+
+        $categoria = $inscricao->categoria;
+        
+        $perfil = $user->perfilIdentitario;
 
         $valor = $categoria ? number_format($categoria->valor_total, 2, ',', '.') : 'N/A';
         $documento = $user->cpf ?? ($user->cnpj ?? $user->passaporte);
-        $genero = ($perfil->genero ?? '') === 'outro' ? $perfil->outroGenero : ucfirst($perfil->genero ?? '');
+        
+        $generoValue = optional($perfil)->genero;
+        $genero = $generoValue === 'outro' ? optional($perfil)->outroGenero : ucfirst($generoValue ?? '');
 
         $racaArray = [];
         if ($perfil && !empty($perfil->raca)) {
-            if (is_array($perfil->raca)) {
-                $racaArray = $perfil->raca;
-            } else {
-                $jsonDecoded = json_decode($perfil->raca, true);
-                if (json_last_error() === JSON_ERROR_NONE && is_array($jsonDecoded)) {
-                    $racaArray = $jsonDecoded;
-                } else {
-                    $racaArray = [$perfil->raca];
-                }
+            $racaData = is_array($perfil->raca) ? $perfil->raca : json_decode($perfil->raca, true);
+            if (is_array($racaData)) {
+                $racaArray = $racaData;
+            } elseif ($perfil->raca) {
+                $racaArray = [$perfil->raca];
             }
         }
         $raca = implode(', ', array_map(fn($item) => ucfirst(str_replace('_', ' ', $item)), $racaArray));
-        if (str_contains($raca, 'Outra raca')) {
+        if ($perfil && str_contains($raca, 'Outra raca')) {
             $raca = 'Outra: ' . ($perfil->outraRaca ?? '');
         }
 
         $necessidadesArray = [];
         if ($perfil && !empty($perfil->necessidadesEspeciais)) {
-            if (is_array($perfil->necessidadesEspeciais)) {
-                $necessidadesArray = $perfil->necessidadesEspeciais;
-            } else {
-                $jsonDecoded = json_decode($perfil->necessidadesEspeciais, true);
-                if (json_last_error() === JSON_ERROR_NONE && is_array($jsonDecoded)) {
-                    $necessidadesArray = $jsonDecoded;
-                } else {
-                    $necessidadesArray = [$perfil->necessidadesEspeciais];
-                }
+            $necessidadesData = is_array($perfil->necessidadesEspeciais) ? $perfil->necessidadesEspeciais : json_decode($perfil->necessidadesEspeciais, true);
+            if (is_array($necessidadesData)) {
+                $necessidadesArray = $necessidadesData;
+            } elseif ($perfil->necessidadesEspeciais) {
+                $necessidadesArray = [$perfil->necessidadesEspeciais];
             }
         }
         $necessidades = implode(', ', $necessidadesArray);
@@ -97,28 +144,28 @@ class InscritosExport implements FromCollection, WithHeadings, WithMapping
             $inscricao->finalizada ? 'Inscrito' : 'Pré-inscrito',
             $inscricao->finalizada ? 'Sim' : 'Não',
             $user->name,
-            $perfil->nomeSocial ?? '',
+            optional($perfil)->nomeSocial ?? '',
             $user->email,
             $documento,
             $perfil && $perfil->dataNascimento ? Carbon::parse($perfil->dataNascimento)->format('d/m/Y') : '',
             $genero,
             $raca,
-            ($perfil->comunidadeTradicional ?? false) ? $perfil->nomeComunidadeTradicional : 'Não',
-            ($perfil->lgbtqia ?? false) ? 'Sim' : 'Não',
-            ($perfil->deficienciaIdoso ?? false) ? 'Sim' : 'Não',
+            (optional($perfil)->comunidadeTradicional ?? false) ? optional($perfil)->nomeComunidadeTradicional : 'Não',
+            (optional($perfil)->lgbtqia ?? false) ? 'Sim' : 'Não',
+            (optional($perfil)->deficienciaIdoso ?? false) ? 'Sim' : 'Não',
             $necessidades,
-            ($perfil->associadoAba ?? false) ? 'Sim' : 'Não',
+            (optional($perfil)->associadoAba ?? false) ? 'Sim' : 'Não',
             $user->instituicao,
             $user->celular,
-            $user->endereco->pais ?? '',
-            $user->endereco->uf ?? '',
-            $user->endereco->cidade ?? '',
-            $user->endereco->bairro ?? '',
-            $user->endereco->rua ?? '',
-            $user->endereco->numero ?? '',
-            $user->endereco->cep ?? '',
-            $user->endereco->complemento ?? '',
-            $categoria->nome ?? 'Não definida',
+            optional($user->endereco)->pais ?? '',
+            optional($user->endereco)->uf ?? '',
+            optional($user->endereco)->cidade ?? '',
+            optional($user->endereco)->bairro ?? '',
+            optional($user->endereco)->rua ?? '',
+            optional($user->endereco)->numero ?? '',
+            optional($user->endereco)->cep ?? '',
+            optional($user->endereco)->complemento ?? '',
+            optional($categoria)->nome ?? 'Não definida',
             $valor,
         ];
 

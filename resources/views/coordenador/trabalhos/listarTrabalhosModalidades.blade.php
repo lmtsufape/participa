@@ -29,7 +29,11 @@
                     <input type="hidden" name="status" value="{{ request('status', 'rascunho') }}">
 
                     <div class="row">
-                        <div class="col-md-10">
+                        <div class="col-md-2">
+                            <label for="id" class="form-label">Buscar por ID</label>
+                            <input type="number" class="form-control" name="id" value="{{ request('id') }}" placeholder="Digite o ID...">
+                        </div>
+                        <div class="col-md-8">
                             <label for="titulo" class="form-label">Buscar por Título</label>
                             <input type="text" class="form-control" name="titulo" value="{{ request('titulo') }}" placeholder="Digite o título do trabalho...">
                         </div>
@@ -71,8 +75,14 @@
                         <th>Avaliadores</th>
                         <th>Avaliações</th>
                         <th>Atribuir</th>
-                        <th>Arquivar</th>
-                        <th>Excluir</th>
+                        @can('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento)
+                            <th>Arquivar</th>
+                            @if ($status == 'rascunho')
+                                <th style="display: none;">Excluir</th>
+                            @else
+                                <th>Excluir</th>
+                            @endif
+                        @endcan
                         <th>Editar</th>
                     </tr>
                 </thead>
@@ -104,20 +114,25 @@
                             <td>{{ $trabalho->atribuicoes_count }}</td>
                             <td>{{ $trabalho->quantidade_avaliacoes }}</td>
                             <td style="text-align:center">
-                                <a href="#" data-bs-toggle="modal" data-bs-target="#modalTrabalho{{$trabalho->id}}"><img src="{{ asset('img/icons/documento.svg') }}" width="20" alt="Atribuir"></a>
+                                <livewire:buttons.ver-trabalho-btn
+                                    :trabalho-id="$trabalho->id"
+                                    :evento-id="$evento->id"
+                                />
                             </td>
-                            <td style="text-align:center">
+                            @can('isCoordenadorOrCoordenadorDaComissaoCientifica', $trabalho->evento)
+                                <td style="text-align:center">
+                                    @if ($trabalho->status == 'arquivado')
+                                        <a href="{{ route('trabalho.status', [$trabalho->id, 'rascunho']) }}"><img src="{{ asset('img/icons/archive.png') }}" width="20" alt="Desarquivar"></a>
+                                    @else
+                                        <a href="{{ route('trabalho.status', [$trabalho->id, 'arquivado'] ) }}"><img src="{{ asset('img/icons/archive.png') }}" width="20" alt="Arquivar"></a>
+                                    @endif
+                                </td>
                                 @if ($trabalho->status == 'arquivado')
-                                    <a href="{{ route('trabalho.status', [$trabalho->id, 'rascunho']) }}"><img src="{{ asset('img/icons/archive.png') }}" width="20" alt="Desarquivar"></a>
-                                @else
-                                    <a href="{{ route('trabalho.status', [$trabalho->id, 'arquivado'] ) }}"><img src="{{ asset('img/icons/archive.png') }}" width="20" alt="Arquivar"></a>
+                                    <td style="text-align:center">
+                                            <a href="#" data-bs-toggle="modal" data-bs-target="#modalExcluirTrabalho_{{$trabalho->id}}"><img src="{{ asset('img/icons/lixo.png') }}" width="20" alt="Excluir"></a>
+                                    </td>
                                 @endif
-                            </td>
-                            <td style="text-align:center">
-                                @if ($trabalho->status == 'arquivado')
-                                    <a href="#" data-bs-toggle="modal" data-bs-target="#modalExcluirTrabalho_{{$trabalho->id}}"><img src="{{ asset('img/icons/lixo.png') }}" width="20" alt="Excluir"></a>
-                                @endif
-                            </td>
+                            @endcan
                             <td style="text-align:center">
                                 <a href="{{ route('coord.trabalho.edit', ['id' => $trabalho->id]) }}"><img src="{{ asset('img/icons/edit-regular.svg') }}" width="20" alt="Editar"></a>
                             </td>
@@ -132,7 +147,6 @@
         </div>
 
         @foreach ($trabalhos as $trabalho)
-            <x-modal-adicionar-revisor :trabalho="$trabalho" :evento="$evento" />
             <x-modal-excluir-trabalho :trabalho="$trabalho" />
         @endforeach
 
@@ -146,12 +160,5 @@
 
 @section('javascript')
     @parent
-    <script>
-        const id = {!! json_encode(old('trabalhoId')) !!};
-        $(document).ready(function(){
-            if(id != null){
-                $('#modalTrabalho'+id).modal('show');
-            }
-        });
-    </script>
+
 @endsection
