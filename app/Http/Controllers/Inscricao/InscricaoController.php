@@ -1192,6 +1192,7 @@ class InscricaoController extends Controller
             $email       = $row['email']       ?? $row[2] ?? null;
             $alimentacao = $row['alimentacao'] ?? $row[3] ?? null;
 
+            $cpf   = $cpf   ? trim( (string) $cpf) : null;
             $email = $email ? mb_strtolower(trim($email)) : null;
 
             return [
@@ -1201,31 +1202,28 @@ class InscricaoController extends Controller
                 'alimentacao' => $alimentacao,
             ];
         })->filter(fn ($l) => $l['cpf'] || $l['email'])->values();
+        $cpfs = $linhas->pluck('cpf')->filter()
+        ->map(fn($v) => preg_replace('/\D+/', '', $v))
+        ->unique()->values();
 
-        $chaves = $linhas->map(fn ($l) => $l['cpf'] ?: $l['email'])->unique()->values();
+    $emails = $linhas->pluck('email')->filter()
+        ->map(fn($v) => mb_strtolower(trim($v)))
+        ->unique()->values();
 
-        $users = User::query()
-            ->where(function ($q) use ($chaves) {
-                foreach ($chaves as $valor) {
-                    $q->orWhere('cpf', 'ILIKE', $valor)
-                    ->orWhere('email', 'ILIKE', $valor);
-                }
-            })
-            ->withExists([
-                'inscricaos as tem_inscricao_confirmada' => function ($q) use ($evento_id) {
-                    $q->when($evento_id, fn ($q) => $q->where('evento_id', $evento_id))
-                    ->where('finalizada', true);
-                },
-            ])
-            ->addSelect([
-                'alimentacao' => Inscricao::select('alimentacao')
-                    ->whereColumn('user_id', 'users.id')
-                    ->when($evento_id, fn ($q) => $q->where('evento_id', $evento_id))
-                    ->where('finalizada', true)
-                    ->latest('created_at')
-                    ->limit(1),
-            ])
-            ->get(['id', 'cpf', 'email']);
+    $users = User::query()
+        ->where(function ($q) use ($cpfs, $emails) {
+            if ($cpfs->isNotEmpty()) {
+                $q->whereIn(DB::raw("REGEXP_REPLACE(cpf, '[^0-9]', '', 'g')"), $cpfs);
+            }
+            if ($emails->isNotEmpty()) {
+                $q->orWhereIn(DB::raw('LOWER(email)'), $emails);
+            }
+        })
+        ->withExists([
+            'inscricaos as tem_inscricao_confirmada' => fn($q) =>
+                $q->where('finalizada', true),
+        ])
+        ->get(['id', 'cpf', 'email']);
 
         $mapaUsuarios = $users->keyBy(fn ($u) => $u->cpf ?: $u->email);
 
