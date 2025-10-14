@@ -21,10 +21,12 @@ class PlanilhaAlimentacaoController extends Controller
     {
         $request->validate([
             'arquivo' => 'required|file|mimes:xlsx,xls|max:10240', // 10MB max
+            'acao' => 'required|in:adicionar,remover'
         ]);
 
         try {
             $arquivo = $request->file('arquivo');
+            $acao = $request->input('acao');
             $caminhoArquivo = $arquivo->store('temp');
             $caminhoCompleto = storage_path('app/' . $caminhoArquivo);
 
@@ -80,13 +82,18 @@ class PlanilhaAlimentacaoController extends Controller
                     ->first();
 
                 if ($inscricao) {
-                    $inscricao->update(['alimentacao' => true]);
+                    $valorAlimentacao = $acao === 'adicionar' ? true : false;
+                    $inscricao->update(['alimentacao' => $valorAlimentacao]);
+
+                    $statusMensagem = $acao === 'adicionar' 
+                        ? 'Inscrição finalizada - Alimentação liberada'
+                        : 'Inscrição finalizada - Alimentação removida';
 
                     $usuariosComAlimentacaoOk[] = [
                         'nome' => $nome,
                         'cpf' => $cpf,
                         'email' => $email,
-                        'status' => 'Inscrição finalizada - Alimentação liberada'
+                        'status' => $statusMensagem
                     ];
                 } else {
                     $usuariosComInscricaoPendente[] = [
