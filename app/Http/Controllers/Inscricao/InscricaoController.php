@@ -26,6 +26,7 @@ use App\Models\Users\Administrador;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Jobs\ProcessarInscricaoAutomaticaJob;
 use Illuminate\Support\Facades\Cache;
+use Maatwebsite\Excel\Facades\Excel;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -978,7 +979,7 @@ class InscricaoController extends Controller
             $jobId = uniqid('inscricao_', true);
 
             ProcessarInscricaoAutomaticaJob::dispatch($dados, $evento->id, $categoria->id, $jobId);
-            
+
             \Log::info("Job despachado com ID: {$jobId}, Total de dados: " . count($dados));
 
             Storage::delete($caminhoArquivo);
@@ -1047,7 +1048,7 @@ class InscricaoController extends Controller
     public function inscricaoAutomaticaProgresso(Request $request)
     {
         $jobId = $request->get('job_id');
-        
+
         if (!$jobId) {
             return redirect()->route('inscricao-automatica.index')
                 ->with('error', 'ID do processamento não encontrado.');
@@ -1059,10 +1060,10 @@ class InscricaoController extends Controller
     public function inscricaoAutomaticaStatusProgresso(Request $request)
     {
         $jobId = $request->get('job_id');
-        
+
         $progresso = Cache::get("inscricao_progress_{$jobId}");
         $completado = Cache::get("inscricao_completed_{$jobId}");
-        
+
         \Log::info("Status request para job {$jobId}: progresso=" . ($progresso ? 'encontrado' : 'não encontrado') . ", completado=" . ($completado ? 'sim' : 'não'));
 
         if ($completado) {
@@ -1093,9 +1094,9 @@ class InscricaoController extends Controller
     public function inscricaoAutomaticaDownloadResultado(Request $request)
     {
         $jobId = $request->get('job_id');
-        
+
         $dados = Cache::get("inscricao_progress_{$jobId}");
-        
+
         if (!$dados) {
             return redirect()->route('inscricao-automatica.index')
                 ->with('error', 'Dados do processamento não encontrados.');
@@ -1174,6 +1175,96 @@ class InscricaoController extends Controller
             return redirect(route('inscricao.inscritos', ['evento' => $evento->id]))
                 ->with(['error_message' => 'Erro ao processar: ' . $e->getMessage()]);
         }
+    }
+
+
+    function processarRelatorioInscricoesJSON(Request $request)
+    {
+
+        $evento_id = $request->integer('evento_id') ?: null;
+        $arquivo  = $request->file('arquivo');
+
+        $sheet = Excel::toCollection(null, $arquivo)->first();
+
+        $linhas = $sheet->skip(1)->map(function ($row) {
+            $nome        = $row['nome']        ?? $row[0] ?? null;
+            $cpf         = $row['cpf']          ?? $row[1] ?? null;
+            $email       = $row['email']       ?? $row[2] ?? null;
+            $alimentacao = $row['alimentacao'] ?? $row[3] ?? null;
+
+            $email = $email ? mb_strtolower(trim($email)) : null;
+
+            return [
+                'nome'        => trim((string) $nome),
+                'cpf'         => $cpf ?: null,
+                'email'       => $email ?: null,
+                'alimentacao' => $alimentacao,
+            ];
+        })->filter(fn ($l) => $l['cpf'] || $l['email'])->values();
+
+        $chaves = $linhas->map(fn ($l) => $l['cpf'] ?: $l['email'])->unique()->values();
+
+        $users = User::query()
+            ->where(function ($q) use ($chaves) {
+                foreach ($chaves as $valor) {
+                    $q->orWhere('cpf', 'ILIKE', $valor)
+                    ->orWhere('email', 'ILIKE', $valor);
+                }
+            })
+            ->withExists([
+                'inscricaos as tem_inscricao_confirmada' => function ($q) use ($evento_id) {
+                    $q->when($evento_id, fn ($q) => $q->where('evento_id', $evento_id))
+                    ->where('finalizada', true);
+                },
+            ])
+            ->addSelect([
+                'alimentacao' => Inscricao::select('alimentacao')
+                    ->whereColumn('user_id', 'users.id')
+                    ->when($evento_id, fn ($q) => $q->where('evento_id', $evento_id))
+                    ->where('finalizada', true)
+                    ->latest('created_at')
+                    ->limit(1),
+            ])
+            ->get(['id', 'cpf', 'email']);
+
+        $mapaUsuarios = $users->keyBy(fn ($u) => $u->cpf ?: $u->email);
+
+        $encontrados = collect();
+        $naoEncontrados = collect();
+
+        foreach ($linhas as $linha) {
+            $chave = $linha['cpf'] ?: $linha['email'];
+            $u = $mapaUsuarios->get($chave);
+
+            if ($u) {
+                $encontrados->push([
+                    'nome'            => $linha['nome'],
+                    'cpf'             => $linha['cpf'],
+                    'email'           => $linha['email'],
+                    'alimentacao'     => (bool) ($u->alimentacao),
+                    'usuario_existe'  => true,
+                    'inscricao'       => (bool) ($u->tem_inscricao_confirmada ?? false)
+                ]);
+            } else {
+                $naoEncontrados->push([
+                    'nome'            => $linha['nome'],
+                    'cpf'             => $linha['cpf'],
+                    'email'           => $linha['email'],
+                    'alimentacao'     => false,
+                    'usuario_existe'  => false,
+                    'inscricao'       => false,
+                ]);
+            }
+        }
+
+        return response()->json([
+            'encontrados'     => $encontrados->values(),
+            'nao_encontrados' => $naoEncontrados->values(),
+            'total'           => [
+                'encontrados'     => $encontrados->count(),
+                'nao_encontrados' => $naoEncontrados->count(),
+            ],
+        ]);
     }
 
 }

@@ -155,6 +155,10 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
             Route::post('/delete/search', [AdministradorController::class, 'search'])->name('search');
             Route::get('/cadastro-automatica', [CadastroUsuarioAutomaticaController::class, 'index'])->name('cadastro-automatica.index');
             Route::post('/cadastro-automatica/processar', [CadastroUsuarioAutomaticaController::class, 'processar'])->name('cadastro-automatica.processar');
+
+            Route::view('/relatorio-inscricoes', 'administrador.confirmar_status_inscricao')->name('relatorio.form');
+
+            Route::post('/relatorio-inscricoes', [InscricaoController::class, 'processarRelatorioInscricoesJSON'])->name('relatorio.processar');
         });
         // rotas da Comissao Cientifica
         Route::get('comissao', [MembroComissaoController::class, 'index'])->name('home.membro');
@@ -164,7 +168,7 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
         Route::get('comissaoCientifica/areas', [CoordComissaoCientificaController::class, 'index'])->name('cientifica.areas');
         Route::post('comissaoCientifica/permissoes', [CoordComissaoCientificaController::class, 'permissoes'])->name('cientifica.permissoes');
         Route::post('comissaoCientifica/novoUsuario', [CoordComissaoCientificaController::class, 'novoUsuario'])->name('cientifica.novoUsuario');
-        
+
         // Rotas de cadastro de usuários para coordenadores e comissão científica
         Route::get('/cadastro-automatica', [CadastroUsuarioAutomaticaController::class, 'index'])->name('cadastro-automatica.index');
         Route::post('/cadastro-automatica/processar', [CadastroUsuarioAutomaticaController::class, 'processar'])->name('cadastro-automatica.processar');
