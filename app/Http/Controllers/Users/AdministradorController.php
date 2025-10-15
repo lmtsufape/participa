@@ -144,31 +144,35 @@ class AdministradorController extends Controller
                 'name' => 'bail|required|string|max:255',
                 'cpf' => ($request->passaporte == null ? ['bail', 'required', 'cpf'] : 'nullable'),
                 'passaporte' => ($request->cpf == null ? 'bail|required|max:10' : 'nullable'),
-                'celular' => 'required|string|max:16',
-                'instituicao' => 'required|string|max:255|regex:/^[A-Za-zÀ-ÿ0-9\s\-\.\(\)\[\]\{\}\/\\,;&@#$%*+=|<>!?~`\'"]+$/',
+                'celular' => 'nullable|string|max:16',
+                'instituicao' => 'nullable|string|max:255|regex:/^[A-Za-zÀ-ÿ0-9\s\-\.\(\)\[\]\{\}\/\\,;&@#$%*+=|<>!?~`\'"]*$/',
                 'especialidade' => 'nullable|string',
-                'rua' => 'required|string|max:255',
-                'numero' => 'required|string',
-                'bairro' => 'required|string|max:255',
-                'cidade' => 'required|string|max:255',
+                'rua' => 'nullable|string|max:255',
+                'numero' => 'nullable|string',
+                'bairro' => 'nullable|string|max:255',
+                'cidade' => 'nullable|string|max:255',
                 'complemento' => 'nullable|string|max:255',
-                'uf' => 'required|string',
-                'cep' => 'required|string',
-                'password' => 'required|string|min:8|confirmed',
+                'uf' => 'nullable|string',
+                'cep' => 'nullable|string',
+                'password' => 'nullable|string|min:8|confirmed',
                 // 'primeiraArea' => 'required|string',
             ]);
 
-            // criar endereço
-            $end = new Endereco();
-            $end->rua = $request->input('rua');
-            $end->numero = $request->input('numero');
-            $end->bairro = $request->input('bairro');
-            $end->cidade = $request->input('cidade');
-            $end->complemento = $request->input('complemento');
-            $end->uf = $request->input('uf');
-            $end->cep = $request->input('cep');
+            // criar endereço apenas se houver dados suficientes
+            $enderecoId = null;
+            if (!empty($request->input('rua')) && !empty($request->input('cidade')) && !empty($request->input('uf'))) {
+                $end = new Endereco();
+                $end->rua = $request->input('rua');
+                $end->numero = $request->input('numero');
+                $end->bairro = $request->input('bairro');
+                $end->cidade = $request->input('cidade');
+                $end->complemento = $request->input('complemento');
+                $end->uf = $request->input('uf');
+                $end->cep = $request->input('cep');
 
-            $end->save();
+                $end->save();
+                $enderecoId = $end->id;
+            }
 
             // Atualizar dados não preenchidos de User
 
@@ -187,7 +191,7 @@ class AdministradorController extends Controller
                 $user->especProfissional = $request->input('especialidade');
             }
             $user->usuarioTemp = null;
-            $user->enderecoId = $end->id;
+            $user->enderecoId = $enderecoId;
             $user->email_verified_at = now();
             $user->save();
 
@@ -233,16 +237,20 @@ class AdministradorController extends Controller
             $user->update();
 
             // endereço
-            $end = Endereco::find($user->enderecoId);
-            $end->rua = $request->input('rua');
-            $end->numero = $request->input('numero');
-            $end->bairro = $request->input('bairro');
-            $end->cidade = $request->input('cidade');
-            $end->complemento = $request->input('complemento');
-            $end->uf = $request->input('uf');
-            $end->cep = $request->input('cep');
+            if ($user->enderecoId) {
+                $end = Endereco::find($user->enderecoId);
+                if ($end) {
+                    $end->rua = $request->input('rua');
+                    $end->numero = $request->input('numero');
+                    $end->bairro = $request->input('bairro');
+                    $end->cidade = $request->input('cidade');
+                    $end->complemento = $request->input('complemento');
+                    $end->uf = $request->input('uf');
+                    $end->cep = $request->input('cep');
 
-            $end->update();
+                    $end->update();
+                }
+            }
             // dd([$user,$end]);
             return redirect()->route('admin.users')->with(['message' => 'Usuário atualizado com sucesso!']);
         }
