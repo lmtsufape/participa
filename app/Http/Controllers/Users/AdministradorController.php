@@ -325,7 +325,7 @@ class AdministradorController extends Controller
 
         app()->setLocale('pt-BR');
 
-        return redirect(route('admin.users', compact('users')))->with(['message' => 'Usuário cadastrado com sucesso!']);
+        return redirect(route('inscricao.inscritos', ['evento' => 2]))->with(['message' => 'Usuário cadastrado com sucesso!']);
     }
 
     protected function validator(Request $request)
