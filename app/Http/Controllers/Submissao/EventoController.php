@@ -314,7 +314,7 @@ class EventoController extends Controller
         if ($isCoordEixoSomente) {
             $areasCoordEixo = $user->areasComoCoordEixoNoEvento($evento->id)->pluck('areas.id');
         }
-        $base = $evento->trabalhos()->whereIn('areaId', $areasId)->when($isCoordEixoSomente, fn($q) => $q->whereIn('areaId', $areasCoordEixo));
+        $base = $evento->trabalhos()->whereIn('areaId', $areasId)->where('modalidadeId', $request->modalidadeId)->when($isCoordEixoSomente, fn($q) => $q->whereIn('areaId', $areasCoordEixo));
 
 
         $trabalhos = QueryBuilder::for($base)
