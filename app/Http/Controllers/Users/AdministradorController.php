@@ -177,7 +177,12 @@ class AdministradorController extends Controller
             $user->passaporte = $request->input('passaporte');
             $user->celular = $request->input('celular');
             $user->instituicao = $request->input('instituicao');
-            $user->password = bcrypt($request->password);
+
+            $password = $request->input('password');
+            if (empty($password)) {
+                $password = $this->gerarSenhaAleatoria(8);
+            }
+            $user->password = bcrypt($password);
             if ($request->input('especialidade') != null) {
                 $user->especProfissional = $request->input('especialidade');
             }
@@ -196,16 +201,16 @@ class AdministradorController extends Controller
                 'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
                 'cpf' => ($request->passaporte == null ? ['bail', 'required', 'cpf', Rule::unique('users')->ignore($user->id)] : 'nullable'),
                 'passaporte' => ($request->cpf == null && $request->cpf == null ? ['bail', 'required', 'max:10', Rule::unique('users')->ignore($user->id)] : ['nullable']),
-                'celular' => 'required|string|max:16',
-                'instituicao' => 'required|string| max:255',
+                'celular' => 'nullable|string|max:16',
+                'instituicao' => 'nullable|string| max:255',
                 // 'especProfissional' => 'nullable|string',
-                'rua' => 'required|string|max:255',
-                'numero' => 'required|string',
-                'bairro' => 'required|string|max:255',
+                'rua' => 'nullable|string|max:255',
+                'numero' => 'nullable|string',
+                'bairro' => 'nullable|string|max:255',
                 'complemento' => 'nullable|string|max:255',
-                'cidade' => 'required|string|max:255',
-                'uf' => 'required|string',
-                'cep' => 'required|string',
+                'cidade' => 'nullable|string|max:255',
+                'uf' => 'nullable|string',
+                'cep' => 'nullable|string',
             ]);
 
             // User
@@ -216,11 +221,13 @@ class AdministradorController extends Controller
             $user->passaporte = $request->input('passaporte');
             $user->celular = $request->input('celular');
             $user->instituicao = $request->input('instituicao');
-            if ($request->input('password') != null) {
-                $request->validate(['password' => 'string|min:8|confirmed',
-                ]);
-                $user->password = bcrypt($request->password);
+            $password = $request->input('password');
+            if (empty($password)) {
+                $password = $this->gerarSenhaAleatoria(8);
+            } else {
+                $request->validate(['password' => 'string|min:8|confirmed']);
             }
+            $user->password = bcrypt($password);
             // $user->especProfissional = $request->input('especProfissional');
             $user->usuarioTemp = null;
             $user->update();
@@ -280,7 +287,12 @@ class AdministradorController extends Controller
 
         $user->name = $request->input('name');
         $user->email = $request->input('email');
-        $user->password = bcrypt($request->input('password'));
+        $password = $request->input('password');
+        if (empty($password)) {
+            $password = $this->gerarSenhaAleatoria(8);
+        }
+        $user->password = bcrypt($password);
+
         $user->cpf = $request->input('cpf');
         $user->passaporte = $request->input('passaporte');
         $user->celular = $request->input('full_number');
@@ -302,20 +314,14 @@ class AdministradorController extends Controller
         $user->save();
 
         // Criar perfil identitário
-        $perfilData = $request->all();
+        if ($this->temDadosPerfilIdentitario($request->all())) {
+            $perfilData = $this->formatarDadosPerfilIdentitario($request->all());
 
-        // Converter strings "true"/"false" para booleanos
-        $booleanFields = ['comunidadeTradicional', 'lgbtqia', 'deficienciaIdoso', 'associadoAba', 'receberInfoAba', 'participacaoOrganizacao'];
-        foreach ($booleanFields as $field) {
-            if (isset($perfilData[$field])) {
-                $perfilData[$field] = $perfilData[$field] === 'true';
-            }
+            $perfilIdentitario = new PerfilIdentitario();
+            $perfilIdentitario->setAttributes($perfilData);
+            $perfilIdentitario->userId = $user->id;
+            $perfilIdentitario->save();
         }
-
-        $perfilIdentitario = new PerfilIdentitario();
-        $perfilIdentitario->setAttributes($perfilData);
-        $perfilIdentitario->userId = $user->id;
-        $perfilIdentitario->save();
 
         app()->setLocale('pt-BR');
 
@@ -327,30 +333,80 @@ class AdministradorController extends Controller
         return Validator::make($request->all(), [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'password' => ['nullable', 'string', 'min:8', 'confirmed'],
             'cpf' => ($request->input('passaporte') == null ? ['required', 'cpf'] : 'nullable'),
             'passaporte' => ($request->input('cpf') == null ? 'required|max:10' : 'nullable'),
-            'celular' => ['required', 'string', 'max:20'],
-            'instituicao' => ['required', 'string', 'max:255', 'regex:/^[A-Za-zÀ-ÿ0-9\s\-\.\(\)\[\]\{\}\/\\,;&@#$%*+=|<>!?~`\'"]+$/'],
-            'dataNascimento' => ['required', 'date'],
-            'rua' => ['required', 'string', 'max:255'],
-            'numero' => ['required', 'string'],
-            'bairro' => ['required', 'string', 'max:255'],
-            'cidade' => ['required', 'string', 'max:255'],
-            'uf' => ['required', 'string'],
-            'cep' => ['required', 'string'],
+            'celular' => ['nullable', 'string', 'max:20'],
+            'instituicao' => ['nullable', 'string', 'max:255', 'regex:/^[A-Za-zÀ-ÿ0-9\s\-\.\(\)\[\]\{\}\/\\,;&@#$%*+=|<>!?~`\'"]*$/'],
+            'dataNascimento' => ['nullable', 'date'],
+            'rua' => ['nullable', 'string', 'max:255'],
+            'numero' => ['nullable', 'string'],
+            'bairro' => ['nullable', 'string', 'max:255'],
+            'cidade' => ['nullable', 'string', 'max:255'],
+            'uf' => ['nullable', 'string'],
+            'cep' => ['nullable', 'string'],
             'complemento' => ['nullable', 'string'],
             // Campos do perfil identitário
-            'genero' => ['required', 'string'],
-            'raca' => ['required', 'array'],
-            'comunidadeTradicional' => ['required', 'in:true,false'],
-            'lgbtqia' => ['required', 'in:true,false'],
-            'necessidadesEspeciais' => ['required', 'array'],
-            'deficienciaIdoso' => ['required', 'in:true,false'],
-            'associadoAba' => ['required', 'in:true,false'],
-            'receberInfoAba' => ['required', 'in:true,false'],
-            'participacaoOrganizacao' => ['required', 'in:true,false'],
+            'genero' => ['nullable', 'string'],
+            'raca' => ['nullable', 'array'],
+            'comunidadeTradicional' => ['nullable', 'in:true,false'],
+            'lgbtqia' => ['nullable', 'in:true,false'],
+            'necessidadesEspeciais' => ['nullable', 'array'],
+            'deficienciaIdoso' => ['nullable', 'in:true,false'],
+            'associadoAba' => ['nullable', 'in:true,false'],
+            'receberInfoAba' => ['nullable', 'in:true,false'],
+            'participacaoOrganizacao' => ['nullable', 'in:true,false'],
             'vinculoInstitucional' => ['nullable', 'string', 'max:1000'],
         ]);
+    }
+    private function gerarSenhaAleatoria(int $length = 8): string
+    {
+        $chars = '0123456789';
+        $result = '';
+        for ($i = 0; $i < $length; $i++) {
+            $result .= $chars[random_int(0, strlen($chars) - 1)];
+        }
+        return $result;
+    }
+
+    private function temDadosPerfilIdentitario(array $data): bool
+    {
+        $camposMinimos = ['dataNascimento', 'genero', 'raca'];
+
+        foreach ($camposMinimos as $campo) {
+            if (empty($data[$campo])) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+    private function formatarDadosPerfilIdentitario(array $data): array
+    {
+        $perfilData = [
+            'nomeSocial' => $data['nomeSocial'] ?? '',
+            'dataNascimento' => $data['dataNascimento'],
+            'genero' => $data['genero'] ?? 'não informado',
+            'outroGenero' => $data['outroGenero'] ?? '',
+            'raca' => is_array($data['raca']) ? $data['raca'] : [$data['raca']],
+            'outraRaca' => $data['outraRaca'] ?? '',
+
+            'comunidadeTradicional' => $data['comunidadeTradicional'] ? 'true' : 'false',
+            'nomeComunidadeTradicional' => $data['nomeComunidadeTradicional'] ?? null,
+
+            'lgbtqia' => $data['lgbtqia'] ? 'true' : 'false',
+            'deficienciaIdoso' => $data['deficienciaIdoso'] ? 'true' : 'false',
+            'associadoAba' => $data['associadoAba'] ? 'true' : 'false',
+            'receberInfoAba' => $data['receberInfoAba'] ? 'true' : 'false',
+
+            'participacaoOrganizacao' => $data['participacaoOrganizacao'] ? 'true' : 'false',
+            'nomeOrganizacao' => $data['nomeOrganizacao'] ?? null,
+
+            'necessidadesEspeciais' => $data['necessidadesEspeciais'] ?? ['nenhuma'],
+            'outraNecessidadeEspecial' => $data['outraNecessidadeEspecial'] ?? '',
+            'vinculoInstitucional' => $data['vinculoInstitucional'] ?? '',
+        ];
+
+        return $perfilData;
     }
 }

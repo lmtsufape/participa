@@ -110,8 +110,8 @@
                 </div>
 
                 <div class="col-md-6">
-                    <label for="instituicao" class="col-form-label required-field"><strong>{{ __('Instituição') }}</strong></label>
-                    <input id="instituicao" type="text" class="form-control apenasLetras @error('instituicao') is-invalid @enderror" name="instituicao" value="{{ old('instituicao') }}" autocomplete="instituicao" required>
+                    <label for="instituicao" class="col-form-label"><strong>{{ __('Instituição') }}</strong></label>
+                    <input id="instituicao" type="text" class="form-control apenasLetras @error('instituicao') is-invalid @enderror" name="instituicao" value="{{ old('instituicao') }}" autocomplete="instituicao">
 
                     @error('instituicao')
                         <span class="invalid-feedback" role="alert">
@@ -123,8 +123,8 @@
 
             <div class="form-group row">
                 <div class="col-md-4">
-                    <label for="celular" class="col-form-label required-field"><strong>{{ __('Celular') }}</strong></label><br>
-                    <input id="phone" class="form-control celular @error('celular') is-invalid @enderror" type="tel" name="celular" value="{{old('celular')}}" style="width: 100% !important;" required autocomplete="celular" onkeyup="process(event)">
+                    <label for="celular" class="col-form-label"><strong>{{ __('Celular') }}</strong></label><br>
+                    <input id="phone" class="form-control celular @error('celular') is-invalid @enderror" type="tel" name="celular" value="{{old('celular')}}" style="width: 100% !important;" autocomplete="celular" onkeyup="process(event)">
                     <div class="alert alert-info mt-1" style="display: none"></div>
                     <div id="celular-invalido" class="alert alert-danger mt-1" role="alert" style="display: none"></div>
 
@@ -136,8 +136,8 @@
                 </div>
 
                 <div class="col-md-4">
-                    <label for="dataNascimento" class="col-form-label required-field"><strong>{{ __('Data de nascimento') }}</strong></label>
-                    <input id="dataNascimento" type="date" class="form-control @error('dataNascimento') is-invalid @enderror" name="dataNascimento" value="{{ old('dataNascimento')}}" autocomplete="dataNascimento" required>
+                    <label for="dataNascimento" class="col-form-label"><strong>{{ __('Data de nascimento') }}</strong></label>
+                    <input id="dataNascimento" type="date" class="form-control @error('dataNascimento') is-invalid @enderror" name="dataNascimento" value="{{ old('dataNascimento')}}" autocomplete="dataNascimento">
 
                     @error('dataNascimento')
                         <span class="invalid-feedback" role="alert">
@@ -160,8 +160,8 @@
 
             <div class="form-group row mb-3">
                 <div class="col-md-6">
-                    <label for="password" class="col-form-label required-field"><strong>{{ __('Senha') }}</strong></label>
-                    <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" autocomplete="new-password" required>
+                    <label for="password" class="col-form-label"><strong>{{ __('Senha') }}</strong></label>
+                    <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" autocomplete="new-password">
                     <small>{{__('OBS: A senha deve ter no mínimo 8 caracteres (letras ou números)')}}.</small>
                     @error('password')
                         <span class="invalid-feedback" role="alert">
@@ -171,8 +171,8 @@
                 </div>
 
                 <div class="col-md-6">
-                    <label for="password-confirm" class="col-form-label required-field"><strong>{{ __('Confirmar senha') }}</strong></label>
-                    <input id="password-confirm" type="password" class="form-control" name="password_confirmation" autocomplete="new-password" required>
+                    <label for="password-confirm" class="col-form-label"><strong>{{ __('Confirmar senha') }}</strong></label>
+                    <input id="password-confirm" type="password" class="form-control" name="password_confirmation" autocomplete="new-password">
                 </div>
             </div>
         </div>
@@ -191,8 +191,8 @@
 
             <div class="form-group row mt-3">
                 <div class="col-md-12">
-                    <label for="cep" class="col-form-label required-field"><strong>{{ __('CEP') }}</strong></label>
-                    <input value="{{old('cep')}}" id="cep" type="text" autocomplete="cep" name="cep" autofocus class="form-control field__input a-field__input" placeholder="{{__('CEP')}}" size="10" maxlength="9" required>
+                    <label for="cep" class="col-form-label"><strong>{{ __('CEP') }}</strong></label>
+                    <input value="{{old('cep')}}" id="cep" type="text" autocomplete="cep" name="cep" autofocus class="form-control field__input a-field__input" placeholder="{{__('CEP')}}" size="10" maxlength="9">
                     @error('cep')
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ __($message) }}</strong>
@@ -203,8 +203,8 @@
 
             <div class="form-group row">
                 <div class="col-md-6">
-                    <label for="rua" class="col-form-label required-field"><strong>{{ __('Rua') }}</strong></label>
-                    <input value="{{old('rua')}}" id="rua" type="text" class="form-control @error('rua') is-invalid @enderror" name="rua" autocomplete="new-password" required>
+                    <label for="rua" class="col-form-label"><strong>{{ __('Rua') }}</strong></label>
+                    <input value="{{old('rua')}}" id="rua" type="text" class="form-control @error('rua') is-invalid @enderror" name="rua" autocomplete="new-password">
 
                     @error('rua')
                         <span class="invalid-feedback" role="alert">
@@ -214,8 +214,8 @@
                 </div>
 
                 <div class="col-md-6">
-                    <label for="numero" class="col-form-label required-field"><strong>{{ __('Número') }}</strong></label>
-                    <input value="{{old('numero')}}" id="numero" type="text" class="form-control @error('numero') is-invalid @enderror" name="numero" autocomplete="numero" maxlength="10" required>
+                    <label for="numero" class="col-form-label"><strong>{{ __('Número') }}</strong></label>
+                    <input value="{{old('numero')}}" id="numero" type="text" class="form-control @error('numero') is-invalid @enderror" name="numero" autocomplete="numero" maxlength="10">
 
                     @error('numero')
                         <span class="invalid-feedback" role="alert">
@@ -227,8 +227,8 @@
 
             <div class="form-group row">
                 <div class="col-md-6">
-                    <label for="bairro" class="col-form-label required-field"><strong>{{ __('Bairro') }}</strong></label>
-                    <input value="{{old('bairro')}}" id="bairro" type="text" class="form-control @error('bairro') is-invalid @enderror" name="bairro" autocomplete="bairro" required>
+                    <label for="bairro" class="col-form-label"><strong>{{ __('Bairro') }}</strong></label>
+                    <input value="{{old('bairro')}}" id="bairro" type="text" class="form-control @error('bairro') is-invalid @enderror" name="bairro" autocomplete="bairro">
 
                     @error('bairro')
                         <span class="invalid-feedback" role="alert">
@@ -251,8 +251,8 @@
 
             <div class="form-group row mb-3">
                 <div class="col-md-6">
-                    <label for="cidade" class="col-form-label required-field"><strong>{{ __('Cidade') }}</strong></label>
-                    <input value="{{old('cidade')}}" id="cidade" type="text" class="form-control apenasLetras @error('cidade') is-invalid @enderror" name="cidade" autocomplete="cidade" required>
+                    <label for="cidade" class="col-form-label"><strong>{{ __('Cidade') }}</strong></label>
+                    <input value="{{old('cidade')}}" id="cidade" type="text" class="form-control apenasLetras @error('cidade') is-invalid @enderror" name="cidade" autocomplete="cidade">
 
                     @error('cidade')
                         <span class="invalid-feedback" role="alert">
@@ -262,8 +262,8 @@
                 </div>
 
                 <div class="col-md-6" id="groupformuf">
-                    <label for="uf" class="col-form-label required-field"><strong>{{ __('Estado') }}</strong></label>
-                    <select class="form-control @error('uf') is-invalid @enderror required-field" id="uf" name="uf" required>
+                    <label for="uf" class="col-form-label"><strong>{{ __('Estado') }}</strong></label>
+                    <select class="form-control @error('uf') is-invalid @enderror" id="uf" name="uf">
                         <option value="" disabled selected hidden>{{__('Selecione o estado')}}</option>
                         <option @if(old('uf') == 'AC') selected @endif value="AC">Acre</option>
                         <option @if(old('uf') == 'AL') selected @endif value="AL">Alagoas</option>
@@ -317,7 +317,7 @@
                 {{-- Gênero --}}
                 <div>
                     <div class="form-group mt-3">
-                        <label class="col-form-label required-field"><strong>Gênero</strong></label>
+                        <label class="col-form-label"><strong>Gênero</strong></label>
                         <div>
                             @php
                                 $generos = [
@@ -337,7 +337,7 @@
                                         name="genero"
                                         id="genero_{{ $key }}"
                                         value="{{ $key }}"
-                                        @if ($loop->first) required @endif>
+                                        >
                                     <label class="form-check-label" for="genero_{{ $key }}">{{ $label }}</label>
                                 </div>
                             @endforeach
@@ -349,7 +349,7 @@
                 {{-- Raça (auto-declaração) --}}
                 <div>
                     <div class="form-group mt-3">
-                        <label class="col-form-label required-field"><strong>Raça (auto-declaração)</strong></label>
+                        <label class="col-form-label"><strong>Raça (auto-declaração)</strong></label>
                         <div>
                             @php
                                 $racas = [
@@ -382,10 +382,10 @@
                 {{-- Comunidade ou povo tradicional --}}
                 <div>
                     <div class="form-group mt-3">
-                        <label class="col-form-label required-field"><strong>Você pertence ou atua em alguma comunidade ou povo tradicional?</strong></label>
+                        <label class="col-form-label"><strong>Você pertence ou atua em alguma comunidade ou povo tradicional?</strong></label>
                         <div>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="comunidadeTradicional" id="comunidade_sim" value="true" required>
+                                <input class="form-check-input" type="radio" name="comunidadeTradicional" id="comunidade_sim" value="true">
                                 <label class="form-check-label" for="comunidade_sim">Sim</label>
                             </div>
                             <div class="form-check">
@@ -400,10 +400,10 @@
                 {{-- Pessoa LGBTQIA+ --}}
                 <div>
                     <div class="form-group mt-3">
-                        <label class="col-form-label required-field"><strong>Você se identifica como Pessoa LGBTQIA+?</strong></label>
+                        <label class="col-form-label"><strong>Você se identifica como Pessoa LGBTQIA+?</strong></label>
                         <div>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="lgbtqia" id="lgbtqia_sim" value="true" required>
+                                <input class="form-check-input" type="radio" name="lgbtqia" id="lgbtqia_sim" value="true">
                                 <label class="form-check-label" for="lgbtqia_sim">Sim</label>
                             </div>
                             <div class="form-check">
@@ -419,7 +419,7 @@
                 {{-- Informações sobre necessidades especiais --}}
                 <div>
                     <div class="form-group mt-3">
-                        <label class="col-form-label required-field"><strong>Informações sobre necessidades</strong></label>
+                        <label class="col-form-label"><strong>Informações sobre necessidades</strong></label>
                         <div>
                             @php
                                 $necessidades = [
@@ -449,10 +449,10 @@
                 {{-- Pessoa com deficiência ou idosos --}}
                 <div>
                     <div class="form-group mt-3">
-                        <label class="col-form-label required-field"><strong>Você é uma pessoa idosa ou com deficiência?</strong></label>
+                        <label class="col-form-label"><strong>Você é uma pessoa idosa ou com deficiência?</strong></label>
                         <div>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="deficienciaIdoso" id="deficiencia_sim" value="true" required>
+                                <input class="form-check-input" type="radio" name="deficienciaIdoso" id="deficiencia_sim" value="true">
                                 <label class="form-check-label" for="deficiencia_sim">Sim</label>
                             </div>
                             <div class="form-check">
@@ -468,10 +468,10 @@
                 {{-- Associado da ABA Agroecologia --}}
                 <div>
                     <div class="form-group mt-3">
-                        <label class="col-form-label required-field"><strong>Você é uma pessoa associada à Associação Brasileira de Agroecologia (ABA-Agroecologia)?</strong></label>
+                        <label class="col-form-label"><strong>Você é uma pessoa associada à Associação Brasileira de Agroecologia (ABA-Agroecologia)?</strong></label>
                         <div>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="associadoAba" id="associado_sim" value="true" required>
+                                <input class="form-check-input" type="radio" name="associadoAba" id="associado_sim" value="true">
                                 <label class="form-check-label" for="associado_sim">Sim</label>
                             </div>
                             <div class="form-check">
@@ -485,10 +485,10 @@
                 {{-- Gostaria de receber mais informações sobre ABA --}}
                 <div>
                     <div class="form-group mt-3">
-                        <label class="col-form-label required-field"><strong>Se não, gostaria de receber mais informações sobre a ABA-Agroecologia?</strong></label>
+                        <label class="col-form-label"><strong>Se não, gostaria de receber mais informações sobre a ABA-Agroecologia?</strong></label>
                         <div>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="receberInfoAba" id="receber_info_sim" value="true" required>
+                                <input class="form-check-input" type="radio" name="receberInfoAba" id="receber_info_sim" value="true">
                                 <label class="form-check-label" for="receber_info_sim">Sim</label>
                             </div>
                             <div class="form-check">
@@ -504,10 +504,10 @@
                 {{-- Participa de organização, rede ou movimento --}}
                 <div>
                     <div class="form-group mt-3">
-                        <label class="col-form-label required-field"><strong>Você participa de alguma organização, rede ou movimento?</strong></label>
+                        <label class="col-form-label"><strong>Você participa de alguma organização, rede ou movimento?</strong></label>
                         <div>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="participacaoOrganizacao" id="participa_sim" value="true" required>
+                                <input class="form-check-input" type="radio" name="participacaoOrganizacao" id="participa_sim" value="true">
                                 <label class="form-check-label" for="participa_sim">Sim</label>
                             </div>
                             <div class="form-check">
