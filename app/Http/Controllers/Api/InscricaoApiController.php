@@ -106,7 +106,7 @@ class InscricaoApiController extends Controller
                 'cidade' => $inscricao->user->endereco?->cidade,
                 'uf' => $inscricao->user->endereco?->uf,
                 'organizacao' => $inscricao->user->instituicao,
-                'tipo_inscricao' => $inscricao->categoria->nome,
+                'tipo_inscricao' => $inscricao->categoria?->nome,
                 'alimentacao' => $inscricao->alimentacao,
             ]
         ], 200);
@@ -258,7 +258,7 @@ class InscricaoApiController extends Controller
                     'cidade' => $user->endereco?->cidade,
                     'uf' => $user->endereco?->uf,
                     'organizacao' => $user->instituicao,
-                    'tipo_inscricao' => $inscricao->categoria->nome,
+                    'tipo_inscricao' => $inscricao->categoria?->nome,
                     'alimentacao' => $inscricao->alimentacao,
                 ];
             }
