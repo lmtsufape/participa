@@ -1222,6 +1222,15 @@ class InscricaoController extends Controller
                 ->whereIn('email', $emails)
                 ->get(['id', 'cpf', 'email']);
             $users = $users->merge($usersEmail);
+
+            $usersEmailLike = User::query()
+                ->where(function($q) use ($emails) {
+                    foreach ($emails as $email) {
+                        $q->orWhere('email', 'ILIKE', $email);
+                    }
+                })
+                ->get(['id', 'cpf', 'email']);
+            $users = $users->merge($usersEmailLike);
         }
 
         $users = $users->unique('id');
@@ -1265,8 +1274,14 @@ class InscricaoController extends Controller
         $naoEncontrados = collect();
 
         foreach ($linhas as $linha) {
-            $chave = $linha['cpf'] ?: $linha['email'];
-            $u = $mapaUsuarios->get($chave);
+            $u = null;
+
+            if ($linha['cpf'] && $mapaUsuarios->has($linha['cpf'])) {
+                $u = $mapaUsuarios->get($linha['cpf']);
+            }
+            elseif ($linha['email'] && $mapaUsuarios->has($linha['email'])) {
+                $u = $mapaUsuarios->get($linha['email']);
+            }
 
             if ($u) {
                 $encontrados->push([
