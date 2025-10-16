@@ -78,7 +78,17 @@
         </div>
         <div class="row justify-content-center">
 
-            <div class="col-md-8">
+            <div class="col-md-4">
+                <label for="nomeSocial" class="col-form-label">{{ __('Nome Social') }}</label>
+                <input id="nomeSocial" type="text" class="form-control apenasLetras @error('nomeSocial') is-invalid @enderror" name="nomeSocial" @if(old('nomeSocial') != null) value="{{ old('nomeSocial') }}" @else value="{{$user->perfilIdentitario->nomeSocial ?? ''}}" @endif autocomplete="nomeSocial">
+
+                @error('nomeSocial')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+            </div>
+            <div class="col-md-4">
             <label for="instituicao" class="col-form-label">{{ __('Instituição de Ensino') }}</label>
             <input id="instituicao" type="text" class="form-control apenasLetras @error('instituicao') is-invalid @enderror" name="instituicao" @if(old('instituicao') != null) value="{{ old('instituicao') }}" @else value="{{$user->instituicao}}" @endif autocomplete="instituicao" autofocus>
 
@@ -422,8 +432,8 @@
                 {{-- <a class="btn btn-secondary botao-form" href="{{route('home')}}" style="width:100%">Voltar</a> --}}
             </div>
             <div class="col-md-6" style="padding-right:0">
-                <button type="submit" class="btn btn-atualizar-perfil botao-form" style="width:100%">
-                    {{ __('Concluir') }}
+                <button type="submit" class="btn btn-success btn-lg botao-form" style="width:100%; font-weight: bold; font-size: 16px; padding: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
+                    </i> {{ __('Concluir') }}
                 </button>
             </div>
         </div>
