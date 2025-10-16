@@ -124,7 +124,7 @@ class AdministradorController extends Controller
     public function editUser($id)
     {
         $this->authorize('isAdmin', Administrador::class);
-        $user = User::find($id);
+        $user = User::with('perfilIdentitario')->find($id);
         $end = $user->endereco;
 
         return view('administrador.editUser', ['user' => $user, 'end' => $end]);
@@ -142,6 +142,7 @@ class AdministradorController extends Controller
         if ($user->usuarioTemp == true) {
             $validator = $request->validate([
                 'name' => 'bail|required|string|max:255',
+                'nomeSocial' => 'nullable|string|max:255',
                 'cpf' => ($request->passaporte == null ? ['bail', 'required', 'cpf'] : 'nullable'),
                 'passaporte' => ($request->cpf == null ? 'bail|required|max:10' : 'nullable'),
                 'celular' => 'nullable|string|max:16',
@@ -195,6 +196,36 @@ class AdministradorController extends Controller
             $user->email_verified_at = now();
             $user->save();
 
+            if ($user->perfilIdentitario) {
+                $user->perfilIdentitario->nomeSocial = $request->input('nomeSocial');
+                $user->perfilIdentitario->save();
+            } else {
+                $perfilData = [
+                    'nomeSocial' => $request->input('nomeSocial'),
+                    'dataNascimento' => '2000-01-01',
+                    'genero' => 'prefiro_nao_responder',
+                    'outroGenero' => '',
+                    'raca' => ['prefiro_nao_responder_raca'],
+                    'outraRaca' => '',
+                    'comunidadeTradicional' => 'false',
+                    'nomeComunidadeTradicional' => null,
+                    'lgbtqia' => 'false',
+                    'deficienciaIdoso' => 'false',
+                    'associadoAba' => 'false',
+                    'receberInfoAba' => 'false',
+                    'participacaoOrganizacao' => 'false',
+                    'nomeOrganizacao' => null,
+                    'necessidadesEspeciais' => ['nenhuma'],
+                    'outraNecessidadeEspecial' => '',
+                    'vinculoInstitucional' => '',
+                ];
+
+                $perfilIdentitario = new PerfilIdentitario();
+                $perfilIdentitario->setAttributes($perfilData);
+                $perfilIdentitario->userId = $user->id;
+                $perfilIdentitario->save();
+            }
+
             return redirect()->route('admin.users')->with(['message' => 'Cadastro completado com sucesso!']);
         } else {
             if ($request->passaporte != null && $request->cpf != null) {
@@ -202,6 +233,7 @@ class AdministradorController extends Controller
             }
             $validator = $request->validate([
                 'name' => 'required|string|max:255',
+                'nomeSocial' => 'nullable|string|max:255',
                 'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
                 'cpf' => ($request->passaporte == null ? ['bail', 'required', 'cpf', Rule::unique('users')->ignore($user->id)] : 'nullable'),
                 'passaporte' => ($request->cpf == null && $request->cpf == null ? ['bail', 'required', 'max:10', Rule::unique('users')->ignore($user->id)] : ['nullable']),
@@ -251,6 +283,36 @@ class AdministradorController extends Controller
                     $end->update();
                 }
             }
+            if ($user->perfilIdentitario) {
+                $user->perfilIdentitario->nomeSocial = $request->input('nomeSocial');
+                $user->perfilIdentitario->save();
+            } else {
+                $perfilData = [
+                    'nomeSocial' => $request->input('nomeSocial'),
+                    'dataNascimento' => '2000-01-01',
+                    'genero' => 'prefiro_nao_responder',
+                    'outroGenero' => '',
+                    'raca' => ['prefiro_nao_responder_raca'],
+                    'outraRaca' => '',
+                    'comunidadeTradicional' => 'false',
+                    'nomeComunidadeTradicional' => null,
+                    'lgbtqia' => 'false',
+                    'deficienciaIdoso' => 'false',
+                    'associadoAba' => 'false',
+                    'receberInfoAba' => 'false',
+                    'participacaoOrganizacao' => 'false',
+                    'nomeOrganizacao' => null,
+                    'necessidadesEspeciais' => ['nenhuma'],
+                    'outraNecessidadeEspecial' => '',
+                    'vinculoInstitucional' => '',
+                ];
+
+                $perfilIdentitario = new PerfilIdentitario();
+                $perfilIdentitario->setAttributes($perfilData);
+                $perfilIdentitario->userId = $user->id;
+                $perfilIdentitario->save();
+            }
+
             // dd([$user,$end]);
             return redirect()->route('admin.users')->with(['message' => 'Usuário atualizado com sucesso!']);
         }
