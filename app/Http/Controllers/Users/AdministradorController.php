@@ -145,7 +145,7 @@ class AdministradorController extends Controller
                 'cpf' => ($request->passaporte == null ? ['bail', 'required', 'cpf'] : 'nullable'),
                 'passaporte' => ($request->cpf == null ? 'bail|required|max:10' : 'nullable'),
                 'celular' => 'nullable|string|max:16',
-                'instituicao' => ['nullable','string','max:255','regex:#^[\p{L}\p{M}0-9 .\-(){}\[\],;&@#$%*+=/\\|<>!?~`\'"]*$#u'],
+                'instituicao' => ['nullable','string','max:255','regex:~^[\p{L}\p{M}0-9 .\-(){}\[\],;&@%*+=/\\\\|<>!?`\'"]*$~u'],
                 'especialidade' => 'nullable|string',
                 'rua' => 'nullable|string|max:255',
                 'numero' => 'nullable|string',
