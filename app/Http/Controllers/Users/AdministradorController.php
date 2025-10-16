@@ -323,11 +323,21 @@ class AdministradorController extends Controller
     public function search(Request $request)
     {
         $this->authorize('isAdmin', Administrador::class);
-        $busca = strtolower($request->search);
-        $users = User::whereRaw('LOWER(email) like ?', ['%' . $busca . '%'])
-            ->orWhereRaw('LOWER(name) like ?', ['%' . $busca . '%'])
-            ->orWhereRaw('LOWER(cpf) like ?', ['%' . $busca . '%'])
-            ->paginate(100);
+        $busca = $request->search;
+        
+        try {
+            $users = User::whereRaw('unaccent(lower(email)) ILIKE unaccent(lower(?))', ['%' . $busca . '%'])
+                ->orWhereRaw('unaccent(lower(name)) ILIKE unaccent(lower(?))', ['%' . $busca . '%'])
+                ->orWhereRaw('unaccent(lower(cpf)) ILIKE unaccent(lower(?))', ['%' . $busca . '%'])
+                ->paginate(100);
+        } catch (\Exception $e) {
+            $busca = strtolower($busca);
+            $users = User::whereRaw('LOWER(email) like ?', ['%' . $busca . '%'])
+                ->orWhereRaw('LOWER(name) like ?', ['%' . $busca . '%'])
+                ->orWhereRaw('LOWER(cpf) like ?', ['%' . $busca . '%'])
+                ->paginate(100);
+        }
+        
         if ($users->count() == 0) {
             return view('administrador.users', compact('users'))->with(['message' => 'Nenhum Resultado encontrado!']);
         }
