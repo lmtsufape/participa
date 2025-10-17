@@ -143,8 +143,9 @@ class AdministradorController extends Controller
             $validator = $request->validate([
                 'name' => 'bail|required|string|max:255',
                 'nomeSocial' => 'nullable|string|max:255',
-                'cpf' => ($request->passaporte == null ? ['bail', 'required', 'cpf'] : 'nullable'),
-                'passaporte' => ($request->cpf == null ? 'bail|required|max:10' : 'nullable'),
+                'cpf' => ($request->passaporte == null && $request->cnpj == null ? ['bail', 'required', 'cpf', 'unique:users,cpf,' . $user->id] : 'nullable'),
+                'cnpj' => ($request->passaporte == null && $request->cpf == null ? ['required', 'string', 'min:14', 'max:18', 'unique:users,cnpj,' . $user->id] : 'nullable'),
+                'passaporte' => ($request->cpf == null && $request->cnpj == null ? 'bail|required|max:10|unique:users,passaporte,' . $user->id : 'nullable'),
                 'celular' => 'nullable|string|max:16',
                 'instituicao' => ['nullable','string','max:255','regex:~^[\p{L}\p{M}0-9 .\-(){}\[\],;&@%*+=/\\\\|<>!?`\'"]*$~u'],
                 'especialidade' => 'nullable|string',
@@ -179,6 +180,7 @@ class AdministradorController extends Controller
 
             $user->name = $request->input('name');
             $user->cpf = $request->input('cpf');
+            $user->cnpj = $request->input('cnpj');
             $user->passaporte = $request->input('passaporte');
             $user->celular = $request->input('celular');
             $user->instituicao = $request->input('instituicao');
@@ -235,8 +237,9 @@ class AdministradorController extends Controller
                 'name' => 'required|string|max:255',
                 'nomeSocial' => 'nullable|string|max:255',
                 'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
-                'cpf' => ($request->passaporte == null ? ['bail', 'required', 'cpf', Rule::unique('users')->ignore($user->id)] : 'nullable'),
-                'passaporte' => ($request->cpf == null && $request->cpf == null ? ['bail', 'required', 'max:10', Rule::unique('users')->ignore($user->id)] : ['nullable']),
+                'cpf' => ($request->passaporte == null && $request->cnpj == null ? ['bail', 'required', 'cpf', 'unique:users,cpf,' . $user->id] : 'nullable'),
+                'cnpj' => ($request->passaporte == null && $request->cpf == null ? ['required', 'string', 'min:14', 'max:18', 'unique:users,cnpj,' . $user->id] : 'nullable'),
+                'passaporte' => ($request->cpf == null && $request->cnpj == null ? ['bail', 'required', 'max:10', 'unique:users,passaporte,' . $user->id] : ['nullable']),
                 'celular' => 'nullable|string|max:16',
                 'instituicao' => 'nullable|string| max:255',
                 // 'especProfissional' => 'nullable|string',
@@ -254,6 +257,7 @@ class AdministradorController extends Controller
             $user->name = $request->input('name');
             $user->email = $request->input('email');
             $user->cpf = $request->input('cpf');
+            $user->cnpj = $request->input('cnpj');
             $user->passaporte = $request->input('passaporte');
             $user->celular = $request->input('celular');
             $user->instituicao = $request->input('instituicao');
@@ -374,6 +378,7 @@ class AdministradorController extends Controller
         $user->password = bcrypt($password);
 
         $user->cpf = $request->input('cpf');
+        $user->cnpj = $request->input('cnpj');
         $user->passaporte = $request->input('passaporte');
         $user->celular = $request->input('full_number');
         $user->instituicao = $request->input('instituicao');
@@ -414,8 +419,9 @@ class AdministradorController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['nullable', 'string', 'min:8', 'confirmed'],
-            'cpf' => ($request->input('passaporte') == null ? ['required', 'cpf'] : 'nullable'),
-            'passaporte' => ($request->input('cpf') == null ? 'required|max:10' : 'nullable'),
+            'cpf' => ($request->input('passaporte') == null && $request->input('cnpj') == null ? ['required', 'cpf', 'unique:users'] : 'nullable'),
+            'cnpj' => ($request->input('passaporte') == null && $request->input('cpf') == null ? ['required', 'string', 'min:14', 'max:18', 'unique:users'] : 'nullable'),
+            'passaporte' => ($request->input('cpf') == null && $request->input('cnpj') == null ? 'required|max:10|unique:users' : 'nullable'),
             'celular' => ['nullable', 'string', 'max:20'],
             'instituicao' => ['nullable', 'string', 'max:255', 'regex:/^[A-Za-zÀ-ÿ0-9\s\-\.\(\)\[\]\{\}\/\\,;&@#$%*+=|<>!?~`\'"]*$/'],
             'dataNascimento' => ['nullable', 'date'],

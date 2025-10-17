@@ -50,6 +50,10 @@
                 <label class="custom-control-label" for="customRadioInline3">CPF</label>
                 </div>
                 <div class="custom-control custom-radio custom-control-inline">
+                <input type="radio" id="customRadioInline5" name="check_cpf" class="custom-control-input"  >
+                <label class="custom-control-label" for="customRadioInline5">CNPJ</label>
+                </div>
+                <div class="custom-control custom-radio custom-control-inline">
                 <input type="radio" id="customRadioInline4" name="check_cpf" class="custom-control-input"  >
                 <label class="custom-control-label " for="customRadioInline4">{{ __('Passaporte') }}</label>
                 </div>
@@ -63,6 +67,16 @@
                     </span>
                 @enderror
                 </div>
+                <div id="fieldCNPJ" style="display: none">
+                <input id="cnpj" type="text" class="form-control @error('cnpj') is-invalid @enderror" name="cnpj" placeholder="CNPJ" @if(old('cnpj') != null) value="{{ old('cnpj') }}" @else value="{{$user->cnpj}}" @endif autocomplete="cnpj" autofocus>
+
+                @error('cnpj')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+                </div>
+
                 <div id="fieldPassaporte" @error('passaporte') style="display: block" @enderror style="display: none" >
                 <input id="passaporte" type="text" class="form-control @error('passaporte') is-invalid @enderror" name="passaporte" placeholder="Passaporte"@if(old('passaporte') != null) value="{{ old('passaporte') }}" @else value="{{$user->passaporte}}" @endif autocomplete="passaporte" autofocus>
 
@@ -450,6 +464,7 @@
     $(document).ready(function($){
       $('#cep').mask('00000-000');
       $('#cpf').mask('000.000.000-00');
+      $('#cnpj').mask('00.000.000/0000-00');
       $(".apenasLetras").mask("#", {
         maxlength: false,
         translation: {
@@ -530,24 +545,33 @@
     <script type="text/javascript">
 
       $(document).ready(function(){
-          // $("#fieldPassaporte").hide();
-          $("#customRadioInline1").click(function(){
-              $("#fieldPassaporte").hide();
+          @if($user->cpf)
+              $("#customRadioInline3").prop('checked', true);
+              $("#fieldCPF").show();
+              $("#fieldCNPJ, #fieldPassaporte").hide();
+          @elseif($user->cnpj)
+              $("#customRadioInline5").prop('checked', true);
+              $("#fieldCNPJ").show();
+              $("#fieldCPF, #fieldPassaporte").hide();
+          @elseif($user->passaporte)
+              $("#customRadioInline4").prop('checked', true);
+              $("#fieldPassaporte").show();
+              $("#fieldCPF, #fieldCNPJ").hide();
+          @endif
+
+          $("#customRadioInline3").click(function(){
+              $("#fieldPassaporte, #fieldCNPJ").hide();
               $("#fieldCPF").show();
           });
 
-          $("#customRadioInline2").click(function(){
-              $("#fieldPassaporte").show();
-              $("#fieldCPF").hide();
-          });
-          $("#customRadioInline3").click(function(){
-              $("#fieldPassaporte").hide();
-              $("#fieldCPF").show();
+          $("#customRadioInline5").click(function(){
+              $("#fieldPassaporte, #fieldCPF").hide();
+              $("#fieldCNPJ").show();
           });
 
           $("#customRadioInline4").click(function(){
+              $("#fieldCPF, #fieldCNPJ").hide();
               $("#fieldPassaporte").show();
-              $("#fieldCPF").hide();
           });
 
       });
