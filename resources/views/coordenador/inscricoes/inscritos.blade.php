@@ -591,6 +591,21 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="col-md-6 mb-3">
+                        <div class="card h-100">
+                            <div class="card-body text-center">
+                                <div class="mb-3">
+                                    <img src="{{asset('img/icons/file-download-solid.svg')}}" alt="Confirmar presença" style="width: 48px; height: 48px;">
+                                </div>
+                                <h5 class="card-title">Confirmar presença</h5>
+                                <p class="card-text">Importação da listagem de presença dos inscritos</p>
+                                <a href="{{route('evento.importListaPresenca', $evento)}}" class="btn btn-success w-100">
+                                    Importar lista de presença
+                                </a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="modal-footer">

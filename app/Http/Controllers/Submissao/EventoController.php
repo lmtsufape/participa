@@ -768,7 +768,99 @@ class EventoController extends Controller
         ]);
     }
 
+    public function importListaPresenca(Evento $evento){
 
+        return view('coordenador.inscricoes.import-lista-presenca', compact('evento'));
+    }
+
+    public function processarListaPresenca(Request $request, Evento $evento)
+    {
+        $arquivo = $request->file('arquivo');
+        $sheet   = Excel::toCollection(null, $arquivo)->first();
+
+        $linhas = $sheet->skip(1)->map(function ($row) {
+            $raw = $row['cpf'] ?? $row[0] ?? null;
+            $tipo = $this->detectarTipoDocumento($raw);
+            [$docNorm, $tipoFinal] = $this->normalizarDocumento($raw, $tipo);
+            return [
+                'documento_raw'  => $raw,
+                'documento'      => $docNorm,
+                'tipo_documento' => $tipoFinal,
+            ];
+        })->filter(fn($l) => $l['documento'] && $l['tipo_documento'])->values();
+
+        if ($linhas->isEmpty()) {
+            return response()->json([
+                'encontrados' => [], 'nao_encontrados' => [], 'total' => ['encontrados'=>0,'nao_encontrados'=>0],
+                'mensagem' => 'Nenhum documento válido encontrado.'
+            ]);
+        }
+
+        $cpfs  = $linhas->where('tipo_documento','cpf')->pluck('documento')->unique()->values();
+        $cnpjs = $linhas->where('tipo_documento','cnpj')->pluck('documento')->unique()->values();
+        $pass  = $linhas->where('tipo_documento','passaporte')->pluck('documento')->unique()->values();
+
+        $mapa = collect();
+
+        $consultaLote = function (Collection $docs, string $col) use ($evento, &$mapa) {
+            if ($docs->isEmpty()) return;
+            foreach ($docs->chunk(10) as $chunk) {
+                $users = User::query()
+                    ->whereIn($col, $chunk)
+                    ->withExists([
+                        'inscricaos as tem_inscricao_confirmada' => function ($q) use ($evento) {
+                            $q->where('evento_id', $evento->id)->where('finalizada', true);
+                        },
+                    ])
+                    ->select('id','name','email','cpf','cnpj','passaporte')
+                    ->get();
+
+                foreach ($users as $u) {
+                    if ($u->cpf)        $mapa->put('cpf:'.$this->onlyDigits($u->cpf), $u);
+                    if ($u->cnpj)       $mapa->put('cnpj:'.$this->onlyDigits($u->cnpj), $u);
+                    if ($u->passaporte) $mapa->put('passaporte:'.$this->normalizarPassaporte($u->passaporte), $u);
+                }
+            }
+        };
+
+        $consultaLote($cpfs,  'cpf');
+        $consultaLote($cnpjs, 'cnpj');
+        $consultaLote($pass,  'passaporte');
+
+        $encontrados = collect();
+        $nao = collect();
+
+        foreach ($linhas as $l) {
+            $key = $l['tipo_documento'].':'.$l['documento'];
+            if ($u = $mapa->get($key)) {
+                $encontrados->push([
+                    'documento_raw'  => $l['documento_raw'],
+                    'documento'      => $l['documento'],
+                    'tipo_documento' => $l['tipo_documento'],
+                    'usuario_existe' => true,
+                    'inscricao'      => (bool) ($u->tem_inscricao_confirmada ?? false),
+                    'user' => [
+                        'id' => $u->id, 'name' => $u->name, 'email' => $u->email,
+                        'cpf' => $u->cpf, 'cnpj' => $u->cnpj, 'passaporte' => $u->passaporte,
+                    ],
+                ]);
+            } else {
+                $nao->push([
+                    'documento_raw'  => $l['documento_raw'],
+                    'documento'      => $l['documento'],
+                    'tipo_documento' => $l['tipo_documento'],
+                    'usuario_existe' => false,
+                    'inscricao'      => false,
+                ]);
+            }
+        }
+
+        return response()->json([
+            'encontrados' => $encontrados->values(),
+            'nao_encontrados' => $nao->values(),
+            'total' => ['encontrados'=>$encontrados->count(), 'nao_encontrados'=>$nao->count()],
+        ]);
+    }
     public function exportInscritos(Evento $evento, Request $request)
     {
         $nome = $this->somenteLetrasNumeros($evento->nome);
@@ -779,20 +871,20 @@ class EventoController extends Controller
     public function exportarInscritosXLSX(Evento $evento, Request $request)
     {
         $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
-        
+
         $filtros = [
             'nome' => $request->get('nome'),
             'email' => $request->get('email'),
             'status' => $request->get('status')
         ];
-        
+
         // Remover filtros vazios
         $filtros = array_filter($filtros, function($value) {
             return !empty($value);
         });
-        
+
         $nomeArquivo = Str::slug($evento->nome) . '-inscritos';
-        
+
         if (!empty($filtros)) {
             if (!empty($filtros['status'])) {
                 $nomeArquivo .= '-' . $filtros['status'];
@@ -804,7 +896,7 @@ class EventoController extends Controller
                 $nomeArquivo .= '-filtrado';
             }
         }
-        
+
         $nomeArquivo .= '.xlsx';
 
         return Excel::download(new InscritosExport($evento, $filtros), $nomeArquivo, \Maatwebsite\Excel\Excel::XLSX);
@@ -816,7 +908,7 @@ class EventoController extends Controller
         if (! (Gate::any(['isCoordenadorOrCoordenadorDaComissaoCientifica', 'isCoordenadorEixo'], $evento) || auth()->user()->administradors()->exists()) ) {
             abort(403, 'Acesso negado');
         }
-        
+
         $nomeEixo = Area::find($eixo)->nome;
         $nomeArquivo = Str::slug($evento->nome) . '-avaliadores-eixo-' . $nomeEixo . '.xlsx';
 
@@ -1203,7 +1295,7 @@ class EventoController extends Controller
             $query->orderBy(User::select('name')->whereColumn('autorId', 'users.id'), $direction);
         } elseif ($column == 'data') {
             $query->leftJoin('arquivo_correcaos', 'trabalhos.id', '=', 'arquivo_correcaos.trabalho_id')
-            ->select('trabalhos.*', 'arquivo_correcaos.created_at as data_correcao') 
+            ->select('trabalhos.*', 'arquivo_correcaos.created_at as data_correcao')
             ->orderBy('data_correcao', $direction);
         } else {
             $query->orderBy($column, $direction);

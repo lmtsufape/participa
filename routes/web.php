@@ -428,6 +428,10 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
         Route::post('/evento/{evento}/downloadTrabalhosCertifica', [EventoController::class, 'exportTrabalhosCertifica'])->name('evento.downloadTrabalhosCertifica');
         Route::get('/evento/{evento}/downloadAvaliacoes/{modalidade}/form/{form}', [EventoController::class, 'exportAvaliacoes'])->name('evento.downloadAvaliacoes');
         Route::get('/evento/{evento}/exportar-avaliadores-eixos/{eixo}', [EventoController::class, 'exportarAvaliadoresXLSX'])->name('evento.exportarAvaliadoresEixos');
+        Route::get('/evento/{evento}/import/listaPresenca', [EventoController::class, 'importListaPresenca'])->name('evento.importListaPresenca');
+        Route::post('/evento/import/listaPresenca', [EventoController::class, 'processarListaPresenca'])->name('evento.processarListaPresenca');
+
+
 
         // Encontrar resumo especifico para trabalhos
         Route::get('/encontrarResumo', [TrabalhoController::class, 'findResumo'])->name('trabalhoResumo');
