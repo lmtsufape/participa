@@ -36,6 +36,7 @@ use App\Models\Submissao\Pergunta;
 use App\Models\Submissao\Resposta;
 use App\Models\Submissao\Trabalho;
 use App\Models\Users\Coautor;
+use App\Imports\ListaPresencaImport;
 use App\Models\Users\ComissaoEvento;
 use App\Models\Users\CoordEixoTematico;
 use App\Models\Users\CoordenadorEvento;
@@ -773,15 +774,28 @@ class EventoController extends Controller
         return view('coordenador.inscricoes.import-lista-presenca', compact('evento'));
     }
 
-    public function processarListaPresenca(Request $request, Evento $evento)
+    public function processarListaPresenca(Request $request)
     {
+        $eventoId = $request->input('evento_id');
+        $evento = Evento::find($eventoId);
+
+        if (!$evento) {
+            return response()->json([
+                'encontrados' => [], 'sem_inscricao' => [], 'nao_encontrados' => [],
+                'total' => ['encontrados'=>0,'sem_inscricao'=>0,'nao_encontrados'=>0],
+                'mensagem' => 'Evento não encontrado.'
+            ]);
+        }
+
         $arquivo = $request->file('arquivo');
         $sheet   = Excel::toCollection(null, $arquivo)->first();
 
-        $linhas = $sheet->skip(1)->map(function ($row) {
+        $import = new ListaPresencaImport();
+
+        $linhas = $sheet->skip(1)->map(function ($row) use ($import) {
             $raw = $row['cpf'] ?? $row[0] ?? null;
-            $tipo = $this->detectarTipoDocumento($raw);
-            [$docNorm, $tipoFinal] = $this->normalizarDocumento($raw, $tipo);
+            $tipo = $import->detectarTipoDocumento($raw);
+            [$docNorm, $tipoFinal] = $import->normalizarDocumento($raw, $tipo);
             return [
                 'documento_raw'  => $raw,
                 'documento'      => $docNorm,
@@ -802,23 +816,30 @@ class EventoController extends Controller
 
         $mapa = collect();
 
-        $consultaLote = function (Collection $docs, string $col) use ($evento, &$mapa) {
+        $eventoId = $evento->id;
+        $consultaLote = function (\Illuminate\Support\Collection $docs, string $col) use ($eventoId, &$mapa, $import) {
             if ($docs->isEmpty()) return;
             foreach ($docs->chunk(10) as $chunk) {
+
                 $users = User::query()
                     ->whereIn($col, $chunk)
-                    ->withExists([
-                        'inscricaos as tem_inscricao_confirmada' => function ($q) use ($evento) {
-                            $q->where('evento_id', $evento->id)->where('finalizada', true);
-                        },
-                    ])
                     ->select('id','name','email','cpf','cnpj','passaporte')
                     ->get();
 
                 foreach ($users as $u) {
-                    if ($u->cpf)        $mapa->put('cpf:'.$this->onlyDigits($u->cpf), $u);
-                    if ($u->cnpj)       $mapa->put('cnpj:'.$this->onlyDigits($u->cnpj), $u);
-                    if ($u->passaporte) $mapa->put('passaporte:'.$this->normalizarPassaporte($u->passaporte), $u);
+                    $temInscricao = Inscricao::where('user_id', $u->id)
+                        ->where('evento_id', $eventoId)
+                        ->where('finalizada', true)
+                        ->exists();
+
+                    $u->tem_inscricao_confirmada = $temInscricao;
+                }
+
+
+                foreach ($users as $u) {
+                    if ($u->cpf)        $mapa->put('cpf:'.$import->onlyDigits($u->cpf), $u);
+                    if ($u->cnpj)       $mapa->put('cnpj:'.$import->onlyDigits($u->cnpj), $u);
+                    if ($u->passaporte) $mapa->put('passaporte:'.$import->normalizarPassaporte($u->passaporte), $u);
                 }
             }
         };
@@ -828,22 +849,42 @@ class EventoController extends Controller
         $consultaLote($pass,  'passaporte');
 
         $encontrados = collect();
+        $semInscricao = collect();
         $nao = collect();
+        $inscricoesParaMarcar = collect();
 
         foreach ($linhas as $l) {
-            $key = $l['tipo_documento'].':'.$l['documento'];
+            $key = $l['tipo_documento'].':'.$import->onlyDigits($l['documento']);
+
             if ($u = $mapa->get($key)) {
-                $encontrados->push([
-                    'documento_raw'  => $l['documento_raw'],
-                    'documento'      => $l['documento'],
-                    'tipo_documento' => $l['tipo_documento'],
-                    'usuario_existe' => true,
-                    'inscricao'      => (bool) ($u->tem_inscricao_confirmada ?? false),
-                    'user' => [
-                        'id' => $u->id, 'name' => $u->name, 'email' => $u->email,
-                        'cpf' => $u->cpf, 'cnpj' => $u->cnpj, 'passaporte' => $u->passaporte,
-                    ],
-                ]);
+                $temInscricao = (bool) ($u->tem_inscricao_confirmada ?? false);
+
+                if ($temInscricao) {
+                    $encontrados->push([
+                        'documento_raw'  => $l['documento_raw'],
+                        'documento'      => $l['documento'],
+                        'tipo_documento' => $l['tipo_documento'],
+                        'usuario_existe' => true,
+                        'inscricao'      => true,
+                        'user' => [
+                            'id' => $u->id, 'name' => $u->name, 'email' => $u->email,
+                            'cpf' => $u->cpf, 'cnpj' => $u->cnpj, 'passaporte' => $u->passaporte,
+                        ],
+                    ]);
+                    $inscricoesParaMarcar->push($u->id);
+                } else {
+                    $semInscricao->push([
+                        'documento_raw'  => $l['documento_raw'],
+                        'documento'      => $l['documento'],
+                        'tipo_documento' => $l['tipo_documento'],
+                        'usuario_existe' => true,
+                        'inscricao'      => false,
+                        'user' => [
+                            'id' => $u->id, 'name' => $u->name, 'email' => $u->email,
+                            'cpf' => $u->cpf, 'cnpj' => $u->cnpj, 'passaporte' => $u->passaporte,
+                        ],
+                    ]);
+                }
             } else {
                 $nao->push([
                     'documento_raw'  => $l['documento_raw'],
@@ -855,10 +896,24 @@ class EventoController extends Controller
             }
         }
 
+        if ($inscricoesParaMarcar->isNotEmpty()) {
+            Inscricao::where('evento_id', $evento->id)
+                ->where('finalizada', true)
+                ->whereIn('user_id', $inscricoesParaMarcar)
+                ->update(['is_presente' => true]);
+        }
+
         return response()->json([
             'encontrados' => $encontrados->values(),
+            'sem_inscricao' => $semInscricao->values(),
             'nao_encontrados' => $nao->values(),
-            'total' => ['encontrados'=>$encontrados->count(), 'nao_encontrados'=>$nao->count()],
+            'total' => [
+                'encontrados' => $encontrados->count(),
+                'sem_inscricao' => $semInscricao->count(),
+                'nao_encontrados' => $nao->count(),
+                'marcados_presenca' => $inscricoesParaMarcar->count()
+            ],
+            'mensagem' => "Processamento concluído. {$inscricoesParaMarcar->count()} inscrições marcadas como presentes."
         ]);
     }
     public function exportInscritos(Evento $evento, Request $request)
