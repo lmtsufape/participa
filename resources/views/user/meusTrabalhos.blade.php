@@ -200,38 +200,17 @@
                                     </td>
 
                                     <td style="text-align:center">
-                                        @if ($trabalho->atribuicoes->count() == 1)
-                                            {{-- Aqui será tratado as revisoes anteriores onde so houve a avalicao de um revisor
-                          Nesses casos o trabalho->status foi setado como avaliado quando encaminhado, entao
-                          deixaremos seguir dessa forma caso o trabalho tenha tido uma atribuicao --}}
-                                            @foreach ($trabalho->atribuicoes as $revisor)
-                                                @if ($trabalho->avaliado($revisor->user))
-                                                    <a
-                                                        @if ($trabalho->status == 'avaliado' || $trabalho->getParecerAtribuicao($revisor->user) == 'encaminhado') href="{{ route('user.visualizarParecer', ['eventoId' => $trabalho->evento->id, 'modalidadeId' => $trabalho->modalidadeId, 'trabalhoId' => $trabalho->id, 'revisorId' => $revisor->id, 'id' => $trabalho->id]) }}" @else href="#" onclick="return false;" data-bs-toggle="popover" data-trigger="focus" data-placement="bottom" title="Não disponível" data-content="O parecer do trabalho estará disponível assim que revisado." @endif>
-                                                        <img src="{{ asset('img/icons/eye-regular.svg') }}"
-                                                            style="width:20px">
-                                                    </a>
-                                                    <br>
-                                                @endif
-                                            @endforeach
-                                        @elseif($trabalho->atribuicoes->count() > 1)
-                                            @foreach ($trabalho->atribuicoes as $revisor)
-                                                @if ($trabalho->avaliado($revisor->user))
-                                                    <a
-                                                        @if ($trabalho->getParecerAtribuicao($revisor->user) == 'encaminhado') href="{{ route('user.visualizarParecer', ['eventoId' => $trabalho->evento->id, 'modalidadeId' => $trabalho->modalidadeId, 'trabalhoId' => $trabalho->id, 'revisorId' => $revisor->id, 'id' => $trabalho->id]) }}" @else href="#" onclick="return false;" data-bs-toggle="popover" data-trigger="focus" data-placement="bottom" title="Não disponível" data-content="O parecer do trabalho estará disponível assim que revisado." @endif>
-                                                        <img src="{{ asset('img/icons/eye-regular.svg') }}"
-                                                            style="width:20px">
-                                                    </a>
-                                                    <br>
-                                                @endif
-                                            @endforeach
-                                        @else
-                                            <a href="#" onclick="return false;" data-bs-toggle="popover"
-                                                data-trigger="focus" data-placement="bottom" title="Não disponível"
-                                                data-content="O parecer do trabalho estará disponível assim que revisado.">
-                                                <img src="{{ asset('img/icons/eye-regular.svg') }}" style="width:20px">
-                                            </a>
-                                        @endif
+                                        @foreach ($trabalho->atribuicoes as $revisor)
+                                            @if (
+                                                ($trabalho->atribuicoes->count() == 1 && ($trabalho->status == 'avaliado' || $trabalho->getParecerAtribuicao($revisor->user) == 'encaminhado'))
+                                                || ($trabalho->atribuicoes->count() > 1 && $trabalho->getParecerAtribuicao($revisor->user) == 'encaminhado')
+                                            )
+                                                <a href="{{ route('user.visualizarParecer', ['eventoId' => $trabalho->evento->id, 'modalidadeId' => $trabalho->modalidadeId, 'trabalhoId' => $trabalho->id, 'revisorId' => $revisor->id, 'id' => $trabalho->id]) }}">
+                                                    <img src="{{ asset('img/icons/eye-regular.svg') }}"
+                                                        style="width:20px">
+                                                </a>
+                                            @endif
+                                        @endforeach
 
                                         @if ($trabalho->pareceres->where('parecer_final', true)->count() > 0)
                                             <a href="#" onclick="return false;" data-bs-toggle="modal"
