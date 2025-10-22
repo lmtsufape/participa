@@ -261,8 +261,8 @@
                                             (($trabalho->modalidade->inicioCorrecao <= $agora && $trabalho->modalidade->fimCorrecao >= $agora) ||
                                                 $trabalho->modalidade->estaEmPeriodoExtraDeCorrecao()) &&
                                                 $trabalho->aprovado === null)
-                                            <a href="#" data-toggle="modal"
-                                                data-target="#modalCorrecaoTrabalho_{{ $trabalho->id }}"
+                                            <a href="#" data-bs-toggle="modal"
+                                                data-bs-target="#modalCorrecaoTrabalho_{{ $trabalho->id }}"
                                                 style="color:#114048ff">
                                                 <img class="" src="{{ asset('img/icons/file-upload-solid.svg') }}"
                                                     style="width:20px">
