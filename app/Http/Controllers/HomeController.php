@@ -29,7 +29,7 @@ class HomeController extends Controller
     {
         $user = Auth::user();
         $eventos = collect();
-        if ($user->administradors()->exists()) {
+        if ($user->administrador()->exists()) {
             $eventos = $eventos->concat(Evento::all());
 
             return view('administrador.index', ['eventos' => $eventos]);

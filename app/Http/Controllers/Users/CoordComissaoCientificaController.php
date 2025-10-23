@@ -26,7 +26,7 @@ class CoordComissaoCientificaController extends Controller
 
     public function usuarios()
     {
-        $usuarios = User::doesntHave('administradors')->paginate(10);
+        $usuarios = User::doesntHave('administrador')->paginate(10);
         //dd($usuarios);
         return view('coordComissaoCientifica.listarUsuarios', compact('usuarios'));
     }

@@ -335,7 +335,7 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
         // Route::post(  '/areaModalidade/criar',  [AreaModalidadeController::class, 'store']             )->name('areaModalidade.store');
 
         //Trabalho
-        Route::get('/trabalho/submeter/{id}/{idModalidade}', [TrabalhoController::class, 'index'])->name('trabalho.index');
+        Route::get('/trabalho/submeter/{modalidade_id}', [TrabalhoController::class, 'create'])->name('trabalho.create');
         Route::post('/trabalho/novaVersao', [TrabalhoController::class, 'novaVersao'])->name('trabalho.novaVersao');
         Route::post('/trabalho/criar', [TrabalhoController::class, 'store'])->name('trabalho.store');
         Route::get('/trabalho/pesquisa', [TrabalhoController::class, 'pesquisaAjax'])->name('trabalho.pesquisa.ajax');

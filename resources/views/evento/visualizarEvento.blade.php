@@ -439,7 +439,7 @@
                                                             @endphp
                                                             {{-- Caso 2: O usuario está logado e pode submeter o trabalho --}}
                                                             @if($pode)
-                                                                <a href="{{ route('trabalho.index', ['id'=>$evento->id,'idModalidade'=>$modalidade->id]) }}"
+                                                                <a href="{{ route('trabalho.create', $modalidade->id) }}"
                                                                 class="btn btn-my-success w-100 mt-3">
                                                                     {{ __('SUBMETER TRABALHO') }}
                                                                 </a>

@@ -377,7 +377,7 @@
                                         <li class="nav-item">
                                             <a class="nav-link d-flex align-items-center gap-2"
                                                 id="submeterTrabalho{{ $modalidade->id }}"
-                                                href="{{ route('trabalho.index', ['id' => $evento->id, 'idModalidade' => $modalidade->id]) }}">
+                                                href="{{ route('trabalho.create', $modalidade->id) }}">
                                                 <span>{{ $modalidade->nome }}</span>
                                             </a>
                                         </li>

@@ -23,7 +23,7 @@ class EventoPolicy
 
     public function isCoordenador(User $user, Evento $evento)
     {
-        return $user->id === $evento->coordenadorId || $evento->coordenadoresEvento()->where('email', $user->email)->exists() || $user->administradors()->exists();
+        return $user->id === $evento->coordenadorId || $evento->coordenadoresEvento()->where('email', $user->email)->exists() || $user->administrador()->exists();
     }
 
     public function isCriador(User $user, Evento $evento)

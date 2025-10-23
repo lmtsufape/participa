@@ -549,7 +549,7 @@ class InscricaoController extends Controller
     public function downloadFileCampoExtra($idInscricao, $idCampo)
     {
         $inscricao = Inscricao::findOrFail($idInscricao);
-        if (auth()->user()->can('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $inscricao->evento) || auth()->user()->administradors()->exists()) {
+        if (auth()->user()->can('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $inscricao->evento) || auth()->user()->administrador()->exists()) {
             $caminho = $inscricao->camposPreenchidos()->where('campo_formulario_id', '=', $idCampo)->first()->pivot->valor;
             if (Storage::disk()->exists($caminho)) {
                 return Storage::download($caminho);

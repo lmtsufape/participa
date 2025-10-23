@@ -142,7 +142,7 @@ class EventoController extends Controller
         $user = auth()->user();
 
         $isCoordEixoSomente = $user->eventosComoCoordEixo()->pluck('eventos.id')->contains($evento->id)
-            && !$user->administradors
+            && !$user->administrador
             && !$user->coordComissaoCientifica()->where('eventos_id', $evento->id)->exists();
 
         $areasCoordEixo = collect();
@@ -271,7 +271,7 @@ class EventoController extends Controller
 
         //Se o user for um coordenador de eixo e não for admin e coordenador cientifico do evento
         if($user_logado->eventosComoCoordEixo()->pluck('eventos.id')->contains($evento->id) &&
-            !$user_logado->administradors &&
+            !$user_logado->administrador &&
             !$user_logado->coordComissaoCientifica()->where('eventos_id', $evento->id)->exists()
         ){
 
@@ -306,7 +306,7 @@ class EventoController extends Controller
 
         $user = auth()->user();
         $isCoordEixoSomente = $user->eventosComoCoordEixo()->pluck('eventos.id')->contains($evento->id)
-        && !$user->administradors
+        && !$user->administrador
         && !$user->coordComissaoCientifica()->where('eventos_id', $evento->id)->exists();
 
         $areasCoordEixo = collect();
@@ -454,7 +454,7 @@ class EventoController extends Controller
     {
         $evento = Evento::find($request->evento_id);
         $this->authorize('isCoordenador', $evento);
-        $usuarios = User::doesntHave('administradors')->get();
+        $usuarios = User::doesntHave('administrador')->get();
 
         return view('coordenador.revisores.listarUsuarios', compact('usuarios', 'evento'));
     }
@@ -806,7 +806,7 @@ class EventoController extends Controller
 
         //Se o user for um coordenador de eixo e não for admin e coordenador cientifico do evento
         if($user_logado->eventosComoCoordEixo()->pluck('eventos.id')->contains($evento->id) &&
-            !$user_logado->administradors &&
+            !$user_logado->administrador &&
             !$user_logado->coordComissaoCientifica()->where('eventos_id', $evento->id)->exists()
         ){
 
@@ -1191,7 +1191,7 @@ class EventoController extends Controller
         $user_logado = auth()->user();
         //Se o user for um coordenador de eixo e não for admin e coordenador cientifico do evento
         if($user_logado->eventosComoCoordEixo()->pluck('eventos.id')->contains($evento->id) &&
-            !$user_logado->administradors &&
+            !$user_logado->administrador &&
             !$user_logado->coordComissaoCientifica()->where('eventos_id', $evento->id)->exists()
             ){
 

@@ -21,6 +21,6 @@ class AdministradorPolicy
 
     public function isAdmin(User $user)
     {
-        return isset($user->administradors);
+        return isset($user->administrador);
     }
 }

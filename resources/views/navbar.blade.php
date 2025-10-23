@@ -90,7 +90,7 @@
                                                 </a>
                                             </li>
                                         @endif
-                                        @if (isset(Auth::user()->administradors))
+                                        @if (isset(Auth::user()->administrador))
                                             {{-- Rota - Area da Comissao --}}
                                             <li>
                                                 <a class="dropdown-item" href="{{ route('admin.home') }}">
@@ -99,7 +99,7 @@
                                                 </a>
                                             </li>
                                         @endif
-                                        @if (Auth::user()->coordComissaoCientifica->count() != 0 || isset(Auth::user()->administradors))
+                                        @if (Auth::user()->coordComissaoCientifica->count() != 0 || isset(Auth::user()->administrador))
                                             {{-- Rota - Area da Comissao --}}
                                             <li>
                                                 <a class="dropdown-item" href="{{ route('cientifica.home') }}">
@@ -108,7 +108,7 @@
                                                 </a>
                                             </li>
                                         @endif
-                                        @if (Auth::user()->coordComissaoOrganizadora->count() != 0 || isset(Auth::user()->administradors))
+                                        @if (Auth::user()->coordComissaoOrganizadora->count() != 0 || isset(Auth::user()->administrador))
                                             {{-- Rota - Area da Comissao --}}
                                             <li>
                                                 <a class="dropdown-item" href="{{ route('home.organizadora') }}">

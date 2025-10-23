@@ -667,78 +667,70 @@
                                                         @endforeach
                                                     </select>
 
-                                                    @error('tipo_apresentacao')
-                                                        <span class="invalid-feedback" role="alert">
-                                                            <strong>{{ $message }}</strong>
-                                                        </span>
-                                                    @enderror
-                                                </div>
-                                            </div>
-                                        @endif
-                                    @endif
-                                    @if ($indice == 'midiaExtra')
-                                        <div class="row justify-content-center">
-                                            @foreach ($modalidade->midiasExtra as $midia)
-                                                <div class="col-sm-12" style="margin-top: 20px;">
-                                                    <label for="{{ $midia->hyphenizeNome() }}"
-                                                        class="col-form-label"><strong>{{ $midia->nome }}</strong>
-                                                    </label>
-                                                    <a
-                                                        href="{{ route('downloadMidiaExtra', ['id' => $trabalho->id, 'id_midia' => $midia->id]) }}">Arquivo
-                                                        atual</a>
-                                                    <br>
-                                                    <small>Para trocar o arquivo envie um novo.</small>
-                                                    <div class="custom-file">
-                                                        <input type="file" class="filestyle"
-                                                            data-placeholder="Nenhum arquivo" data-text="Selecionar"
-                                                            data-btnClass="btn-primary-lmts"
-                                                            name="{{ $midia->hyphenizeNome() }}">
-                                                    </div>
-                                                    <small><strong>Extensão de arquivos aceitas:</strong>
-                                                        @if ($midia->pdf == true)
-                                                            <span> / ".pdf"</span>
-                                                        @endif
-                                                        @if ($midia->jpg == true)
-                                                            <span> / ".jpg"</span>
-                                                        @endif
-                                                        @if ($midia->jpeg == true)
-                                                            <span> / ".jpeg"</span>
-                                                        @endif
-                                                        @if ($midia->png == true)
-                                                            <span> / ".png"</span>
-                                                        @endif
-                                                        @if ($midia->docx == true)
-                                                            <span> / ".docx"</span>
-                                                        @endif
-                                                        @if ($midia->odt == true)
-                                                            <span> / ".odt"</span>
-                                                        @endif
-                                                        @if ($midia->zip == true)
-                                                            <span> / ".zip"</span>
-                                                        @endif
-                                                        @if ($midia->svg == true)
-                                                            <span> / ".svg"</span>
-                                                        @endif
-                                                        @if ($midia->mp4 == true)
-                                                            <span> / ".mp4"</span>
-                                                        @endif
-                                                        @if ($midia->mp3 == true)
-                                                            <span> / ".mp3"</span>
-                                                        @endif.
-                                                    </small>
-                                                    @error($midia->nome)
-                                                        <span class="invalid-feedback" role="alert"
-                                                            style="overflow: visible; display:block">
-                                                            <strong>{{ $message }}</strong>
-                                                        </span>
-                                                    @enderror
-                                                </div>
-                                            @endforeach
-                                        </div>
-                                    @endif
-                                    @if ($indice == 'etiquetauploadtrabalho')
-                                        <div class="row justify-content-center">
-                                            {{-- Submeter trabalho --}}
+              @error('tipo_apresentacao')
+              <span class="invalid-feedback" role="alert">
+                <strong>{{ $message }}</strong>
+              </span>
+              @enderror
+            </div>
+          </div>
+          @endif
+          @endif
+          @if ($indice == "midiaExtra")
+          <div class="row justify-content-center">
+            @foreach ($modalidade->midiasExtra as $midia)
+            <div class="col-sm-12" style="margin-top: 20px;">
+              <label for="{{$midia->hyphenizeNome}}" class="col-form-label"><strong>{{$midia->nome}}</strong>
+              </label>
+              <a href="{{route('downloadMidiaExtra', ['id' => $trabalho->id, 'id_midia' => $midia->id])}}">Arquivo atual</a>
+              <br>
+              <small>Para trocar o arquivo envie um novo.</small>
+              <div class="custom-file">
+                <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="{{$midia->hyphenizeNome}}">
+              </div>
+              <small><strong>Extensão de arquivos aceitas:</strong>
+                @if($midia->pdf == true)
+                <span> / ".pdf"</span>
+                @endif
+                @if($midia->jpg == true)
+                <span> / ".jpg"</span>
+                @endif
+                @if($midia->jpeg == true)
+                <span> / ".jpeg"</span>
+                @endif
+                @if($midia->png == true)
+                <span> / ".png"</span>
+                @endif
+                @if($midia->docx == true)
+                <span> / ".docx"</span>
+                @endif
+                @if($midia->odt == true)
+                <span> / ".odt"</span>
+                @endif
+                @if($midia->zip == true)
+                <span> / ".zip"</span>
+                @endif
+                @if($midia->svg == true)
+                <span> / ".svg"</span>
+                @endif
+                @if($midia->mp4 == true)
+                <span> / ".mp4"</span>
+                @endif
+                @if($midia->mp3 == true)
+                <span> / ".mp3"</span>
+                @endif. </small>
+              @error($midia->nome)
+              <span class="invalid-feedback" role="alert" style="overflow: visible; display:block">
+                <strong>{{ $message }}</strong>
+              </span>
+              @enderror
+            </div>
+            @endforeach
+          </div>
+          @endif
+          @if ($indice == "etiquetauploadtrabalho")
+          <div class="row justify-content-center">
+            {{-- Submeter trabalho --}}
 
                                             @if ($modalidade->arquivo == true)
                                                 <div class="col-sm-12" style="margin-top: 20px;">
