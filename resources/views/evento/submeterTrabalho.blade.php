@@ -897,7 +897,7 @@
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <label for="autor_email">E-mail</label>
-                                                    <input type="text" name="autor[email]" id="autor_email" class="form-control @error('autor.email') is-invalid @enderror" value="{{ old('autor.email') }}" @if(!(auth()->user()->administrador()->exists() || auth()->user()->coordComissaoCientifica()->where('eventos_id', $evento->id)->exists())) readonly value="{{auth()->user()->email}}"@endif>
+                                                    <input type="text" name="autor[email]" id="autor_email" class="form-control @error('autor.email') is-invalid @enderror" value="{{ old('autor.email') }}" @if(!(auth()->user()->administrador()->exists() || auth()->user()->coordComissaoCientifica()->where('eventos_id', $evento->id)->exists() || $evento->coordenadorId == auth()->user()->id)) readonly value="{{auth()->user()->email}}"@endif>
 
                                                     @error('autor.email')
                                                         <span class="invalid-feedback" role="alert">
@@ -907,7 +907,7 @@
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label for="autor_nome">Nome Completo</label>
-                                                    <input type="text" name="autor[nome]" id="autor_nome" class="form-control @error('autor.nome') is-invalid @enderror" value="{{ old('autor.nome') }}" @if(!(auth()->user()->administrador()->exists() || auth()->user()->coordComissaoCientifica()->where('eventos_id', $evento->id)->exists())) readonly value="{{auth()->user()->name}}"@endif>
+                                                    <input type="text" name="autor[nome]" id="autor_nome" class="form-control @error('autor.nome') is-invalid @enderror" value="{{ old('autor.nome') }}" @if(!(auth()->user()->administrador()->exists() || auth()->user()->coordComissaoCientifica()->where('eventos_id', $evento->id)->exists() || $evento->coordenadorId == auth()->user()->id)) readonly value="{{auth()->user()->name}}"@endif>
 
                                                     @error('autor.nome')
                                                         <span class="invalid-feedback" role="alert">
