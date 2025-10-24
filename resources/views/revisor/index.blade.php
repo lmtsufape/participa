@@ -207,7 +207,7 @@
 
 
                                                 @if(!in_array($trabalho->avaliado, ['corrigido', 'corrigido_parcialmente', 'nao_corrigido']))
-                                                    <a type="button" data-target="#validacaoCorrecaoModal{{$trabalho->id}}" data-toggle="modal" class="btn btn-sm btn-primary mt-2">
+                                                    <a type="button" data-bs-target="#validacaoCorrecaoModal{{$trabalho->id}}" data-bs-toggle="modal" class="btn btn-sm btn-primary mt-2">
                                                         Fazer validação
                                                     </a>
                                                 @endif
