@@ -53,7 +53,7 @@ class TrabalhoController extends Controller
         $modalidade = Modalidade::find($modalidade_id);
         $evento = Evento::find($modalidade->evento_id);
         $areas = Area::where('eventoId', $evento->id)->orderBy('ordem')->get();
-        if(auth()->user()->administrador || auth()->coordComissaoCientifica()->where('eventos_id', $evento->id)->exists()){
+        if(auth()->user()->administrador || auth()->user()->coordComissaoCientifica()->where('eventos_id', $evento->id)->exists()){
             $modalidades = Modalidade::where('evento_id', $evento->id)
             ->orderBy('ordem')
             ->get();
