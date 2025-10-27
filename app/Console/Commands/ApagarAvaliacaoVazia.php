@@ -32,10 +32,10 @@ class ApagarAvaliacaoVazia extends Command
     {
         $trabalhosSemRespostas = Resposta::doesntHave('opcoes')->doesntHave('paragrafo')->pluck('trabalho_id')->unique()->all();
         $trabalhos = Trabalho::whereIn('id', $trabalhosSemRespostas)
-            ->with('atribuicoes', fn($query) => $query->where('parecer', 'avaliado'))
+            ->with('revisores', fn($query) => $query->where('parecer', 'avaliado'))
             ->get();
         foreach ($trabalhos as $trabalho) {
-            foreach ($trabalho->atribuicoes as $revisor) {
+            foreach ($trabalho->revisores as $revisor) {
                 $revisor->pivot->update(['parecer' => 'processando']);
                 $respostasId = Resposta::where([['revisor_id', $revisor->id], ['trabalho_id', $trabalho->id]])->pluck('id')->all();
                 Opcao::whereIn('resposta_id', $respostasId)->delete();

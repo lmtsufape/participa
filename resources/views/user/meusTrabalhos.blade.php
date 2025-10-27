@@ -200,10 +200,10 @@
                                     </td>
 
                                     <td style="text-align:center">
-                                        @foreach ($trabalho->atribuicoes as $revisor)
+                                        @foreach ($trabalho->revisores as $revisor)
                                             @if (
-                                                ($trabalho->atribuicoes->count() == 1 && ($trabalho->status == 'avaliado' || $trabalho->getParecerAtribuicao($revisor->user) == 'encaminhado'))
-                                                || ($trabalho->atribuicoes->count() > 1 && $trabalho->getParecerAtribuicao($revisor->user) == 'encaminhado')
+                                                ($trabalho->revisores->count() == 1 && ($trabalho->status == 'avaliado' || $trabalho->getParecerAtribuicao($revisor->user) == 'encaminhado'))
+                                                || ($trabalho->revisores->count() > 1 && $trabalho->getParecerAtribuicao($revisor->user) == 'encaminhado')
                                             )
                                                 <a href="{{ route('user.visualizarParecer', ['eventoId' => $trabalho->evento->id, 'modalidadeId' => $trabalho->modalidadeId, 'trabalhoId' => $trabalho->id, 'revisorId' => $revisor->id, 'id' => $trabalho->id]) }}">
                                                     <img src="{{ asset('img/icons/eye-regular.svg') }}"

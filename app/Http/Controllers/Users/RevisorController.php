@@ -506,7 +506,7 @@ class RevisorController extends Controller
             }
         }
         $trabalho->avaliado = 'Avaliado';
-        $trabalho->atribuicoes()->where('revisor_id', $data['revisor_id'])->first()->pivot->update(['parecer' => 'avaliado']);
+        $trabalho->revisores()->where('revisor_id', $data['revisor_id'])->first()->pivot->update(['parecer' => 'avaliado']);
         $trabalho->save();
         $evento = Evento::find($evento_id);
         $revisor = Revisor::where([['user_id', auth()->user()->id], ['evento_id', $evento_id]])->first();

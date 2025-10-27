@@ -428,12 +428,12 @@ class TrabalhoController extends Controller
             abort(403, 'Acesso negado');
         }
         if ($trabalho->getParecerAtribuicao($revisor->user) == 'encaminhado') {
-            $trabalho->atribuicoes()->where('revisor_id', $revisor->id)->first()->pivot->update(['parecer' => 'avaliado']);
+            $trabalho->revisores()->where('revisor_id', $revisor->id)->first()->pivot->update(['parecer' => 'avaliado']);
 
             return redirect()->back()->with(['message' => 'Encaminhamento desfeito com sucesso!', 'class' => 'success']);
         } else {
             if ($trabalho->avaliado($revisor->user)) {
-                $trabalho->atribuicoes()->where('revisor_id', $revisor->id)->first()->pivot->update(['parecer' => 'encaminhado']);
+                $trabalho->revisores()->where('revisor_id', $revisor->id)->first()->pivot->update(['parecer' => 'encaminhado']);
                 Mail::to($trabalho->autor->email)->send(new EmailParecerDisponivel($trabalho->evento, $trabalho));
 
                 return redirect()->back()->with(['message' => 'Trabalho encaminhado ao autor com sucesso!', 'class' => 'success']);
@@ -495,12 +495,12 @@ class TrabalhoController extends Controller
         $trabalho->resumo = $request->input('resumo' . $id);
         if ($request->input('modalidade' . $id) != $trabalho->modalidadeId && $trabalho->avaliado == 'Avaliado') {
             return redirect()->back()->withErrors(['modalidadeError' . $id => 'Não é possível alterar a modalidade de um trabalho avaliado.'])->withInput($validatedData);
-        } elseif ($request->input('modalidade' . $id) != $trabalho->modalidadeId && $trabalho->atribuicoes->count() > 0) {
+        } elseif ($request->input('modalidade' . $id) != $trabalho->modalidadeId && $trabalho->revisores->count() > 0) {
             return redirect()->back()->withErrors(['modalidadeError' . $id => 'Não é possível alterar a modalidade de um trabalho com revisores atribuídos.'])->withInput($validatedData);
         } else {
             $trabalho->modalidadeId = $request->input('modalidade' . $id);
         }
-        if ($request->input('area'.$id) != $trabalho->area->id && $trabalho->atribuicoes()->exists())
+        if ($request->input('area'.$id) != $trabalho->area->id && $trabalho->revisores()->exists())
         {
             return redirect()->back()->withErrors(['area' . $id => 'Não é possível alterar '.$evento->formSubTrab->etiquetaareatrabalho.' de um trabalho com revisores atribuídos.'])->withInput($validatedData);
         } else {
@@ -758,9 +758,9 @@ class TrabalhoController extends Controller
                 $trabalho->arquivo()->delete();
             }
 
-            if ($trabalho->atribuicoes != null && $trabalho->atribuicoes->count() > 0) {
-                foreach ($trabalho->atribuicoes as $atrib) {
-                    $trabalho->atribuicoes()->detach($atrib->revisor_id);
+            if ($trabalho->revisores != null && $trabalho->revisores->count() > 0) {
+                foreach ($trabalho->revisores as $atrib) {
+                    $trabalho->revisores()->detach($atrib->revisor_id);
                 }
             }
 
@@ -823,7 +823,7 @@ class TrabalhoController extends Controller
         ]);
 
         $trabalho = Trabalho::find($request->trabalhoId);
-        $revisores = $trabalho->atribuicoes;
+        $revisores = $trabalho->revisores;
         $revisoresAux = [];
         foreach ($revisores as $key) {
             if ($key->user->name != null) {
@@ -1259,12 +1259,12 @@ class TrabalhoController extends Controller
         }
 
         // Atualizando tabelas
-        $atribuicao = $trabalho->atribuicoes()->updateExistingPivot($revisor->id, ['confirmacao' => true, 'parecer' => 'dado']);
+        $atribuicao = $trabalho->revisores()->updateExistingPivot($revisor->id, ['confirmacao' => true, 'parecer' => 'dado']);
         $trabalho->avaliado = 'Avaliado';
         $trabalho->update();
 
         //Atualizando os status do revisor
-        $revisor = $trabalho->atribuicoes()->where('revisor_id', $revisor->id)->first();
+        $revisor = $trabalho->revisores()->where('revisor_id', $revisor->id)->first();
         $revisor->trabalhosCorrigidos++;
         $revisor->correcoesEmAndamento--;
         $revisor->update();
@@ -1286,12 +1286,12 @@ class TrabalhoController extends Controller
         try {
             $trabalho = Trabalho::findOrFail($trabalho_id);
 
-            $trabalho->atribuicoes()->detach($request->revisor_id);
+            $trabalho->revisores()->detach($request->revisor_id);
 
             Resposta::where('trabalho_id', $trabalho->id)
                     ->where('revisor_id', $request->revisor_id)->delete();
 
-            if($trabalho->atribuicoes()->count() == 0){
+            if($trabalho->revisores()->count() == 0){
                 $trabalho->avaliado = 'nao';
             }
             $avaliacao = ArquivoAvaliacao::where('trabalhoId', $trabalho->id)

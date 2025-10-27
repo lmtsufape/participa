@@ -157,7 +157,7 @@
                                             <td>{{ $trabalho->tipo_apresentacao }}</td>
                                         @endif
                                         <td class="text-center">
-                                            {{ count($trabalho->atribuicoes) }}
+                                            {{ count($trabalho->revisores) }}
                                         </td>
                                         <td class="text-center">{{ $trabalho->getQuantidadeAvaliacoes() }}</td>
 

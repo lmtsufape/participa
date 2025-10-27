@@ -82,7 +82,7 @@ class EventoController extends Controller
                     'trabalho as trabalhos_count',
                     'trabalho as enviados_count' => fn ($query) => $query->where('status', 'rascunho'),
                     'trabalho as arquivados_count' => fn ($query) => $query->where('status', 'arquivado'),
-                    'trabalho as avaliados_count' => fn ($query) => $query->whereHas('atribuicoes', fn ($query) => $query->where('parecer', '!=', 'processando')),
+                    'trabalho as avaliados_count' => fn ($query) => $query->whereHas('revisores', fn ($query) => $query->where('parecer', '!=', 'processando')),
                     'trabalho as pendentes_count' => fn ($query) => $query->where('avaliado', 'processando')->where('status', '!=', 'arquivado'),
                 ]);
             },
@@ -102,7 +102,7 @@ class EventoController extends Controller
             'trabalhos',
             'trabalhos as enviados_count' => fn ($query) => $query->where('status', 'rascunho'),
             'trabalhos as arquivados_count' => fn ($query) => $query->where('status', 'arquivado'),
-            'trabalhos as avaliados_count' => fn ($query) => $query->whereHas('atribuicoes', fn ($query) => $query->where('parecer', '!=', 'processando')),
+            'trabalhos as avaliados_count' => fn ($query) => $query->whereHas('revisores', fn ($query) => $query->where('parecer', '!=', 'processando')),
             'trabalhos as pendentes_count' => fn ($query) => $query->where('avaliado', 'processando')->where('status', '!=', 'arquivado'),
             'revisors as revisores_count' => fn ($query) => $query->select(DB::raw('count(distinct user_id)')),
             'usuariosDaComissao as comissao_cientifica_count',
@@ -160,10 +160,10 @@ class EventoController extends Controller
                     $hasRevisor = filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
                     if ($hasRevisor === true) {
                         $q->where('status', '!=', 'arquivado')
-                            ->whereHas('atribuicoes');
+                            ->whereHas('revisores');
                     } elseif ($hasRevisor === false) {
                         $q->where('status', '!=', 'arquivado')
-                            ->whereDoesntHave('atribuicoes');
+                            ->whereDoesntHave('revisores');
                     }
                 })
             ])
@@ -324,10 +324,10 @@ class EventoController extends Controller
                     $hasRevisor = filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
                     if ($hasRevisor === true) {
                         $q->where('status', '!=', 'arquivado')
-                            ->whereHas('atribuicoes');
+                            ->whereHas('revisores');
                     } elseif ($hasRevisor === false) {
                         $q->where('status', '!=', 'arquivado')
-                            ->whereDoesntHave('atribuicoes');
+                            ->whereDoesntHave('revisores');
                     }
                 })
             ])
@@ -632,8 +632,8 @@ class EventoController extends Controller
         Trabalho::where([['eventoId', $evento->id], ['modalidadeId', $modalidade->id]])
             ->get()
             ->map(function ($trabalho) use ($form, $trabalhosCollect) {
-                if ($trabalho->atribuicoes->first() != null) {
-                    $trabalho->atribuicoes->map(function ($avaliacao) use ($trabalho, $form, $trabalhosCollect) {
+                if ($trabalho->revisores->first() != null) {
+                    $trabalho->revisores->map(function ($avaliacao) use ($trabalho, $form, $trabalhosCollect) {
                         $trabalhosCollect->push($this->makeRepostasExportAvaliacoes($trabalho, $form, $avaliacao));
                     });
                 } else {
@@ -1706,7 +1706,7 @@ class EventoController extends Controller
         $trabalhosPendentes = Trabalho::whereIn('areaId', $areasId)->where('avaliado', 'processando')->count();
         $trabalhosAvaliados = 0;
         foreach ($trabalhosId as $trabalho) {
-            $trabalhosAvaliados += $trabalho->atribuicoes()->where('parecer', '!=', 'processando')->count();
+            $trabalhosAvaliados += $trabalho->revisores()->where('parecer', '!=', 'processando')->count();
         }
 
         $numeroRevisores = Revisor::where('evento_id', $evento->id)->count();
