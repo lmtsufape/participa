@@ -855,12 +855,16 @@ class CertificadoController extends Controller
 
     public function validar(Request $request)
     {
-        $request->validate([
-            'hash' => ['required','string','max:128'],
-            'tipo' => ['required','in:certificado,aceite'],
-        ]);
-
+        if ($request->tipo == 'cpf_evento') {
+            return $this->validarCertificadoPorCpf($request);
+        }
+        
         if($request->tipo == 'aceite'){
+            $request->validate([
+                'hash' => ['required','string','max:128'],
+                'tipo' => ['required','in:certificado,aceite'],
+            ]);
+            
             $codigo = trim((string) $request->input('hash'));
 
             $norm = strtoupper(str_replace(['-', ' '], '', $codigo));
@@ -877,16 +881,149 @@ class CertificadoController extends Controller
             }
 
             return view('carta_de_aceite_sucesso_validacao', [
-                'codigo'   => $codigo,
+                'codigo' => $codigo,
                 'trabalho' => $trabalho,
             ]);
         }
 
+        $request->validate([
+            'hash' => ['required','string','max:128'],
+            'tipo' => ['required','in:certificado,aceite'],
+        ]);
+        
         $certificado_user = DB::table('certificado_user')->where([
             ['validacao', '=', $request['hash']],
             ['valido', '=', true],
         ])->first();
+        
         return $this->gerar_pdf($certificado_user);
+    }
+
+    public function validarCertificadoPorCpf(Request $request)
+    {
+        $request->validate([
+            'cpf' => ['required', 'string', 'max:14'],
+            'evento_id' => ['required', 'exists:eventos,id'],
+        ], [
+            'cpf.required' => 'O campo CPF é obrigatório.',
+            'cpf.max' => 'O CPF deve ter no máximo 14 caracteres.',
+            'evento_id.required' => 'O campo Evento é obrigatório.',
+            'evento_id.exists' => 'O evento selecionado é inválido.',
+        ]);
+
+        // 1. Normaliza o CPF digitado (remove pontos, traços, etc.)
+        $cpfNormalizado = preg_replace('/[^0-9]/', '', $request->cpf);
+        
+        // 2. Garante 11 dígitos para CPF (adiciona '0' inicial se for 10)
+        if (strlen($cpfNormalizado) === 10) {
+            $cpfNormalizado = '0' . $cpfNormalizado;
+        }
+
+        $user = null;
+        
+        if (strlen($cpfNormalizado) === 11) {
+            // Opção 1: Formata o CPF para o padrão "XXX.XXX.XXX-XX" (SE O BANCO SALVA COM MÁSCARA)
+            $cpfFormatadoParaBusca = substr($cpfNormalizado, 0, 3) . '.' .
+                                    substr($cpfNormalizado, 3, 3) . '.' .
+                                    substr($cpfNormalizado, 6, 3) . '-' .
+                                    substr($cpfNormalizado, 9, 2);
+            
+            $user = User::where('cpf', $cpfFormatadoParaBusca)->first();
+
+            // Opção 2 (Fallback): Tenta buscar pelo CPF sem máscara (SE O BANCO SALVA SÓ NÚMEROS)
+            if (!$user) {
+                $user = User::where('cpf', $cpfNormalizado)->first();
+            }
+        }
+
+        // Opção 3 (Fallback): Tenta buscar pelo valor digitado exatamente como está (caso seja inválido ou CNPJ, embora não seja o foco)
+        if (!$user) {
+            $user = User::where('cpf', $request->cpf)->first();
+        }
+        
+        if (!$user) {
+            return back()->withErrors(['cpf_evento' => 'Usuário não encontrado com o CPF informado.'])->withInput();
+        }
+
+        // 4. Verifica a inscrição e presença
+        $inscricao = Inscricao::where('user_id', $user->id)
+                                ->where('evento_id', $request->evento_id)
+                                ->where('finalizada', true)
+                                ->where('is_presente', true) 
+                                ->first();
+
+        if (!$inscricao) {
+            return back()->withErrors(['cpf_evento' => 'O CPF não está registrado como presente e com inscrição finalizada neste evento.'])->withInput();
+        }
+        
+        // 5. Busca certificados emitidos
+        $certificadosTiposGerais = [Certificado::TIPO_ENUM['participante'], Certificado::TIPO_ENUM['inscrito']];
+        
+        $certificadosEmitidosCount = $user->certificados()
+                                    ->whereHas('evento', fn($q) => $q->where('id', $request->evento_id))
+                                    ->whereIn('tipo', $certificadosTiposGerais)
+                                    ->wherePivot('valido', true)
+                                    ->count();
+
+        if ($certificadosEmitidosCount === 0) {
+            return back()->withErrors(['cpf_evento' => 'Nenhum certificado de participação foi emitido para o seu CPF neste evento.'])->withInput();
+        }
+
+        // 6. Redireciona para a listagem
+        return redirect()->route('certificado.disponiveis', [
+            'user_id' => $user->id,
+            'evento_id' => $request->evento_id,
+            'cpf_validado' => hash('sha256', $user->id . $request->evento_id . 'cert-cpf-valid'),
+        ])->with('success', 'Certificados disponíveis para download!');
+    }
+
+    public function validarCertificadoForm()
+    {
+        $eventos = Evento::where('publicado', true)
+            ->where('deletado', false)
+            ->where('dataFim', '<', now())
+            ->orderBy('nome', 'asc')
+            ->get(['id', 'nome']);
+
+        return view('validar', compact('eventos'));
+    }
+
+    public function certificadosDisponiveis(Request $request)
+    {
+        $token = $request->cpf_validado;
+        $expectedToken = hash('sha256', $request->user_id . $request->evento_id . 'cert-cpf-valid');
+
+        if ($token !== $expectedToken) {
+            return redirect()->route('validarCertificado')->withErrors(['hash' => 'Sessão de validação expirada ou inválida. Tente novamente.']);
+        }
+
+        $user = User::findOrFail($request->user_id);
+        $evento = Evento::findOrFail($request->evento_id);
+
+        $certificadosTiposGerais = [Certificado::TIPO_ENUM['participante'], Certificado::TIPO_ENUM['inscrito']];
+        
+        $certificadosEmitidos = $user->certificados()
+                                    ->whereHas('evento', fn($q) => $q->where('id', $evento->id))
+                                    ->whereIn('tipo', $certificadosTiposGerais)
+                                    ->wherePivot('valido', true)
+                                    ->get();
+        
+        if ($certificadosEmitidos->isEmpty()) {
+            return redirect()->route('validarCertificado')->withErrors(['hash' => 'Nenhum certificado disponível para download.']);
+        }
+        
+        $listaCertificados = $certificadosEmitidos->map(function ($certificado) use ($user, $evento) {
+            return [
+                'nome' => $certificado->nome,
+                'download_url' => route('verCertificado', [
+                    'certificadoId' => $certificado->id,
+                    'destinatarioId' => $user->id,
+                    'trabalhoId' => 0 
+                ]),
+            ];
+        });
+
+        return view('certificados_disponiveis', compact('user', 'evento', 'listaCertificados'));
     }
 
     private function gerar_pdf($certificado_user)

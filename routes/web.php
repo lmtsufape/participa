@@ -122,7 +122,8 @@ Route::namespace('Submissao')->group(function () {
         return redirect()->route('evento.visualizar', $id);
     });
     Route::get('certificado/{hash}', [CertificadoController::class, 'verificar'])->name('certificado.view')->where('hash', '.*');;
-    Route::view('/validarDocumentos', 'validar')->name('validarCertificado')->middleware('block.get.params');
+    Route::get('/validarDocumentos', [CertificadoController::class, 'validarCertificadoForm'])->name('validarCertificado')->middleware('block.get.params');
+    Route::get('certificados/{user_id}/{evento_id}', [CertificadoController::class, 'certificadosDisponiveis'])->name('certificado.disponiveis');
     Route::post('validarDocumentos', [CertificadoController::class, 'validar'])->name('validarCertificadoPost');
     Route::get('/home', [CertificadoController::class, 'validar'])->name('home')->middleware('verified', 'isTemp');
 
@@ -310,7 +311,6 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
             Route::post('certificados/{id}/editCertificado', [CertificadoController::class, 'update'])->name('certificado.update');
             Route::get('certificados/ajax-listar-destinatarios', [CertificadoController::class, 'ajaxDestinatarios'])->name('ajax.listar.destinatarios');
             Route::get('certificados/{certificadoId}/preview-destinatario/{destinatarioId}/trabalho/{trabalhoId}', [CertificadoController::class, 'previewCertificado'])->name('previewCertificado');
-            Route::get('certificados/{certificadoId}/ver-destinatario/{destinatarioId}/trabalho/{trabalhoId}', [CertificadoController::class, 'visualizar_certificado_emitido'])->name('verCertificado');
             Route::delete('certificados/emissoes/deletar', [CertificadoController::class, 'deletarEmissao'])->name('deletar.emissao');
 
             Route::get('modalidade/cadastrarModalidade', [EventoController::class, 'cadastrarModalidade'])->name('cadastrarModalidade');
@@ -441,6 +441,8 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
         Route::get('/{evento_id}/criterio/{id}/deletar', [CriteriosController::class, 'destroy'])->name('criterio.destroy');
         Route::get('/encontrarCriterio', [CriteriosController::class, 'findCriterio'])->name('encontrar.criterio');
     });
+
+    Route::get('certificados/{certificadoId}/ver-destinatario/{destinatarioId}/trabalho/{trabalhoId}', [CertificadoController::class, 'visualizar_certificado_emitido'])->name('verCertificado');
 
     Route::namespace('Users')->group(function () {
         // Controllers Within The "App\Http\Controllers\Admin" Namespace
