@@ -145,7 +145,7 @@
                                 <th style="text-align:center">Excluir</th>
                                 <th style="text-align:center">Pareceres</th>
                                 <th style="text-align:center">Correção</th>
-                                {{-- <th style="text-align:center">Arquivar</th> --}}
+                                <th class="text-center">Resultado</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -274,6 +274,15 @@
                                                 <img src="{{ asset('img/icons/file-upload-solid.svg') }}"
                                                     style="width:20px">
                                             </a>
+                                        @endif
+                                    </td>
+                                    <td class="text-center">
+                                        @if($trabalho->aprovado === true)
+                                            <p class="py-2 px-2 bg-success text-white rounded-pill shadow">Aprovado</p>
+                                        @elseif($trabalho->aprovado === false)
+                                            <p class="py-2 px-2 bg-danger text-white rounded-pill shadow">Reprovado</p>
+                                        @else
+                                            <p class="py-2 px-2 bg-warning text-white rounded-pill shadow">Em andamento</p>
                                         @endif
                                     </td>
                                 </tr>
