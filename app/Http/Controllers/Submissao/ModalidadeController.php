@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Submissao;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ModalidadeStoreRequest;
+use App\Models\Submissao\Area;
 use App\Models\Submissao\DataExtra;
+use App\Models\Submissao\Evento;
 use App\Models\Submissao\MidiaExtra;
 use App\Models\Submissao\Modalidade;
 use App\Models\Submissao\TipoApresentacao;
@@ -14,14 +16,20 @@ use Illuminate\Support\Facades\Storage;
 
 class ModalidadeController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+
+    public function index(Request $request)
     {
-        //
+        $evento = Evento::find($request->eventoId);
+        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
+        $modalidades = Modalidade::where('evento_id', $evento->id)->orderBy('ordem')->get();
+        $areasId = Area::where('eventoId', $evento->id)->select('id')->get();
+        // $areaModalidades = AreaModalidade::whereIn('areaId', $areasId)->get();
+
+        return view('coordenador.modalidade.listarModalidade', [
+            'evento' => $evento,
+            'modalidades' => $modalidades,
+            // 'areaModalidades'         => $areaModalidades,
+        ]);
     }
 
     public function find(Request $request)
@@ -31,14 +39,18 @@ class ModalidadeController extends Controller
         return $modalidadeEdit;
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function create(Request $request)
     {
-        //
+        $evento = Evento::find($request->eventoId);
+        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
+        $areas = Area::where('eventoId', $evento->id)->get();
+        $modalidades = Modalidade::where('evento_id', $evento->id)->get();
+
+        return view('coordenador.modalidade.cadastrarModalidade', [
+            'evento' => $evento,
+            'areas' => $areas,
+            'modalidades' => $modalidades,
+        ]);
     }
 
     /**

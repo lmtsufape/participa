@@ -720,35 +720,6 @@ class EventoController extends Controller
         return $retorno;
     }
 
-    public function cadastrarModalidade(Request $request)
-    {
-        $evento = Evento::find($request->eventoId);
-        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
-        $areas = Area::where('eventoId', $evento->id)->get();
-        $modalidades = Modalidade::where('evento_id', $evento->id)->get();
-
-        return view('coordenador.modalidade.cadastrarModalidade', [
-            'evento' => $evento,
-            'areas' => $areas,
-            'modalidades' => $modalidades,
-        ]);
-    }
-
-    public function listarModalidade(Request $request)
-    {
-        $evento = Evento::find($request->eventoId);
-        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
-        $modalidades = Modalidade::where('evento_id', $evento->id)->orderBy('ordem')->get();
-        $areasId = Area::where('eventoId', $evento->id)->select('id')->get();
-        // $areaModalidades = AreaModalidade::whereIn('areaId', $areasId)->get();
-
-        return view('coordenador.modalidade.listarModalidade', [
-            'evento' => $evento,
-            'modalidades' => $modalidades,
-            // 'areaModalidades'         => $areaModalidades,
-        ]);
-    }
-
     public function listarCorrecoes(Request $request, $column = 'titulo', $direction = 'asc')
     {
         $evento = Evento::find($request->eventoId);

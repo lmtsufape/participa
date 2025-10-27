@@ -273,8 +273,8 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
             Route::get('certificados/{certificadoId}/ver-destinatario/{destinatarioId}/trabalho/{trabalhoId}', [CertificadoController::class, 'visualizar_certificado_emitido'])->name('verCertificado');
             Route::delete('certificados/emissoes/deletar', [CertificadoController::class, 'deletarEmissao'])->name('deletar.emissao');
 
-            Route::get('modalidade/cadastrarModalidade', [EventoController::class, 'cadastrarModalidade'])->name('cadastrarModalidade');
-            Route::get('modalidade/listarModalidade', [EventoController::class, 'listarModalidade'])->name('listarModalidade');
+            Route::get('modalidade/create', [ModalidadeController::class, 'create'])->name('modalidade.create');
+            Route::get('modalidade/', [ModalidadeController::class, 'index'])->name('modalidade.index');
             Route::get('modalidade/cadastrarCriterio', [EventoController::class, 'cadastrarCriterio'])->name('cadastrarCriterio');
             Route::get('modalidade/listarCriterios', [EventoController::class, 'listarCriterios'])->name('listarCriterios');
             Route::get('modalidade/forms', [EventoController::class, 'forms'])->name('forms');
