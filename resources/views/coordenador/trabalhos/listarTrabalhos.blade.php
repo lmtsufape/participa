@@ -28,38 +28,56 @@
                 </div> -->
             </div>
         </div>
-        {{-- Tabela Trabalhos --}}
-        <div class="btn-group mb-2" role="group" aria-label="Button group with nested dropdown">
-            <div class="btn-group" role="group">
-            <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Opções
-            </button>
-            <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                <a class="dropdown-item" href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'filter[status]' => 'rascunho'])}}">
-                    Todos
-                </a>
-                <a class="dropdown-item" href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'filter[status]' => 'arquivado'])}}">
-                    Arquivados
-                </a>
-                <a class="dropdown-item" href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'filter[has_revisor]' => 'false'])}}">
-                    Sem avaliador
-                </a>
-                <a class="dropdown-item" href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'filter[has_revisor]' => 'true'])}}">
-                    Com avaliador
-                </a>
-                <a class="dropdown-item disabled" href="#" >
-                    Submetidos
-                </a>
-                <a class="dropdown-item disabled" href="#" >
-                    Aprovados
-                </a>
-                <a class="dropdown-item disabled" href="#" >
-                    Corrigidos
-                </a>
-                <a class="dropdown-item disabled" href="#" >
-                    Rascunhos
-                </a>
+        <div class="row mt-5">
+            <div class="col-md-1">
+                <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+                    <div class="btn-group" role="group">
+                    <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Opções
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                        <a class="dropdown-item" href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'filter[status]' => 'rascunho'])}}">
+                            Todos
+                        </a>
+                        <a class="dropdown-item" href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'filter[status]' => 'arquivado'])}}">
+                            Arquivados
+                        </a>
+                        <a class="dropdown-item" href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'filter[has_revisor]' => 'false'])}}">
+                            Sem avaliador
+                        </a>
+                        <a class="dropdown-item" href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'filter[has_revisor]' => 'true'])}}">
+                            Com avaliador
+                        </a>
+                        <a class="dropdown-item disabled" href="#" >
+                            Submetidos
+                        </a>
+                        <a class="dropdown-item disabled" href="#" >
+                            Aprovados
+                        </a>
+                        <a class="dropdown-item disabled" href="#" >
+                            Corrigidos
+                        </a>
+                        <a class="dropdown-item disabled" href="#" >
+                            Rascunhos
+                        </a>
+                    </div>
+                    </div>
+                </div>
             </div>
+
+            <div class="col-md-11">
+                <form method="GET" class="mb-3">
+                    <div class="input-group">
+                    <input type="search" name="filter[q]" value="{{ request('filter.q') }}"
+                        class="form-control" placeholder="Buscar por ID, título ou autor...">
+                    <input type="hidden" name="eventoId" id="eventoId" value="{{ $evento->id }}">
+                    <button class="btn btn-outline-primary" type="submit" aria-label="Buscar trabalhos">
+                        <i class="bi bi-search" aria-hidden="true"></i>
+                        <span class="ms-1">Buscar</span>
+                    </button>
+
+                    </div>
+                </form>
             </div>
         </div>
 

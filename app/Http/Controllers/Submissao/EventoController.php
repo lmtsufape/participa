@@ -165,7 +165,19 @@ class EventoController extends Controller
                         $q->where('status', '!=', 'arquivado')
                             ->whereDoesntHave('revisores');
                     }
-                })
+                }),
+                AllowedFilter::callback('q', function ($q, $value)  {
+                    $term = trim((string) $value);
+                    if ($term === '') return;
+
+                    $q->where(function ($w) use ($term) {
+                        if (ctype_digit($term)) {
+                            $w->orWhere('id', (int) $term);
+                        }
+                        $w->orWhere('titulo', 'ILIKE', "%{$term}%")
+                          ->orWhereHas('autor', fn($a) => $a->where('name', 'ILIKE', "%{$term}%"));
+                    });
+                }),
             ])
             ->allowedSorts([
                 'id', 'created_at', 'titulo', 'area', 'autor', 'modalidade'
@@ -329,7 +341,19 @@ class EventoController extends Controller
                         $q->where('status', '!=', 'arquivado')
                             ->whereDoesntHave('revisores');
                     }
-                })
+                }),
+                AllowedFilter::callback('q', function ($q, $value)  {
+                    $term = trim((string) $value);
+                    if ($term === '') return;
+
+                    $q->where(function ($w) use ($term) {
+                        if (ctype_digit($term)) {
+                            $w->orWhere('id', (int) $term);
+                        }
+                        $w->orWhere('titulo', 'ILIKE', "%{$term}%")
+                          ->orWhereHas('autor', fn($a) => $a->where('name', 'ILIKE', "%{$term}%"));
+                    });
+                }),
             ])
             ->allowedSorts([
                 'id', 'created_at', 'titulo', 'area', 'autor', 'modalidade'
