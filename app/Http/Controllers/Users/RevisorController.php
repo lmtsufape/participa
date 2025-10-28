@@ -447,9 +447,6 @@ class RevisorController extends Controller
     {
 
         $data = $request->all();
-        if($data['prazo_correcao'] < now()){
-            return redirect()->back()->withErrors(['message' => 'Prazo de correção expirado.']);
-        }
         $evento = Evento::find($data['evento_id']);
         $data['revisor'] = Revisor::find($data['revisor_id']);
         $data['modalidade'] = Modalidade::find($data['modalidade_id']);

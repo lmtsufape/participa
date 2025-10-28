@@ -141,7 +141,6 @@
                                 <th scope="col" style="text-align:center">Avaliação do trabalho</th>
                                 <th scope="col" style="text-align:center">Validação das correções</th>
                                 <th scope="col" style="text-align:center">Atribuído em</th>
-                                <th scope="col" style="text-align:center">Prazo</th>
                                 </tr>
                             </thead>
                             @foreach($trabalhosDoRevisor as $trabalho)
@@ -167,7 +166,7 @@
                                     </td>
 
                                     @if (!$trabalho->avaliado(auth()->user())){{--avaliacao do revisor aqui--}}
-                                        @if (now() >= $trabalho->modalidade->inicioRevisao && now() <= $trabalho->modalidade->fimRevisao && ($trabalho->revisores->firstWhere('user_id', auth()->id())->pivot->prazo_correcao == null || now() <= $trabalho->revisores->firstWhere('user_id', auth()->id())->pivot->prazo_correcao))
+                                        @if (now() >= $trabalho->modalidade->inicioRevisao && now() <= $trabalho->modalidade->fimRevisao)
                                             <td>
                                                 <form action="{{route('revisor.responde')}}" method="get">
                                                     @csrf
@@ -175,7 +174,6 @@
                                                     <input type="hidden" name="trabalho_id" value="{{$trabalho->id}}">
                                                     <input type="hidden" name="evento_id" value="{{$eventos[$key]->id}}">
                                                     <input type="hidden" name="modalidade_id" value="{{$trabalho->modalidade->id}}">
-                                                    <input type="hidden" name="prazo_correcao" value="{{$trabalho->revisores->firstWhere('user_id', auth()->id())->pivot->prazo_correcao}}">
                                                     <div class="d-flex justify-content-center">
                                                         <button type="submit" class="btn btn-success">
                                                         Avaliar
@@ -186,7 +184,7 @@
                                         @else
                                             <div class="d-flex justify-content-center">
                                                 <td style="text-align:center">
-                                                    <img src="{{asset('img/icons/check-solid.svg')}}" style="width:20px" title="Avaliação disponível em {{date('d/m/Y',strtotime($trabalho->modalidade->inicioRevisao))}} até {{date('d/m/Y',strtotime($trabalho->revisores->firstWhere('user_id', auth()->id())->pivot->prazo_correcao))}}">
+                                                    <img src="{{asset('img/icons/check-solid.svg')}}" style="width:20px" title="Avaliação disponível em {{date('d/m/Y',strtotime($trabalho->modalidade->inicioRevisao))}} até {{date('d/m/Y',strtotime($trabalho->modalidade->fimRevisao))}}">
                                                 </td>
                                             </div>
                                         @endif
@@ -216,13 +214,6 @@
                                         </td>
                                         <td style="text-align:center">
                                             {{date('d/m/Y H:i',strtotime($trabalho->revisores->firstWhere('user_id', auth()->id())->pivot->created_at))}}
-                                        </td>
-
-
-                                        <td style="text-align:center">
-                                            @if ($trabalho->revisores->firstWhere('user_id', auth()->id())->pivot->prazo_correcao)
-                                                {{ date('d/m/Y H:i', strtotime($trabalho->revisores->firstWhere('user_id', auth()->id())->pivot->prazo_correcao)) }}
-                                            @endif
                                         </td>
 
                                     </tr>

@@ -72,7 +72,7 @@ class Trabalho extends Model
 
     public function revisores()
     {
-        return $this->belongsToMany(Revisor::class, 'atribuicaos', 'trabalho_id', 'revisor_id')->withPivot('confirmacao', 'parecer','prazo_correcao')->withTimestamps();
+        return $this->belongsToMany(Revisor::class, 'atribuicaos', 'trabalho_id', 'revisor_id')->withPivot('confirmacao', 'parecer')->withTimestamps();
     }
 
     public function evento()
