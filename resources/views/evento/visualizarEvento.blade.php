@@ -1136,40 +1136,38 @@
                 let botVagas = '';
                 if (ativ.vagas != null) {
                     if (ativ.vagas > 0) {
-                        botVagas = `
-                         <div class="col-auto">
-                            <button type="button" class="btn btn-success btn-sm px-3 py-1 rounded-pill"> Vagas disponíveis </button>
-                         </div>`;
+                        botVagas = `<span class="badge bg-success px-4 py-2 rounded-pill">Vagas disponíveis</span>`;
                     } else {
-                        botVagas = `
-                        <div class="col-auto">
-                        <button type="button" class="btn btn-danger btn-sm px-3 py-1 rounded-pill"> Vagas encerradas </button>
-                        </div>`;
+                        botVagas = `<span class="badge bg-success px-4 py-2 rounded-pill">Vagas encerradas</span>`;
                     }
                 }
 
                 return `
-                <div class="card shadow w-100 d-flex flex-column">
+                <div class="card shadow w-100">
                     <div class="card-body d-flex flex-column justify-content-between align-items-start">
-                <div>
-                    <strong>${inicio} - ${fim}</strong>
-                    <p class="mb-0">${ativ.titulo}</p>
-                </div>
-                <div class="row mt-3 gx-2">
-                    <div class="col-auto">
-                        <button
-                        class="btn btn-my-outline-primary btn-sm px-3 py-1 rounded-pill"
-                        type="button"
-                        data-bs-toggle="modal"
-                        data-bs-target="#modalAtividadeShow${ativ.id}"
-                        >
-                        Saiba mais
-                        </button>
+                        <div class="w-100">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <strong>${inicio} - ${fim}</strong>
+
+                                ${botVagas}
+
+                            </div>
+                            <p class="mt-2 mb-0">${ativ.titulo}</p>
+                        </div>
+                        <div class="row mt-3 gx-2">
+                            <div class="col-auto">
+                                <button
+                                class="btn btn-my-outline-primary btn-sm px-3 py-1 rounded-pill"
+                                type="button"
+                                data-bs-toggle="modal"
+                                data-bs-target="#modalAtividadeShow${ativ.id}"
+                                >
+                                Saiba mais
+                                </button>
+                            </div>
+                        </div>
                     </div>
-                     ${botVagas}
-                </div>
-            </div>
-            </div>`;
+                </div>`;
             }
 
 
