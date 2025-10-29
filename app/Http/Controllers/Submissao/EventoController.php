@@ -1488,7 +1488,7 @@ class EventoController extends Controller
             ->orderBy('data')          // <-- garante que o banco já ordene por data
             ->get();
 
-        $atividades = Atividade::join('datas_atividades', 'atividades.id', '=', 'datas_atividades.atividade_id')
+        $atividades = Atividade::where('eventoId', $evento->id)->join('datas_atividades', 'atividades.id', '=', 'datas_atividades.atividade_id')
         ->select('atividades.*', 'datas_atividades.data', 'datas_atividades.hora_inicio')
         ->orderBy('datas_atividades.data')
         ->orderBy('datas_atividades.hora_inicio')
