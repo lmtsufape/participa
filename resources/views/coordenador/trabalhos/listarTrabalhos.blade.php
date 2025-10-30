@@ -107,6 +107,7 @@
                                                 @endif
                                                 <th>Avaliadores</th>
                                                 <th>Avaliações</th>
+                                                <th>Apresentado</th>
                                                 <th>Data</th>
                                                 <th>Atribuir</th>
                                                 @can('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento)
@@ -147,6 +148,13 @@
                                                     @endif
                                                     <td>{{ $trabalho->atribuicoes_count }}</td>
                                                     <td>{{ $trabalho->quantidade_avaliacoes }}</td>
+                                                    <td>
+                                                        @if($trabalho->apresentado)
+                                                            <span class="badge bg-success">Sim</span>
+                                                        @else
+                                                            <span class="badge bg-secondary">Não</span>
+                                                        @endif
+                                                    </td>
                                                     <td>{{ $trabalho->created_at?->format('d/m/Y H:i') }}</td>
                                                     <td style="text-align:center">
                                                         <livewire:buttons.ver-trabalho-btn
