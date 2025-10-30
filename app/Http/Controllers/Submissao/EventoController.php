@@ -385,40 +385,6 @@ class EventoController extends Controller
         ]);
     }
 
-    public function cadastrarAreas(Request $request)
-    {
-        $evento = Evento::find($request->eventoId);
-        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
-        $etiquetas = FormEvento::where('eventoId', $evento->id)->first(); //etiquetas do card de eventos
-        $etiquetasSubTrab = FormSubmTraba::where('eventoId', $evento->id)->first();
-
-        return view('coordenador.areas.cadastrarAreas', [
-            'evento' => $evento,
-        ]);
-    }
-
-    public function listarAreas(Request $request)
-    {
-        $evento = Evento::find($request->eventoId);
-        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
-        $areas = Area::where('eventoId', $evento->id)->orderBy('ordem')->get();
-
-        return view('coordenador.areas.listarAreas', [
-            'evento' => $evento,
-            'areas' => $areas,
-        ]);
-    }
-
-    public function cadastrarRevisores(Request $request)
-    {
-        // return view('coordenador.revisores.cadastrarRevisores', [
-        //             'evento'                  => $evento,
-        //             'areas'                   => $areas,
-        //             'modalidades'             => $modalidades,
-
-        //           ]);
-    }
-
     public function listarRevisores(Request $request)
     {
         $evento = Evento::find($request->eventoId);
