@@ -168,11 +168,10 @@
                                             <td class="text-center">{{ $trabalho->getQuantidadeAvaliacoes() }}</td>
 
                                             <td style="text-align:center">
-                                                <a href="#" data-bs-toggle="modal"
-                                                    data-bs-target="#modalTrabalho{{ $trabalho->id }}">
-                                                    <img src="{{ asset('img/icons/documento.svg') }}" class="icon-card"
-                                                        width="20" alt="atribuir">
-                                                </a>
+                                                <livewire:trabalhos.buttons.atribuir-trabalho
+                                                    :trabalho-id="$trabalho->id"
+                                                    :evento-id="$evento->id"
+                                                />
                                             </td>
 
                                             <td class="text-center">
@@ -210,68 +209,9 @@
         </div>
 
     </div>
-    <!-- End Trabalhos -->
-    <!-- Modal Trabalho -->
-    {{-- <div class="modal fade" id="modalDistribuicaoAutomatica" tabindex="-1" role="dialog" aria-labelledby="modalDistribuicaoAutomatica" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-header" style="background-color: #114048ff; color: white;">
-        <h5 class="modal-title" id="exampleModalCenterTitle">Distribuir trabalhos automaticamente</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <form method="GET" action="{{ route('distribuicaoAutomaticaPorArea') }}" id="formDistribuicaoPorArea">
-        <div class="modal-body">
-          <input type="hidden" name="eventoId" value="{{$evento->id}}">
-          <div class="row">
-            <div class="col-sm-12">
-                <input type="hidden" name="distribuirTrabalhosAutomaticamente" value="{{$evento->id}}">
-                <label for="areaId" class="col-form-label">{{ __('Área') }}</label>
-                <select class="form-control @error('área') is-invalid @enderror" id="areaIdformDistribuicaoPorArea" name="área" required>
-                    <option value="" disabled selected hidden>-- Área --</option>
-                    @foreach ($areas as $area)
-                        <option value="{{$area->id}}">{{$area->nome}}</option>
-                    @endforeach
-                </select>
-
-                @error('área')
-                <span class="invalid-feedback" role="alert">
-                    <strong>{{ $message }}</strong>
-                </span>
-                @enderror
-            </div>
-          </div>
-          <div class="row">
-              <div class="col-sm-12">
-                  <label for="numeroDeRevisoresPorTrabalho" class="col-form-label">{{ __('Número de avaliadores por trabalho') }}</label>
-              </div>
-          </div>
-          <div class="row justify-content-center">
-              <div class="col-sm-12">
-                  <input id="numeroDeRevisoresPorTrabalhoInput" type="number" min="1" class="form-control @error('numeroDeRevisoresPorTrabalho') is-invalid @enderror" name="numeroDeRevisoresPorTrabalho" value="{{ old('numeroDeRevisoresPorTrabalho') }}" required autocomplete="numeroDeRevisoresPorTrabalho" autofocus>
-
-                  @error('numeroDeRevisoresPorTrabalho')
-                  <span class="invalid-feedback" role="alert">
-                      <strong>{{ $message }}</strong>
-                  </span>
-                  @enderror
-              </div>
-
-          </div>
-        </div>
-      </form>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-        <button id="numeroDeRevisoresPorTrabalhoButton" onclick="document.getElementById('formDistribuicaoPorArea').submit();" type="button" class="btn btn-primary">Distribuir</button>
-      </div>
-    </div>
-  </div>
-</div> --}}
 
     @foreach ($trabalhos as $trabalho)
         <!-- Modal Trabalho -->
-        <x-modal-adicionar-revisor :trabalho="$trabalho" :evento="$evento" />
         <x-modal-excluir-trabalho :trabalho="$trabalho" />
     @endforeach
 @endsection
@@ -282,11 +222,5 @@
         function marcarCheckboxes() {
             $(".trabalhos").prop('checked', $('#selectAllCheckboxes').is(":checked"));
         }
-        const id = {!! json_encode(old('trabalhoId')) !!};
-        $(document).ready(function() {
-            if (id != null) {
-                $('#modalTrabalho' + id).modal('show');
-            }
-        });
     </script>
 @endsection

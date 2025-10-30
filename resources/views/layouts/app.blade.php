@@ -73,11 +73,13 @@
 
     <!-- icon eye -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    @livewireStyles
+    @livewireScripts
 </head>
 
 <body class="d-flex flex-column min-vh-100" style="background-color: #f5f5f5;">
     @include('navbar')
-
+    <livewire:ui.modal />
     @if(View::hasSection('sidebar'))
         {{-- <div class="ml-auto mensagem"> apagar o css depois
         </div> --}}
@@ -114,7 +116,6 @@
     <script async defer src="https://maps.googleapis.com/maps/api/js?key={{env('GOOGLE_MAPS_API_KEY')}}&callback=initMap"></script>
 
     <script src="{{ asset('js/jquery-mask-plugin.js')}}"></script>
-    <script defer src="{{ asset('js/alpine.js') }}"></script>
     <script src="{{ asset('js/dark-mode.js') }}"></script>
     <script src="{{ asset('js/submit.js') }}"></script>
     <!-- CKEditor -->
