@@ -385,6 +385,7 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
         Route::get('/trabalho/encaminhar/{id}/{revisor}', [TrabalhoController::class, 'encaminharTrabalho'])->name('trabalho.encaminhar');
         Route::post('/trabalho/{id}/aprovar-reprovar', [TrabalhoController::class, 'aprovacaoTrabalho'])->name('trabalho.aprovacao');
         Route::post('/trabalho/{id}/correcao', [TrabalhoController::class, 'correcaoTrabalho'])->name('trabalho.correcao');
+        Route::post('/trabalho/importar-apresentacoes/{eventoId}', [TrabalhoController::class, 'importarApresentacoes'])->name('trabalho.importar.apresentacoes');
         //Atribuição
         Route::get('/atribuir', [AtribuicaoController::class, 'distribuicaoAutomatica'])->name('distribuicao');
         Route::get('/atribuirPorArea', [AtribuicaoController::class, 'distribuicaoPorArea'])->name('distribuicaoAutomaticaPorArea');
