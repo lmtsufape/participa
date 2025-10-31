@@ -414,7 +414,7 @@
                                         <li class="nav-item">
                                             <a class="nav-link d-flex align-items-center gap-2"
                                                 id="listarTrabalhos{{ $modalidade->id }}"
-                                                href="{{ route('coord.listarTrabalhosModalidades', ['eventoId' => $evento->id, 'modalidadeId' => $modalidade->id, 'titulo', 'asc', 'rascunho']) }}">
+                                                href="{{ route('coord.listarTrabalhos', ['eventoId' => $evento->id, 'modalidadeId' => $modalidade->id, 'titulo', 'asc', 'rascunho']) }}">
                                                 <span>{{ $modalidade->nome }}</span>
                                             </a>
                                         </li>

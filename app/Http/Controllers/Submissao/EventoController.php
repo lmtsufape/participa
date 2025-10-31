@@ -133,13 +133,15 @@ class EventoController extends Controller
         ]);
     }
 
-    public function listarTrabalhos(Request $request, $column = 'titulo', $direction = 'asc', $status = 'rascunho')
+    public function listarTrabalhos(Request $request, $status = 'rascunho')
     {
         $evento = Evento::find($request->eventoId);
         $this->authorize('isCoordenadorOrCoordCientificaOrCoordEixo', $evento);
-        // $users = $evento->usuariosDaComissao;
         $areas = Area::where('eventoId', $evento->id)->orderBy('ordem')->get();
         $user = auth()->user();
+        $modalidade = Modalidade::find($request->modalidadeId);
+        $areasId = Area::where('eventoId', $evento->id)->select('id')->orderBy('ordem')->get();
+
 
         $isCoordEixoSomente = $user->eventosComoCoordEixo()->pluck('eventos.id')->contains($evento->id)
             && !$user->administrador
@@ -150,7 +152,7 @@ class EventoController extends Controller
         if ($isCoordEixoSomente) {
             $areasCoordEixo = $user->areasComoCoordEixoNoEvento($evento->id)->pluck('areas.id');
         }
-        $base = $evento->trabalhos()->when($isCoordEixoSomente, fn($q) => $q->whereIn('area_id', $areasCoordEixo));
+        $base = $evento->trabalhos()->whereIn('areaId', $areasId)->when($modalidade, fn($q) => $q->where('modalidadeId', $modalidade->id))->when($isCoordEixoSomente, fn($q) => $q->whereIn('area_id', $areasCoordEixo));
 
 
         $trabalhos = QueryBuilder::for($base)
@@ -199,6 +201,16 @@ class EventoController extends Controller
             }
         }
 
+        if($modalidade){
+            return view('coordenador.trabalhos.listarTrabalhosModalidades', [
+                'evento' => $evento,
+                'areas' => $areas,
+                'trabalhos' => $trabalhos,
+                'agora' => now(),
+                'modalidade' => $modalidade,
+            ]);
+        }
+
         return view('coordenador.trabalhos.listarTrabalhos', [
             'evento' => $evento,
             'areas' => $areas,
@@ -208,7 +220,6 @@ class EventoController extends Controller
             'coautoresSemCpfPorTrabalho' => $coautoresSemCpfPorTrabalho,
         ]);
     }
-
     public function listarAvaliacoes(Request $request, $column = 'titulo', $direction = 'asc', $status = 'rascunho')
     {
         $evento = Evento::find($request->eventoId);
@@ -306,71 +317,6 @@ class EventoController extends Controller
                 'trabalhosPorModalidade' => $trabalhos,
             ]
         );
-    }
-
-    public function listarTrabalhosModalidades(Request $request, $column = 'titulo', $direction = 'asc', $status = 'arquivado')
-    {
-        $evento = Evento::find($request->eventoId);
-        $this->authorize('isCoordenadorOrCoordCientificaOrCoordEixo', $evento);
-        $modalidade = Modalidade::find($request->modalidadeId);
-        $areas = Area::where('eventoId', $evento->id)->orderBy('ordem')->get();
-        $areasId = Area::where('eventoId', $evento->id)->select('id')->orderBy('ordem')->get();
-
-        $user = auth()->user();
-        $isCoordEixoSomente = $user->eventosComoCoordEixo()->pluck('eventos.id')->contains($evento->id)
-        && !$user->administrador
-        && !$user->coordComissaoCientifica()->where('eventos_id', $evento->id)->exists();
-
-        $areasCoordEixo = collect();
-
-        if ($isCoordEixoSomente) {
-            $areasCoordEixo = $user->areasComoCoordEixoNoEvento($evento->id)->pluck('areas.id');
-        }
-        $base = $evento->trabalhos()->whereIn('areaId', $areasId)->where('modalidadeId', $request->modalidadeId)->when($isCoordEixoSomente, fn($q) => $q->whereIn('areaId', $areasCoordEixo));
-
-
-        $trabalhos = QueryBuilder::for($base)
-            ->allowedFilters([
-                AllowedFilter::exact('status'),
-                AllowedFilter::callback('has_revisor', function($q, $value){
-                    $hasRevisor = filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
-                    if ($hasRevisor === true) {
-                        $q->where('status', '!=', 'arquivado')
-                            ->whereHas('revisores');
-                    } elseif ($hasRevisor === false) {
-                        $q->where('status', '!=', 'arquivado')
-                            ->whereDoesntHave('revisores');
-                    }
-                }),
-                AllowedFilter::callback('q', function ($q, $value)  {
-                    $term = trim((string) $value);
-                    if ($term === '') return;
-
-                    $q->where(function ($w) use ($term) {
-                        if (ctype_digit($term)) {
-                            $w->orWhere('id', (int) $term);
-                        }
-                        $w->orWhere('titulo', 'ILIKE', "%{$term}%")
-                          ->orWhereHas('autor', fn($a) => $a->where('name', 'ILIKE', "%{$term}%"));
-                    });
-                }),
-            ])
-            ->allowedSorts([
-                'id', 'created_at', 'titulo', 'area', 'autor', 'modalidade'
-            ])
-            ->paginate(request('per_page', 15))
-            ->withQueryString();
-
-
-
-
-        return view('coordenador.trabalhos.listarTrabalhosModalidades', [
-            'evento' => $evento,
-            'areas' => $areas,
-            'trabalhos' => $trabalhos,
-            'agora' => now(),
-            'modalidade' => $modalidade,
-        ]);
     }
 
     public function cadastrarComissao(Request $request)

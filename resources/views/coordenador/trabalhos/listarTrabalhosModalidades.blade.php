@@ -21,11 +21,11 @@
                         </button>
                         <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
                             <a class="dropdown-item"
-                                href="{{ route('coord.listarTrabalhosModalidades', ['eventoId' => $evento->id, 'modalidadeId' => $modalidade->id, 'filter[status]' => 'rascunho']) }}">
+                                href="{{ route('coord.listarTrabalhos', ['eventoId' => $evento->id, 'modalidadeId' => $modalidade->id, 'filter[status]' => 'rascunho']) }}">
                                 Todos
                             </a>
                             <a class="dropdown-item"
-                                href="{{ route('coord.listarTrabalhosModalidades', ['eventoId' => $evento->id, 'modalidadeId' => $modalidade->id, 'filter[status]' => 'arquivado']) }}">
+                                href="{{ route('coord.listarTrabalhos', ['eventoId' => $evento->id, 'modalidadeId' => $modalidade->id, 'filter[status]' => 'arquivado']) }}">
                                 Arquivados
                             </a>
                             <a class="dropdown-item disabled" href="#">

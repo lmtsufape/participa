@@ -187,7 +187,6 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
             Route::get('informacoes', [EventoController::class, 'informacoes'])->name('informacoes');
             Route::get('trabalhos/definirSubmissoes', [EventoController::class, 'definirSubmissoes'])->name('definirSubmissoes');
             Route::get('trabalhos/listarTrabalhos/{column?}/{direction?}/{status?}', [EventoController::class, 'listarTrabalhos'])->name('listarTrabalhos');
-            Route::get('trabalhos/listarTrabalhosModalidades/{column?}/{direction?}/{status?}', [EventoController::class, 'listarTrabalhosModalidades'])->name('listarTrabalhosModalidades');
             Route::get('trabalhos/{id}/resultados/{column?}/{direction?}/{status?}', [TrabalhoController::class, 'resultados'])->name('resultados');
             Route::post('trabalhos/parecer_final', [TrabalhoController::class, 'parecerFinalTrabalho'])->name('parecer.final');
             Route::get('/trabalhos/parecer_final/info', [TrabalhoController::class, 'infoParecerTrabalho'])->name('parecer.final.info.ajax');
