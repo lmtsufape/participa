@@ -54,7 +54,11 @@
 
                                 <br><br>
 
-                                Segue anexo da sua certificação.
+                                Segue em anexo a sua certificação.
+
+                                <br><br>
+                                
+                                Para validar o certificado emitido, acesse a plataforma e no rodapé clique em "Validar Documento", e na página coloque o código de validação.
 
                                 <br><br>
 
