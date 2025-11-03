@@ -1,4 +1,4 @@
- @extends('layouts.app')
+@extends('layouts.app')
 @section('sidebar')
 
 @endsection
@@ -66,18 +66,8 @@
             </div>
 
             <div class="col-md-11">
-                <form method="GET" class="mb-3">
-                    <div class="input-group">
-                    <input type="search" name="filter[q]" value="{{ request('filter.q') }}"
-                        class="form-control" placeholder="Buscar por ID, título ou autor...">
-                    <input type="hidden" name="eventoId" id="eventoId" value="{{ $evento->id }}">
-                    <button class="btn btn-outline-primary" type="submit" aria-label="Buscar trabalhos">
-                        <i class="bi bi-search" aria-hidden="true"></i>
-                        <span class="ms-1">Buscar</span>
-                    </button>
-
-                    </div>
-                </form>
+                <x-ui.search-box placeholder="Buscar por ID, título ou autor..." aria_label_btn="Buscar trabalhos" txt_btn="Buscar"/>
+                <input type="hidden" form="search-box" name="eventoId" id="eventoId" value="{{ $evento->id }}">
             </div>
         </div>
 

@@ -22,6 +22,8 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Users\User;
 use App\Models\Users\Administrador;
+use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class InscricaoController extends Controller
 {
@@ -54,7 +56,36 @@ class InscricaoController extends Controller
     public function inscritos(Evento $evento)
     {
         $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
-        $inscricoes = $evento->inscritos()->sortBy('finalizada');
+
+        $inscricoes = QueryBuilder::for(Inscricao::class)
+            ->where('evento_id', $evento->id)
+            ->allowedFilters([
+                AllowedFilter::callback('q', function ($query, $value) {
+                    $term = trim((string) $value);
+                    if ($term === '') {
+                        return;
+                    }
+
+                    $digits = preg_replace('/\D/', '', $term);
+
+                    $query->whereHas('user', function ($u) use ($term, $digits) {
+                        $u->where(function ($sq) use ($term, $digits) {
+                            $sq->where('name', 'ILIKE', "%{$term}%")
+                            ->orWhere('email', 'ILIKE', "%{$term}%")
+                            ->orWhere('passaporte', 'ILIKE', "%{$term}%");
+
+                            if (!empty($digits)) {
+                                $sq->orWhere('cpf', 'LIKE', "%{$digits}%")
+                                ->orWhere('cnpj', 'LIKE', "%{$digits}%");
+                            }
+                        });
+                    });
+                }),
+            ])
+            ->with('user')
+            ->orderBy('finalizada', 'desc')
+            ->paginate(15)
+            ->withQueryString();
 
         return view('coordenador.inscricoes.inscritos', compact('inscricoes', 'evento'));
     }
@@ -642,7 +673,7 @@ class InscricaoController extends Controller
         if ($inscricao->finalizada) {
             return redirect()->back()->with(['message' => 'Não é possível alterar a categoria de uma inscrição já finalizada.', 'class' => 'danger']);
         }
-        
+
         $validator = Validator::make($request->all(), [
             'categoria' => 'required|exists:categoria_participantes,id',
         ]);

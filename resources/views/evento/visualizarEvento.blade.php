@@ -1138,7 +1138,7 @@
                     if (ativ.vagas > 0) {
                         botVagas = `<span class="badge bg-success px-4 py-2 rounded-pill">Vagas disponíveis</span>`;
                     } else {
-                        botVagas = `<span class="badge bg-success px-4 py-2 rounded-pill">Vagas encerradas</span>`;
+                        botVagas = `<span class="badge bg-danger px-4 py-2 rounded-pill">Vagas encerradas</span>`;
                     }
                 }
 

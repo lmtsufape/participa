@@ -1,44 +1,38 @@
-@extends('coordenador.detalhesEvento')
-@section('menu')
+@extends('layouts.app')
+@section('sidebar')
 
-@if (session('message'))
-    <div class="alert alert-success">
-        {{ session('message') }}
-    </div>
-@elseif ( session('error_message'))
-<div class="alert alert-danger">
-        {{ session('error_message') }}
-    </div>
-@endif
-
-<div id="" style="display: block">
+@endsection
+@section('content')
+<div class="container">
     <div class="row">
         <div class="col-md-12">
             <h1 class="titulo-detalhes">Listar Inscritos</h1>
         </div>
     </div>
+
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
                 <div class="card-body">
-                  <div class="row justify-content-between">
-                    <div class="col-md-6">
-                      <h5 class="card-title">Inscrições</h5>
-                      <h6 class="card-subtitle mb-2 text-muted">Inscritos no evento {{$evento->nome}}</h6>
-                      <!--<h6 class="card-subtitle mb-2 text-muted">Obs.: ao exportar o arquivo csv, usar o delimitador , (vírgula) para abrir o arquivo</h6>-->
-                    </div>
-                    <div class="col-md-6 d-flex gap-2 flex-column align-items-end">
-                        <a href="{{route('evento.exportarInscritosXLSX', $evento)}}" class="btn btn-success">Exportar .xlsx</a>
-                        {{-- <a href="{{route('evento.downloadInscritos', $evento)}}" class="btn btn-primary">Exportar .csv</a>--}}
-{{--                        <a href="{{route('evento.downloadInscritosCertifica', $evento)}}" class="btn btn-primary float-md-right mt-2">Exportar XLSX para o Certifica</a>--}}
-                        <button type="button" class="button-prevent-multiple-submits btn btn-outline-success my-2 ml-1" data-bs-toggle="modal" data-bs-target="#modal-inscrever-participante">
-                            Inscrever participante
-                        </button>
+                    <div class="row justify-content-between">
+                        <div class="col-md-6">
+                            <h5 class="card-title">Inscrições</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">Inscritos no evento {{$evento->nome}}</h6>
+                            <!--<h6 class="card-subtitle mb-2 text-muted">Obs.: ao exportar o arquivo csv, usar o delimitador , (vírgula) para abrir o arquivo</h6>-->
+                        </div>
+                        <div class="col-md-6 d-flex gap-2 flex-column align-items-end">
+                            <a href="{{route('evento.exportarInscritosXLSX', $evento)}}" class="btn btn-success">Exportar .xlsx</a>
+                            {{-- <a href="{{route('evento.downloadInscritos', $evento)}}" class="btn btn-primary">Exportar .csv</a>--}}
+                            {{--                        <a href="{{route('evento.downloadInscritosCertifica', $evento)}}" class="btn btn-primary float-md-right mt-2">Exportar XLSX para o Certifica</a>--}}
+                            <button type="button" class="button-prevent-multiple-submits btn btn-outline-success my-2 ml-1" data-bs-toggle="modal" data-bs-target="#modal-inscrever-participante">
+                                Inscrever participante
+                            </button>
                         </button>
                     </div>
 
                     @include('coordenador.inscricoes.inscrever_participante')
 
+                    <x-ui.search-box placeholder="Buscar por nome, e-mail, CPF, CNPJ, passaporte..." aria_label_btn="Buscar revisor" txt_btn="Buscar"/>
                     <p class="card-text">
                     <table class="table table-hover table-responsive-lg table-sm" style="position: relative;">
                         <thead>
@@ -80,6 +74,9 @@
                             </tbody>
                         @endforeach
                     </table>
+                    <div class="mt-5 d-flex justify-content-center">
+                        {{ $inscricoes->appends(request()->query())->links('pagination::bootstrap-5') }}
+                    </div>
                     </p>
                 </div>
             </div>
