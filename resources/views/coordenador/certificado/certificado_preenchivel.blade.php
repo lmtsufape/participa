@@ -280,7 +280,7 @@
                 font-size: {{$medida->fontSize}}px;
                 top: {{$medida->y}}px;
                 width: {{$medida->largura}}px;">
-                <strong>Certificado emitido pela plataforma {{config('app.name')}}</strong>
+                <strong>Certificado emitido pela plataforma {{config('app.name')}}.</strong>
             </p>
             @php
                 $medida = $certificado->medidas->where('tipo', $tipos["logo"])->first();
