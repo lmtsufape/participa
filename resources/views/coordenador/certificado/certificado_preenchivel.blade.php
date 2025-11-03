@@ -268,7 +268,7 @@
                 font-size: {{$medida->fontSize}}px;
                 top: {{$medida->y}}px;
                 width: {{$medida->largura}}px;">
-                Código para validação do certificado: <br>
+                <strong>Código para validação do certificado: </strong><br>
                 {{$validacao}}
             </p>
             @php
@@ -280,7 +280,7 @@
                 font-size: {{$medida->fontSize}}px;
                 top: {{$medida->y}}px;
                 width: {{$medida->largura}}px;">
-                Certificado emitido pela plataforma {{config('app.name')}} em {{ $now }}
+                <strong>Certificado emitido pela plataforma {{config('app.name')}} em {{ $now }}</strong>
             </p>
             @php
                 $medida = $certificado->medidas->where('tipo', $tipos["logo"])->first();
