@@ -762,6 +762,35 @@ class CertificadoController extends Controller
                     }
                 }
                 break;
+            case Certificado::TIPO_ENUM['credenciado']:
+                foreach ($request->destinatarios as $i => $destinarioId) {
+                    $qrcode = base64_encode(QrCode::generate($validacoes[$i]));
+                    $certificado->usuarios()->attach($destinarioId, ['validacao' => $validacoes[$i]]);
+                    $user = User::find($destinarioId);
+                    $texto = $certificado->texto;
+                    
+                    $cargo_label = 'participante (credenciado)';
+
+                    if ($request->boolean('sem_anexo')) {
+                        $link = route('certificado.view', urlencode($validacoes[$i]));
+                        Mail::to($user->email)->send(new EmailCertificadoSemAnexo($user, $cargo_label, $evento->nome, $link));
+                    } else {
+                        $pdf = Pdf::loadView('coordenador.certificado.certificado_preenchivel', [
+                            'texto' => $texto, 
+                            'qrcode' => $qrcode, 
+                            'validacao' => $validacoes[$i], 
+                            'certificado' => $certificado, 
+                            'user' => $user, 
+                            'cargo' => $cargo_label, 
+                            'evento' => $evento, 
+                            'dataHoje' => $certificado->data->isoFormat('LL'), 
+                            'now' => now()->isoFormat('LL')
+                        ])->setPaper('a4', 'landscape');
+                        
+                        Mail::to($user->email)->send(new EmailCertificado($user, $cargo_label, $evento->nome, $pdf));
+                    }
+                }
+                break;
             case Certificado::TIPO_ENUM['expositor']:
                 foreach ($request->destinatarios as $i => $destinarioId) {
                     $qrcode = base64_encode(QrCode::generate($validacoes[$i]));
