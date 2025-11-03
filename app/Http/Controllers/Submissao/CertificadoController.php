@@ -487,7 +487,7 @@ class CertificadoController extends Controller
         $evento = Evento::find($request->eventoId);
         $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
         $certificados = Certificado::where('evento_id', $evento->id)->get();
-        $destinatarios = [1 => 'Apresentadores', 'Membro da comissão científica', 'Membro da comissão organizadora', 'Revisores', 'Participantes', 'Palestrante', 'Coordenador da comissão científica', 'Membro de outra comissão', 'Inscrito em uma atividade', 'Inscrito no evento'];
+        $destinatarios = [1 => 'Apresentadores', 'Membro da comissão científica', 'Membro da comissão organizadora', 'Revisores', 'Participantes', 'Palestrante', 'Coordenador da comissão científica', 'Membro de outra comissão', 'Inscrito em uma atividade', 'Inscrito no evento', Certificado::TIPO_ENUM['credenciado'] => 'Credenciados (Com presença confirmada)'];
 
         return view('coordenador.certificado.emissao', [
             'evento' => $evento,
@@ -543,6 +543,13 @@ class CertificadoController extends Controller
                 ->sortBy('name')->values()->unique('id')->all();
         } elseif ($request->destinatario == Certificado::TIPO_ENUM['inscrito']) {
             $destinatarios = Inscricao::where('evento_id', $request->eventoId)->get()->pluck('user');
+        } elseif ($request->destinatario == Certificado::TIPO_ENUM['credenciado']) {
+            $destinatarios = Inscricao::where('evento_id', $request->eventoId)
+                                    ->where('finalizada', true)
+                                    ->where('is_presente', true) 
+                                    ->get()
+                                    ->pluck('user');
+                                    
         } elseif ($request->destinatario == Certificado::TIPO_ENUM['expositor']) {
             $destinatarios = Evento::find($request->eventoId)->palestrantes()->orderBy('nome')->get();
             $palestras = $destinatarios->map(function ($destinatario) {
@@ -600,6 +607,9 @@ class CertificadoController extends Controller
                 } else {
                     $certificados = Certificado::where([['evento_id', $request->eventoId], ['tipo', Certificado::TIPO_ENUM['inscrito_atividade']], ['atividade_id', $request->atividade]])->get();
                 }
+                break;
+            case Certificado::TIPO_ENUM['credenciado']: 
+                $certificados = Certificado::where([['evento_id', $request->eventoId], ['tipo', Certificado::TIPO_ENUM['participante']]])->get(); // Certificados de Participante
                 break;
             default:
                 break;

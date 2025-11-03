@@ -198,7 +198,7 @@
             comissao: '',
             atividade: '',
             outros() {
-                return ['2','3','4','5','7', '10'].includes(this.tipo)
+                return ['2','3','4','5','7', '10','11'].includes(this.tipo)
             },
             selecionarDestinatario (eventoId) {
                 this.destinatarios = []
