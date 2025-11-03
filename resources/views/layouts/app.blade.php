@@ -31,7 +31,7 @@
 
     <link href="{{ asset('css/styleIndex.css') }}" rel="stylesheet">
     <link href="{{ asset('css/dark-mode.css') }}" rel="stylesheet">
-    <link href='{{ asset('fullcalendar-5.3.2/lib/main.css') }}' rel='stylesheet' />
+  
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     <link rel="stylesheet" href="{{ asset('css/required-fields.css') }}">
@@ -120,9 +120,7 @@
     <script src="{{ asset('js/submit.js') }}"></script>
     <!-- CKEditor -->
     <script src="{{ asset('ckeditor/ckeditor.js') }}"></script>
-    <!-- FullCalendar -->
-    <script src='{{ asset('fullcalendar-5.3.2/lib/main.js') }}'></script>
-    <script src='{{ asset('fullcalendar-5.3.2/lib/locales-all.js') }}'></script>
+
     <!-- Swiper JS -->
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script>
