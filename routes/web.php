@@ -91,6 +91,7 @@ Route::view('/termos-de-uso', 'termosdeuso')->name('termos.de.uso');
 Route::view('/aviso-de-privacidade', 'avisodeprivacidade')->name('aviso.de.privacidade');
 Route::get('/evento/busca', [EventoController::class, 'buscaLivre'])->name('busca.eventos');
 Route::get('/evento/buscar-livre', [EventoController::class, 'buscaLivreAjax'])->name('busca.livre.ajax');
+Route::get('certificados/{certificadoId}/ver-destinatario/{destinatarioId}/trabalho/{trabalhoId}', [CertificadoController::class, 'visualizar_certificado_emitido'])->name('verCertificado');
 
 Auth::routes(['verify' => true, 'register' => false]);
 
@@ -442,8 +443,6 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
         Route::get('/{evento_id}/criterio/{id}/deletar', [CriteriosController::class, 'destroy'])->name('criterio.destroy');
         Route::get('/encontrarCriterio', [CriteriosController::class, 'findCriterio'])->name('encontrar.criterio');
     });
-
-    Route::get('certificados/{certificadoId}/ver-destinatario/{destinatarioId}/trabalho/{trabalhoId}', [CertificadoController::class, 'visualizar_certificado_emitido'])->name('verCertificado');
 
     Route::namespace('Users')->group(function () {
         // Controllers Within The "App\Http\Controllers\Admin" Namespace
