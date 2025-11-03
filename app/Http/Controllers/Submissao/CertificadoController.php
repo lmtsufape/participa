@@ -179,7 +179,7 @@ class CertificadoController extends Controller
 
         if ($request->fotoCertificado != null) {
             $request->validate([
-                'fotoCertificado' => 'required|file|mimes:png,jpeg,jpg|max:2048',
+                'fotoCertificado' => 'required|file|mimes:png,jpeg,jpg|max:5120',
             ]);
             if (Storage::disk('public')->exists($certificado->caminho)) {
                 Storage::disk('public')->delete($certificado->caminho);
