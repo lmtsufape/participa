@@ -352,7 +352,7 @@ class CertificadoController extends Controller
         $certificado = Certificado::withTrashed()
             ->where('id', $certificadoId)
             ->first();
-        if (auth()->user()->id != $destinatarioId) {
+        if (auth()->check() && auth()->user()->id != $destinatarioId) {
             return redirect()->back()->with('certificado', 'Você não possui autorização para ver este certificado');
         }
         $evento = $certificado->evento;
