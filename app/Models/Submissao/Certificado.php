@@ -29,6 +29,7 @@ class Certificado extends Model
         'outras_comissoes' => 8,
         'inscrito_atividade' => 9,
         'inscrito' => 10,
+        'credenciado' => 11,
     ];
 
     public function assinaturas()
