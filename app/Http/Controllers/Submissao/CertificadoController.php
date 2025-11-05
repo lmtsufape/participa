@@ -658,15 +658,35 @@ class CertificadoController extends Controller
         $evento = Evento::find($request->eventoId);
         $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
         $certificado = Certificado::find($request->certificado);
+
         if ($certificado->medidas->count() == 0) {
             return redirect()->back()->with('error', 'Atualize o modelo do certificado antes de realizar emissões');
         }
-        $validacoes = collect($request->destinatarios)->map(function ($item) {
+
+        $destinatariosIds = $request->destinatarios; 
+        $numDestinatarios = count($destinatariosIds);
+        $semAnexo = $request->boolean('sem_anexo');
+        
+        if ($request->destinatario == Certificado::TIPO_ENUM['credenciado'] && $numDestinatarios > 100) {
+            
+            EmitirCertificadoJob::dispatch(
+                $destinatariosIds,
+                $certificado->id,
+                $evento,
+                $semAnexo
+            );
+
+            return redirect(route('coord.emitirCertificado', ['eventoId' => $evento->id]))
+                ->with(['success' => "Processo de emissão de {$numDestinatarios} certificados iniciado em segundo plano. O tempo estimado é de " . ceil($numDestinatarios / 200) . " minutos. Você será notificado ao final."]);
+        }
+
+        $validacoes = collect($destinatariosIds)->map(function ($item) {
             return Hash::make($item);
         });
+
         switch ($request->destinatario) {
             case Certificado::TIPO_ENUM['apresentador']:
-                foreach ($request->destinatarios as $i => $destinarioId) {
+                foreach ($destinatariosIds as $i => $destinarioId) {
                     $qrcode = base64_encode(QrCode::generate($validacoes[$i]));
                     $certificado->usuarios()->attach($destinarioId, ['validacao' => $validacoes[$i], 'trabalho_id' => $request->trabalhos[$i]]);
                     $user = User::find($destinarioId);
@@ -678,7 +698,7 @@ class CertificadoController extends Controller
                     } else {
                         $texto = preg_replace('/%MSG_COAUTORES=(.*?)%/', '', $texto);
                     }
-                    if ($request->boolean('sem_anexo')) {
+                    if ($semAnexo) {
                         $link = route('certificado.view', urlencode($validacoes[$i]));
                         Mail::to($user->email)->send(new EmailCertificadoSemAnexo($user, 'apresentador de trabalho', $evento->nome, $link));
                     } else {
@@ -688,12 +708,12 @@ class CertificadoController extends Controller
                 }
                 break;
             case Certificado::TIPO_ENUM['comissao_cientifica']:
-                foreach ($request->destinatarios as $i => $destinarioId) {
+                foreach ($destinatariosIds as $i => $destinarioId) {
                     $qrcode = base64_encode(QrCode::generate($validacoes[$i]));
                     $certificado->usuarios()->attach($destinarioId, ['validacao' => $validacoes[$i]]);
                     $user = User::find($destinarioId);
                     $texto = $certificado->texto;
-                    if ($request->boolean('sem_anexo')) {
+                    if ($semAnexo) {
                         $link = route('certificado.view', urlencode($validacoes[$i]));
                         Mail::to($user->email)->send(new EmailCertificadoSemAnexo($user, 'membro da Comissão Científica', $evento->nome, $link));
                     } else {
@@ -703,12 +723,12 @@ class CertificadoController extends Controller
                 }
                 break;
             case Certificado::TIPO_ENUM['comissao_organizadora']:
-                foreach ($request->destinatarios as $i => $destinarioId) {
+                foreach ($destinatariosIds as $i => $destinarioId) {
                     $qrcode = base64_encode(QrCode::generate($validacoes[$i]));
                     $certificado->usuarios()->attach($destinarioId, ['validacao' => $validacoes[$i]]);
                     $user = User::find($destinarioId);
                     $texto = $certificado->texto;
-                    if ($request->boolean('sem_anexo')) {
+                    if ($semAnexo) {
                         $link = route('certificado.view', urlencode($validacoes[$i]));
                         Mail::to($user->email)->send(new EmailCertificadoSemAnexo($user, 'membro da Comissão Organizadora', $evento->nome, $link));
                     } else {
@@ -718,12 +738,12 @@ class CertificadoController extends Controller
                 }
                 break;
             case Certificado::TIPO_ENUM['revisor']:
-                foreach ($request->destinatarios as $i => $destinarioId) {
+                foreach ($destinatariosIds as $i => $destinarioId) {
                     $qrcode = base64_encode(QrCode::generate($validacoes[$i]));
                     $certificado->usuarios()->attach($destinarioId, ['validacao' => $validacoes[$i]]);
                     $user = User::find($destinarioId);
                     $texto = $certificado->texto;
-                    if ($request->boolean('sem_anexo')) {
+                    if ($semAnexo) {
                         $link = route('certificado.view', urlencode($validacoes[$i]));
                         Mail::to($user->email)->send(new EmailCertificadoSemAnexo($user, 'avaliador/a', $evento->nome, $link));
                     } else {
@@ -733,12 +753,12 @@ class CertificadoController extends Controller
                 }
                 break;
             case Certificado::TIPO_ENUM['participante']:
-                foreach ($request->destinatarios as $i => $destinarioId) {
+                foreach ($destinatariosIds as $i => $destinarioId) {
                     $qrcode = base64_encode(QrCode::generate($validacoes[$i]));
                     $certificado->usuarios()->attach($destinarioId, ['validacao' => $validacoes[$i]]);
                     $user = User::find($destinarioId);
                     $texto = $certificado->texto;
-                    if ($request->boolean('sem_anexo')) {
+                    if ($semAnexo) {
                         $link = route('certificado.view', urlencode($validacoes[$i]));
                         Mail::to($user->email)->send(new EmailCertificadoSemAnexo($user, 'participante', $evento->nome, $link));
                     } else {
@@ -748,12 +768,12 @@ class CertificadoController extends Controller
                 }
                 break;
             case Certificado::TIPO_ENUM['inscrito']:
-                foreach ($request->destinatarios as $i => $destinarioId) {
+                foreach ($destinatariosIds as $i => $destinarioId) {
                     $qrcode = base64_encode(QrCode::generate($validacoes[$i]));
                     $certificado->usuarios()->attach($destinarioId, ['validacao' => $validacoes[$i]]);
                     $user = User::find($destinarioId);
                     $texto = $certificado->texto;
-                    if ($request->boolean('sem_anexo')) {
+                    if ($semAnexo) {
                         $link = route('certificado.view', urlencode($validacoes[$i]));
                         Mail::to($user->email)->send(new EmailCertificadoSemAnexo($user, 'inscrito', $evento->nome, $link));
                     } else {
@@ -763,15 +783,14 @@ class CertificadoController extends Controller
                 }
                 break;
             case Certificado::TIPO_ENUM['credenciado']:
-                foreach ($request->destinatarios as $i => $destinarioId) {
+                $cargo_label = 'participante (credenciado)';
+                foreach ($destinatariosIds as $i => $destinarioId) {
                     $qrcode = base64_encode(QrCode::generate($validacoes[$i]));
                     $certificado->usuarios()->attach($destinarioId, ['validacao' => $validacoes[$i]]);
                     $user = User::find($destinarioId);
                     $texto = $certificado->texto;
                     
-                    $cargo_label = 'participante (credenciado)';
-
-                    if ($request->boolean('sem_anexo')) {
+                    if ($semAnexo) {
                         $link = route('certificado.view', urlencode($validacoes[$i]));
                         Mail::to($user->email)->send(new EmailCertificadoSemAnexo($user, $cargo_label, $evento->nome, $link));
                     } else {
@@ -792,13 +811,13 @@ class CertificadoController extends Controller
                 }
                 break;
             case Certificado::TIPO_ENUM['expositor']:
-                foreach ($request->destinatarios as $i => $destinarioId) {
+                foreach ($destinatariosIds as $i => $destinarioId) {
                     $qrcode = base64_encode(QrCode::generate($validacoes[$i]));
                     $certificado->usuarios()->attach($destinarioId, ['validacao' => $validacoes[$i], 'palestra_id' => $request->palestras[$i]]);
                     $user = Palestrante::find($destinarioId);
                     $palestra = Palestra::find($request->palestras[$i]);
                     $texto = $certificado->texto;
-                    if ($request->boolean('sem_anexo')) {
+                    if ($semAnexo) {
                         $link = route('certificado.view', urlencode($validacoes[$i]));
                         Mail::to($user->email)->send(new EmailCertificadoSemAnexo($user, 'palestrante', $evento->nome, $link));
                     } else {
@@ -808,12 +827,12 @@ class CertificadoController extends Controller
                 }
                 break;
             case Certificado::TIPO_ENUM['coordenador_comissao_cientifica']:
-                foreach ($request->destinatarios as $i => $destinarioId) {
+                foreach ($destinatariosIds as $i => $destinarioId) {
                     $qrcode = base64_encode(QrCode::generate($validacoes[$i]));
                     $certificado->usuarios()->attach($destinarioId, ['validacao' => $validacoes[$i]]);
                     $user = User::find($destinarioId);
                     $texto = $certificado->texto;
-                    if ($request->boolean('sem_anexo')) {
+                    if ($semAnexo) {
                         $link = route('certificado.view', urlencode($validacoes[$i]));
                         Mail::to($user->email)->send(new EmailCertificadoSemAnexo($user, 'coordenador/a da comissão Científica', $evento->nome, $link));
                     } else {
@@ -823,13 +842,13 @@ class CertificadoController extends Controller
                 }
                 break;
             case Certificado::TIPO_ENUM['outras_comissoes']:
-                foreach ($request->destinatarios as $i => $destinarioId) {
+                foreach ($destinatariosIds as $i => $destinarioId) {
                     $qrcode = base64_encode(QrCode::generate($validacoes[$i]));
                     $certificado->usuarios()->attach($destinarioId, ['validacao' => $validacoes[$i], 'comissao_id' => $request->tipo_comissao_id]);
                     $user = User::find($destinarioId);
                     $comissao = TipoComissao::find($request->tipo_comissao_id);
                     $texto = $certificado->texto;
-                    if ($request->boolean('sem_anexo')) {
+                    if ($semAnexo) {
                         $link = route('certificado.view', urlencode($validacoes[$i]));
                         Mail::to($user->email)->send(new EmailCertificadoSemAnexo($user, "membro da comissão {$comissao->nome}", $evento->nome, $link));
                     } else {
@@ -839,13 +858,13 @@ class CertificadoController extends Controller
                 }
                 break;
             case Certificado::TIPO_ENUM['inscrito_atividade']:
-                foreach ($request->destinatarios as $i => $destinarioId) {
+                foreach ($destinatariosIds as $i => $destinarioId) {
                     $qrcode = base64_encode(QrCode::generate($validacoes[$i]));
                     $certificado->usuarios()->attach($destinarioId, ['validacao' => $validacoes[$i], 'atividade_id' => $request->atividades[$i]]);
                     $user = User::find($destinarioId);
                     $atividade = Atividade::find($request->atividades[$i]);
                     $texto = $certificado->texto;
-                    if ($request->boolean('sem_anexo')) {
+                    if ($semAnexo) {
                         $link = route('certificado.view', urlencode($validacoes[$i]));
                         Mail::to($user->email)->send(new EmailCertificadoSemAnexo($user, "inscrito na atividade {$atividade->titulo}", $evento->nome, $link));
                     } else {
