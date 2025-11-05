@@ -29,7 +29,7 @@
         </div>
     @endif
     <div class="container" style="position: relative;" x-data="handler()">
-        <form id="formEnviarCertificado" action="{{route('coord.enviarCertificado')}}" method="POST">
+        <form id="formEnviarCertificado" action="{{route('coord.enviarCertificado')}}" method="POST" onsubmit="return preSubmissao()">
             @csrf
             <input type="hidden" name="eventoId" value="{{$evento->id}}">
             <div class="form-row">
@@ -178,8 +178,26 @@
         </form>
     </div>
 @endsection
+@php
+    $TIPO_CREDENCIADO = \App\Models\Submissao\Certificado::TIPO_ENUM['credenciado'];
+@endphp
 <script src="{{ asset('js/checkbox_marcar_todos.js') }}" defer></script>
 <script>
+    const TIPO_CREDENCIADO = {{ $TIPO_CREDENCIADO }};
+    function preSubmissao() {
+        const destinatarioSelecionado = document.getElementById('idSelecionarDestinatario').value;
+        if (destinatarioSelecionado == TIPO_CREDENCIADO) {
+            const checkboxes = document.querySelectorAll('.checkbox_destinatario');
+            checkboxes.forEach(checkbox => {
+                checkbox.disabled = true;
+            });
+            const hiddenInputs = document.querySelectorAll('input[name^="trabalhos"], input[name^="palestras"], input[name^="atividades"]');
+             hiddenInputs.forEach(input => {
+                 input.disabled = true;
+             });
+        }
+        return true; 
+    }
     function selecionarTodosDestinatarios(source) {
         const container = document.getElementById('dentroTabelaDestinatarios');
             const checkboxes = container.querySelectorAll('input[type="checkbox"]');
