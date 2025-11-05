@@ -676,7 +676,7 @@ class CertificadoController extends Controller
                 $semAnexo
             );
 
-            return redirect(route('coord.emitirCertificado', ['eventoId' => $evento->id]))
+             return redirect()->route('coord.emitirCertificado', ['eventoId' => $evento->id])
                 ->with(['success' => "Processo de emissão de {$numDestinatarios} certificados iniciado em segundo plano. O tempo estimado é de " . ceil($numDestinatarios / 200) . " minutos. Você será notificado ao final."]);
         }
 
