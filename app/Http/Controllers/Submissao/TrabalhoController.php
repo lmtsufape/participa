@@ -1074,7 +1074,6 @@ class TrabalhoController extends Controller
     public function downloadArquivoCorrecao(Request $request)
     {
         $trabalho = Trabalho::find($request->id);
-        $this->authorize('permissaoCorrecao', $trabalho);
         $arquivo = $trabalho->arquivoCorrecao()->first();
         if ($arquivo != null && Storage::disk()->exists($arquivo->caminho)) {
             return Storage::download($arquivo->caminho);
