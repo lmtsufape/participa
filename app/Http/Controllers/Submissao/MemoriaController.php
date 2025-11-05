@@ -41,19 +41,24 @@ class MemoriaController extends Controller
         $memoria->evento()->associate($evento);
         $memoria->save();
 
-        return redirect()->back()->with(['success' => 'Registro adicionado com sucesso!']);
+        return redirect()->route('coord.memoria.index', $evento)->with(['success' => 'Registro adicionado com sucesso!']);
     }
 
     public function update(MemoriaRequest $request, Evento $evento, Memoria $memoria)
     {
         $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
         $validatedData = $request->validated();
+        if ($memoria->arquivo) {
+            Storage::disk('public')->delete($memoria->arquivo);
+            $memoria->arquivo = null;
+        }
+
         if ($request->has('arquivo')) {
             $path = $request->file('arquivo')->store("eventos/$evento->id/registros", 'public');
             if (! $path) {
                 return redirect()->back('error', 'Não foi possível salvar o arquivo enviado');
             }
-            Storage::disk('public')->delete($memoria->arquivo);
+
             $validatedData['arquivo'] = $path;
         }
         $memoria->fill($validatedData);
