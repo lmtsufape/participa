@@ -591,11 +591,87 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="col-md-6 mb-3">
+                        <div class="card h-100">
+                            <div class="card-body text-center">
+                                <div class="mb-3">
+                                    <img src="{{asset('img/icons/file-download-solid.svg')}}" alt="Confirmar presença" style="width: 48px; height: 48px;">
+                                </div>
+                                <h5 class="card-title">Confirmar presença</h5>
+                                <p class="card-text">Importação da listagem de presença dos inscritos</p>
+                                <a href="{{route('evento.importListaPresenca', $evento)}}" class="btn btn-success w-100">
+                                    Importar lista de presença
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <div class="card h-100">
+                            <div class="card-body text-center">
+                                <div class="mb-3">
+                                    <img src="{{asset('img/icons/file-download-solid.svg')}}" alt="Importar Apresentações" style="width: 48px; height: 48px;">
+                                </div>
+                                <h5 class="card-title">Importar Apresentações</h5>
+                                <p class="card-text">Importar planilha com trabalhos apresentados</p>
+                                <button type="button" class="btn btn-success w-100" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#modal-importar-apresentacoes">
+                                    <img src="{{asset('img/icons/file-download-solid.svg')}}" alt="Importar" style="width: 16px; height: 16px;" class="me-2">Importar Apresentações
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
             </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Importar Apresentações -->
+<div class="modal fade" id="modal-importar-apresentacoes" tabindex="-1" role="dialog" aria-labelledby="modal-importar-apresentacoes-label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #114048ff; color: white;">
+                <h5 class="modal-title" id="modal-importar-apresentacoes-label">Importar Apresentações - {{ $evento->nome }}</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <form action="{{ route('trabalho.importar.apresentacoes', ['eventoId' => $evento->id]) }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="planilha_apresentacoes" class="form-label">Selecione a planilha (.xlsx):</label>
+                        <input type="file" class="form-control" id="planilha_apresentacoes" name="planilha_apresentacoes" accept=".xlsx,.xls" required>
+                        <div class="form-text">
+                            A planilha deve conter 3 colunas na seguinte ordem: <strong>ID do trabalho</strong>, <strong>Título do trabalho</strong> e <strong>Autor</strong>.
+                        </div>
+                    </div>
+
+                    <div class="alert alert-info">
+                        <h6>Instruções:</h6>
+                        <ul class="mb-0">
+                            <li>A planilha deve estar no formato .xlsx ou .xls</li>
+                            <li><strong>Ordem das colunas é importante:</strong></li>
+                            <li><strong>1ª coluna:</strong> ID do trabalho</li>
+                            <li><strong>2ª coluna:</strong> Título do trabalho apresentado</li>
+                            <li><strong>3ª coluna:</strong> Nome do autor do trabalho</li>
+                            <li>A primeira linha deve conter os cabeçalhos das colunas</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-info button-prevent-multiple-submits">
+                        <img src="{{asset('img/icons/file-upload-solid.svg')}}" alt="Importar" style="width: 16px; height: 16px;" class="me-2">Importar Apresentações
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

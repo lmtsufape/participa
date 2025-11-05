@@ -1192,49 +1192,96 @@ class InscricaoController extends Controller
             $email       = $row['email']       ?? $row[2] ?? null;
             $alimentacao = $row['alimentacao'] ?? $row[3] ?? null;
 
-            $email = $email ? mb_strtolower(trim($email)) : null;
+            $cpfNormalizado = $cpf ? $this->normalizarCpf($cpf) : null;
+
+            $emailNormalizado = $email ? mb_strtolower(trim($email)) : null;
+
 
             return [
                 'nome'        => trim((string) $nome),
-                'cpf'         => $cpf ?: null,
-                'email'       => $email ?: null,
+                'cpf'         => $cpfNormalizado,
+                'email'       => $emailNormalizado,
                 'alimentacao' => $alimentacao,
             ];
         })->filter(fn ($l) => $l['cpf'] || $l['email'])->values();
 
-        $chaves = $linhas->map(fn ($l) => $l['cpf'] ?: $l['email'])->unique()->values();
+        $cpfs = $linhas->pluck('cpf')->filter()->unique()->values();
+        $emails = $linhas->pluck('email')->filter()->unique()->values();
 
-        $users = User::query()
-            ->where(function ($q) use ($chaves) {
-                foreach ($chaves as $valor) {
-                    $q->orWhere('cpf', 'ILIKE', $valor)
-                    ->orWhere('email', 'ILIKE', $valor);
-                }
-            })
-            ->withExists([
-                'inscricaos as tem_inscricao_confirmada' => function ($q) use ($evento_id) {
-                    $q->when($evento_id, fn ($q) => $q->where('evento_id', $evento_id))
-                    ->where('finalizada', true);
-                },
-            ])
-            ->addSelect([
-                'alimentacao' => Inscricao::select('alimentacao')
-                    ->whereColumn('user_id', 'users.id')
-                    ->when($evento_id, fn ($q) => $q->where('evento_id', $evento_id))
-                    ->where('finalizada', true)
-                    ->latest('created_at')
-                    ->limit(1),
-            ])
-            ->get(['id', 'cpf', 'email']);
+        $users = collect();
 
-        $mapaUsuarios = $users->keyBy(fn ($u) => $u->cpf ?: $u->email);
+        if ($cpfs->isNotEmpty()) {
+            $usersCpf = User::query()
+                ->whereIn('cpf', $cpfs)
+                ->get(['id', 'cpf', 'email']);
+            $users = $users->merge($usersCpf);
+        }
+
+        if ($emails->isNotEmpty()) {
+            $usersEmail = User::query()
+                ->whereIn('email', $emails)
+                ->get(['id', 'cpf', 'email']);
+            $users = $users->merge($usersEmail);
+
+            $usersEmailLike = User::query()
+                ->where(function($q) use ($emails) {
+                    foreach ($emails as $email) {
+                        $q->orWhere('email', 'ILIKE', $email);
+                    }
+                })
+                ->get(['id', 'cpf', 'email']);
+            $users = $users->merge($usersEmailLike);
+        }
+
+        $users = $users->unique('id');
+
+        if ($users->isNotEmpty()) {
+            $userIds = $users->pluck('id');
+
+            $users = User::query()
+                ->whereIn('id', $userIds)
+                ->withExists([
+                    'inscricaos as tem_inscricao_confirmada' => function ($q) use ($evento_id) {
+                        $q->when($evento_id, fn ($q) => $q->where('evento_id', $evento_id))
+                        ->where('finalizada', true);
+                    },
+                ])
+                ->addSelect([
+                    'alimentacao' => Inscricao::select('alimentacao')
+                        ->whereColumn('user_id', 'users.id')
+                        ->when($evento_id, fn ($q) => $q->where('evento_id', $evento_id))
+                        ->where('finalizada', true)
+                        ->latest('created_at')
+                        ->limit(1),
+                ])
+                ->get(['id', 'cpf', 'email']);
+        } else {
+            $users = collect();
+        }
+
+
+        $mapaUsuarios = collect();
+        foreach ($users as $user) {
+            if ($user->cpf) {
+                $mapaUsuarios->put($user->cpf, $user);
+            }
+            if ($user->email) {
+                $mapaUsuarios->put($user->email, $user);
+            }
+        }
 
         $encontrados = collect();
         $naoEncontrados = collect();
 
         foreach ($linhas as $linha) {
-            $chave = $linha['cpf'] ?: $linha['email'];
-            $u = $mapaUsuarios->get($chave);
+            $u = null;
+
+            if ($linha['cpf'] && $mapaUsuarios->has($linha['cpf'])) {
+                $u = $mapaUsuarios->get($linha['cpf']);
+            }
+            elseif ($linha['email'] && $mapaUsuarios->has($linha['email'])) {
+                $u = $mapaUsuarios->get($linha['email']);
+            }
 
             if ($u) {
                 $encontrados->push([
@@ -1265,6 +1312,22 @@ class InscricaoController extends Controller
                 'nao_encontrados' => $naoEncontrados->count(),
             ],
         ]);
+    }
+
+    private function normalizarCpf($cpf)
+    {
+        $cpf = preg_replace('/[^0-9]/', '', $cpf);
+        if (strlen($cpf) < 11) {
+            $cpf = str_pad($cpf, 11, '0', STR_PAD_LEFT);
+        }
+        if (strlen($cpf) === 11) {
+            return substr($cpf, 0, 3) . '.' .
+                   substr($cpf, 3, 3) . '.' .
+                   substr($cpf, 6, 3) . '-' .
+                   substr($cpf, 9, 2);
+        }
+
+        return $cpf;
     }
 
 }

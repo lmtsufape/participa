@@ -63,8 +63,7 @@
                 paymentMethods: {
                     atm: "all",
                     creditCard: "all",
-                    bankTransfer: "all",
-                    ticket: "all"
+                    bankTransfer: "all"
                 },
                 installments: 1,
             },

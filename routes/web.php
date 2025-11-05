@@ -91,6 +91,7 @@ Route::view('/termos-de-uso', 'termosdeuso')->name('termos.de.uso');
 Route::view('/aviso-de-privacidade', 'avisodeprivacidade')->name('aviso.de.privacidade');
 Route::get('/evento/busca', [EventoController::class, 'buscaLivre'])->name('busca.eventos');
 Route::get('/evento/buscar-livre', [EventoController::class, 'buscaLivreAjax'])->name('busca.livre.ajax');
+Route::get('certificados/{certificadoId}/ver-destinatario/{destinatarioId}/trabalho/{trabalhoId}', [CertificadoController::class, 'visualizar_certificado_emitido'])->name('verCertificado');
 
 Auth::routes(['verify' => true, 'register' => false]);
 
@@ -122,7 +123,8 @@ Route::namespace('Submissao')->group(function () {
         return redirect()->route('evento.visualizar', $id);
     });
     Route::get('certificado/{hash}', [CertificadoController::class, 'verificar'])->name('certificado.view')->where('hash', '.*');;
-    Route::view('/validarDocumentos', 'validar')->name('validarCertificado')->middleware('block.get.params');
+    Route::get('/validarDocumentos', [CertificadoController::class, 'validarCertificadoForm'])->name('validarCertificado')->middleware('block.get.params');
+    Route::get('certificados/{user_id}/{evento_id}', [CertificadoController::class, 'certificadosDisponiveis'])->name('certificado.disponiveis');
     Route::post('validarDocumentos', [CertificadoController::class, 'validar'])->name('validarCertificadoPost');
     Route::get('/home', [CertificadoController::class, 'validar'])->name('home')->middleware('verified', 'isTemp');
 
@@ -310,7 +312,6 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
             Route::post('certificados/{id}/editCertificado', [CertificadoController::class, 'update'])->name('certificado.update');
             Route::get('certificados/ajax-listar-destinatarios', [CertificadoController::class, 'ajaxDestinatarios'])->name('ajax.listar.destinatarios');
             Route::get('certificados/{certificadoId}/preview-destinatario/{destinatarioId}/trabalho/{trabalhoId}', [CertificadoController::class, 'previewCertificado'])->name('previewCertificado');
-            Route::get('certificados/{certificadoId}/ver-destinatario/{destinatarioId}/trabalho/{trabalhoId}', [CertificadoController::class, 'visualizar_certificado_emitido'])->name('verCertificado');
             Route::delete('certificados/emissoes/deletar', [CertificadoController::class, 'deletarEmissao'])->name('deletar.emissao');
 
             Route::get('modalidade/cadastrarModalidade', [EventoController::class, 'cadastrarModalidade'])->name('cadastrarModalidade');
@@ -385,6 +386,7 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
         Route::get('/trabalho/encaminhar/{id}/{revisor}', [TrabalhoController::class, 'encaminharTrabalho'])->name('trabalho.encaminhar');
         Route::post('/trabalho/{id}/aprovar-reprovar', [TrabalhoController::class, 'aprovacaoTrabalho'])->name('trabalho.aprovacao');
         Route::post('/trabalho/{id}/correcao', [TrabalhoController::class, 'correcaoTrabalho'])->name('trabalho.correcao');
+        Route::post('/trabalho/importar-apresentacoes/{eventoId}', [TrabalhoController::class, 'importarApresentacoes'])->name('trabalho.importar.apresentacoes');
         //Atribuição
         Route::get('/atribuir', [AtribuicaoController::class, 'distribuicaoAutomatica'])->name('distribuicao');
         Route::get('/atribuirPorArea', [AtribuicaoController::class, 'distribuicaoPorArea'])->name('distribuicaoAutomaticaPorArea');
@@ -428,6 +430,10 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
         Route::post('/evento/{evento}/downloadTrabalhosCertifica', [EventoController::class, 'exportTrabalhosCertifica'])->name('evento.downloadTrabalhosCertifica');
         Route::get('/evento/{evento}/downloadAvaliacoes/{modalidade}/form/{form}', [EventoController::class, 'exportAvaliacoes'])->name('evento.downloadAvaliacoes');
         Route::get('/evento/{evento}/exportar-avaliadores-eixos/{eixo}', [EventoController::class, 'exportarAvaliadoresXLSX'])->name('evento.exportarAvaliadoresEixos');
+        Route::get('/evento/{evento}/import/listaPresenca', [EventoController::class, 'importListaPresenca'])->name('evento.importListaPresenca');
+        Route::post('/evento/import/listaPresenca', [EventoController::class, 'processarListaPresenca'])->name('evento.processarListaPresenca');
+
+
 
         // Encontrar resumo especifico para trabalhos
         Route::get('/encontrarResumo', [TrabalhoController::class, 'findResumo'])->name('trabalhoResumo');

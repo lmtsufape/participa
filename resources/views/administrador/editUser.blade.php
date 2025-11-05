@@ -35,7 +35,7 @@
             <input hidden name="id" value="{{$user->id}}">
             <div class="col-md-6">
                 <label for="name" class="col-form-label">{{ __('Name') }}</label>
-                <input id="name" type="text" class="form-control apenasLetras @error('name') is-invalid @enderror" name="name" @if(old('name') != null) value="{{ old('name') }}" @else value="{{$user->name}}" @endif required autocomplete="name" autofocus>
+                <input id="name" type="text" class="form-control apenasLetras @error('name') is-invalid @enderror" name="name" @if(old('name') != null) value="{{ old('name') }}" @else value="{{$user->name}}" @endif autocomplete="name" autofocus>
 
                 @error('name')
                     <span class="invalid-feedback" role="alert">
@@ -48,6 +48,10 @@
                 <div class="custom-control custom-radio custom-control-inline col-form-label">
                 <input type="radio" id="customRadioInline3" name="check_cpf" class="custom-control-input"  >
                 <label class="custom-control-label" for="customRadioInline3">CPF</label>
+                </div>
+                <div class="custom-control custom-radio custom-control-inline">
+                <input type="radio" id="customRadioInline5" name="check_cpf" class="custom-control-input"  >
+                <label class="custom-control-label" for="customRadioInline5">CNPJ</label>
                 </div>
                 <div class="custom-control custom-radio custom-control-inline">
                 <input type="radio" id="customRadioInline4" name="check_cpf" class="custom-control-input"  >
@@ -63,6 +67,16 @@
                     </span>
                 @enderror
                 </div>
+                <div id="fieldCNPJ" style="display: none">
+                <input id="cnpj" type="text" class="form-control @error('cnpj') is-invalid @enderror" name="cnpj" placeholder="CNPJ" @if(old('cnpj') != null) value="{{ old('cnpj') }}" @else value="{{$user->cnpj}}" @endif autocomplete="cnpj" autofocus>
+
+                @error('cnpj')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+                </div>
+
                 <div id="fieldPassaporte" @error('passaporte') style="display: block" @enderror style="display: none" >
                 <input id="passaporte" type="text" class="form-control @error('passaporte') is-invalid @enderror" name="passaporte" placeholder="Passaporte"@if(old('passaporte') != null) value="{{ old('passaporte') }}" @else value="{{$user->passaporte}}" @endif autocomplete="passaporte" autofocus>
 
@@ -78,9 +92,19 @@
         </div>
         <div class="row justify-content-center">
 
-            <div class="col-md-8">
+            <div class="col-md-4">
+                <label for="nomeSocial" class="col-form-label">{{ __('Nome Social') }}</label>
+                <input id="nomeSocial" type="text" class="form-control apenasLetras @error('nomeSocial') is-invalid @enderror" name="nomeSocial" @if(old('nomeSocial') != null) value="{{ old('nomeSocial') }}" @else value="{{$user->perfilIdentitario->nomeSocial ?? ''}}" @endif autocomplete="nomeSocial">
+
+                @error('nomeSocial')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+            </div>
+            <div class="col-md-4">
             <label for="instituicao" class="col-form-label">{{ __('Instituição de Ensino') }}</label>
-            <input id="instituicao" type="text" class="form-control apenasLetras @error('instituicao') is-invalid @enderror" name="instituicao" @if(old('instituicao') != null) value="{{ old('instituicao') }}" @else value="{{$user->instituicao}}" @endif required autocomplete="instituicao" autofocus>
+            <input id="instituicao" type="text" class="form-control apenasLetras @error('instituicao') is-invalid @enderror" name="instituicao" @if(old('instituicao') != null) value="{{ old('instituicao') }}" @else value="{{$user->instituicao}}" @endif autocomplete="instituicao" autofocus>
 
             @error('instituicao')
                 <span class="invalid-feedback" role="alert">
@@ -91,7 +115,7 @@
 
             <div class="col-md-4">
                 <label for="celular" class="col-form-label">{{ __('Celular') }}</label><br>
-                <input id="celular" id="phone" type="tel" class="form-control @error('celular') is-invalid @enderror" name="celular" @if(old('celular') != null) value="{{ old('celular') }}" @else value="{{$user->celular}}" @endif required autocomplete="celular" autofocus>
+                <input id="celular" id="phone" type="tel" class="form-control @error('celular') is-invalid @enderror" name="celular" @if(old('celular') != null) value="{{ old('celular') }}" @else value="{{$user->celular}}" @endif autocomplete="celular" autofocus>
                 <div class="alert alert-info mt-1" style="display: none"></div>
                 <div id="celular-invalido" class="alert alert-danger mt-1" role="alert"   style="display: none"></div>
 
@@ -110,7 +134,7 @@
             @if ($user->membroComissaoEvento != null && count($user->membroComissaoEvento) > 0)
                 <div class="col-md-4">
                     <label for="especialidade" class="col-form-label">{{ __('Especialidade profissional') }}</label>
-                    <input id="especialidade" type="text" class="form-control apenasLetras @error('especialidade') is-invalid @enderror" name="especialidade" required autocomplete="new-password">
+                    <input id="especialidade" type="text" class="form-control apenasLetras @error('especialidade') is-invalid @enderror" name="especialidade" autocomplete="new-password">
 
                     @error('especialidade')
                         <span class="invalid-feedback" role="alert">
@@ -122,7 +146,7 @@
 
             <div class="col-md-4">
                 <label for="email" class="col-form-label">{{ __('E-Mail') }}</label>
-                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" @if(old('email') != null) value="{{ old('email') }}" @else value="{{$user->email}}" @endif required autocomplete="email" autofocus>
+                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" @if(old('email') != null) value="{{ old('email') }}" @else value="{{$user->email}}" @endif autocomplete="email" autofocus>
 
                 @error('email')
                     <span class="invalid-feedback" role="alert">
@@ -162,7 +186,7 @@
             <div class="form-group row justify-content-center">
                 <div class="col-md-2">
                     <label for="cep" class="col-form-label">{{ __('CEP') }}</label>
-                    <input onblur="pesquisacep(this.value);" id="cep" type="text" class="form-control @error('cep') is-invalid @enderror" name="cep" @if(old('cep') != null ) value="{{ old('cep') }}" @else value="{{$end->cep}}" @endif required autocomplete="cep">
+                    <input onblur="pesquisacep(this.value);" id="cep" type="text" class="form-control @error('cep') is-invalid @enderror" name="cep" @if(old('cep') != null ) value="{{ old('cep') }}" @else value="{{$end->cep}}" @endif autocomplete="cep">
 
                     @error('cep')
                         <span class="invalid-feedback" role="alert">
@@ -172,7 +196,7 @@
                 </div>
                 <div class="col-md-6">
                     <label for="rua" class="col-form-label">{{ __('Rua') }}</label>
-                    <input id="rua" type="text" class="form-control @error('rua') is-invalid @enderror" name="rua" @if(old('rua') != null) value="{{ old('rua') }}" @else value="{{$end->rua}}" @endif required autocomplete="new-password">
+                    <input id="rua" type="text" class="form-control @error('rua') is-invalid @enderror" name="rua" @if(old('rua') != null) value="{{ old('rua') }}" @else value="{{$end->rua}}" @endif autocomplete="new-password">
 
                     @error('rua')
                         <span class="invalid-feedback" role="alert">
@@ -183,7 +207,7 @@
 
                 <div class="col-md-4">
                 <label for="numero" class="col-form-label">{{ __('Número') }}</label>
-                <input id="numero" type="number" class="form-control @error('numero') is-invalid @enderror" name="numero" @if(old('numero') != null) value="{{ old('numero') }}" @else value="{{$end->numero}}" @endif required autocomplete="numero" maxlength="10">
+                <input id="numero" type="number" class="form-control @error('numero') is-invalid @enderror" name="numero" @if(old('numero') != null) value="{{ old('numero') }}" @else value="{{$end->numero}}" @endif autocomplete="numero" maxlength="10">
 
                 @error('numero')
                     <span class="invalid-feedback" role="alert">
@@ -197,7 +221,7 @@
             <div class="form-group row justify-content-center">
                 <div class="col-md-3">
                     <label for="bairro" class="col-form-label">{{ __('Bairro') }}</label>
-                    <input id="bairro" type="text" class="form-control @error('bairro') is-invalid @enderror" name="bairro" @if(old('bairro') != null) value="{{ old('bairro') }}" @else value="{{$end->bairro}}" @endif required autocomplete="bairro">
+                    <input id="bairro" type="text" class="form-control @error('bairro') is-invalid @enderror" name="bairro" @if(old('bairro') != null) value="{{ old('bairro') }}" @else value="{{$end->bairro}}" @endif autocomplete="bairro">
 
                     @error('bairro')
                         <span class="invalid-feedback" role="alert">
@@ -208,7 +232,7 @@
 
                 <div class="col-md-3">
                     <label for="cidade" class="col-form-label">{{ __('Cidade') }}</label>
-                    <input id="cidade" type="text" class="form-control @error('cidade') is-invalid @enderror" name="cidade" @if(old('cidade') != null) value="{{ old('cidade') }}" @else value="{{$end->cidade}}" @endif required autocomplete="cidade">
+                    <input id="cidade" type="text" class="form-control @error('cidade') is-invalid @enderror" name="cidade" @if(old('cidade') != null) value="{{ old('cidade') }}" @else value="{{$end->cidade}}" @endif autocomplete="cidade">
 
                     @error('cidade')
                         <span class="invalid-feedback" role="alert">
@@ -218,7 +242,7 @@
                 </div>
                 <div class="col-sm-4">
                     <label for="complemento" class="col-form-label">{{ __('Complemento') }}</label>
-                    <input id="complemento" type="text" class="form-control apenasLetras @error('complemento') is-invalid @enderror" name="complemento" @if(old('complemento') != null) value="{{ old('complemento') }}"@else value="{{$end->complemento}} "@endif required autocomplete="complemento">
+                    <input id="complemento" type="text" class="form-control apenasLetras @error('complemento') is-invalid @enderror" name="complemento" @if(old('complemento') != null) value="{{ old('complemento') }}"@else value="{{$end->complemento}} "@endif autocomplete="complemento">
 
                     @error('complemento')
                     <span class="invalid-feedback" role="alert">
@@ -309,7 +333,7 @@
             <div class="form-group row justify-content-center">
                 <div class="col-md-2">
                     <label for="cep" class="col-form-label">{{ __('CEP') }}</label>
-                    <input onblur="pesquisacep(this.value);" value="{{old('cep')}}" id="cep" type="text" class="form-control @error('cep') is-invalid @enderror" name="cep" required autocomplete="cep">
+                    <input onblur="pesquisacep(this.value);" value="{{old('cep')}}" id="cep" type="text" class="form-control @error('cep') is-invalid @enderror" name="cep" autocomplete="cep">
 
                     @error('cep')
                         <span class="invalid-feedback" role="alert">
@@ -319,7 +343,7 @@
                 </div>
                 <div class="col-md-6">
                     <label for="rua" class="col-form-label">{{ __('Rua') }}</label>
-                    <input value="{{old('rua')}}" id="rua" type="text" class="form-control @error('rua') is-invalid @enderror" name="rua" required autocomplete="new-password">
+                    <input value="{{old('rua')}}" id="rua" type="text" class="form-control @error('rua') is-invalid @enderror" name="rua" autocomplete="new-password">
 
                     @error('rua')
                         <span class="invalid-feedback" role="alert">
@@ -330,7 +354,7 @@
 
                 <div class="col-md-4">
                 <label for="numero" class="col-form-label">{{ __('Número') }}</label>
-                <input value="{{old('numero')}}" id="numero" min="0" type="text" class="form-control @error('numero') is-invalid @enderror" name="numero" required autocomplete="numero" maxlength="10">
+                <input value="{{old('numero')}}" id="numero" min="0" type="text" class="form-control @error('numero') is-invalid @enderror" name="numero" autocomplete="numero" maxlength="10">
 
                 @error('numero')
                     <span class="invalid-feedback" role="alert">
@@ -344,7 +368,7 @@
             <div class="form-group row justify-content-center">
                 <div class="col-md-3">
                     <label for="bairro" class="col-form-label">{{ __('Bairro') }}</label>
-                    <input value="{{old('bairro')}}" id="bairro" type="text" class="form-control @error('bairro') is-invalid @enderror" name="bairro" required autocomplete="bairro">
+                    <input value="{{old('bairro')}}" id="bairro" type="text" class="form-control @error('bairro') is-invalid @enderror" name="bairro" autocomplete="bairro">
 
                     @error('bairro')
                         <span class="invalid-feedback" role="alert">
@@ -355,7 +379,7 @@
 
                 <div class="col-md-3">
                     <label for="cidade" class="col-form-label">{{ __('Cidade') }}</label>
-                    <input value="{{old('cidade')}}" id="cidade" type="text" class="form-control apenasLetras @error('cidade') is-invalid @enderror" name="cidade" required autocomplete="cidade">
+                    <input value="{{old('cidade')}}" id="cidade" type="text" class="form-control apenasLetras @error('cidade') is-invalid @enderror" name="cidade" autocomplete="cidade">
 
                     @error('cidade')
                         <span class="invalid-feedback" role="alert">
@@ -422,8 +446,8 @@
                 {{-- <a class="btn btn-secondary botao-form" href="{{route('home')}}" style="width:100%">Voltar</a> --}}
             </div>
             <div class="col-md-6" style="padding-right:0">
-                <button type="submit" class="btn btn-atualizar-perfil botao-form" style="width:100%">
-                    {{ __('Concluir') }}
+                <button type="submit" class="btn btn-success btn-lg botao-form" style="width:100%; font-weight: bold; font-size: 16px; padding: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
+                    </i> {{ __('Concluir') }}
                 </button>
             </div>
         </div>
@@ -440,6 +464,7 @@
     $(document).ready(function($){
       $('#cep').mask('00000-000');
       $('#cpf').mask('000.000.000-00');
+      $('#cnpj').mask('00.000.000/0000-00');
       $(".apenasLetras").mask("#", {
         maxlength: false,
         translation: {
@@ -520,24 +545,33 @@
     <script type="text/javascript">
 
       $(document).ready(function(){
-          // $("#fieldPassaporte").hide();
-          $("#customRadioInline1").click(function(){
-              $("#fieldPassaporte").hide();
+          @if($user->cpf)
+              $("#customRadioInline3").prop('checked', true);
+              $("#fieldCPF").show();
+              $("#fieldCNPJ, #fieldPassaporte").hide();
+          @elseif($user->cnpj)
+              $("#customRadioInline5").prop('checked', true);
+              $("#fieldCNPJ").show();
+              $("#fieldCPF, #fieldPassaporte").hide();
+          @elseif($user->passaporte)
+              $("#customRadioInline4").prop('checked', true);
+              $("#fieldPassaporte").show();
+              $("#fieldCPF, #fieldCNPJ").hide();
+          @endif
+
+          $("#customRadioInline3").click(function(){
+              $("#fieldPassaporte, #fieldCNPJ").hide();
               $("#fieldCPF").show();
           });
 
-          $("#customRadioInline2").click(function(){
-              $("#fieldPassaporte").show();
-              $("#fieldCPF").hide();
-          });
-          $("#customRadioInline3").click(function(){
-              $("#fieldPassaporte").hide();
-              $("#fieldCPF").show();
+          $("#customRadioInline5").click(function(){
+              $("#fieldPassaporte, #fieldCPF").hide();
+              $("#fieldCNPJ").show();
           });
 
           $("#customRadioInline4").click(function(){
+              $("#fieldCPF, #fieldCNPJ").hide();
               $("#fieldPassaporte").show();
-              $("#fieldCPF").hide();
           });
 
       });

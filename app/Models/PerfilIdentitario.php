@@ -40,23 +40,23 @@ class PerfilIdentitario extends Model
 
     public function setAttributes($data)
     {
-        $this->nomeSocial = $data['nomeSocial'];
-        $this->dataNascimento = $data['dataNascimento'];
-        $this->genero = $data['genero'];
-        $this->outroGenero = $data['outroGenero'];
+        $this->nomeSocial = $data['nomeSocial'] ?? null;
+        $this->dataNascimento = $data['dataNascimento'] ?? null;
+        $this->genero = $data['genero'] ?? null;
+        $this->outroGenero = $data['outroGenero'] ?? null;
         $this->raca = !empty($data['raca']) ? $data['raca'] : [];
-        $this->outraRaca = $data['outraRaca'];
-        $this->comunidadeTradicional = $data['comunidadeTradicional'];
-        $this->nomeComunidadeTradicional = $data['nomeComunidadeTradicional'];
-        $this->lgbtqia = $data['lgbtqia'];
-        $this->deficienciaIdoso = $data['deficienciaIdoso'];
+        $this->outraRaca = $data['outraRaca'] ?? null;
+        $this->comunidadeTradicional = $data['comunidadeTradicional'] ?? null;
+        $this->nomeComunidadeTradicional = $data['nomeComunidadeTradicional'] ?? null;
+        $this->lgbtqia = $data['lgbtqia'] ?? null;
+        $this->deficienciaIdoso = $data['deficienciaIdoso'] ?? null;
         $this->necessidadesEspeciais = !empty($data['necessidadesEspeciais']) ? $data['necessidadesEspeciais'] : ['nenhuma'];
-        $this->outraNecessidadeEspecial = $data['outraNecessidadeEspecial'];
-        $this->associadoAba = $data['associadoAba'];
-        $this->receberInfoAba = $data['receberInfoAba'];
-        $this->vinculoInstitucional = $data['vinculoInstitucional'];
-        $this->participacaoOrganizacao = $data['participacaoOrganizacao'];
-        $this->nomeOrganizacao = $data['nomeOrganizacao'];
+        $this->outraNecessidadeEspecial = $data['outraNecessidadeEspecial'] ?? null;
+        $this->associadoAba = $data['associadoAba'] ?? null;
+        $this->receberInfoAba = $data['receberInfoAba'] ?? null;
+        $this->vinculoInstitucional = $data['vinculoInstitucional'] ?? null;
+        $this->participacaoOrganizacao = $data['participacaoOrganizacao'] ?? null;
+        $this->nomeOrganizacao = $data['nomeOrganizacao'] ?? null;
     }
 
     public function editAttributes($data)

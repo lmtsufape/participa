@@ -42,6 +42,8 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\ApresentacoesImport;
 
 class TrabalhoController extends Controller
 {
@@ -1538,6 +1540,42 @@ class TrabalhoController extends Controller
             DB::rollBack();
 
             return back()->with('error', 'Erro: ' . $e->getMessage());
+        }
+    }
+
+    public function importarApresentacoes(Request $request, $eventoId)
+    {
+        $request->validate([
+            'planilha_apresentacoes' => 'required|file|mimes:xlsx,xls|max:10240'
+        ]);
+
+        try {
+            $evento = Evento::findOrFail($eventoId);
+
+            if (!Gate::any([
+                'isCoordenadorOrCoordenadorDaComissaoCientifica',
+                'isCoordenadorEixo'
+            ], $evento) || !auth()->user()->administradors()->exists()) {
+                abort(403, 'Acesso negado');
+            }
+
+            $import = new ApresentacoesImport($eventoId);
+
+            Excel::import($import, $request->file('planilha_apresentacoes'));
+
+            $processados = $import->getProcessados();
+            $erros = $import->getErros();
+
+            $mensagem = "Importação concluída! {$processados} apresentações foram marcadas como apresentadas.";
+
+            if (!empty($erros)) {
+                $mensagem .= " Erros encontrados: " . implode('; ', $erros);
+            }
+
+            return redirect()->back()->with('success', $mensagem);
+
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Erro ao importar planilha: ' . $e->getMessage());
         }
     }
 }
