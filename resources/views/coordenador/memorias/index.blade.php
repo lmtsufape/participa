@@ -75,7 +75,8 @@
                                                     data-bs-target="#modalExcluirRegistro{{ $registro->id }}">
                                                     <img src="{{ asset('img/icons/trash-alt-regular.svg') }}"
                                                         class="icon-card"
-                                                        alt="">
+                                                        alt=""
+                                                        style="width:20px">
                                                 </a>
                                             </form>
                                         </td>
@@ -185,7 +186,7 @@
                     <div class="modal-footer">
                         <button type="button"
                             class="btn btn-secondary"
-                            data-dismiss="modal">Cancelar</button>
+                            data-bs-dismiss="modal">Cancelar</button>
                         <button type="submit"
                             class="btn btn-primary"
                             form="formEditarRegistro{{ $registro->id }}">Atualizar</button>
@@ -219,7 +220,7 @@
                     <div class="modal-footer">
                         <button type="button"
                             class="btn btn-secondary"
-                            data-dismiss="modal">Não</button>
+                            data-bs-dismiss="modal">Não</button>
                         <button type="submit"
                             class="btn btn-primary"
                             form="formExcluirRegistro{{ $registro->id }}">Sim</button>
