@@ -549,7 +549,9 @@ class CertificadoController extends Controller
                                     ->where('finalizada', true)
                                     ->where('is_presente', true) 
                                     ->get()
-                                    ->pluck('user');
+                                    ->pluck('user')
+                                    ->sortBy('name')
+                                    ->values();
                                     
         } elseif ($request->destinatario == Certificado::TIPO_ENUM['expositor']) {
             $destinatarios = Evento::find($request->eventoId)->palestrantes()->orderBy('nome')->get();
