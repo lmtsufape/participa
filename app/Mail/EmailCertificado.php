@@ -45,6 +45,6 @@ class EmailCertificado extends Mailable
                 'user' => $this->user,
                 'cargo' => $this->cargo,
                 'evento' => $this->nomeEvento,
-            ])->attachData($this->pdf->output(), 'Certificado.pdf');
+            ])->attachData($this->pdf, 'Certificado.pdf');
     }
 }

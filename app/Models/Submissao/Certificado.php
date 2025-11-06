@@ -39,7 +39,7 @@ class Certificado extends Model
 
     public function usuarios()
     {
-        return $this->belongsToMany(User::class, 'certificado_user')->withPivot('id', 'valido', 'validacao', 'trabalho_id', 'palestra_id', 'comissao_id', 'atividade_id')->withTimestamps();
+        return $this->belongsToMany(User::class, 'certificado_user')->withPivot('id', 'valido', 'validacao', 'trabalho_id', 'palestra_id', 'comissao_id', 'atividade_id', 'path')->withTimestamps();
     }
 
     public function usuariosPalestrantes()
