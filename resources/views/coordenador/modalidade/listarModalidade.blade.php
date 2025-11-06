@@ -4,6 +4,13 @@
 @error('excluirModalidade')
 @include('componentes.mensagens')
 @enderror
+@error('excluirMidiaExtra')
+<div class="alert alert-danger alert-dismissible fade show" role="alert">
+    <strong>Erro! Não é permitido escluir pois há trabalhos vinculados a ele</strong> {{ $message }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+@enderror
+
 <div id="divListarModalidades" class="modalidades" style="display: block">
     <div class="row">
         <div class="col-sm-12">

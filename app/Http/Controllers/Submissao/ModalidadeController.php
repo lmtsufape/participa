@@ -617,6 +617,14 @@ class ModalidadeController extends Controller
         //Excluindo docs
         if ($docsExcluidos != null && $docsExcluidos->count() > 0) {
             foreach ($docsExcluidos as $doc) {
+                // Verifica se existem trabalhos usando esta mídia extra
+                if ($doc->trabalhos()->exists()) {
+                    return redirect()->back()
+                        ->withErrors([
+                            'excluirMidiaExtra' => 'Não é possível excluir o arquivo adicional "' . $doc->nome . '", pois já existem trabalhos que o utilizam.'
+                        ])
+                        ->withInput();
+                }
                 $doc->delete();
             }
         }
