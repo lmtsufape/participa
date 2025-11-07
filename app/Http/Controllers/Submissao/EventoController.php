@@ -363,7 +363,7 @@ class EventoController extends Controller
                 try {
                     $trabalho->midias_extra_verificadas = $trabalho->midiasExtra->keyBy('id');
                 } catch (\Exception $e) {
-                    \Log::warning("Erro ao processar midiasExtra para trabalho {$trabalho->id}: " . $e->getMessage());
+                    \Loveg::warning("Erro ao processar midiasExtra para trabalho {$trabalho->id}: " . $e->getMessage());
                     $trabalho->midias_extra_verificadas = collect();
                 }
             }
@@ -375,6 +375,118 @@ class EventoController extends Controller
             'agora' => now(), 'status' => $status, 'coautoresSemCpfPorTrabalho' => $coautoresSemCpfPorTrabalho,
             'eixoSelecionado' => $eixoSelecionado, 'trabalhos' => $trabalhos,
         ]);
+    }
+
+    public function downloadTrabalhosEixo(Request $request)
+    {
+        $evento = Evento::find($request->eventoId);
+        $this->authorize('isCoordenadorOrCoordCientificaOrCoordEixo', $evento);
+        
+        $eixoSelecionado = $request->get('eixo_id');
+        $status = $request->input('status', 'rascunho');
+        
+        if (!$eixoSelecionado) {
+            return redirect()->back()->with('error', 'Nenhum eixo foi selecionado.');
+        }
+
+        $area = Area::find($eixoSelecionado);
+        if (!$area) {
+            return redirect()->back()->with('error', 'Eixo não encontrado.');
+        }
+
+        $user_logado = auth()->user();
+        if (
+            $user_logado->eventosComoCoordEixo()->pluck('eventos.id')->contains($evento->id) &&
+            !$user_logado->administradors &&
+            !$user_logado->coordComissaoCientifica()->where('eventos_id', $evento->id)->exists()
+        ) {
+            $areasCoordEixo = auth()->user()->areasComoCoordEixoNoEvento($evento->id)->pluck('areas.id');
+            if (!$areasCoordEixo->contains($eixoSelecionado)) {
+                return redirect()->back()->with('error', 'Você não tem permissão para baixar trabalhos deste eixo.');
+            }
+        }
+
+        $statusFilter = function ($query) use ($status) {
+            if ($status == 'rascunho') {
+                $query->where('status', '!=', 'arquivado');
+            } elseif ($status == 'with_revisor') {
+                $query->has('atribuicoes')->where('status', '!=', 'arquivado');
+            } elseif ($status == 'no_revisor') {
+                $query->doesntHave('atribuicoes')->where('status', '!=', 'arquivado');
+            } else {
+                $query->where('status', $status);
+            }
+        };
+
+        $trabalhos = Trabalho::where('eventoId', $evento->id)
+            ->where('areaId', $eixoSelecionado)
+            ->where($statusFilter)
+            ->with(['arquivo', 'modalidade:id,nome', 'autor:id,name'])
+            ->get();
+
+        if ($trabalhos->isEmpty()) {
+            return redirect()->back()->with('error', 'Nenhum trabalho encontrado para este eixo.');
+        }
+
+        set_time_limit(600); 
+        ini_set('memory_limit', '512M');
+
+        $nomeZip = 'trabalhos_' . \Illuminate\Support\Str::slug($area->nome) . '_' . date('Y-m-d_His') . '.zip';
+        $caminhoZip = storage_path('app/temp/' . $nomeZip);
+
+        if (!file_exists(storage_path('app/temp'))) {
+            mkdir(storage_path('app/temp'), 0755, true);
+        }
+
+        $zip = new \ZipArchive();
+        
+        if ($zip->open($caminhoZip, \ZipArchive::CREATE | \ZipArchive::OVERWRITE) !== true) {
+            return redirect()->back()->with('error', 'Não foi possível criar o arquivo ZIP.');
+        }
+
+        $arquivosAdicionados = 0;
+        $arquivosNaoEncontrados = 0;
+
+        foreach ($trabalhos as $trabalho) {
+            $arquivo = $trabalho->arquivo()->where('versaoFinal', true)->first();
+            
+            if ($arquivo && \Storage::disk()->exists($arquivo->nome)) {
+                $caminhoArquivo = storage_path('app/' . $arquivo->nome);
+                
+                $modalidadeNome = $trabalho->modalidade ? \Illuminate\Support\Str::slug($trabalho->modalidade->nome) : 'sem-modalidade';
+                $tituloSlug = \Illuminate\Support\Str::slug(substr($trabalho->titulo, 0, 50));
+                
+                $extensao = pathinfo($arquivo->nome, PATHINFO_EXTENSION);
+                
+                $nomeArquivoZip = sprintf(
+                    '%s/%04d_%s.%s',
+                    $modalidadeNome,
+                    $trabalho->id,
+                    $tituloSlug,
+                    $extensao
+                );
+                
+                if ($zip->addFile($caminhoArquivo, $nomeArquivoZip)) {
+                    $arquivosAdicionados++;
+                } else {
+                    \Log::warning("Erro ao adicionar trabalho {$trabalho->id} ao ZIP");
+                    $arquivosNaoEncontrados++;
+                }
+            } else {
+                $arquivosNaoEncontrados++;
+            }
+        }
+
+        $zip->close();
+
+        if ($arquivosAdicionados === 0) {
+            if (file_exists($caminhoZip)) {
+                unlink($caminhoZip);
+            }
+            return redirect()->back()->with('error', 'Nenhum arquivo foi encontrado para os trabalhos deste eixo.');
+        }
+
+        return response()->download($caminhoZip, $nomeZip)->deleteFileAfterSend(true);
     }
 
     public function listarAvaliacoes(Request $request, $column = 'titulo', $direction = 'asc', $status = 'rascunho')
