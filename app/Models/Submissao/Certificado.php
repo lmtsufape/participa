@@ -32,6 +32,30 @@ class Certificado extends Model
         'credenciado' => 11,
     ];
 
+    public static function getTipoNome($tipo)
+    {
+        $tipos = self::getTiposNomes();
+        return $tipos[$tipo] ?? 'Desconhecido';
+    }
+
+
+    public static function getTiposNomes()
+    {
+        return [
+            self::TIPO_ENUM['apresentador'] => 'Apresentador de Trabalho',
+            self::TIPO_ENUM['comissao_cientifica'] => 'Membro da Comissão Científica',
+            self::TIPO_ENUM['comissao_organizadora'] => 'Membro da Comissão Organizadora',
+            self::TIPO_ENUM['revisor'] => 'Revisor/Avaliador',
+            self::TIPO_ENUM['participante'] => 'Participante',
+            self::TIPO_ENUM['expositor'] => 'Palestrante',
+            self::TIPO_ENUM['coordenador_comissao_cientifica'] => 'Coordenador da Comissão Científica',
+            self::TIPO_ENUM['outras_comissoes'] => 'Membro de Outra Comissão',
+            self::TIPO_ENUM['inscrito_atividade'] => 'Inscrito em Atividade',
+            self::TIPO_ENUM['inscrito'] => 'Inscrito no Evento',
+            self::TIPO_ENUM['credenciado'] => 'Credenciado (Com Presença Confirmada)',
+        ];
+    }
+
     public function assinaturas()
     {
         return $this->belongsToMany(Assinatura::class, 'assinatura_certificado', 'certificado_id', 'assinatura_id')->orderBy('nome');

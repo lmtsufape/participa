@@ -884,6 +884,10 @@ class CertificadoController extends Controller
             return $this->validarCertificadoPorCpf($request);
         }
 
+        if ($request->tipo == 'nome') {
+            return $this->validarCertificadoPorNome($request);
+        }
+
         if($request->tipo == 'aceite'){
             $request->validate([
                 'hash' => ['required','string','max:128'],
@@ -1000,6 +1004,61 @@ class CertificadoController extends Controller
             'evento_id' => $request->evento_id,
             'cpf_validado' => hash('sha256', $user->id . $request->evento_id . 'cert-cpf-valid'),
         ])->with('success', 'Certificados disponíveis para download!');
+    }
+
+    public function validarCertificadoPorNome(Request $request)
+    {
+        $request->validate([
+            'nome' => ['required', 'string', 'min:3', 'max:255'],
+        ], [
+            'nome.required' => 'O campo Nome é obrigatório.',
+            'nome.min' => 'Digite pelo menos 3 caracteres para buscar.',
+            'nome.max' => 'O nome deve ter no máximo 255 caracteres.',
+        ]);
+
+        $nomeBuscado = trim($request->nome);
+
+        try {
+            $usuarios = User::whereHas('certificados', function ($query) {
+                $query->where('certificado_user.valido', true);
+            })
+            ->whereRaw('unaccent(lower(name)) ILIKE unaccent(lower(?))', ['%' . $nomeBuscado . '%'])
+            ->with(['certificados' => function ($query) {
+                $query->wherePivot('valido', true)
+                      ->with('evento')
+                      ->orderBy('certificado_user.created_at', 'desc');
+            }])
+            ->orderBy('name')
+            ->paginate(30)
+            ->appends(['nome' => $nomeBuscado]);
+        } catch (\Exception $e) {
+            \Log::warning('Erro ao usar unaccent na busca de certificados: ' . $e->getMessage());
+            
+            $usuarios = User::whereHas('certificados', function ($query) {
+                $query->where('certificado_user.valido', true);
+            })
+            ->whereRaw('LOWER(name) ILIKE ?', ['%' . strtolower($nomeBuscado) . '%'])
+            ->with(['certificados' => function ($query) {
+                $query->wherePivot('valido', true)
+                      ->with('evento')
+                      ->orderBy('certificado_user.created_at', 'desc');
+            }])
+            ->orderBy('name')
+            ->paginate(30)
+            ->appends(['nome' => $nomeBuscado]);
+        }
+
+        if ($usuarios->isEmpty()) {
+            return back()
+                ->withInput()
+                ->withErrors(['nome_busca' => 'Nenhum usuário com certificados foi encontrado com o nome informado.']);
+        }
+
+        $totalUsuarios = $usuarios->total();
+
+        $tiposCertificados = Certificado::getTiposNomes();
+
+        return view('certificados_por_nome', compact('usuarios', 'nomeBuscado', 'tiposCertificados', 'totalUsuarios'));
     }
 
     public function validarCertificadoForm()
