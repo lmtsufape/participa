@@ -213,7 +213,7 @@ class User extends Authenticatable
 
     public function certificados()
     {
-        return $this->belongsToMany(Certificado::class, 'certificado_user')->withTrashed()->withPivot('id', 'valido', 'validacao', 'trabalho_id', 'palestra_id', 'comissao_id')->withTimestamps();
+        return $this->belongsToMany(Certificado::class, 'certificado_user')->withTrashed()->withPivot('id', 'valido', 'validacao', 'trabalho_id', 'palestra_id', 'comissao_id', 'path')->withTimestamps();
     }
 
     public function atividades()
@@ -248,7 +248,7 @@ class User extends Authenticatable
             'area_id'
         )->where('coordenadores_eixos_tematicos.evento_id', $evento_id);
 
-        $query->select('areas.*'); 
+        $query->select('areas.*');
 
         return $query;
     }
