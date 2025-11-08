@@ -105,9 +105,10 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
                 </div>
                 <div class="modal-body">
-                    Informamos que a partir de hoje, dia <strong>13/10</strong>, às inscrições efetuadas para o Congresso não contarão com o kit do participante.<br>
-                    <br>
-                    As inscrições seguem abertas normalmente, porém sem a inclusão desse material.
+                    Caro/a participante! <br><br>
+                    Os certificados de participação foram emitidos e estão sendo enviados. <br>
+                    Esclarecemos que não é necessário qualquer validação do certificado, bastando utilizá-lo como ele foi recebido. A validação serve para que terceiros, em bancas de concursos, processos seletivos, e similares, atestem que de fato esse certificado foi emitido pelo evento. <br>
+                    Quaisquer dúvidas, favor entrar em contato pelo e-mail: secretaria13cba@gmail.com 
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
