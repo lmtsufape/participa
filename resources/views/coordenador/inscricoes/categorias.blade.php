@@ -196,7 +196,6 @@
                           method="POST">
                         @csrf
                         @method('PUT')
-                        <input type="hidden" name="valor_total_{{ $categoria->id }}" value="0">
                         <input type="hidden" name="editarCategoria" value="{{ $categoria->id }}">
                         <input type="hidden" id="linkIdExcluir" name="linkIdExcluir[]" value="">
 
@@ -217,6 +216,21 @@
                             <label for="descricao_{{ $categoria->id }}">Descrição</label>
                             <textarea id="descricao_{{ $categoria->id }}" name="descricao"
                                       class="ckeditor-texto">{{ $categoria->descricao }}</textarea>
+                        </div>
+
+                        <div class="form-group" style="margin-top: 20px; margin-bottom: 20px;">
+                            <label for="valor_total_edit_{{ $categoria->id }}">Valor*</label>
+                            <input id="valor_total_edit_{{ $categoria->id }}" type="number" step="0.01" min="0"
+                                class="form-control @error('valor_total_'.$categoria->id) is-invalid @enderror"
+                                name="valor_total_{{ $categoria->id }}"
+                                value="{{ old('valor_total_'.$categoria->id, $categoria->valor_total) }}"
+                                required>
+                            <small>(0 para inscrição gratuita)</small>
+                            @error('valor_total_'.$categoria->id)
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
                         </div>
 
                         {{-- Links atuais --}}
