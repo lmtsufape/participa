@@ -41,7 +41,7 @@
                         <h6 class="fw-bold">{{ __('Plataforma') }}</h6>
                         <ul class="list-unstyled small">
                             <li><a href="mailto:lmts@ufape.edu.br" target="_blank" class="text-white text-decoration-none">{{ __('Ajuda') }}</a></li>
-                            <li><a href="{{ route('validarCertificado') }}" class="text-white text-decoration-none">{{ __('Validar Documentos') }}</a></li>
+                            <li><a href="{{ route('validarCertificado') }}" class="text-white text-decoration-none">{{ __('Acessar / validar documentos ou certificados') }}</a></li>
                         </ul>
                     </div>
                 </div>
