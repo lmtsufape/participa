@@ -115,7 +115,12 @@ class EventoController extends Controller
             'inscricaosEstudantes as solicitacoes_estudantes_rejeitadas_count' => fn($query) => $query->where('status', 'rejeitado'),
         ]);
 
-        $evento->total_arrecadado = $evento->inscricaos()->where('finalizada', true)->with('categoria')->get()->sum(fn($inscricao) => $inscricao->categoria->valor_total ?? 0);
+        $evento->total_arrecadado = $evento->inscricaos()
+            ->where('finalizada', true)
+            ->whereNotNull('pagamento_id')
+            ->with('categoria')
+            ->get()
+            ->sum(fn($inscricao) => $inscricao->categoria->valor_total ?? 0);
 
         return view('coordenador.informacoes', [
             'evento' => $evento,
