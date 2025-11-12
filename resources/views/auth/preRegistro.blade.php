@@ -10,7 +10,7 @@
             margin-bottom: 20px;
             font-family: sans-serif;
         }
-        
+
         .etapa {
             flex: 1;
             text-align: left;
@@ -19,7 +19,7 @@
             font-weight: normal;
             border-bottom: 2px solid transparent;
         }
-        
+
         .etapa.ativa {
             color: #004d51;
             font-weight: bold;
@@ -32,7 +32,7 @@
             margin-left: 2px;
         }
     </style>
-    
+
     <br><br>
 
     @if(session('sucesso'))
@@ -297,7 +297,7 @@
                         </div>
 
                         <div id="fieldCPF" @error('passaporte') style="display: none" @enderror>
-                            <input id="cpf" type="text" class="form-control @error('cpf') is-invalid @enderror" name="cpf" value="{{ old('cpf') }}" 
+                            <input id="cpf" type="text" class="form-control @error('cpf') is-invalid @enderror" name="cpf" value="{{ old('cpf') }}"
                                 autocomplete="cpf" placeholder="CPF" minlength="14" maxlength="14" pattern="\d{3}\.\d{3}\.\d{3}-\d{2}" title="O CPF deve conter 11 caracteres" autofocus>
 
                             @error('cpf')
@@ -307,7 +307,7 @@
                             @enderror
                         </div>
                         <div id="fieldCNPJ" @error('passaporte') style="display: block" @enderror style="display: none" >
-                            <input id="cnpj" type="text" class="form-control @error('cnpj') is-invalid @enderror" name="cnpj" placeholder="{{__('CNPJ')}}" 
+                            <input id="cnpj" type="text" class="form-control @error('cnpj') is-invalid @enderror" name="cnpj" placeholder="{{__('CNPJ')}}"
                                 value="{{ old('cnpj') }}"  autocomplete="cnpj" minlength="18" maxlength="18" pattern="\d{2}\.\d{3}\.\d{3}/\d{4}-\d{2}" title="O CNPJ deve conter 14 caracteres" autofocus>
 
                             @error('cnpj')
@@ -360,11 +360,15 @@
 @endsection
 
 @section('javascript')
-  <script type="text/javascript" >
+  <!-- Incluir arquivo de validação -->
+  <script src="{{ asset('js/validacao-documentos.js') }}"></script>
+
+  <script type="text/javascript">
     $(document).ready(function($){
 
       $('#cpf').mask('000.000.000-00');
       $('#cnpj').mask('00.000.000/0000-00');
+
       if($('html').attr('lang') == 'en') {
       } else if ($('html').attr('lang') == 'pt-BR') {
         $('#cep').blur(function () {
@@ -378,125 +382,197 @@
             field.mask(SPMaskBehavior.apply({}, arguments), options);
           }
         };
-        //$('#celular').mask(SPMaskBehavior, spOptions);
         $('#cep').mask('00000-000');
       }
+
       $(".apenasLetras").mask("#", {
         maxlength: false,
         translation: {
             '#': {pattern: /[A-zÀ-ÿ ]/, recursive: true}
         }
       });
-      //$('#numero').mask('0000000000000');
+
+      // ============================================
+      // VALIDAÇÃO DE CPF/CNPJ/PASSAPORTE EM TEMPO REAL
+      // ============================================
+
+      // Validar CPF ao sair do campo
+      $('#cpf').on('blur', function() {
+          const cpf = $(this).val();
+
+          if (cpf && cpf.length > 0) {
+              if (!validarCPF(cpf)) {
+                  mostrarErroDocumento('#cpf', 'CPF inválido. Verifique os números digitados.');
+              } else {
+                  limparErroDocumento('#cpf');
+              }
+          }
+      });
+
+      // Validar CNPJ ao sair do campo
+      $('#cnpj').on('blur', function() {
+          const cnpj = $(this).val();
+
+          if (cnpj && cnpj.length > 0) {
+              if (!validarCNPJ(cnpj)) {
+                  mostrarErroDocumento('#cnpj', 'CNPJ inválido. Verifique os números digitados.');
+              } else {
+                  limparErroDocumento('#cnpj');
+              }
+          }
+      });
+
+      // Validar Passaporte ao sair do campo
+      $('#passaporte').on('blur', function() {
+          const passaporte = $(this).val();
+
+          if (passaporte && passaporte.length > 0) {
+              if (!validarPassaporte(passaporte)) {
+                  mostrarErroDocumento('#passaporte', 'Passaporte inválido. Deve conter apenas letras e números (6-9 caracteres).');
+              } else {
+                  limparErroDocumento('#passaporte');
+              }
+          }
+      });
+
+      // ============================================
+      // VALIDAÇÃO NO SUBMIT DO FORMULÁRIO
+      // ============================================
+
+      $('form').on('submit', function(e) {
+          let formValido = true;
+
+          // Verificar qual documento está visível e validar
+          if ($('#fieldCPF').is(':visible')) {
+              const cpf = $('#cpf').val();
+              if (cpf && !validarCPF(cpf)) {
+                  e.preventDefault();
+                  mostrarErroDocumento('#cpf', 'CPF inválido. Verifique os números digitados.');
+                  formValido = false;
+
+                  // Scroll até o campo
+                  $('html, body').animate({
+                      scrollTop: $('#cpf').offset().top - 100
+                  }, 500);
+              }
+          }
+
+          if ($('#fieldCNPJ').is(':visible')) {
+              const cnpj = $('#cnpj').val();
+              if (cnpj && !validarCNPJ(cnpj)) {
+                  e.preventDefault();
+                  mostrarErroDocumento('#cnpj', 'CNPJ inválido. Verifique os números digitados.');
+                  formValido = false;
+
+                  // Scroll até o campo
+                  $('html, body').animate({
+                      scrollTop: $('#cnpj').offset().top - 100
+                  }, 500);
+              }
+          }
+
+          if ($('#fieldPassaporte').is(':visible')) {
+              const passaporte = $('#passaporte').val();
+              if (passaporte && !validarPassaporte(passaporte)) {
+                  e.preventDefault();
+                  mostrarErroDocumento('#passaporte', 'Passaporte inválido. Deve conter apenas letras e números (6-9 caracteres).');
+                  formValido = false;
+
+                  // Scroll até o campo
+                  $('html, body').animate({
+                      scrollTop: $('#passaporte').offset().top - 100
+                  }, 500);
+              }
+          }
+
+          if (!formValido) {
+              return false;
+          }
+      });
 
     });
+
+    // Funções de CEP (mantidas do código original)
     function limpa_formulário_cep() {
-            //Limpa valores do formulário de cep.
-            document.getElementById('rua').value=("");
-            document.getElementById('bairro').value=("");
-            document.getElementById('cidade').value=("");
-            document.getElementById('uf').value=("");
+        document.getElementById('rua').value=("");
+        document.getElementById('bairro').value=("");
+        document.getElementById('cidade').value=("");
+        document.getElementById('uf').value=("");
     }
 
     function meu_callback(conteudo) {
         if (!("erro" in conteudo)) {
-            //Atualiza os campos com os valores.
             document.getElementById('rua').value=(conteudo.logradouro);
             document.getElementById('bairro').value=(conteudo.bairro);
             document.getElementById('cidade').value=(conteudo.localidade);
             document.getElementById('uf').value=(conteudo.uf);
-
-        } //end if.
-        else {
-            //CEP não Encontrado.
+        } else {
             limpa_formulário_cep();
             alert("CEP não encontrado.");
         }
     }
 
     function pesquisacep(valor) {
-
-        //Nova variável "cep" somente com dígitos.
         var cep = valor.replace(/\D/g, '');
 
-        //Verifica se campo cep possui valor informado.
         if (cep != "") {
-
-            //Expressão regular para validar o CEP.
             var validacep = /^[0-9]{8}$/;
 
-            //Valida o formato do CEP.
             if(validacep.test(cep)) {
-
-                //Preenche os campos com "..." enquanto consulta webservice.
                 document.getElementById('rua').value="...";
                 document.getElementById('bairro').value="...";
                 document.getElementById('cidade').value="...";
                 document.getElementById('uf').value="...";
 
-
-                //Cria um elemento javascript.
                 var script = document.createElement('script');
-
-                //Sincroniza com o callback.
                 script.src = 'https://viacep.com.br/ws/'+ cep + '/json/?callback=meu_callback';
-
-                //Insere script no documento e carrega o conteúdo.
                 document.body.appendChild(script);
-
-            } //end if.
-            else {
-                //cep é inválido.
+            } else {
                 limpa_formulário_cep();
                 alert("Formato de CEP inválido.");
             }
-        } //end if.
-        else {
-            //cep sem valor, limpa formulário.
+        } else {
             limpa_formulário_cep();
         }
     };
   </script>
+
   <script src="{{ asset('js/celular.js') }}" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css"/>
-  <script type="text/javascript">
 
+  <script type="text/javascript">
     $(document).ready(function(){
-        // $("#fieldPassaporte").hide();
         $("#customRadioInline1").click(function(){
-            $("#fieldPassaporte").hide().find('input').val('');;
-            $("#fieldCNPJ").hide().find('input').val('');;
+            $("#fieldPassaporte").hide().find('input').val('');
+            $("#fieldCNPJ").hide().find('input').val('');
             $("#fieldCPF").show();
+            limparErroDocumento('#cpf');
+            limparErroDocumento('#cnpj');
+            limparErroDocumento('#passaporte');
         });
 
         $("#customRadioInline2").click(function(){
-            $("#fieldPassaporte").hide().find('input').val('');;
+            $("#fieldPassaporte").hide().find('input').val('');
             $("#fieldCNPJ").show();
-            $("#fieldCPF").hide().find('input').val('');;
+            $("#fieldCPF").hide().find('input').val('');
+            limparErroDocumento('#cpf');
+            limparErroDocumento('#cnpj');
+            limparErroDocumento('#passaporte');
         });
 
         $("#customRadioInline3").click(function(){
             $("#fieldPassaporte").show();
-            $("#fieldCNPJ").hide().find('input').val('');;
-            $("#fieldCPF").hide().find('input').val('');;
+            $("#fieldCNPJ").hide().find('input').val('');
+            $("#fieldCPF").hide().find('input').val('');
+            limparErroDocumento('#cpf');
+            limparErroDocumento('#cnpj');
+            limparErroDocumento('#passaporte');
         });
-
     });
-
-    function proximaEtapa() {
-        document.getElementById('etapa-1').style.display = 'none';
-        document.getElementById('etapa-2').style.display = 'block';
-    }
-
-    function etapaAnterior() {
-        document.getElementById('etapa-1').style.display = 'block';
-        document.getElementById('etapa-2').style.display = 'none';
-    }
 
     $(document).ready(function () {
         $('#pais').select2();
     });
-
   </script>
 @endsection

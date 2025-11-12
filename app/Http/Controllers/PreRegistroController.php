@@ -31,19 +31,19 @@ class PreRegistroController extends Controller
         ];
 
         if ($request->filled('cpf')) {
-            $rules['cpf'] = 'required|string';
+            $rules['cpf'] = ['required', 'string', new \App\Rules\ValidCpf()];
             // Verifica se existe um usuário ativo com esse CPF
             $userCpfAtivo = User::where('cpf', $request->cpf)->whereNull('deleted_at')->first();
             if ($userCpfAtivo) {
-                return back()->withErrors(['cpf' => 'Este CPF já está cadastrado no sistema.']);
+                return back()->withErrors(['cpf' => 'Este CPF já está cadastrado no sistema.'])->withInput();
             }
             $messages['cpf.unique'] = 'Este CPF já está cadastrado no sistema.';
         } elseif ($request->filled('cnpj')) {
-            $rules['cnpj'] = 'required|string';
+            $rules['cnpj'] = ['required', 'string', new \App\Rules\ValidCnpj()];
             // Verifica se existe um usuário ativo com esse CNPJ
             $userCnpjAtivo = User::where('cnpj', $request->cnpj)->whereNull('deleted_at')->first();
             if ($userCnpjAtivo) {
-                return back()->withErrors(['cnpj' => 'Este CNPJ já está cadastrado no sistema.']);
+                return back()->withErrors(['cnpj' => 'Este CNPJ já está cadastrado no sistema.'])->withInput();
             }
             $messages['cnpj.unique'] = 'Este CNPJ já está cadastrado no sistema.';
         } elseif ($request->filled('passaporte')) {
@@ -52,7 +52,7 @@ class PreRegistroController extends Controller
             // Verifica se existe um usuário ativo com esse passaporte
             $userPassaporteAtivo = User::where('passaporte', $request->passaporte)->whereNull('deleted_at')->first();
             if ($userPassaporteAtivo) {
-                return back()->withErrors(['passaporte' => 'Este passaporte já está cadastrado no sistema.']);
+                return back()->withErrors(['passaporte' => 'Este passaporte já está cadastrado no sistema.'])->withInput();
             }
             $messages['passaporte.unique'] = 'Este passaporte já está cadastrado no sistema.';
         }
@@ -61,9 +61,9 @@ class PreRegistroController extends Controller
 
         // Verifica se existe um usuário com soft delete
         $userDeletado = User::withTrashed()->where('email', $request->email)->first();
-        
+
         if ($userDeletado && $userDeletado->deleted_at === null) {
-            return back()->withErrors(['email' => 'Este email já está cadastrado no sistema.']);
+            return back()->withErrors(['email' => 'Este email já está cadastrado no sistema.'])->withInput();
         }
 
         // Verifica se já existe um código ainda válido para esse e-mail ou CPF
