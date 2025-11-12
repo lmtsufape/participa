@@ -204,14 +204,14 @@
     <div class="d-flex justify-content-center">
         <div class="mr-2">
             <button class="btn btn-danger"
-            data-toggle="modal" data-target="#avaliacao-reprovar-{{$trabalho->id}}" @disabled($trabalho->aprovado === false)>
+            data-bs-toggle="modal" data-bs-target="#avaliacao-reprovar-{{$trabalho->id}}" @disabled($trabalho->aprovado === false)>
                 Reprovar Trabalho
             </button>
         </div>
         @if($trabalho->avaliado == 'Avaliado')
             <div>
                 <button class="btn btn-primary"
-                    data-toggle="modal" data-target="#avaliacao-corrigir-{{$trabalho->id}}">
+                    data-bs-toggle="modal" data-bs-target="#avaliacao-corrigir-{{$trabalho->id}}">
                     Aprovar com pendências
                 </button>
                 @push('modais')
@@ -222,7 +222,7 @@
         @endif
         <div class="ml-2">
             <button class="btn btn-success"
-            data-toggle="modal" data-target="#avaliacao-aprovar-{{$trabalho->id}}" @disabled($trabalho->aprovado === true)>
+            data-bs-toggle="modal" data-bs-target="#avaliacao-aprovar-{{$trabalho->id}}" @disabled($trabalho->aprovado === true)>
                 Aprovar Trabalho
             </button>
         </div>

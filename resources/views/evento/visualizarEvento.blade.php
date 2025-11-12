@@ -439,7 +439,7 @@
                                                             @endphp
                                                             {{-- Caso 2: O usuario está logado e pode submeter o trabalho --}}
                                                             @if($pode)
-                                                                <a href="{{ route('trabalho.index', ['id'=>$evento->id,'idModalidade'=>$modalidade->id]) }}"
+                                                                <a href="{{ route('trabalho.create', $modalidade->id) }}"
                                                                 class="btn btn-my-success w-100 mt-3">
                                                                     {{ __('SUBMETER TRABALHO') }}
                                                                 </a>
@@ -1136,40 +1136,38 @@
                 let botVagas = '';
                 if (ativ.vagas != null) {
                     if (ativ.vagas > 0) {
-                        botVagas = `
-                         <div class="col-auto">
-                            <button type="button" class="btn btn-success btn-sm px-3 py-1 rounded-pill"> Vagas disponíveis </button>
-                         </div>`;
+                        botVagas = `<span class="badge bg-success px-4 py-2 rounded-pill">Vagas disponíveis</span>`;
                     } else {
-                        botVagas = `
-                        <div class="col-auto">
-                        <button type="button" class="btn btn-danger btn-sm px-3 py-1 rounded-pill"> Vagas encerradas </button>
-                        </div>`;
+                        botVagas = `<span class="badge bg-danger px-4 py-2 rounded-pill">Vagas encerradas</span>`;
                     }
                 }
 
                 return `
-                <div class="card shadow w-100 d-flex flex-column">
+                <div class="card shadow w-100">
                     <div class="card-body d-flex flex-column justify-content-between align-items-start">
-                <div>
-                    <strong>${inicio} - ${fim}</strong>
-                    <p class="mb-0">${ativ.titulo}</p>
-                </div>
-                <div class="row mt-3 gx-2">
-                    <div class="col-auto">
-                        <button
-                        class="btn btn-my-outline-primary btn-sm px-3 py-1 rounded-pill"
-                        type="button"
-                        data-bs-toggle="modal"
-                        data-bs-target="#modalAtividadeShow${ativ.id}"
-                        >
-                        Saiba mais
-                        </button>
+                        <div class="w-100">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <strong>${inicio} - ${fim}</strong>
+
+                                ${botVagas}
+
+                            </div>
+                            <p class="mt-2 mb-0">${ativ.titulo}</p>
+                        </div>
+                        <div class="row mt-3 gx-2">
+                            <div class="col-auto">
+                                <button
+                                class="btn btn-my-outline-primary btn-sm px-3 py-1 rounded-pill"
+                                type="button"
+                                data-bs-toggle="modal"
+                                data-bs-target="#modalAtividadeShow${ativ.id}"
+                                >
+                                Saiba mais
+                                </button>
+                            </div>
+                        </div>
                     </div>
-                     ${botVagas}
-                </div>
-            </div>
-            </div>`;
+                </div>`;
             }
 
 
@@ -1222,54 +1220,5 @@
             document.getElementById('trabalhoNovaVersaoId').value = x;
         }
     </script>
-    @if ($dataInicial != '' && $evento->exibir_calendario_programacao)
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                /* initialize the external events
-                -----------------------------------------------------------------*/
-                // var containerEl = document.getElementById('external-events-list');
-                // new FullCalendar.Draggable(containerEl, {
-                //   itemSelector: '.fc-event',
-                //   eventData: function(eventEl) {
-                //     return {
-                //       title: eventEl.innerText.trim()
-                //     }
-                //   }
-                // });
-                //// the individual way to do it
-                // var containerEl = document.getElementById('external-events-list');
-                // var eventEls = Array.prototype.slice.call(
-                //   containerEl.querySelectorAll('.fc-event')
-                // );
-                // eventEls.forEach(function(eventEl) {
-                //   new FullCalendar.Draggable(eventEl, {
-                //     eventData: {
-                //       title: eventEl.innerText.trim(),
-                //     }
-                //   });
-                // });
-                /* initialize the calendar
-                -----------------------------------------------------------------*/
-                var calendarEl = document.getElementById('calendar');
-                var calendar = new FullCalendar.Calendar(calendarEl, {
-                    initialDate: "{{ $dataInicial->data }}",
-                    headerToolbar: {
-                        left: 'dayGridMonth,timeGridWeek,timeGridDay,listYear',
-                        center: 'title',
-                        right: 'prev,next today'
-                    },
-                    initialView: 'listYear',
-                    locale: 'pt-br',
-                    editable: false,
-                    eventClick: function(info) {
-                        var idModal = "#modalAtividadeShow" + info.event.id;
-                        $(idModal).modal('show');
-                    },
-                    events: "{{ route('atividades.json', ['id' => $evento->id]) }}",
-                });
-                calendar.render();
-            });
-        </script>
-    @endif
 
 @endsection

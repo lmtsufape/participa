@@ -14,9 +14,17 @@ class AreaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+
+    public function index(Request $request)
     {
-        //
+        $evento = Evento::find($request->eventoId);
+        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
+        $areas = Area::where('eventoId', $evento->id)->orderBy('ordem')->get();
+
+        return view('coordenador.areas.listarAreas', [
+            'evento' => $evento,
+            'areas' => $areas,
+        ]);
     }
 
     /**

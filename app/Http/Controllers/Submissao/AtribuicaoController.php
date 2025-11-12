@@ -185,17 +185,6 @@ class AtribuicaoController extends Controller
         return redirect()->back()->with(['success' => 'Trabalhos da área '.$area->nome.' distribuidos!']);
     }
 
-    private function atualizarPrazoCorrecaoAtribuicao($trabalhoId)
-    {
-        $modalidadeid = Trabalho::find($trabalhoId)->modalidadeId;
-        $modalidade = Modalidade::find($modalidadeid);
-        $prazoCorrecao = now()->addDays(15);
-        if($prazoCorrecao > $modalidade->fimCorrecao) {
-            $prazoCorrecao = $modalidade->fimCorrecao;
-        }
-        return $prazoCorrecao;
-    }
-
     public function distribuicaoManual(Request $request)
     {
         $validatedData = $request->validate([
@@ -218,7 +207,7 @@ class AtribuicaoController extends Controller
 
         $revisor = Revisor::find($request->revisorId);
 
-        if ($trabalho->atribuicoes->contains($revisor)) {
+        if ($trabalho->revisores->contains($revisor)) {
             return redirect()->back()->with(['error' => 'Revisor já atribuído ao trabalho.'])->withInput($validatedData);
         }
 
@@ -226,8 +215,7 @@ class AtribuicaoController extends Controller
             return redirect()->back()->with(['error' => $revisor->user->name.' não pode ser revisor deste trabalho.'])->withInput($validatedData);
         }
 
-        $prazo_correcao = $this->atualizarPrazoCorrecaoAtribuicao($trabalho->id);
-        $revisor->trabalhosAtribuidos()->attach($trabalho->id, ['confirmacao' => false, 'parecer' => 'processando', 'prazo_correcao' => $prazo_correcao]);
+        $revisor->trabalhosAtribuidos()->attach($trabalho->id, ['confirmacao' => false, 'parecer' => 'processando']);
         $revisor->correcoesEmAndamento = $revisor->correcoesEmAndamento + 1;
         $revisor->save();
 
@@ -265,7 +253,7 @@ class AtribuicaoController extends Controller
         $revisor->correcoesEmAndamento -= 1;
         $revisor->update();
 
-        $trabalho->atribuicoes()->detach($id);
+        $trabalho->revisores()->detach($id);
 
         $mensagem = $trabalho->titulo.' foi retirado de '.$revisor->user->name.' com sucesso!';
 

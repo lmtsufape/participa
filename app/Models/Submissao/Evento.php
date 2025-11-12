@@ -5,6 +5,12 @@ namespace App\Models\Submissao;
 use App\Models\Users\CoordEixoTematico;
 use App\Models\Users\User;
 use App\Models\CandidatoAvaliador;
+use App\Models\Inscricao\CampoFormulario;
+use App\Models\Inscricao\CategoriaParticipante;
+use App\Models\Inscricao\CupomDeDesconto;
+use App\Models\Inscricao\Inscricao;
+use App\Models\Inscricao\Promocao;
+use App\Models\Users\Revisor;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -30,17 +36,17 @@ class Evento extends Model
 
     public function endereco()
     {
-        return $this->belongsTo('App\Models\Submissao\Endereco', 'enderecoId');
+        return $this->belongsTo(Endereco::class, 'enderecoId');
     }
 
     public function atividade()
     {
-        return $this->hasMany('App\Models\Submissao\Atividade', 'eventoId');
+        return $this->hasMany(Atividade::class, 'eventoId');
     }
 
     public function areas()
     {
-        return $this->hasMany('App\Models\Submissao\Area', 'eventoId');
+        return $this->hasMany(Area::class, 'eventoId');
     }
 
     public function arquivoInfos()
@@ -50,7 +56,7 @@ class Evento extends Model
 
     public function modalidades()
     {
-        return $this->hasMany('App\Models\Submissao\Modalidade', 'evento_id');
+        return $this->hasMany(Modalidade::class, 'evento_id');
     }
 
     /**
@@ -60,7 +66,7 @@ class Evento extends Model
      */
     public function coordenador()
     {
-        return $this->belongsTo('App\Models\Users\User', 'coordenadorId');
+        return $this->belongsTo(User::class, 'coordenadorId');
     }
 
     /**
@@ -70,12 +76,12 @@ class Evento extends Model
      */
     public function coordenadoresEvento()
     {
-        return $this->belongsToMany('App\Models\Users\User', 'coordenador_eventos', 'eventos_id', 'user_id')->using('App\Models\Users\CoordenadorEvento');
+        return $this->belongsToMany(User::class, 'coordenador_eventos', 'eventos_id', 'user_id')->using('App\Models\Users\CoordenadorEvento');
     }
 
     public function coordComissaoCientifica()
     {
-        return $this->belongsToMany('App\Models\Users\User', 'coord_comissao_cientificas', 'eventos_id', 'user_id')->using('App\Models\Users\CoordComissaoCientifica');
+        return $this->belongsToMany(User::class, 'coord_comissao_cientificas', 'eventos_id', 'user_id')->using('App\Models\Users\CoordComissaoCientifica');
     }
 
     public function userIsCoordComissaoCientifica(User $user)
@@ -85,7 +91,7 @@ class Evento extends Model
 
     public function coordComissaoOrganizadora()
     {
-        return $this->belongsToMany('App\Models\Users\User', 'coord_comissao_organizadoras', 'eventos_id', 'user_id')->using('App\Models\Users\CoordComissaoOrganizadora');
+        return $this->belongsToMany(User::class, 'coord_comissao_organizadoras', 'eventos_id', 'user_id')->using('App\Models\Users\CoordComissaoOrganizadora');
     }
 
     public function userIsCoordComissaoOrganizadora(User $user)
@@ -95,7 +101,7 @@ class Evento extends Model
 
     public function revisors()
     {
-        return $this->hasMany('App\Models\Users\Revisor', 'evento_id');
+        return $this->hasMany(Revisor::class, 'evento_id');
     }
 
     public function revisoresDaAreaEModalidadeComContadorDeAtribuicoes($area_id, $modalidade_id)
@@ -113,42 +119,42 @@ class Evento extends Model
 
     public function usuariosDaComissao()
     {
-        return $this->belongsToMany('App\Models\Users\User', 'comissao_cientifica_eventos', 'evento_id', 'user_id');
+        return $this->belongsToMany(User::class, 'comissao_cientifica_eventos', 'evento_id', 'user_id');
     }
 
     public function formEvento()
     {
-        return $this->hasOne('App\Models\Submissao\FormEvento', 'eventoId');
+        return $this->hasOne(FormEvento::class, 'eventoId');
     }
 
     public function formSubTrab()
     {
-        return $this->hasOne('App\Models\Submissao\FormSubmTraba', 'eventoId');
+        return $this->hasOne(FormSubmTraba::class, 'eventoId');
     }
 
     public function trabalhos()
     {
-        return $this->hasMany('App\Models\Submissao\Trabalho', 'eventoId');
+        return $this->hasMany(Trabalho::class, 'eventoId');
     }
 
     public function mensagensParecer()
     {
-        return $this->hasMany('App\Models\Submissao\MensagemParecer');
+        return $this->hasMany(MensagemParecer::class);
     }
 
     public function usuariosDaComissaoOrganizadora()
     {
-        return $this->belongsToMany('App\Models\Users\User', 'comissao_organizadora_eventos', 'evento_id', 'user_id');
+        return $this->belongsToMany(User::class, 'comissao_organizadora_eventos', 'evento_id', 'user_id');
     }
 
     public function promocoes()
     {
-        return $this->hasMany('App\Models\Inscricao\Promocao', 'evento_id');
+        return $this->hasMany(Promocao::class, 'evento_id');
     }
 
     public function cuponsDeDesconto()
     {
-        return $this->hasMany('App\Models\Inscricao\CupomDeDesconto', 'evento_id');
+        return $this->hasMany(CupomDeDesconto::class, 'evento_id');
     }
 
     // public function revisores(){
@@ -157,12 +163,12 @@ class Evento extends Model
 
     public function categoriasParticipantes()
     {
-        return $this->hasMany('App\Models\Inscricao\CategoriaParticipante', 'evento_id')->orderBy('created_at');
+        return $this->hasMany(CategoriaParticipante::class, 'evento_id')->orderBy('created_at');
     }
 
     public function categoriasQuePermitemInscricao()
     {
-        return $this->hasMany('App\Models\Inscricao\CategoriaParticipante', 'evento_id')
+        return $this->hasMany(CategoriaParticipante::class, 'evento_id')
                     ->where('permite_inscricao', true)
                     ->where(function ($q) {
                         $q->whereNull('limite_inscricao')
@@ -177,7 +183,7 @@ class Evento extends Model
 
     public function camposFormulario()
     {
-        return $this->hasMany('App\Models\Inscricao\CampoFormulario', 'evento_id')->orderBy('created_at');
+        return $this->hasMany(CampoFormulario::class, 'evento_id')->orderBy('created_at');
     }
 
     public function possuiFormularioDeInscricao()
@@ -187,37 +193,37 @@ class Evento extends Model
 
     public function inscricaos()
     {
-        return $this->hasMany('App\Models\Inscricao\Inscricao');
+        return $this->hasMany(Inscricao::class);
     }
 
     public function subeventos()
     {
-        return $this->hasMany('App\Models\Submissao\Evento', 'evento_pai_id');
+        return $this->hasMany(Evento::class, 'evento_pai_id');
     }
 
     public function eventoPai()
     {
-        return $this->belongsTo('App\Models\Submissao\Evento', 'evento_pai_id');
+        return $this->belongsTo(Evento::class, 'evento_pai_id');
     }
 
     public function palestrantes()
     {
-        return $this->hasManyThrough('App\Models\Submissao\Palestrante', 'App\Models\Submissao\Palestra');
+        return $this->hasManyThrough(Palestrante::class, 'App\Models\Submissao\Palestra');
     }
 
     public function outrasComissoes()
     {
-        return $this->hasMany('App\Models\Submissao\TipoComissao');
+        return $this->hasMany(TipoComissao::class);
     }
 
     public function palestras()
     {
-        return $this->hasMany('App\Models\Submissao\Palestra');
+        return $this->hasMany(Palestra::class);
     }
 
     public function memorias()
     {
-        return $this->hasMany('App\Models\Submissao\Memoria')->orderBy('ordem');
+        return $this->hasMany(Memoria::class)->orderBy('ordem');
     }
 
     public function inscritos()

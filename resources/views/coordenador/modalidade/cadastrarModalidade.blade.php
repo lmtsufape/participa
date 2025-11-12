@@ -1,6 +1,9 @@
-@extends('coordenador.detalhesEvento')
-@section('menu')
-<div id="divCadastrarModalidades" class="modalidades" style="display: block">
+@extends('layouts.app')
+@section('sidebar')
+
+@endsection
+@section('content')
+<div class="container">
     <div class="row">
         <div class="col-sm-12">
             <h1 class="titulo-detalhes">Cadastrar Modalidade</h1>

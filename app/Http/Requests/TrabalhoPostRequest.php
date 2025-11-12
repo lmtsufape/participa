@@ -22,17 +22,17 @@ class TrabalhoPostRequest extends FormRequest
      */
     public function authorize()
     {
-        $modalidade = Modalidade::find($this->request->get('modalidadeId'));
+        $modalidade = Modalidade::find($this->request->get('modalidade_id'));
         $mytime = Carbon::now('America/Recife');
-        $evento = Evento::find(request()->eventoId);
-        if (! $modalidade->estaEmPeriodoDeSubmissao()) {
-            return $this->user()->can('isCoordenadorOrCoordenadorDasComissoes', $evento);
-        }
-        if (! $modalidade->estaEmPeriodoDeSubmissao()) {
-            return redirect()->route('home');
-        }
+        $evento = Evento::find($modalidade->eventoId);
+        // if (! $modalidade->estaEmPeriodoDeSubmissao()) {
+        //     return $this->user()->can('isCoordenadorOrCoordenadorDasComissoes', $evento);
+        // }
+        // if (! $modalidade->estaEmPeriodoDeSubmissao()) {
+        //     return redirect()->route('home');
+        // }
 
-        return 1;
+        return true;
     }
 
     /**
@@ -42,20 +42,21 @@ class TrabalhoPostRequest extends FormRequest
      */
     public function rules()
     {
-        $evento = Evento::find(request()->eventoId);
-        $modalidade = Modalidade::find(request()->modalidadeId);
+        $modalidade = Modalidade::find(request()->modalidade_id);
         $validate_array = [
             'nomeTrabalho' => ['required', 'string'],
             'nomeTrabalho_en' => ['nullable', 'string'],
-            'areaId' => ['required', 'integer'],
-            'modalidadeId' => ['required', 'integer'],
-            'eventoId' => ['required', 'integer'],
+            'area_id'       => ['required', 'exists:areas,id'],
+            'modalidade_id' => ['required', 'exists:modalidades,id'],
+            'evento_id'     => ['required', 'exists:eventos,id'],
             'resumo' => ['nullable', 'string'],
             'resumo_en' => ['nullable', 'string'],
-            'nomeCoautor.*' => ['string'],
-            'emailCoautor' => [new MaxCoautoresNaModalidade($modalidade)],
-            'emailCoautor.*' => ['string', new MaxTrabalhosCoautor($evento->numMaxCoautores), new CoautorInscritoNoEvento($evento), new CoautorCadastrado($evento)],
-            'arquivo' => ['nullable', 'file', new FileType($modalidade, new MidiaExtra, request()->arquivo, true)],
+            'autor.email' => ['required', 'email'],
+            'autor.nome'  => ['required', 'string', 'max:255'],
+            'coautores' => ['array', new MaxCoautoresNaModalidade($modalidade)],
+            'coautores.*.nome'  => ['required','string','max:255'],
+            'coautores.*.email' => ['required','email:rfc', 'distinct', 'different:autor.email'],
+            'arquivo' => ['required', 'file', new FileType($modalidade, new MidiaExtra, request()->arquivo, true)],
             'campoextra1arquivo' => ['nullable', 'file', 'max:2048'],
             'campoextra2arquivo' => ['nullable', 'file', 'max:2048'],
             'campoextra3arquivo' => ['nullable', 'file', 'max:2048'],
@@ -84,7 +85,7 @@ class TrabalhoPostRequest extends FormRequest
         ];
 
         foreach ($modalidade->midiasExtra as $midia) {
-            $validate_array[$midia->hyphenizeNome()] = ['required', 'file', new FileType($modalidade, $midia, request()[$midia->hyphenizeNome()], false)];
+            $validate_array[$midia->hyphenizeNome] = ['required', 'file', new FileType($modalidade, $midia, request()[$midia->hyphenizeNome], false)];
         }
 
         return $validate_array;

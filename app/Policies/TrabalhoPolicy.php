@@ -38,7 +38,7 @@ class TrabalhoPolicy
             $resultado = true;
         } elseif ($trabalho->autorId == $user->id && ($trabalho->modalidade->estaEmPeriodoDeCorrecao() || $trabalho->modalidade->estaEmPeriodoExtraDeCorrecao())) {
             $resultado = true;
-        }else if($trabalho->userRevisorTrabalho()->exists()){
+        }else if($trabalho->userRevisorTrabalho()){
             $resultado = true;
         }
 

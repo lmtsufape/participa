@@ -15,12 +15,12 @@
 
     {{-- titulo da página --}}
     <div class="d-flex justify-content-between align-items-center mb-5">
-                <div>
-                    <h1>{{__('Meus Eventos')}}</h1>
-                </div>
-                 <div>
-                    <a href="{{route('evento.criar')}}" class="btn btn-primary">{{__('Novo Evento')}}</a>
-                </div>
+        <div>
+            <h1>{{__('Meus Eventos')}}</h1>
+        </div>
+        <div>
+            <a href="{{route('evento.criar')}}" class="btn btn-primary">{{__('Novo Evento')}}</a>
+        </div>
 
     </div>
     <div class="row">
@@ -28,6 +28,7 @@
             use Illuminate\Support\Str;
         @endphp
 
+        <x-ui.search-box placeholder="Buscar por ID, nome ou descrição..." aria_label_btn="Buscar eventos" txt_btn="Buscar"/>
         @foreach ($eventos as $evento)
             @if (! $evento->deletado)
                 @can('isCoordenadorOrCoordenadorDasComissoes', $evento)
@@ -146,7 +147,10 @@
                     </div>
                 @endcan
             @endif
-        @endforeach
+            @endforeach
+            <div class="mt-5 d-flex justify-content-center">
+                {{ $eventos->appends(request()->query())->links('pagination::bootstrap-5') }}
+            </div>
     </div>
     @foreach ($eventos as $evento)
         @if ($evento->deletado == false)

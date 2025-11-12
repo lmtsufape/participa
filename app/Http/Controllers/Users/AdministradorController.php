@@ -11,6 +11,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Validator;
+use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\QueryBuilder;
+
+use function PHPUnit\Framework\callback;
 
 class AdministradorController extends Controller
 {
@@ -101,7 +105,25 @@ class AdministradorController extends Controller
 
     public function eventos()
     {
-        $eventos = Evento::latest()->get();
+        $eventos = QueryBuilder::for(Evento::class)
+        ->allowedFilters([
+            AllowedFilter::callback('q', function ($query, $value) {
+                $term = trim((string) $value);
+                if ($term === '') return;
+
+                $query->where(function ($w) use ($term) {
+                    if (ctype_digit($term)) {
+                        $w->orWhere('id', (int) $term);
+                    }
+
+                    $w->orWhere('nome', 'ILIKE', "%{$term}%")
+                      ->orWhere('descricao', 'ILIKE', "%{$term}%");
+                });
+            }),
+        ])
+        ->latest()
+        ->paginate(request('per_page', 15))
+        ->withQueryString();
 
         return view('coordenador.index', ['eventos' => $eventos]);
     }

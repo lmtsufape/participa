@@ -68,12 +68,12 @@
                         </div>
                     </div>
                 @endif
-                @if (count($trabalho->atribuicoes) > 0)
+                @if (count($trabalho->revisores) > 0)
                     <div class="row justify-content-start">
                         <div class="col-sm-12">
                             <h5>{{ __('Avaliadores atribuídos ao trabalho') }}</h5>
                         </div>
-                        @foreach ($trabalho->atribuicoes as $i => $revisor)
+                        @foreach ($trabalho->revisores as $i => $revisor)
                             <div class="col-sm-4">
                                 <div class="card" style="width: 13.5rem; text-align: center;">
                                     <img class="" src="{{ asset('img/icons/user.png') }}" width="100px" alt="Revisor"
@@ -113,7 +113,7 @@
                                     <option value="" disabled selected>-- {{ __('E-mail do avaliador') }} --</option>
                                     @foreach ($evento->revisors()->where([['modalidadeId', $trabalho->modalidade->id], ['areaId', $trabalho->area->id]])->get() as $revisor)
                                         @if (
-                                            !$trabalho->atribuicoes->contains($revisor) &&
+                                            !$trabalho->revisores->contains($revisor) &&
                                                 is_null($trabalho->coautors->where('autorId', $revisor->user_id)->first()) &&
                                                 $trabalho->autorId != $revisor->user_id)
                                                 @php

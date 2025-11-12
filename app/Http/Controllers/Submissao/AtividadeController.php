@@ -601,6 +601,27 @@ class AtividadeController extends Controller
         return filter_var($email, FILTER_VALIDATE_EMAIL);
     }
 
+    public function storeAjax(Request $request)
+    {
+        $evento = Evento::find($request->evento_id);
+        if (auth()->user()->id == $evento->coordenadorId || $evento->usuariosDaComissao->contains(auth()->user()) || $evento->usuariosDaComissaoOrganizadora->contains(auth()->user())) {
+            if ($request->name == null) {
+                return response()->json('Nome não contido na requição.', 404);
+            }
+
+            $tipo = new TipoAtividade();
+            $tipo->descricao = $request->name;
+            $tipo->evento_id = $evento->id;
+            $tipo->save();
+
+            $tiposAtividades = TipoAtividade::where('evento_id', '=', $evento->id)->get();
+
+            return response()->json($tiposAtividades);
+        } else {
+            return response()->json('Usuário não autorizado.', 403);
+        }
+    }
+
     public function listarInscritos($id)
     {
         $atividade = Atividade::find($id);

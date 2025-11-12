@@ -187,7 +187,6 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
             Route::get('informacoes', [EventoController::class, 'informacoes'])->name('informacoes');
             Route::get('trabalhos/definirSubmissoes', [EventoController::class, 'definirSubmissoes'])->name('definirSubmissoes');
             Route::get('trabalhos/listarTrabalhos/{column?}/{direction?}/{status?}', [EventoController::class, 'listarTrabalhos'])->name('listarTrabalhos');
-            Route::get('trabalhos/listarTrabalhosModalidades/{column?}/{direction?}/{status?}', [EventoController::class, 'listarTrabalhosModalidades'])->name('listarTrabalhosModalidades');
             Route::get('trabalhos/{id}/resultados/{column?}/{direction?}/{status?}', [TrabalhoController::class, 'resultados'])->name('resultados');
             Route::post('trabalhos/parecer_final', [TrabalhoController::class, 'parecerFinalTrabalho'])->name('parecer.final');
             Route::get('/trabalhos/parecer_final/info', [TrabalhoController::class, 'infoParecerTrabalho'])->name('parecer.final.info.ajax');
@@ -200,10 +199,8 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
             Route::get('trabalhos/form/visualizarRespostaFormulario', [EventoController::class, 'visualizarRespostaFormulario'])->name('visualizarRespostaFormulario');
             Route::get('trabalhos/listarCorrecoes/{column?}/{direction?}', [EventoController::class, 'listarCorrecoes'])->name('listarCorrecoes');
 
-            Route::get('areas/cadastrarAreas', [EventoController::class, 'cadastrarAreas'])->name('cadastrarAreas');
-            Route::get('areas/listarAreas', [EventoController::class, 'listarAreas'])->name('listarAreas');
+            Route::get('areas/listarAreas', [AreaController::class, 'index'])->name('listarAreas');
 
-            Route::get('revisores/cadastrarRevisores', [EventoController::class, 'cadastrarRevisores'])->name('cadastrarRevisores');
 
             Route::get('revisores/listarRevisores', [EventoController::class, 'listarRevisores'])->name('listarRevisores');
             Route::get('revisores/listarUsuarios', [EventoController::class, 'listarUsuarios'])->name('listarUsuarios');
@@ -273,8 +270,8 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
             Route::get('certificados/{certificadoId}/ver-destinatario/{destinatarioId}/trabalho/{trabalhoId}', [CertificadoController::class, 'visualizar_certificado_emitido'])->name('verCertificado');
             Route::delete('certificados/emissoes/deletar', [CertificadoController::class, 'deletarEmissao'])->name('deletar.emissao');
 
-            Route::get('modalidade/cadastrarModalidade', [EventoController::class, 'cadastrarModalidade'])->name('cadastrarModalidade');
-            Route::get('modalidade/listarModalidade', [EventoController::class, 'listarModalidade'])->name('listarModalidade');
+            Route::get('modalidade/create', [ModalidadeController::class, 'create'])->name('modalidade.create');
+            Route::get('modalidade/', [ModalidadeController::class, 'index'])->name('modalidade.index');
             Route::get('modalidade/cadastrarCriterio', [EventoController::class, 'cadastrarCriterio'])->name('cadastrarCriterio');
             Route::get('modalidade/listarCriterios', [EventoController::class, 'listarCriterios'])->name('listarCriterios');
             Route::get('modalidade/forms', [EventoController::class, 'forms'])->name('forms');
@@ -296,7 +293,7 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
             Route::post('atividade/{id}/excluir', [AtividadeController::class, 'destroy'])->name('atividade.destroy');
             Route::post('{id}/atividade/salvar-pdf-programacao', [EventoController::class, 'pdfProgramacao'])->name('evento.pdf.programacao');
             Route::post('{id}/atividade/salvar-pdf-adicional', [EventoController::class, 'pdfAdicional'])->name('evento.pdf.adicional');
-            Route::get('tipo-de-atividade/new', [TipoAtividadeController::class, 'storeAjax'])->name('tipo.store.ajax');
+            Route::get('tipo-de-atividade/new', [AtividadeController::class, 'storeAjax'])->name('tipo.store.ajax');
             Route::get('eventos/editarEtiqueta', [EventoController::class, 'editarEtiqueta'])->name('editarEtiqueta');
             Route::get('eventos/etiquetasTrabalhos', [EventoController::class, 'etiquetasTrabalhos'])->name('etiquetasTrabalhos');
             Route::get('{id}/modulos', [FormEventoController::class, 'indexModulo'])->name('modulos');
@@ -335,7 +332,7 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
         // Route::post(  '/areaModalidade/criar',  [AreaModalidadeController::class, 'store']             )->name('areaModalidade.store');
 
         //Trabalho
-        Route::get('/trabalho/submeter/{id}/{idModalidade}', [TrabalhoController::class, 'index'])->name('trabalho.index');
+        Route::get('/trabalho/submeter/{modalidade_id}', [TrabalhoController::class, 'create'])->name('trabalho.create');
         Route::post('/trabalho/novaVersao', [TrabalhoController::class, 'novaVersao'])->name('trabalho.novaVersao');
         Route::post('/trabalho/criar', [TrabalhoController::class, 'store'])->name('trabalho.store');
         Route::get('/trabalho/pesquisa', [TrabalhoController::class, 'pesquisaAjax'])->name('trabalho.pesquisa.ajax');

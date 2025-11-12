@@ -79,7 +79,7 @@
                                   <td>
                                     <form action="{{route('revisor.responde')}}" method="get">
                                       @csrf
-                                      <input type="hidden" name="revisor_id" value="{{$trabalho->atribuicoes()->where('user_id', auth()->user()->id)->first()->id}}">
+                                      <input type="hidden" name="revisor_id" value="{{$trabalho->revisores()->where('user_id', auth()->user()->id)->first()->id}}">
                                       <input type="hidden" name="trabalho_id" value="{{$trabalho->id}}">
                                       <input type="hidden" name="evento_id" value="{{$evento->id}}">
                                       <input type="hidden" name="modalidade_id" value="{{$trabalho->modalidade->id}}">
@@ -97,7 +97,6 @@
                                     <img src="{{asset('img/icons/check-solid.svg')}}" style="width:20px" title="Avaliação disponível em {{date('d/m/Y',strtotime($trabalho->modalidade->inicioRevisao))}} até {{date('d/m/Y',strtotime($trabalho->modalidade->fimRevisao))}}">
                                   </td>
                                 @endif
-                                {{-- {{$trabalho->atribuicoes()->where('user_id', auth()->user()->id)->first()->id}} --}}
                                 <td>
 
 

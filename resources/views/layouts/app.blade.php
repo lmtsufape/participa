@@ -31,7 +31,7 @@
 
     <link href="{{ asset('css/styleIndex.css') }}" rel="stylesheet">
     <link href="{{ asset('css/dark-mode.css') }}" rel="stylesheet">
-    <link href='{{ asset('fullcalendar-5.3.2/lib/main.css') }}' rel='stylesheet' />
+  
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     <link rel="stylesheet" href="{{ asset('css/required-fields.css') }}">
@@ -64,14 +64,22 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+    <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+    referrerpolicy="no-referrer"
+  />
+
 
     <!-- icon eye -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    @livewireStyles
+    @livewireScripts
 </head>
 
 <body class="d-flex flex-column min-vh-100" style="background-color: #f5f5f5;">
     @include('navbar')
-
+    <livewire:ui.modal />
     @if(View::hasSection('sidebar'))
         {{-- <div class="ml-auto mensagem"> apagar o css depois
         </div> --}}
@@ -108,14 +116,11 @@
     <script async defer src="https://maps.googleapis.com/maps/api/js?key={{env('GOOGLE_MAPS_API_KEY')}}&callback=initMap"></script>
 
     <script src="{{ asset('js/jquery-mask-plugin.js')}}"></script>
-    <script defer src="{{ asset('js/alpine.js') }}"></script>
     <script src="{{ asset('js/dark-mode.js') }}"></script>
     <script src="{{ asset('js/submit.js') }}"></script>
     <!-- CKEditor -->
     <script src="{{ asset('ckeditor/ckeditor.js') }}"></script>
-    <!-- FullCalendar -->
-    <script src='{{ asset('fullcalendar-5.3.2/lib/main.js') }}'></script>
-    <script src='{{ asset('fullcalendar-5.3.2/lib/locales-all.js') }}'></script>
+
     <!-- Swiper JS -->
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script>

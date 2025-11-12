@@ -40,7 +40,7 @@
                 <td>{{$trabalho->id}}</td>
                 <td>{{$trabalho->area->nome}}</td>
                 <td>
-                    @foreach($trabalho->atribuicoes as $revisor)
+                    @foreach($trabalho->revisores as $revisor)
                         {{$revisor->user->email}},
                     @endforeach
                 </td>

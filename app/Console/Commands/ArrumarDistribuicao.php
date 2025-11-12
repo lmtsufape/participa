@@ -27,19 +27,19 @@ class ArrumarDistribuicao extends Command
      */
     public function handle()
     {
-        $trabalhos = Trabalho::whereHas('atribuicoes', fn ($query) => $query->whereColumn('trabalhos.modalidadeId', '!=', 'revisors.modalidadeId'))
-            ->with(['atribuicoes.modalidade'])
+        $trabalhos = Trabalho::whereHas('revisores', fn ($query) => $query->whereColumn('trabalhos.modalidadeId', '!=', 'revisors.modalidadeId'))
+            ->with(['revisores.modalidade'])
             ->get();
         foreach ($trabalhos as $trabalho) {
-            $atribuicoes = $trabalho->atribuicoes;
+            $atribuicoes = $trabalho->revisores;
             foreach ($atribuicoes as $revisor) {
                 if ($revisor->modalidadeId != $trabalho->modalidadeId) {
                     $revisorCerto = Revisor::where([['modalidadeId', $trabalho->modalidadeId], ['areaId', $trabalho->areaId], ['user_id', $revisor->user_id]])->first();
                     if ($revisorCerto) {
                         $alterados = $trabalho->respostas()->where('revisor_id', $revisor->id)->update(['revisor_id' => $revisorCerto->id]);
                         $parecer = $alterados > 0 ? 'avaliado' : 'processando';
-                        $trabalho->atribuicoes()->attach($revisorCerto->id, ['parecer' => $parecer, 'confirmacao' => false]);
-                        $trabalho->atribuicoes()->detach($revisor->id);
+                        $trabalho->revisores()->attach($revisorCerto->id, ['parecer' => $parecer, 'confirmacao' => false]);
+                        $trabalho->revisores()->detach($revisor->id);
                     } else {
                         $this->error('O avaliador '.$revisor->user->name.' não é avaliador da modalidade '.$trabalho->modalidade->nome.' por isso a correção para o trabalho '.$trabalho->id.': '.$trabalho->titulo.' não foi possível.');
                     }
