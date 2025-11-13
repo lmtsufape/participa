@@ -50,22 +50,17 @@
 
                                 <br> <br>
 
-                                Agradecemos a sua contribuição como {{ $cargo }} no evento {{ $nomeEvento }}.
+                                Agradecemos a sua contribuição como {{ $cargo }} no 13º Congresso Brasileiro de Agroecologia.
 
                                 <br><br>
 
-                                Segue em anexo a sua certificação.
-
-                                <br><br>
-                                
-                                Para validar o certificado emitido, acesse a plataforma e no rodapé clique em "Validar Documento", e na página coloque o código de validação.
+                                Em anexo está o seu certificado de participação, de atividades em comissões ou apresentação de trabalho no 13º CBA.
 
                                 <br><br>
 
                                 Abraços,<br>
-                                Plataforma de inscrições e submissões de trabalhos <br>
-                                Participa (UFAPE/LMTS) <br>
-                                Associação Brasileira de Agroecologia (ABA) <br>
+                                Plataforma de Inscrições e Submissões de Trabalhos - Participa (UFAPE/LMTS)<br>
+                                Associação Brasileira de Agroecologia (ABA-Agroecologia) <br>
                             </p>
                         </td>
                     </tr>
