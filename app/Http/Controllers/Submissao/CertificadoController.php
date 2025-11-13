@@ -403,7 +403,11 @@ class CertificadoController extends Controller
             default:
                 break;
         }
-        $qrcode = base64_encode(QrCode::generate($validacao));
+        
+        $url_validacao_direta = route('certificado.view', ['hash' => urlencode($validacao)]);
+
+        $qrcode = base64_encode(QrCode::generate($url_validacao_direta));
+        
         switch ($certificado->tipo) {
             case Certificado::TIPO_ENUM['apresentador']:
                 $user = User::find($destinatarioId);
