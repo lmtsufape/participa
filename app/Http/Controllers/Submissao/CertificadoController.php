@@ -404,7 +404,7 @@ class CertificadoController extends Controller
                 break;
         }
         
-        $url_validacao_direta = route('certificado.view', ['hash' => urlencode($validacao)]);
+        $url_validacao_direta = route('certificado.view', ['hash' => urlencode($validacao)], true);
 
         $qrcode = base64_encode(QrCode::generate($url_validacao_direta));
         
