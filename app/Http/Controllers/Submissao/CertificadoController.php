@@ -404,6 +404,8 @@ class CertificadoController extends Controller
                 break;
         }
 
+        $qrcode = base64_encode(QrCode::generate($validacao));
+
         switch ($certificado->tipo) {
             case Certificado::TIPO_ENUM['apresentador']:
                 $user = User::find($destinatarioId);
@@ -415,126 +417,54 @@ class CertificadoController extends Controller
                 } else {
                     $texto = preg_replace('/%MSG_COAUTORES=(.*?)%/', '', $texto);
                 }
-                $pdf = Pdf::loadView('coordenador.certificado.certificado_preenchivel', [
-                    'texto' => $texto, 
-                    'url_validacao' => $url_validacao_direta,
-                    'validacao' => $validacao, 
-                    'certificado' => $certificado, 'user' => $user, 'trabalho' => $trabalho, 
-                    'coautores' => $coautores, 'cargo' => 'Apresentador', 'evento' => $evento, 
-                    'dataHoje' => $certificado->data->isoFormat('LL'), 
-                    'now' => now()->isoFormat('LL')])->setPaper('a4', 'landscape');
+                $pdf = Pdf::loadView('coordenador.certificado.certificado_preenchivel', ['texto' => $texto, 'qrcode' => $qrcode, 'validacao' => $validacao, 'certificado' => $certificado, 'user' => $user, 'trabalho' => $trabalho, 'coautores' => $coautores, 'cargo' => 'Apresentador', 'evento' => $evento, 'dataHoje' => $certificado->data->isoFormat('LL'), 'now' => now()->isoFormat('LL')])->setPaper('a4', 'landscape');
                 break;
             case Certificado::TIPO_ENUM['comissao_cientifica']:
                 $user = User::find($destinatarioId);
                 $texto = $certificado->texto;
-                $pdf = Pdf::loadView('coordenador.certificado.certificado_preenchivel', [
-                    'texto' => $texto, 
-                    'url_validacao' => $url_validacao_direta,
-                    'validacao' => $validacao, 
-                    'certificado' => $certificado, 'user' => $user, 
-                    'cargo' => 'Comissão Científica', 'evento' => $evento, 
-                    'dataHoje' => $certificado->data->isoFormat('LL'), 
-                    'now' => now()->isoFormat('LL')])->setPaper('a4', 'landscape');
+                $pdf = Pdf::loadView('coordenador.certificado.certificado_preenchivel', ['texto' => $texto, 'qrcode' => $qrcode, 'validacao' => $validacao, 'certificado' => $certificado, 'user' => $user, 'cargo' => 'Comissão Científica', 'evento' => $evento, 'dataHoje' => $certificado->data->isoFormat('LL'), 'now' => now()->isoFormat('LL')])->setPaper('a4', 'landscape');
                 break;
             case Certificado::TIPO_ENUM['comissao_organizadora']:
                 $user = User::find($destinatarioId);
                 $texto = $certificado->texto;
-                $pdf = Pdf::loadView('coordenador.certificado.certificado_preenchivel', [
-                    'texto' => $texto, 
-                    'url_validacao' => $url_validacao_direta, 
-                    'validacao' => $validacao, 
-                    'certificado' => $certificado, 'user' => $user, 
-                    'cargo' => 'Comissão Organizadora', 'evento' => $evento, 
-                    'dataHoje' => $certificado->data->isoFormat('LL'), 
-                    'now' => now()->isoFormat('LL')])->setPaper('a4', 'landscape');
-                break;
+                $pdf = Pdf::loadView('coordenador.certificado.certificado_preenchivel', ['texto' => $texto, 'qrcode' => $qrcode, 'validacao' => $validacao, 'certificado' => $certificado, 'user' => $user, 'cargo' => 'Comissão Organizadora', 'evento' => $evento, 'dataHoje' => $certificado->data->isoFormat('LL'), 'now' => now()->isoFormat('LL')])->setPaper('a4', 'landscape');
             case Certificado::TIPO_ENUM['revisor']:
                 $user = User::find($destinatarioId);
                 $texto = $certificado->texto;
-                $pdf = Pdf::loadView('coordenador.certificado.certificado_preenchivel', [
-                    'texto' => $texto, 
-                    'url_validacao' => $url_validacao_direta, 
-                    'validacao' => $validacao, 
-                    'certificado' => $certificado, 'user' => $user, 
-                    'cargo' => 'Revisor', 'evento' => $evento, 
-                    'dataHoje' => $certificado->data->isoFormat('LL'), 
-                    'now' => now()->isoFormat('LL')])->setPaper('a4', 'landscape');
+                $pdf = Pdf::loadView('coordenador.certificado.certificado_preenchivel', ['texto' => $texto, 'qrcode' => $qrcode, 'validacao' => $validacao, 'certificado' => $certificado, 'user' => $user, 'cargo' => 'Revisor', 'evento' => $evento, 'dataHoje' => $certificado->data->isoFormat('LL'), 'now' => now()->isoFormat('LL')])->setPaper('a4', 'landscape');
                 break;
             case Certificado::TIPO_ENUM['participante']:
                 $user = User::find($destinatarioId);
                 $texto = $certificado->texto;
-                $pdf = Pdf::loadView('coordenador.certificado.certificado_preenchivel', [
-                    'texto' => $texto, 
-                    'url_validacao' => $url_validacao_direta,
-                    'validacao' => $validacao, 
-                    'certificado' => $certificado, 'user' => $user, 
-                    'cargo' => 'Participante', 'evento' => $evento, 
-                    'dataHoje' => $certificado->data->isoFormat('LL'), 
-                    'now' => now()->isoFormat('LL')])->setPaper('a4', 'landscape');
-                break;
+                $pdf = Pdf::loadView('coordenador.certificado.certificado_preenchivel', ['texto' => $texto, 'qrcode' => $qrcode, 'validacao' => $validacao, 'certificado' => $certificado, 'user' => $user, 'cargo' => 'Participante', 'evento' => $evento, 'dataHoje' => $certificado->data->isoFormat('LL'), 'now' => now()->isoFormat('LL')])->setPaper('a4', 'landscape');
             case Certificado::TIPO_ENUM['inscrito']:
                 $user = User::find($destinatarioId);
                 $texto = $certificado->texto;
-                $pdf = Pdf::loadView('coordenador.certificado.certificado_preenchivel', [
-                    'texto' => $texto, 
-                    'url_validacao' => $url_validacao_direta,
-                    'validacao' => $validacao, 
-                    'certificado' => $certificado, 'user' => $user, 
-                    'cargo' => 'Inscrito', 'evento' => $evento, 
-                    'dataHoje' => $certificado->data->isoFormat('LL'), 
-                    'now' => now()->isoFormat('LL')])->setPaper('a4', 'landscape');
+                $pdf = Pdf::loadView('coordenador.certificado.certificado_preenchivel', ['texto' => $texto, 'qrcode' => $qrcode, 'validacao' => $validacao, 'certificado' => $certificado, 'user' => $user, 'cargo' => 'Inscrito', 'evento' => $evento, 'dataHoje' => $certificado->data->isoFormat('LL'), 'now' => now()->isoFormat('LL')])->setPaper('a4', 'landscape');
                 break;
             case Certificado::TIPO_ENUM['expositor']:
                 $user = Palestrante::find($destinatarioId);
                 $palestra = Palestra::find($trabalhoId);
                 $texto = $certificado->texto;
-                $pdf = Pdf::loadView('coordenador.certificado.certificado_preenchivel', [
-                    'texto' => $texto, 
-                    'url_validacao' => $url_validacao_direta, 
-                    'validacao' => $validacao, 
-                    'certificado' => $certificado, 'user' => $user, 
-                    'palestra' => $palestra, 'cargo' => 'Expositor', 'evento' => $evento, 
-                    'dataHoje' => $certificado->data->isoFormat('LL'), 
-                    'now' => now()->isoFormat('LL')])->setPaper('a4', 'landscape');
+                $pdf = Pdf::loadView('coordenador.certificado.certificado_preenchivel', ['texto' => $texto, 'qrcode' => $qrcode, 'validacao' => $validacao, 'certificado' => $certificado, 'user' => $user, 'palestra' => $palestra, 'cargo' => 'Expositor', 'evento' => $evento, 'dataHoje' => $certificado->data->isoFormat('LL'), 'now' => now()->isoFormat('LL')])->setPaper('a4', 'landscape');
                 break;
             case Certificado::TIPO_ENUM['coordenador_comissao_cientifica']:
                 $user = User::find($destinatarioId);
                 $trabalho = Trabalho::find($trabalhoId);
                 $texto = $certificado->texto;
-                $pdf = Pdf::loadView('coordenador.certificado.certificado_preenchivel', [
-                    'texto' => $texto, 
-                    'url_validacao' => $url_validacao_direta,
-                    'validacao' => $validacao, 
-                    'certificado' => $certificado, 'user' => $user, 'trabalho' => $trabalho, 
-                    'cargo' => 'Coordenador comissão científica', 'evento' => $evento, 
-                    'dataHoje' => $certificado->data->isoFormat('LL'), 
-                    'now' => now()->isoFormat('LL')])->setPaper('a4', 'landscape');
+                $pdf = Pdf::loadView('coordenador.certificado.certificado_preenchivel', ['texto' => $texto, 'qrcode' => $qrcode, 'validacao' => $validacao, 'certificado' => $certificado, 'user' => $user, 'trabalho' => $trabalho, 'cargo' => 'Coordenador comissão científica', 'evento' => $evento, 'dataHoje' => $certificado->data->isoFormat('LL'), 'now' => now()->isoFormat('LL')])->setPaper('a4', 'landscape');
                 break;
             case Certificado::TIPO_ENUM['outras_comissoes']:
                 $user = User::find($destinatarioId);
                 $comissao = TipoComissao::find($trabalhoId);
                 $texto = $certificado->texto;
-                $pdf = Pdf::loadView('coordenador.certificado.certificado_preenchivel', [
-                    'texto' => $texto, 
-                    'url_validacao' => $url_validacao_direta,
-                    'validacao' => $validacao, 
-                    'certificado' => $certificado, 'user' => $user, 'comissao' => $comissao, 
-                    'cargo' => "membro da comissao {$comissao->nome}", 'evento' => $evento, 
-                    'dataHoje' => $certificado->data->isoFormat('LL'), 
-                    'now' => now()->isoFormat('LL')])->setPaper('a4', 'landscape');
+                $pdf = Pdf::loadView('coordenador.certificado.certificado_preenchivel', ['texto' => $texto, 'qrcode' => $qrcode, 'validacao' => $validacao, 'certificado' => $certificado, 'user' => $user, 'comissao' => $comissao, 'cargo' => "membro da comissao {$comissao->nome}", 'evento' => $evento, 'dataHoje' => $certificado->data->isoFormat('LL'), 'now' => now()->isoFormat('LL')])->setPaper('a4', 'landscape');
                 break;
             case Certificado::TIPO_ENUM['inscrito_atividade']:
                 $user = User::find($destinatarioId);
                 $atividade = Atividade::find($trabalhoId);
                 $texto = $certificado->texto;
-                $pdf = Pdf::loadView('coordenador.certificado.certificado_preenchivel', [
-                    'texto' => $texto, 
-                    'url_validacao' => $url_validacao_direta, 
-                    'validacao' => $validacao, 
-                    'certificado' => $certificado, 'user' => $user, 'atividade' => $atividade, 
-                    'cargo' => "inscrito na atividade {$atividade->titulo}", 'evento' => $evento, 
-                    'dataHoje' => $certificado->data->isoFormat('LL'), 
-                    'now' => now()->isoFormat('LL')])->setPaper('a4', 'landscape');
+                $pdf = Pdf::loadView('coordenador.certificado.certificado_preenchivel', ['texto' => $texto, 'qrcode' => $qrcode, 'validacao' => $validacao, 'certificado' => $certificado, 'user' => $user, 'atividade' => $atividade, 'cargo' => "inscrito na atividade {$atividade->titulo}", 'evento' => $evento, 'dataHoje' => $certificado->data->isoFormat('LL'), 'now' => now()->isoFormat('LL')])->setPaper('a4', 'landscape');
                 break;
         }
 
