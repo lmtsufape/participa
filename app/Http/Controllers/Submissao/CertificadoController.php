@@ -809,7 +809,7 @@ class CertificadoController extends Controller
                 case Certificado::TIPO_ENUM['outras_comissoes']:
                     foreach ($destinatariosIds as $i => $destinarioId) {
                         $validacao = $validacoes[$i];
-                        $url_validacao_direta = route('certificado.view', ['hash' => urlencode($validacao)], true);
+                        $url_validacao_direta = route('validarCertificado', ['hash' => $validacao]);
                         $qrcode = base64_encode(QrCode::generate($url_validacao_direta));
                         $certificado->usuarios()->attach($destinarioId, ['validacao' => $validacao, 'comissao_id' => $comissaoId]);
                         $user = User::find($destinarioId);
@@ -882,6 +882,16 @@ class CertificadoController extends Controller
 
     public function validar(Request $request)
     {
+        $hash = $request->input('hash');
+
+        if ($hash) {
+            $certificado_user = DB::table('certificado_user')->where([
+                ['validacao', '=', $hash],
+                ['valido', '=', true],
+            ])->first();
+            return $this->gerar_pdf($certificado_user);
+        }
+        
         if ($request->tipo == 'cpf_evento') {
             return $this->validarCertificadoPorCpf($request);
         }
