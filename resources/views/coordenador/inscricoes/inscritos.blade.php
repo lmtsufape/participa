@@ -11,6 +11,12 @@
     </div>
 @endif
 
+@if ($errors->has('email_inscritos'))
+    <div class="alert alert-danger">
+        {{ $errors->first('email_inscritos') }}
+    </div>
+@endif
+
 <div id="" style="display: block">
     <div class="row">
         <div class="col-md-12">
@@ -28,12 +34,21 @@
                       <!--<h6 class="card-subtitle mb-2 text-muted">Obs.: ao exportar o arquivo csv, usar o delimitador , (vírgula) para abrir o arquivo</h6>-->
                     </div>
                     <div class="col-md-6 d-flex gap-2 flex-column align-items-end">
+                        <button
+                            type="button"
+                            class="btn btn-primary w-100"
+                            id="btn-abrir-modal-email"
+                            data-bs-toggle="modal"
+                            data-bs-target="#modal-enviar-email"
+                            disabled
+                        >
+                            Enviar e-mail
+                        </button>
                         <a href="{{route('evento.exportarInscritosXLSX', $evento)}}" class="btn btn-success">Exportar .xlsx</a>
                         {{-- <a href="{{route('evento.downloadInscritos', $evento)}}" class="btn btn-primary">Exportar .csv</a>--}}
 {{--                        <a href="{{route('evento.downloadInscritosCertifica', $evento)}}" class="btn btn-primary float-md-right mt-2">Exportar XLSX para o Certifica</a>--}}
                         <button type="button" class="button-prevent-multiple-submits btn btn-outline-success my-2 ml-1" data-bs-toggle="modal" data-bs-target="#modal-inscrever-participante">
                             Inscrever participante
-                        </button>
                         </button>
                     </div>
 
@@ -42,7 +57,10 @@
                     <p class="card-text">
                     <table class="table table-hover table-responsive-lg table-sm" style="position: relative;">
                         <thead>
-                            <th>
+                            <tr>
+                                <th>
+                                    <input type="checkbox" id="selecionar-todos-inscritos" class="form-check-input">
+                                </th>
                                 <th>#</th>
                                 @if ($evento->subeventos->count() > 0)
                                     <th>Evento/Subevento</th>
@@ -54,11 +72,14 @@
                                 <th>Status</th>
                                 <th>Aprovada</th>
                                 <th></th>
-                            </th>
+                            </tr>
                         </thead>
-                        @foreach ($inscricoes as $inscricao)
-                            <tbody>
-                                <th>
+                        <tbody>
+                            @forelse ($inscricoes as $inscricao)
+                                <tr>
+                                    <td>
+                                        <input type="checkbox" class="form-check-input checkbox-inscricao" value="{{$inscricao->id}}">
+                                    </td>
                                     <td data-bs-toggle="modal" data-bs-target="#modal-listar-campos-formulario-{{$inscricao->id}}">{{$loop->iteration}}</td>
                                     @if ($evento->subeventos->count() > 0)
                                         <td data-bs-toggle="modal" data-bs-target="#modal-listar-campos-formulario-{{$inscricao->id}}">{{$inscricao->evento->nome}}</td>
@@ -76,9 +97,15 @@
                                     </td>
                                     <td data-bs-toggle="modal" data-bs-target="#modal-listar-campos-formulario-{{$inscricao->id}}">{{$inscricao->finalizada ? 'Sim' : 'Não'}}</td>
                                     <td data-bs-toggle="modal" data-bs-target="#modal-listar-campos-formulario-{{$inscricao->id}}"><img src="{{asset('img/icons/eye-regular.svg')}}" alt="" style="width: 14px; fill: #000 !important;"></td>
-                                </th>
-                            </tbody>
-                        @endforeach
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="{{ $evento->subeventos->count() > 0 ? 10 : 9 }}" class="text-center">
+                                        Nenhum inscrito encontrado.
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
                     </table>
                     </p>
                 </div>
@@ -86,6 +113,89 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="modal-enviar-email" tabindex="-1" aria-labelledby="modal-enviar-email-label" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #114048ff; color: white;">
+                <h5 class="modal-title" id="modal-enviar-email-label">Enviar e-mail para inscritos</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="POST" action="{{ route('inscricao.enviarEmail', $evento) }}" id="form-enviar-email-inscritos">
+                @csrf
+                <div class="modal-body">
+                    <input type="hidden" name="inscricoes" id="inscricoes-email-input">
+                    <p class="text-muted mb-3">Este e-mail será enviado para <span id="total-inscricoes-selecionadas">0</span> inscrito(s) selecionado(s).</p>
+                    <div class="form-group">
+                        <label for="assunto-email-inscritos">Título do e-mail</label>
+                        <input type="text" class="form-control" id="assunto-email-inscritos" name="assunto" required maxlength="255">
+                    </div>
+                    <div class="form-group mt-3">
+                        <label for="mensagem-email-inscritos">Corpo do e-mail</label>
+                        <textarea class="form-control" id="mensagem-email-inscritos" name="mensagem" rows="6" required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Enviar e-mail</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const selectAllCheckbox = document.getElementById('selecionar-todos-inscritos');
+        const checkboxNodes = document.querySelectorAll('.checkbox-inscricao');
+        const openModalButton = document.getElementById('btn-abrir-modal-email');
+        const hiddenInput = document.getElementById('inscricoes-email-input');
+        const modalElement = document.getElementById('modal-enviar-email');
+        const totalSelectedSpan = document.getElementById('total-inscricoes-selecionadas');
+
+        if (!selectAllCheckbox || !openModalButton || !modalElement) {
+            return;
+        }
+
+        const checkboxList = Array.from(checkboxNodes);
+
+        const updateButtonState = () => {
+            const anyChecked = checkboxList.some((checkbox) => checkbox.checked);
+            openModalButton.disabled = !anyChecked;
+        };
+
+        const syncSelectAll = () => {
+            if (!checkboxList.length) {
+                selectAllCheckbox.checked = false;
+                return;
+            }
+
+            selectAllCheckbox.checked = checkboxList.every((checkbox) => checkbox.checked);
+        };
+
+        selectAllCheckbox.addEventListener('change', () => {
+            checkboxList.forEach((checkbox) => {
+                checkbox.checked = selectAllCheckbox.checked;
+            });
+            updateButtonState();
+        });
+
+        checkboxList.forEach((checkbox) => {
+            checkbox.addEventListener('change', () => {
+                syncSelectAll();
+                updateButtonState();
+            });
+        });
+
+        modalElement.addEventListener('show.bs.modal', () => {
+            const selectedIds = checkboxList.filter((checkbox) => checkbox.checked).map((checkbox) => checkbox.value);
+            hiddenInput.value = selectedIds.join(',');
+            totalSelectedSpan.textContent = selectedIds.length;
+        });
+
+        updateButtonState();
+    });
+</script>
 
 @foreach ($inscricoes as $inscricao)
 <div class="modal fade" id="modal-listar-campos-formulario-{{$inscricao->id}}" tabindex="-1" role="dialog" aria-labelledby="#label" aria-hidden="true">
