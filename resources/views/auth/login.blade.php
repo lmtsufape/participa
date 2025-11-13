@@ -77,10 +77,11 @@
                 <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center pb-5">
                     <div class="mb-2 mb-sm-0">
                         <input class="form-check-input border-dark"
-                               type="checkbox"
-                               name="remember"
-                               id="remember"
-                               {{ old('remember') ? 'checked' : '' }}>
+                            type="checkbox"
+                            name="remember"
+                            id="remember"
+                            value="1"
+                            {{ old('remember') ? 'checked' : '' }}>
                         <label class="form-check-label" for="remember">
                             {{ __('Lembre-se de mim') }}
                         </label>
@@ -136,5 +137,30 @@
             });
         });
     }
+
+    // ============================================
+    // PREENCHER ÚLTIMO E-MAIL USADO NO LOGIN
+    // ============================================
+    document.addEventListener("DOMContentLoaded", function () {
+        const emailInput = document.getElementById("email");
+        const loginForm = document.querySelector('form[action*="login"]');
+
+        // Ao carregar a página, verificar se há um e-mail salvo
+        const ultimoEmail = localStorage.getItem("ultimoEmailLogin");
+
+        if (ultimoEmail && emailInput && !emailInput.value) {
+            emailInput.value = ultimoEmail;
+        }
+
+        // Ao submeter o formulário de login, salvar o e-mail usado
+        if (loginForm) {
+            loginForm.addEventListener("submit", function () {
+                const email = emailInput.value.trim();
+                if (email) {
+                    localStorage.setItem("ultimoEmailLogin", email);
+                }
+            });
+        }
+    });
 </script>
 @endsection
