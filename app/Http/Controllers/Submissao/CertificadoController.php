@@ -403,9 +403,6 @@ class CertificadoController extends Controller
             default:
                 break;
         }
-        
-        $url_validacao_direta = route('certificado.view', ['hash' => urlencode($validacao)], true);
-
 
         switch ($certificado->tipo) {
             case Certificado::TIPO_ENUM['apresentador']:
@@ -797,7 +794,8 @@ class CertificadoController extends Controller
                 case Certificado::TIPO_ENUM['apresentador']:
                     foreach ($destinatariosIds as $i => $destinarioId) {
                         $validacao = $validacoes[$i];
-                        $qrcode = base64_encode(QrCode::generate($validacao));
+                        $url_validacao_direta = route('certificado.view', ['hash' => urlencode($validacao)], true);
+                        $qrcode = base64_encode(QrCode::generate($url_validacao_direta));
 
                         $certificado->usuarios()->attach($destinarioId, ['validacao' => $validacao, 'trabalho_id' => $trabalhoIds[$i]]);
 
