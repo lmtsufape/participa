@@ -30,7 +30,7 @@ p{
                 @csrf
 
                 <div class="text-center">
-                    <h1 class="h3 fw-semibold mb-0">{{ __('Validar documento') }}</h1>
+                    <h1 class="h3 fw-semibold mb-0">{{ __('Acessar / validar documentos ou certificados') }}</h1>
                     <p class="text-center mb-0" id="subtitulo-documento">{{ __('Certificado ou carta de aceite') }}</p>
                 </div>
                 <hr class="border-secondary">
