@@ -122,6 +122,7 @@ Route::namespace('Submissao')->group(function () {
     Route::get('/evento/visualizar/{id}', function ($id) {
         return redirect()->route('evento.visualizar', $id);
     });
+    Route::match(['get', 'post'], '/validarDocumentos', [CertificadoController::class, 'validar'])->name('validarCertificado');
     //Route::get('certificado/{hash}', [CertificadoController::class, 'verificar'])->name('certificado.view')->where('hash', '.*');;
     Route::get('/validarDocumentos', [CertificadoController::class, 'validarCertificadoForm'])->name('validarCertificado');
     Route::get('certificados/{user_id}/{evento_id}', [CertificadoController::class, 'certificadosDisponiveis'])->name('certificado.disponiveis');

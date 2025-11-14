@@ -882,14 +882,19 @@ class CertificadoController extends Controller
 
     public function validar(Request $request)
     {
-        $hash = $request->input('hash');
+        $hash_url = $request->input('hash');
 
-        if ($hash) {
+        if ($hash_url) {
             $certificado_user = DB::table('certificado_user')->where([
-                ['validacao', '=', $hash],
+                ['validacao', '=', $hash_url],
                 ['valido', '=', true],
             ])->first();
-            return $this->gerar_pdf($certificado_user);
+
+            if ($certificado_user) {
+                return $this->gerar_pdf($certificado_user);
+            } else {
+                return redirect()->route('validarCertificadoForm')->withErrors(['hash' => 'Código de validação não encontrado ou inválido.'])->withInput(['hash' => $hash_url]);
+            }
         }
         
         if ($request->tipo == 'cpf_evento') {
@@ -1080,21 +1085,6 @@ class CertificadoController extends Controller
             ->where('dataFim', '<', now())
             ->orderBy('nome', 'asc')
             ->get(['id', 'nome']);
-            
-        $hash_url = $request->input;
-        if ($hash_url) {
-            $certificado_user = DB::table('certificado_user')->where([
-                ['validacao', '=', $hash_url],
-                ['valido', '=', true],
-            ])->first();
-
-            if ($certificado_user) {
-                return $this->gerar_pdf($certificado_user);
-            } else {
-                return redirect()->route('validarCertificado')->withErrors(['hash' => 'Código de validação não encontrado ou inválido.'])->withInput(['hash' => $hash_url]);
-            }
-        }
-
 
         return view('validar', compact('eventos'));
     }
