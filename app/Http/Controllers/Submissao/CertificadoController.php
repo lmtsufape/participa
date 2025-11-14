@@ -809,7 +809,7 @@ class CertificadoController extends Controller
                 case Certificado::TIPO_ENUM['outras_comissoes']:
                     foreach ($destinatariosIds as $i => $destinarioId) {
                         $validacao = $validacoes[$i];
-                        $url_validacao_direta = route('validarCertificado', ['hash' => $validacao]);
+                        $url_validacao_direta = route('certificado.view', ['hash' => $validacao], true);
                         $qrcode = base64_encode(QrCode::generate($url_validacao_direta));
                         $certificado->usuarios()->attach($destinarioId, ['validacao' => $validacao, 'comissao_id' => $comissaoId]);
                         $user = User::find($destinarioId);
@@ -885,9 +885,9 @@ class CertificadoController extends Controller
         $hash_url = $request->input('hash');
 
         if ($hash_url) {
-            $hash_decodificado = urldecode($hash_url);
+            $hash_decodificado = trim(urldecode($hash_url));
             $certificado_user = DB::table('certificado_user')->where([
-                ['validacao', '=', urldecode($hash_url)], 
+                [DB::raw('trim(validacao)'), '=', $hash_decodificado], 
                 ['valido', '=', true],
             ])->first();
 
