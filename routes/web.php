@@ -123,11 +123,10 @@ Route::namespace('Submissao')->group(function () {
         return redirect()->route('evento.visualizar', $id);
     });
     Route::match(['get', 'post'], '/validarDocumentos', [CertificadoController::class, 'validar'])->name('validarCertificado');
-    //Route::get('certificado/{hash}', [CertificadoController::class, 'verificar'])->name('certificado.view')->where('hash', '.*');;
+    Route::get('certificado/{hash}', [CertificadoController::class, 'validar'])->name('certificado.view')->where('hash', '.*');
     Route::get('/validarDocumentos', [CertificadoController::class, 'validarCertificadoForm'])->name('validarCertificado');
     Route::get('certificados/{user_id}/{evento_id}', [CertificadoController::class, 'certificadosDisponiveis'])->name('certificado.disponiveis');
     Route::post('validarDocumentos', [CertificadoController::class, 'validar'])->name('validarCertificadoPost');
-    Route::get('certificado/validacao-direta', [CertificadoController::class, 'validar'])->name('certificado.view.direta');
     Route::get('/home', [CertificadoController::class, 'validar'])->name('home')->middleware('verified', 'isTemp');
 
 });
