@@ -1075,6 +1075,12 @@ class CertificadoController extends Controller
 
     public function validarCertificadoForm()
     {
+        $eventos = Evento::where('publicado', true)
+            ->where('deletado', false)
+            ->where('dataFim', '<', now())
+            ->orderBy('nome', 'asc')
+            ->get(['id', 'nome']);
+            
         $hash_url = $request->input;
         if ($hash_url) {
             $certificado_user = DB::table('certificado_user')->where([
@@ -1089,11 +1095,6 @@ class CertificadoController extends Controller
             }
         }
 
-        $eventos = Evento::where('publicado', true)
-            ->where('deletado', false)
-            ->where('dataFim', '<', now())
-            ->orderBy('nome', 'asc')
-            ->get(['id', 'nome']);
 
         return view('validar', compact('eventos'));
     }
