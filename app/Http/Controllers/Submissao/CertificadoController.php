@@ -885,6 +885,7 @@ class CertificadoController extends Controller
         $hash_url = $request->input('hash');
 
         if ($hash_url) {
+            $hash_decodificado = urldecode($hash_url);
             $certificado_user = DB::table('certificado_user')->where([
                 ['validacao', '=', urldecode($hash_url)], 
                 ['valido', '=', true],
