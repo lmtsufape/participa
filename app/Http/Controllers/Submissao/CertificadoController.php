@@ -886,7 +886,7 @@ class CertificadoController extends Controller
 
         if ($hash_url) {
             $certificado_user = DB::table('certificado_user')->where([
-                ['validacao', '=', $hash_url],
+                ['validacao', '=', urldecode($hash_url)], 
                 ['valido', '=', true],
             ])->first();
 
