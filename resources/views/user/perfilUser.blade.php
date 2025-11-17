@@ -54,17 +54,6 @@
 
         @if(Auth::check())
             <form method="POST" action="{{ route('perfil.update') }}">
-                @if ($pais == null && $end != null)
-                    @php
-                        $pais = $end?->pais;
-                    @endphp
-                @else
-                    @php
-                        $pais = 'brasil';
-                    @endphp
-                @endif
-
-                        @endif
                         <div id="etapa-1">
 
                             @csrf
@@ -295,7 +284,6 @@
                             <div class="col-md-4">
                                 <label for="pais" class="col-form-label">{{ __('País') }}*</label>
                                 <select onchange="this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value);" class="form-control @error('pais') is-invalid @enderror" id="pais">
-                                    <option value="" disabled selected hidden>-- {{__('País')}} --</option>
                                     <option @if($pais == 'brasil') selected @endif value="/perfil/brasil">{{__('Brasil')}}</option>
                                     <option @if($pais == 'usa') selected @endif value="/perfil/usa">{{__('Estados Unidos da América')}}</option>
                                     <option @if($pais == 'outro') selected @endif value="/perfil/outro">{{__('Outro')}}</option>
@@ -749,6 +737,7 @@
                             </div>
                         </div>
                     </form>
+                @endif
     </div>
 
 

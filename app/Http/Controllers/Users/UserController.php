@@ -29,16 +29,19 @@ class UserController extends Controller
         $user = User::find(Auth::user()->id);
         $end = $user->endereco;
         if ($pais) {
-            if ($pais != 'brasil') {
-                app()->setLocale('en');
-            } else {
-                app()->setLocale('pt-BR');
-            }
-        } elseif ($end && $end->pais != 'brasil') {
+            $selectedPais = $pais;
+        } elseif ($end) {
+            $selectedPais = $end->pais;
+        } else {
+            $selectedPais = 'brasil';
+        }
+
+        if ($selectedPais != 'brasil') {
             app()->setLocale('en');
         } else {
             app()->setLocale('pt-BR');
         }
+
         $areas = Area::orderBy('nome')->get();
 
         $perfilIdentitario = PerfilIdentitario::query()
@@ -48,6 +51,8 @@ class UserController extends Controller
         if ($user->usuarioTemp) {
             app()->setLocale('pt-BR');
         }
+
+        $pais = $selectedPais;
 
         return view('user.perfilUser', compact('user', 'end', 'areas', 'pais', 'perfilIdentitario'));
     }

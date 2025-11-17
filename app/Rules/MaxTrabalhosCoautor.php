@@ -34,11 +34,22 @@ class MaxTrabalhosCoautor implements Rule
     {
         $user = User::where('email', $value)->first();
         $eventoId = request()->input('eventoId');
+        $userLogado = auth()->user();
+
+        if ($userLogado && $user && $userLogado->id === $user->id && str_ends_with($attribute, '.0')) {
+            return true; 
+        }
 
         if ($user != null && $this->numCoautores != null && Coautor::where('autorId', $user->id)->first() != null) {
             $this->value = $value;
-            $qtd = Coautor::where('autorId', $user->id)->first()->trabalhos()->where('status', '!=', 'arquivado')->where('eventoId', $eventoId)->count();
-
+            
+            $qtd = Coautor::where('autorId', $user->id)
+                        ->first()
+                        ->trabalhos()
+                        ->where('status', '!=', 'arquivado')
+                        ->where('eventoId', $eventoId)
+                        ->count();
+            
             return $qtd < $this->numCoautores;
         }
 
