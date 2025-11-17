@@ -51,10 +51,45 @@ class InscricaoController extends Controller
             'campos' => $camposDoFormulario, ]);
     }
 
-    public function inscritos(Evento $evento)
+    public function inscritos(Evento $evento, Request $request)
     {
         $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
-        $inscricoes = $evento->inscritos()->sortBy('finalizada');
+
+        if ($evento->subeventos->count() > 0) {
+            $subeventoIds = $evento->subeventos->pluck('id')->toArray();
+            $query = Inscricao::where(function($q) use ($evento, $subeventoIds) {
+                $q->where('evento_id', $evento->id)
+                ->orWhereIn('evento_id', $subeventoIds);
+            })->with('user');
+        } else {
+            $query = $evento->inscricaos()->with('user'); 
+        }
+        
+        if ($request->filled('nome')) {
+            $query->whereHas('user', function($q) use ($request) {
+                $q->whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($request->nome) . '%']);
+            });
+        }
+
+        if ($request->filled('email')) {
+            $query->whereHas('user', function($q) use ($request) {
+                $q->whereRaw('LOWER(email) LIKE ?', ['%' . strtolower($request->email) . '%']);
+            });
+        }
+
+        if ($request->filled('status')) {
+            if ($request->status === 'finalizada') {
+                $query->where('finalizada', true);
+            } elseif ($request->status === 'pendente') {
+                $query->where('finalizada', false);
+            }
+        }
+
+        $inscricoes = $query->orderBy('finalizada', 'desc')
+                            ->orderBy(User::select('name')
+                                ->whereColumn('user_id', 'users.id'), 'asc')
+                            ->paginate(50) 
+                            ->withQueryString();
 
         return view('coordenador.inscricoes.inscritos', compact('inscricoes', 'evento'));
     }

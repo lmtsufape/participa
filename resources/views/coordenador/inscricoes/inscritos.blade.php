@@ -37,6 +37,31 @@
                         </button>
                     </div>
 
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <form method="GET" action="{{ route('inscricao.inscritos', $evento) }}" class="row g-3">
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control" name="nome" placeholder="Buscar por nome..." value="{{ request('nome') }}">
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="email" class="form-control" name="email" placeholder="Buscar por email..." value="{{ request('email') }}">
+                                </div>
+                                <div class="col-md-2">
+                                    <select class="form-control" name="status">
+                                        <option value="">Todos os status</option>
+                                        <option value="finalizada" {{ request('status') === 'finalizada' ? 'selected' : '' }}>Inscrito (Finalizada)</option>
+                                        <option value="pendente" {{ request('status') === 'pendente' ? 'selected' : '' }}>Pré-inscrito (Pendente)</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-2 d-flex gap-2">
+                                    <button type="submit" class="btn btn-primary w-100">Buscar</button>
+                                    <a href="{{ route('inscricao.inscritos', $evento) }}" class="btn btn-outline-secondary w-100">Limpar</a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <hr class="mt-0">
+
                     @include('coordenador.inscricoes.inscrever_participante')
 
                     <p class="card-text">
