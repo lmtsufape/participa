@@ -586,18 +586,19 @@
                     </div>
                     <ul class="nav flex-column">
                         <li class="nav-item">
-                            <a class="nav-link d-flex align-items-center gap-2" id="publicarEvento"
-                                onclick="habilitarEvento()">
-                                <img src="{{ asset('img/icons/alto-falante.svg') }}" alt="" width="20px">
-                                <span>{{ __('Publicar evento') }}</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
+                            @if ($evento->publicado)
                             <a class="nav-link d-flex align-items-center gap-2" id="desabilitarEventoPublicado"
                                 onclick="desabilitarEvento()">
                                 <img src="{{ asset('img/icons/alto-falante-nao.svg') }}" alt="" width="20px">
                                 <span>{{ __('Desfazer publicação') }}</span>
                             </a>
+                            @else
+                            <a class="nav-link d-flex align-items-center gap-2" id="publicarEvento"
+                                onclick="habilitarEvento()">
+                                <img src="{{ asset('img/icons/alto-falante.svg') }}" alt="" width="20px">
+                                <span>{{ __('Publicar evento') }}</span>
+                            </a>
+                            @endif
                         </li>
                     </ul>
                 </div>
