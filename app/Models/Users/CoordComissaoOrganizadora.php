@@ -3,6 +3,8 @@
 namespace App\Models\Users;
 
 use Illuminate\Database\Eloquent\Relations\Pivot;
+use App\Models\Users\User;
+use App\Models\Submissao\Evento;
 
 class CoordComissaoOrganizadora extends Pivot
 {
@@ -17,11 +19,11 @@ class CoordComissaoOrganizadora extends Pivot
 
     public function user()
     {
-        return $this->belongsTo('App\Models\Users\User');
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function evento()
     {
-        return $this->belongsTo('App\Models\Submissao\Evento', 'eventos_id');
+        return $this->belongsTo(Evento::class, 'eventos_id');
     }
 }

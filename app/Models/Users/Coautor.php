@@ -3,6 +3,10 @@
 namespace App\Models\Users;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Users\User;
+use App\Models\Submissao\Trabalho;
+use App\Models\Submissao\Evento;
+
 
 class Coautor extends Model
 {
@@ -17,16 +21,16 @@ class Coautor extends Model
 
     public function user()
     {
-        return $this->belongsTo('App\Models\Users\User', 'autorId');
+        return $this->belongsTo(User::class, 'autorId');
     }
 
     public function trabalhos()
     {
-        return $this->belongsToMany('App\Models\Submissao\Trabalho', 'coautor_trabalho', 'coautor_id', 'trabalho_id');
+        return $this->belongsToMany(User::class, 'coautor_trabalho', 'coautor_id', 'trabalho_id');
     }
 
     public function eventos()
     {
-        return $this->belongsTo('App\Models\Submissao\Evento');
+        return $this->belongsTo(User::class, 'eventos_id');
     }
 }
