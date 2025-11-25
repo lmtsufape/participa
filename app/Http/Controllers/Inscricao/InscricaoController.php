@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Users\User;
 use App\Models\Users\Administrador;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class InscricaoController extends Controller
 {
@@ -696,5 +697,100 @@ class InscricaoController extends Controller
 
         return redirect()->action([CheckoutController::class, 'telaPagamento'], ['evento' => $inscricao->evento_id])
                        ->with('message', 'Categoria alterada com sucesso! Prossiga com o pagamento.');
+    }
+
+    /**
+     * Gera um código de validação único para a inscrição.
+     *
+     * @return string
+     */
+    private function gerarCodigoValidacaoUnico(): string
+    {
+        do {
+            $codigo = strtoupper(substr(md5(uniqid()), 0, 16));
+        } while (Inscricao::where('codigo_validacao', $codigo)->exists());
+
+        return $codigo;
+    }
+
+    /**
+     * Exibe o recibo de uma inscrição em PDF e permite download.
+     *
+     * @param Inscricao $inscricao
+     * @return \Illuminate\Http\Response
+     */
+    public function recibo(Inscricao $inscricao)
+    {
+        try {
+            $isCoordenadorOrAdmin = auth()->user()->can('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $inscricao->evento) || auth()->user()->administradors()->exists();
+            
+            if (auth()->id() !== $inscricao->user_id && !$isCoordenadorOrAdmin) {
+                abort(403, 'Acesso não autorizado ao recibo.');
+            }
+
+            if (!$inscricao->finalizada) {
+                return redirect()->back()->with(['error_message' => 'Recibo disponível apenas para inscrições finalizadas.']);
+            }
+
+            if (!$inscricao->codigo_validacao) {
+                $inscricao->codigo_validacao = $this->gerarCodigoValidacaoUnico();
+                $inscricao->save();
+            }
+
+            $valor = $inscricao->categoria?->valor_total ?? 0;
+            $nomeEvento = $inscricao->evento?->nome ?? 'Evento';
+            $nomeCategoria = $inscricao->categoria?->nome ?? 'Categoria';
+
+            $data = [
+                'nome' => $inscricao->user->name,
+                'valor' => $valor, 
+                'data' => now(), 
+                'codigo_validacao' => $inscricao->codigo_validacao,
+                'evento' => $nomeEvento,
+                'categoria' => $nomeCategoria,
+            ];
+
+           $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('inscricao.recibo_pdf', $data)
+                ->setPaper('a4', 'portrait');
+
+            return $pdf->download("recibo-{$inscricao->id}.pdf");
+            
+        } catch (\Throwable $e) {
+
+            dd($e->getMessage(), $e->getFile(), $e->getLine());
+            
+            \Log::error('Erro ao gerar recibo', [
+                'inscricao_id' => $inscricao->id ?? null,
+                'exception' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+            return redirect()->back()->with(['error_message' => 'Erro ao gerar recibo.']);
+        }
+    }
+
+    /**
+     * Valida o código do recibo.
+     *
+     * @param string $codigo
+     * @return \Illuminate\Http\Response
+     */
+    public function validarRecibo($codigo)
+    {
+        $inscricao = Inscricao::where('codigo_validacao', $codigo)->first();
+
+        if (!$inscricao) {
+            return view('validacao.recibo_invalido'); 
+        }
+
+        $data = [
+            'nome' => $inscricao->user->name,
+            'valor' => $inscricao->categoria ? $inscricao->categoria->valor_total : 0,
+            'data' => $inscricao->created_at,
+            'codigo_validacao' => $inscricao->codigo_validacao,
+            'evento' => $inscricao->evento->nome ?? 'Evento',
+            'categoria' => $inscricao->categoria->nome ?? 'Categoria',
+        ];
+
+        return view('validacao.recibo_valido', $data);
     }
 }
