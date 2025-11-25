@@ -26,11 +26,11 @@ class Coautor extends Model
 
     public function trabalhos()
     {
-        return $this->belongsToMany(User::class, 'coautor_trabalho', 'coautor_id', 'trabalho_id');
+        return $this->belongsToMany(Trabalho::class, 'coautor_trabalho', 'coautor_id', 'trabalho_id');
     }
 
     public function eventos()
     {
-        return $this->belongsTo(User::class, 'eventos_id');
+        return $this->belongsTo(Evento::class); 
     }
 }
