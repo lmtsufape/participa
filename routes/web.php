@@ -136,6 +136,8 @@ Route::get('/{id}/atividades', [AtividadeController::class, 'atividadesJson'])->
 Route::get('/perfil/{pais?}', [UserController::class, 'perfil'])->name('perfil')->middleware('auth');
 Route::post('/perfil/editar', [UserController::class, 'editarPerfil'])->name('perfil.update')->middleware('auth');
 
+Route::get('/validar/recibo/{codigo}', [InscricaoController::class, 'validarRecibo']);
+
 Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
     Route::get('meusCertificados', [CertificadoController::class, 'listarCertificados'])->name('meusCertificados');
     Route::get('/home-user', [HomeController::class, 'index'])->name('home.user');
@@ -143,7 +145,9 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
     Route::namespace('Users')->group(function () {
 
         Route::get('meusCertificados', [UserController::class, 'meusCertificados'])->name('meusCertificados');
-
+        Route::get('/inscricao/{inscricao}/recibo', [InscricaoController::class, 'recibo'])->name('inscricao.recibo');
+        Route::get('/meus/comprovantes', [UserController::class, 'meusComprovantes'])->name('user.meusComprovantes');
+        
         // rotas do administrador
         Route::prefix('/admin')->name('admin.')->group(function () {
             Route::get('/home', [AdministradorController::class, 'index'])->name('home');
