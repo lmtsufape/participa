@@ -91,29 +91,30 @@ class InscricaoController extends Controller
             return redirect()->back()->withErrors(['email_inscritos' => 'Não foi possível localizar os inscritos selecionados.']);
         }
 
-        $emailsEnviados = 0;
+        $emails = $inscricoes
+            ->map(fn ($inscricao) => $inscricao->user?->email)
+            ->filter()
+            ->unique()
+            ->values();
 
-        foreach ($inscricoes as $inscricao) {
-            $email = $inscricao->user?->email;
-            if (!$email) {
-                continue;
-            }
+        if ($emails->isEmpty()) {
+            return redirect()->back()->withErrors(['email_inscritos' => 'Nenhum e-mail válido encontrado para os inscritos selecionados.']);
+        }
 
-            Mail::to($email)->send(new EmailInscritosPersonalizado(
+        $emailsArray = $emails->toArray();
+        $destinatariosTotais = count($emailsArray);
+        $emailPrincipal = array_shift($emailsArray);
+        $bccList = $emailsArray;
+
+        Mail::to($emailPrincipal)
+            ->bcc($bccList)
+            ->send(new EmailInscritosPersonalizado(
                 $evento,
-                $inscricao->user,
                 $validated['assunto'],
                 $validated['mensagem']
             ));
 
-            $emailsEnviados++;
-        }
-
-        if ($emailsEnviados === 0) {
-            return redirect()->back()->withErrors(['email_inscritos' => 'Nenhum e-mail válido encontrado para os inscritos selecionados.']);
-        }
-
-        return redirect()->back()->with('message', 'E-mail enviado para '.$emailsEnviados.' inscrito(s).');
+        return redirect()->back()->with('message', 'E-mail enviado para '.$destinatariosTotais.' inscrito(s).');
     }
 
     public function formulario(Evento $evento)

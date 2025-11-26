@@ -33,10 +33,10 @@
                       <h6 class="card-subtitle mb-2 text-muted">Inscritos no evento {{$evento->nome}}</h6>
                       <!--<h6 class="card-subtitle mb-2 text-muted">Obs.: ao exportar o arquivo csv, usar o delimitador , (vírgula) para abrir o arquivo</h6>-->
                     </div>
-                    <div class="col-md-6 d-flex gap-2 flex-column align-items-end">
+                    <div class="col-md-2 d-flex gap-2 flex-column align-items-end">
                         <button
                             type="button"
-                            class="btn btn-primary w-100"
+                            class="button-prevent-multiple-submits btn btn-outline-primary my-1 ml-1"
                             id="btn-abrir-modal-email"
                             data-bs-toggle="modal"
                             data-bs-target="#modal-enviar-email"
@@ -137,7 +137,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-primary">Enviar e-mail</button>
+                    <button type="submit" class="btn btn-success">Enviar e-mail</button>
                 </div>
             </form>
         </div>

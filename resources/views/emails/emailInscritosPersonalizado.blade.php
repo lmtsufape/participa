@@ -1,5 +1,5 @@
 @component('mail::message')
-# Olá {{ $user->name }}!
+# Olá!
 
 {!! nl2br(e($mensagemPersonalizada)) !!}
 
