@@ -259,7 +259,7 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
             Route::get('certificados/{id}/modelo', [CertificadoController::class, 'modelo'])->name('modeloCertificado');
             Route::get('certificados/{id}/editarCertificado', [CertificadoController::class, 'edit'])->name('editarCertificado');
             Route::get('certificados/emitir', [CertificadoController::class, 'emitir'])->name('emitirCertificado');
-            Route::post('certificados/enviar-certificado', [CertificadoController::class, 'enviarCertificacao'])->name('enviarCertificado');
+            Route::post('certificados/enviar-certificado', [CertificadoController::class, 'enviarCertificacao'])->name('enviarCertificado')->middleware('throttle:1,1');;
             Route::get('certificados/listarCertificado', [CertificadoController::class, 'index'])->name('listarCertificados');
             Route::post('certificados/cadastrarCertificado', [CertificadoController::class, 'store'])->name('certificado.store');
             Route::post('certificados/{id}/deleteCertificado', [CertificadoController::class, 'destroy'])->name('certificado.destroy');
