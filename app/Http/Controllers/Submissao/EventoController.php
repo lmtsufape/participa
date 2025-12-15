@@ -921,83 +921,190 @@ class EventoController extends Controller
         ]);
     }
 
-    public function listarCorrecoes(Request $request, $column = 'titulo', $direction = 'asc')
+    public function listarCorrecoes(Request $request, $eventoId, $column = 'titulo', $direction = 'asc')
     {
-        $evento = Evento::find($request->eventoId);
-        if (! Gate::any([
-            'isCoordenadorOrCoordenadorDaComissaoCientifica',
-            'isCoordenadorEixo'
-        ], $evento)) {
+        $evento = Evento::find($eventoId);
+        if (is_null($evento)) {
+            abort(404, 'Evento não encontrado.');
+        }
+        if (! (Gate::allows('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento) ||
+               Gate::allows('isCoordenadorEixo', $evento) ||
+               auth()->user()->administradors()->exists())) { 
             abort(403, 'Acesso negado');
         }
 
-        $modalidades = Modalidade::where('evento_id', $evento->id)->orderBy('nome')->get();
-        $areas = Area::where('eventoId', $evento->id)->orderBy('nome')->get();
-        $trabalhos = collect();
-        if ($column == 'titulo') {
-            foreach ($modalidades as $modalidade) {
-                $trabalhosArea = collect();
-                foreach ($areas as $area) {
-                    $trabalhosArea->push(Trabalho::where([['modalidadeId', $modalidade->id], ['status', '!=', 'arquivado'], ['areaId', $area->id]])->get()->sortBy(
-                        function ($trabalho) {
-                            return $trabalho->autor->name;
-                        },
-                        SORT_REGULAR
-                    ));
-                }
-                $trabalhosArea = $trabalhosArea->filter(function ($collection) {
-                    return $collection->isNotEmpty();
-                });
-                $trabalhos->push($trabalhosArea);
-            }
-        } elseif ($column == 'data') {
-            foreach ($modalidades as $modalidade) {
-                $trabalhosArea = collect();
-                foreach ($areas as $area) {
-                    $trabalhosArea->push(Trabalho::where([['modalidadeId', $modalidade->id], ['status', '!=', 'arquivado'], ['areaId', $area->id]])->get()->sortBy(
-                        function ($trabalho) {
-                            if ($trabalho->arquivoCorrecao) {
-                                return $trabalho->arquivoCorrecao->created_at;
-                            } else {
-                                return date('1900-01-30');
-                            }
-                        },
-                        SORT_REGULAR,
-                        $direction == 'asc'
-                    ));
-                }
-                $trabalhos->push($trabalhosArea);
-            }
+        $perPage = 50; 
+
+        $query = Trabalho::where('eventoId', $evento->id)
+                         ->where('status', '!=', 'arquivado')
+                         ->with(['modalidade', 'area', 'autor', 'arquivoCorrecao', 'atribuicoes.user']);
+
+        if ($request->filled('titulo')) {
+            $query->where('titulo', 'ilike', '%' . $request->titulo . '%');
         }
 
-        $trabalhos = $trabalhos->filter(function($collection){
-            return $collection->isNotEmpty();
-        });
+        if ($request->has('id') && $request->id != '') {
+            $query->where('id', $request->id);
+        }
 
         $user_logado = auth()->user();
-
-        //Se o user for um coordenador de eixo e não for admin e coordenador cientifico do evento
         if($user_logado->eventosComoCoordEixo()->pluck('eventos.id')->contains($evento->id) &&
-            !$user_logado->administradors &&
-            !$user_logado->coordComissaoCientifica()->where('eventos_id', $evento->id)->exists()
+        !$user_logado->administradors()->exists() &&
+        !$user_logado->coordComissaoCientifica()->where('eventos_id', $evento->id)->exists()
         ){
-
             $areasCoordEixo = $user_logado->areasComoCoordEixoNoEvento($evento->id)->pluck('areas.id');
-
-            $trabalhos = $trabalhos->map(function ($subCollection) use ($areasCoordEixo) {
-                return $subCollection->map(function($subSubCollection) use ($areasCoordEixo){
-                    return $subSubCollection->filter(function ($trabalho) use ($areasCoordEixo) {
-                        return $areasCoordEixo->contains($trabalho->areaId);
-                    });
-                })->filter(function ($subCollection) {
-                    return $subCollection->isNotEmpty();
-                });
-            });
+            $query->whereIn('areaId', $areasCoordEixo);
         }
+
+        if ($column == 'autor') {
+            $query->orderBy(User::select('name')->whereColumn('autorId', 'users.id'), $direction);
+        } elseif ($column == 'data') {
+            $query->leftJoin('arquivo_correcaos', 'trabalhos.id', '=', 'arquivo_correcaos.trabalho_id')
+                  ->select('trabalhos.*', 'arquivo_correcaos.created_at as data_correcao')
+                  ->orderBy('data_correcao', $direction);
+        } else {
+            $query->orderBy($column, $direction);
+        }
+
+        $trabalhosPaginados = $query->simplePaginate($perPage)->withQueryString();
+
+        $modalidades = Modalidade::where('evento_id', $evento->id)
+             ->orderBy('nome')
+             ->get();
+
+        $trabalhosPorModalidade = $trabalhosPaginados->groupBy('modalidadeId');
+
+        foreach ($modalidades as $modalidade) {
+            $modalidade->trabalho = $trabalhosPorModalidade->get($modalidade->id, collect());
+        }
+        $modalidades = $modalidades->filter(fn($mod) => $mod->trabalho->isNotEmpty())->values();
+
 
         return view('coordenador.trabalhos.listarTrabalhosCorrecoes', [
             'evento' => $evento,
-            'trabalhosPorModalidade' => $trabalhos,
+            'modalidades' => $modalidades,
+            'trabalhos' => $trabalhosPaginados, 
+            'agora' => now(),
+        ]);
+    }
+
+    public function listarCorrecoesPorModalidade(Request $request, $column = 'titulo', $direction = 'asc')
+    {
+        $evento = Evento::find($request->eventoId);
+        if (! (Gate::allows('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento) ||
+               Gate::allows('isCoordenadorEixo', $evento) ||
+               auth()->user()->administradors()->exists())) {
+            abort(403, 'Acesso negado');
+        }
+
+        $modalidade = Modalidade::find($request->modalidadeId);
+
+        $query = Trabalho::where('modalidadeId', $request->modalidadeId)
+                         ->where('status', '!=', 'arquivado')
+                         ->with(['autor', 'arquivoCorrecao', 'atribuicoes.user']);
+
+        if ($request->filled('id')) {
+            $query->where('id', $request->id);
+        }
+        if ($request->filled('titulo')) {
+            $query->where('titulo', 'ilike', '%' . $request->titulo . '%');
+        }
+
+        $user_logado = auth()->user();
+        if($user_logado->eventosComoCoordEixo()->pluck('eventos.id')->contains($evento->id) &&
+           !$user_logado->administradors()->exists() &&
+           !$user_logado->coordComissaoCientifica()->where('eventos_id', $evento->id)->exists()
+        ){
+            $areasCoordEixo = $user_logado->areasComoCoordEixoNoEvento($evento->id)->pluck('areas.id');
+            $query->whereIn('areaId', $areasCoordEixo);
+        }
+
+        if ($column == 'autor') {
+            $query->orderBy(User::select('name')->whereColumn('autorId', 'users.id'), $direction);
+        } elseif ($column == 'data') {
+            $query->leftJoin('arquivo_correcaos', 'trabalhos.id', '=', 'arquivo_correcaos.trabalho_id')
+            ->select('trabalhos.*', 'arquivo_correcaos.created_at as data_correcao')
+            ->orderBy('data_correcao', $direction);
+        } else {
+            $query->orderBy($column, $direction);
+        }
+
+        $trabalhos = $query->simplePaginate(15)->withQueryString();
+
+        return view('coordenador.trabalhos.listarCorrecoesModalidade', [
+            'evento' => $evento,
+            'modalidade' => $modalidade,
+            'trabalhos' => $trabalhos,
+        ]);
+    }
+
+    public function listarValidacoes(Request $request, $eventoId, $column = 'titulo', $direction = 'asc')
+    {
+        $evento = Evento::find($eventoId);
+        if (! (Gate::allows('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento) ||
+            Gate::allows('isCoordenadorEixo', $evento) ||
+            auth()->user()->administradors()->exists())) {
+            abort(403, 'Acesso negado');
+        }
+
+        $query = Trabalho::where('eventoId', $evento->id)
+                        ->where('status', '!=', 'arquivado')
+                        ->whereIn('avaliado', ['corrigido', 'corrigido_parcialmente', 'nao_corrigido', 'Avaliado', 'processando']) // Apenas trabalhos que passaram pela avaliação (e correção)
+                        ->with(['modalidade', 'area', 'autor', 'arquivoCorrecao', 'atribuicoes.user']);
+
+        if ($request->filled('titulo')) {
+            $query->where('titulo', 'ilike', '%' . $request->titulo . '%');
+        }
+
+        if ($request->has('id') && $request->id != '') {
+            $query->where('id', $request->id);
+        }
+
+        if ($column == 'autor') {
+            $query->orderBy(User::select('name')->whereColumn('autorId', 'users.id'), $direction);
+        } elseif ($column == 'data') {
+            $query->leftJoin('arquivo_correcaos', 'trabalhos.id', '=', 'arquivo_correcaos.trabalho_id')
+                ->orderBy('arquivo_correcaos.created_at', $direction)
+                ->select('trabalhos.*');
+        } else {
+            $query->orderBy($column, $direction);
+        }
+
+        $user_logado = auth()->user();
+
+        if($user_logado->eventosComoCoordEixo()->pluck('eventos.id')->contains($evento->id) &&
+        !$user_logado->administradors()->exists() &&
+        !$user_logado->coordComissaoCientifica()->where('eventos_id', $evento->id)->exists()
+        ){
+            $areasCoordEixo = $user_logado->areasComoCoordEixoNoEvento($evento->id)->pluck('areas.id');
+            $query->whereIn('areaId', $areasCoordEixo);
+        }
+
+        $trabalhos = $query->simplePaginate(15)->withQueryString();
+
+        $modalidades = Modalidade::where('evento_id', $evento->id)
+            ->whereHas('trabalho', function($q) {
+                $q->where('status', '!=', 'arquivado');
+            })
+            ->orderBy('nome')->get();
+
+        $trabalhosPorModalidade = $trabalhos->groupBy('modalidadeId');
+
+        foreach ($modalidades as $modalidade) {
+            $modalidade->trabalho = $trabalhosPorModalidade->get($modalidade->id, collect());
+
+            foreach ($modalidade->trabalho as $trabalho) {
+                $trabalho->tem_pagamento = $this->verificarPagamentoAutores($trabalho); 
+            }
+        }
+        
+        $modalidades = $modalidades->filter(fn($mod) => $mod->trabalho->isNotEmpty())->values();
+
+
+        return view('coordenador.trabalhos.listarTrabalhosValidacoes', [
+            'evento' => $evento,
+            'modalidades' => $modalidades,
+            'trabalhos' => $trabalhos,
             'agora' => now(),
         ]);
     }
@@ -2180,5 +2287,22 @@ class EventoController extends Controller
         $proximosEventos = $query->paginate(9);
 
         return view('coordenador.evento.eventosProximos', compact('proximosEventos'));
+    }
+
+    private function verificarPagamentoAutores($trabalho)
+    {
+        $autorTemPagamento = $trabalho->autor->inscricaos->where('finalizada', true)->isNotEmpty();
+        if ($autorTemPagamento) {
+            return true;
+        }
+
+        foreach ($trabalho->coautors as $coautor) {
+            $coautorTemPagamento = $coautor->user->inscricaos->where('finalizada', true)->isNotEmpty();
+            if ($coautorTemPagamento) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

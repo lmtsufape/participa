@@ -1,7 +1,6 @@
 @extends('coordenador.detalhesEvento')
 
 @section('menu')
-    <!-- Trabalhos -->
     <div id="divListarTrabalhos" style="display: block">
 
         <div class="row ">
@@ -42,73 +41,111 @@
         </div>
         @endif
 
-    {{-- Tabela Trabalhos --}}
-    <form action="{{route('coord.evento.avisoCorrecao', $evento->id)}}" method="POST" id="avisoCorrecao">
-    @csrf
-    @foreach ($trabalhosPorModalidade as $trabalhosPorArea)
-        @foreach ($trabalhosPorArea as $trabalhos)
-
-        @if(!is_null($trabalhos->first()))
-            <div class="row justify-content-center" style="width: 100%;">
-                <div class="col-sm-12">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="justify-content-between d-flex">
-                                <div>
-                                    <h5 class="card-title">Modalidade: <span class="card-subtitle mb-2 text-muted" >{{$trabalhos->first()->modalidade->nome}}</span>
-                                    @if ($trabalhos->first()->modalidade->inicioCorrecao && $trabalhos->first()->modalidade->fimCorrecao)
-                                        <h5 class="card-title">Correção: <span class="card-subtitle mb-2 text-muted" >{{date("d/m/Y H:i", strtotime($trabalhos->first()->modalidade->inicioCorrecao))}} - {{date("d/m/Y H:i",strtotime($trabalhos->first()->modalidade->fimCorrecao))}}</span></h5>
-                                    @else
-                                        <h5 class="card-title">Correção: <span class="card-subtitle mb-2 text-muted" >não haverá</span></h5>
-                                    @endif
-                                    <h5 class="card-title">{{$trabalhos->first()->evento->formSubTrab->etiquetaareatrabalho}}: <span class="card-subtitle mb-2 text-muted" >{{$trabalhos->first()->area->nome}}</span></h5>
-                                </div>
-                                <div>
-                                    <button class="btn btn-primary" type="submit" form="avisoCorrecao">Lembrete de envio de versão corrigida do texto</button>
-                                </div>
+        <div class="card mb-3">
+            <div class="card-body">
+                <form method="GET" action="{{ route('coord.listarCorrecoes', $evento->id) }}">
+                    <div class="row">
+                        <div class="col-md-2">
+                            <label for="id" class="form-label">Buscar por ID</label>
+                            <input type="number" class="form-control" name="id" value="{{ request('id') }}" placeholder="Digite o ID...">
+                        </div>
+                        <div class="col-md-8">
+                            <label for="titulo" class="form-label">Buscar por Título</label>
+                            <input type="text" class="form-control" name="titulo" value="{{ request('titulo') }}" placeholder="Digite o título do trabalho...">
+                        </div>
+                        <div class="col-md-2 d-flex align-items-end">
+                            <button type="submit" class="btn btn-primary w-100">Buscar</button>
+                        </div>
+                    </div>
+                    @if(request('titulo') || request('id'))
+                        <div class="row mt-2">
+                            <div class="col-12">
+                                <a href="{{ route('coord.listarCorrecoes', ['eventoId' => $evento->id, 'column' => request('column', 'titulo'), 'direction' => request('direction', 'asc')]) }}" class="btn btn-outline-success btn-sm">Limpar filtros</a>
                             </div>
-                            <div class="row table-trabalhos">
-                            <div class="col-sm-12">
-                                @csrf
+                        </div>
+                    @endif
+                </form>
+            </div>
+        </div>
 
-                                <input type="hidden" name="eventoId" value="{{$evento->id}}">
-                                <br>
-                                <table class="table table-hover table-responsive-lg table-sm table-striped">
-                                    <thead>
-                                        <tr>
-                                            <th><input type="checkbox" onchange="alterarSelecionados(this)"></th>
-                                            <th scope="col" >Trabalho inicial</th>
-                                            <th scope="col" >Trabalho revisado</th>
-                                            <th scope="col" >Autor</th>
-                                            <th scope="col">
-                                                Data
-                                                <a href="{{route('coord.listarCorrecoes', ['eventoId' => $evento->id, 'data', 'asc'])}}">
-                                                    <i class="fas fa-arrow-alt-circle-up"></i>
-                                                </a>
-                                                <a href="{{route('coord.listarCorrecoes',[ 'eventoId' => $evento->id, 'data', 'desc'])}}">
-                                                    <i class="fas fa-arrow-alt-circle-down"></i>
-                                                </a>
-                                            </th>
-                                            <th scope="col" >Parecer</th>
-                                            <th scope="col" class="text-center">Lembrete de correção enviado</th>
-                                            <th scope="col" class="text-center">Validação das correções</th>
-                                            <th scope="col" style="text-align:center;">Editar</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @php $i = 0; @endphp
-                                        @foreach($trabalhos as $trabalho)
+        <form action="{{route('coord.evento.avisoCorrecao', $evento->id)}}" method="POST" id="avisoCorrecao">
+        @csrf
+
+        @forelse ($modalidades as $modalidade)
+            @if(count($modalidade->trabalho) > 0)
+                <div class="row justify-content-center" style="width: 100%;">
+                    <div class="col-sm-12">
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <div class="justify-content-between d-flex">
+                                    <div>
+                                        <h5 class="card-title">Modalidade: <span class="card-subtitle mb-2 text-muted" >{{$modalidade->nome}}</span></h5>
+                                        @if ($modalidade->inicioCorrecao && $modalidade->fimCorrecao)
+                                            <h5 class="card-title">Correção: <span class="card-subtitle mb-2 text-muted" >{{date("d/m/Y H:i", strtotime($modalidade->inicioCorrecao))}} - {{date("d/m/Y H:i",strtotime($modalidade->fimCorrecao))}}</span></h5>
+                                        @else
+                                            <h5 class="card-title">Correção: <span class="card-subtitle mb-2 text-muted" >não haverá</span></h5>
+                                        @endif
+                                    </div>
+                                    <div>
+                                        {{-- Botão de Lembrete: removido o form, pois a tag <form> já envolve tudo. --}}
+                                        <button class="btn btn-primary" type="submit">Lembrete de envio de versão corrigida</button>
+                                    </div>
+                                </div>
+                                <div class="table-responsive">
+                                    <input type="hidden" name="eventoId" value="{{$evento->id}}">
+                                    <br>
+                                    <table class="table table-hover table-responsive-lg table-sm table-striped">
+                                        <thead>
                                             <tr>
-                                                <td><input type="checkbox" name="trabalhosSelecionados[]" value="{{$trabalho->id}}"></td>
+                                                <th><input type="checkbox" onchange="alterarSelecionados(this)"></th>
+                                                <th scope="col">ID</th>
+                                                <th scope="col">Trabalho inicial</th>
+                                                <th scope="col">Trabalho revisado</th>
+                                                <th scope="col">Autor</th>
+                                                <th scope="col">
+                                                    Data de Envio
+                                                    @php
+                                                        $currentColumn = request('column', 'titulo');
+                                                        $currentDirection = request('direction', 'asc');
+                                                        $newDirection = ($currentColumn == 'data' && $currentDirection == 'asc') ? 'desc' : 'asc';
+                                                        $urlDataAsc = route('coord.listarCorrecoes', array_merge([$evento->id], ['column' => 'data', 'direction' => 'asc'], request()->except(['column', 'direction'])));
+                                                        $urlDataDesc = route('coord.listarCorrecoes', array_merge([$evento->id], ['column' => 'data', 'direction' => 'desc'], request()->except(['column', 'direction'])));
+                                                    @endphp
+                                                    <a href="{{ $urlDataAsc }}" title="Ordenar Crescente">
+                                                        <i class="fas fa-arrow-alt-circle-up"></i>
+                                                    </a>
+                                                    <a href="{{ $urlDataDesc }}" title="Ordenar Decrescente">
+                                                        <i class="fas fa-arrow-alt-circle-down"></i>
+                                                    </a>
+                                                </th>
+                                                <th scope="col">Parecer</th>
+                                                <th scope="col" class="text-center">Lembrete enviado</th>
+                                                <th scope="col" style="text-align:center;">Editar</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach($modalidade->trabalho as $trabalho)
+                                            <tr>
+                                                {{-- Checkbox para envio de lembrete --}}
+                                                @php
+                                                    $isEncaminhado = $trabalho->atribuicoes()->wherePivot('parecer', 'encaminhado')->exists();
+                                                    $hasCorrecao = $trabalho->arquivoCorrecao()->exists();
+                                                @endphp
+                                                <td>
+                                                    @if($isEncaminhado && ! $hasCorrecao)
+                                                        <input type="checkbox" name="trabalhosSelecionados[]" value="{{$trabalho->id}}">
+                                                    @endif
+                                                </td>
+                                                <td> {{ $trabalho->id }}</td>
                                                 <td>
                                                     @if ($trabalho->arquivo)
                                                         <a href="{{route('downloadTrabalho', ['id' => $trabalho->id])}}">
-                                                            <span class="d-inline-block text-truncate" class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" title="{{$trabalho->titulo}}" style="max-width: 150px;">
+                                                            <span class="d-inline-block text-truncate" tabindex="0" data-bs-toggle="tooltip" title="{{$trabalho->titulo}}" style="max-width: 150px;">
                                                                 {{$trabalho->titulo}}
                                                             </span>
                                                         </a>
                                                     @else
-                                                        <span class="d-inline-block text-truncate" class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" title="{{$trabalho->titulo}}" style="max-width: 150px;">
+                                                        <span class="d-inline-block text-truncate" tabindex="0" data-bs-toggle="tooltip" title="{{$trabalho->titulo}}" style="max-width: 150px;">
                                                             {{$trabalho->titulo}}
                                                         </span>
                                                     @endif
@@ -116,13 +153,13 @@
                                                 <td>
                                                     @if ($trabalho->arquivoCorrecao)
                                                         <a href="{{route('downloadCorrecao', ['id' => $trabalho->id])}}">
-                                                            <span class="d-inline-block text-truncate" class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" title="{{$trabalho->titulo}}" style="max-width: 150px;">
+                                                            <span class="d-inline-block text-truncate" tabindex="0" data-bs-toggle="tooltip" title="{{$trabalho->titulo}}" style="max-width: 150px;">
                                                                 {{$trabalho->titulo}}
                                                             </span>
                                                         </a>
                                                     @else
-                                                        <span class="d-inline-block text-truncate" class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" title="{{$trabalho->titulo}}" style="max-width: 150px;">
-                                                            {{$trabalho->titulo}}
+                                                        <span class="d-inline-block text-truncate text-danger" tabindex="0" data-bs-toggle="tooltip" title="Aguardando envio da correção" style="max-width: 150px;">
+                                                            Aguardando envio
                                                         </span>
                                                     @endif
                                                 </td>
@@ -136,73 +173,50 @@
 
                                                 <td style="text-align:center">
                                                     @foreach ($trabalho->atribuicoes as $revisor)
-                                                        <a href="{{route('coord.visualizarRespostaFormulario', ['eventoId' => $evento->id, 'modalidadeId' => $trabalho->modalidadeId, 'trabalhoId' => $trabalho->id, 'revisorId' => $revisor->id])}}">
-                                                            <img src="{{asset('img/icons/eye-regular.svg')}}" style="width:20px">
-                                                        </a>
+                                                        @if($trabalho->avaliado($revisor->user))
+                                                            <a href="{{route('coord.visualizarRespostaFormulario', ['eventoId' => $evento->id, 'modalidadeId' => $trabalho->modalidadeId, 'trabalhoId' => $trabalho->id, 'revisorId' => $revisor->id])}}" title="Visualizar Parecer de {{ $revisor->user->name }}">
+                                                                <img src="{{asset('img/icons/eye-regular.svg')}}" style="width:20px">
+                                                            </a>
+                                                        @endif
                                                         <br>
                                                     @endforeach
                                                 </td>
                                                 <td class="text-center">{{$trabalho->lembrete_enviado ? 'Sim' : 'Não'}}</td>
-                                                 <td class="text-center">
-                                                    @switch($trabalho->avaliado)
-                                                        @case('corrigido')
-                                                            Finalizado: aprovado completamente
-                                                            @break
-                                                        @case('corrigido_parcialmente')
-                                                            Finalizado: aprovado parcialmente
-                                                            @break
-                                                        @case('nao_corrigido')
-                                                            Finalizado: reprovado
-                                                            @break
-                                                        @default
-                                                        Em análise
-                                                    @endswitch
-                                                </td>
-
-                                                <td class="text-center">
-                                                    @switch($trabalho->avaliado)
-                                                        @case('corrigido')
-                                                            Finalizado: aprovado completamente
-                                                            @break
-                                                        @case('corrigido_parcialmente')
-                                                            Finalizado: aprovado parcialmente
-                                                            @break
-                                                        @case('nao_corrigido')
-                                                            Finalizado: reprovado
-                                                            @break
-                                                        @default
-                                                        Em análise
-                                                    @endswitch
-                                                </td>
-
                                                 <td style="text-align:center">
-                                                    <a href="#" data-bs-toggle="modal" data-bs-target="#modalCorrecaoTrabalho_{{$trabalho->id}}" style="color:#114048ff">
-                                                        <i class="fas fa-edit"></i>
+                                                    <a href="#" data-bs-toggle="modal" data-bs-target="#modalCorrecaoTrabalho_{{$trabalho->id}}" style="color:#114048ff" title="Fazer/Alterar Correção">
+                                                        <img src="{{ asset('img/icons/edit-regular.svg') }}" width="20" alt="Editar">
                                                     </a>
-
                                                 </td>
                                             </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
+            @endif
+        @empty
+            <div class="row">
+                <div class="col-md-12">
+                    <p class="text-center">Nenhum trabalho corrigido encontrado.</p>
+                </div>
+            </div>
+        @endforelse
+        </form>
+
+        @if(isset($trabalhos) && $trabalhos->hasPages())
+            <div class="d-flex justify-content-center mt-4">
+                {{ $trabalhos->appends(request()->query())->links() }}
             </div>
         @endif
-        @endforeach
-    @endforeach
-    </form>
+    </div>
 
-</div>
-<!-- End Trabalhos -->
-
-@foreach ($trabalhosPorModalidade as $trabalhosPorArea)
-        @foreach ($trabalhosPorArea as $trabalhos)
+    {{-- Modais de Edição/Correção --}}
+    @if(isset($trabalhos))
         @foreach ($trabalhos as $trabalho)
-            <!-- Modal  correcao trabalho -->
-            <div class="modal fade" id="modalCorrecaoTrabalho_{{$trabalho->id}}" tabindex="-1" aria-labelledby="modalCorrecaoTrabalho_{{$trabalho->id}}Label" aria-hidden="true">
+        <div class="modal fade" id="modalCorrecaoTrabalho_{{$trabalho->id}}" tabindex="-1" aria-labelledby="modalCorrecaoTrabalho_{{$trabalho->id}}Label" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                 <div class="modal-header" style="background-color: #114048ff; color: white;">
@@ -233,7 +247,6 @@
                     @foreach ($ordem as $indice)
                         @if ($indice == "etiquetatitulotrabalho")
                         <div class="row justify-content-center">
-                            {{-- Nome Trabalho  --}}
                             <div class="col-sm-12">
                                 <label for="nomeTrabalho_{{$trabalho->id}}" class="col-form-label">{{ $formSubTraba->etiquetatitulotrabalho }}</label>
                                 <input id="nomeTrabalho_{{$trabalho->id}}" type="text" class="form-control @error('nomeTrabalho'.$trabalho->id) is-invalid @enderror" name="nomeTrabalho{{$trabalho->id}}" value="@if(old('nomeTrabalho'.$trabalho->id)!=null){{old('nomeTrabalho'.$trabalho->id)}}@else{{$trabalho->titulo}}@endif"  autocomplete="nomeTrabalho" autofocus disabled>
@@ -246,7 +259,6 @@
                             </div>
                         </div>
                         <div class="row justify-content-center">
-                            {{-- Autor Trabalho  --}}
                             <div class="col-sm-12">
                                 <label for="autorTrabalho_{{$trabalho->autor->id}}" class="col-form-label">Autor</label>
                                 <input id="autorTrabalho_{{$trabalho->autor->id}}" type="text" class="form-control @error('autorTrabalho'.$trabalho->autor->id) is-invalid @enderror" name="autorTrabalho{{$trabalho->autor->id}}" value="@if(old('autorTrabalho'.$trabalho->autor->id)!=null){{old('autorTrabalho'.$trabalho->autor->id)}}@else{{$trabalho->autor->name}}@endif"  autocomplete="autorTrabalho" autofocus disabled>
@@ -279,11 +291,10 @@
                             </div>
                         @endif
                         @if ($indice == "etiquetaareatrabalho")
-                        <!-- Areas -->
                         <div class="row justify-content-center">
                             <div class="col-sm-12">
                                 <label for="area_{{$trabalho->id}}" class="col-form-label">{{$formSubTraba->etiquetaareatrabalho}}</label>
-                                <select id="area_{{$trabalho->id}}" class="form-control @error('area'.$trabalho->id) is-invalid @enderror" name="area{{$trabalho->id}}" required>
+                                <select id="area_{{$trabalho->id}}" class="form-control @error('area'.$trabalho->id) is-invalid @enderror" name="area{{$trabalho->id}}" required disabled>
                                     <option value="{{$trabalho->area->nome}}" selected disabled>{{$trabalho->area->nome}}</option>
                                 </select>
                                 @error('area'.$trabalho->id)
@@ -296,7 +307,6 @@
                         @endif
                         @if ($indice == "etiquetauploadtrabalho")
                         <div class="row justify-content-center">
-                            {{-- Submeter trabalho corrigido --}}
 
                             @if ($modalidade->arquivo == true)
                             <div class="col-sm-12" style="margin-top: 20px;">
@@ -307,7 +317,7 @@
                                     <small>Para trocar o arquivo envie um novo.</small>
                                 @endif
                                 <div class="custom-file">
-                                <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivoCorrecao" required>
+                                <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivoCorrecao" @if($trabalho->arquivoCorrecao()->first() == null) required @endif>
                                 </div>
                                 <small>Arquivos aceitos nos formatos
                                 @if($modalidade->pdf == true)<span> - pdf</span>@endif
@@ -337,11 +347,9 @@
                 </div>
                 </div>
             </div>
-            </div>
-            <!-- Fim Modal correcao trabalho -->
-    @endforeach
-    @endforeach
-@endforeach
+        </div>
+        @endforeach
+    @endif
 
 @endsection
 
@@ -349,8 +357,11 @@
 <script>
     function alterarSelecionados(source) {
         let checkboxes = document.querySelectorAll('input[name="trabalhosSelecionados[]"]');
-        checkboxes.forEach(checkbox => checkbox.checked = source.checked);
+        checkboxes.forEach(checkbox => {
+            if (checkbox.closest('tr').querySelector('td:first-child input[type="checkbox"]')) {
+                checkbox.checked = source.checked;
+            }
+        });
     }
 </script>
 @endsection
-

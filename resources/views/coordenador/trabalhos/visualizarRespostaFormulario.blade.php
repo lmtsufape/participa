@@ -57,7 +57,7 @@
                     <input type="hidden" name="pergunta_id[]" value="{{$pergunta->id}}">
                         <div class="card">
                             <div class="card-body">
-                                <p><strong>{{strip_tags($pergunta->pergunta)}}</strong> <span><small style="float: right">Pergunta visível para o autor? <input type="checkbox" name="pergunta_checkBox[]" value="{{$pergunta->id}}" {{  ($pergunta->visibilidade == true ? ' checked' : '') }} disabled></small></span>
+                                <p><strong>{{strip_tags($pergunta->pergunta)}}</strong> <span><small style="float: right">Pergunta visível para o autor? <input type="checkbox" name="pergunta_checkBox[]" value="{{$pergunta->id}}" {{ ($pergunta->visibilidade == true ? ' checked' : '') }} disabled></small></span>
                                 </p>
 
                                 @if($pergunta->respostas()->exists() && $pergunta->respostas->first()->opcoes->count())
@@ -76,20 +76,20 @@
                                         </label>
                                     </div>
                                     @endforeach
-                                   @if ($respostas[$pergunta->id] != null)
-                                        <div class="col-form-label text-md-left">
-                                            <small>Resposta visível para o autor? (selecione se sim) </small>
-                                            <input type="checkbox"
-                                                name="visivilidade_opcoes[]"
-                                                value="{{$respostas[$pergunta->id]->opcoes->first()->id}}"
-                                                {{ ($respostas[$pergunta->id]->opcoes->first()->visibilidade == true ? ' checked' : '') }}
-                                                {{ $pergunta->visibilidade == true ? '' : 'disabled' }}
-                                            >
-                                        </div>
-                                   @endif
+                                    @if ($respostas[$pergunta->id] != null)
+                                            <div class="col-form-label text-md-left">
+                                                <small>Resposta visível para o autor? (selecione se sim) </small>
+                                                <input type="checkbox"
+                                                    name="visivilidade_opcoes[]"
+                                                    value="{{$respostas[$pergunta->id]->opcoes->first()->id}}"
+                                                    {{ ($respostas[$pergunta->id]->opcoes->first()->visibilidade == true ? ' checked' : '') }}
+                                                    {{ $pergunta->visibilidade == true ? '' : 'disabled' }}
+                                                >
+                                            </div>
+                                        @endif
                                 @elseif($pergunta->respostas->first()->paragrafo != null)
                                     @forelse ($pergunta->respostas as $resposta)
-                                        @if($resposta->revisor != null && $resposta->trabalho != null  && $resposta->paragrafo != null)
+                                        @if($resposta->revisor != null && $resposta->trabalho != null && $resposta->paragrafo != null)
                                             @if($resposta->revisor->user_id == $revisorUser->id && $resposta->trabalho->id == $trabalho->id)
 
                                                 <p class="card-text">
@@ -97,7 +97,7 @@
                                                     <textarea id="resposta{{$resposta->paragrafo->id}}" type="text" class="form-control @error('resposta'.$resposta->paragrafo->id) is-invalid @enderror" name="resposta{{$resposta->paragrafo->id}}" required>@if(old('resposta'.$resposta->paragrafo->id)!=null){{old('resposta'.$resposta->paragrafo->id)}}@else{{($resposta->paragrafo->resposta)}}@endif</textarea>
                                                 </p>
                                                 <div class="col-form-label text-md-left">
-                                                    <small>Resposta visível para o autor? (selecione se sim) </small><input type="checkbox" name="paragrafo_checkBox[]" value="{{$resposta->paragrafo->id}}" {{  ($resposta->paragrafo->visibilidade == true ? ' checked' : '') }} >
+                                                    <small>Resposta visível para o autor? (selecione se sim) </small><input type="checkbox" name="paragrafo_checkBox[]" value="{{$resposta->paragrafo->id}}" {{  ($resposta->paragrafo->visibilidade == true ? ' checked' : '') }} >
                                                 </div>
                                             @endif
                                         @endif
@@ -118,19 +118,8 @@
             </div>
         @endforeach
         <div class="alert alert-info w-50">
-            @switch($trabalho->avaliado)
-                @case('nao_corrigido')
-                    <span>Parececer do avaliador sobre a correção: <strong>Não corrigido</strong></span>
-                    @break
-                @case('corrigido_parcialmente')
-                    <span>Parececer do avaliador sobre a correção: <strong>Corrigido parcialmente</strong></span>
-                    @break
-                @case('corrigido')
-                    <span>Parececer do avaliador sobre a correção: <strong>Corrigido totalmente</strong></span>
-                    @break
-                @default
-                    <span>Parecer do avaliador sobre a correção ainda não definido</span>
-            @endswitch
+            {{-- Substituí a lógica de switch pelo texto estático da aba --}}
+            Parecer do avaliador sobre a correção ainda não definido
         </div>
         <div class="col-sm-12" style="margin-top: 20px;">
             <small>Para trocar o arquivo de avaliação do avaliador, envie um novo.</small><br>
@@ -150,88 +139,62 @@
             @error('arquivo'.$trabalho->id)
                 <span class="invalid-feedback" role="alert" style="overflow: visible; display:block">
                     <strong>{{ $message }}</strong>
-                 </span>
+                </span>
             @enderror
         </div>
     </form>
-    <div class="d-flex mt-4">
-        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal{{$trabalho->id}}">
+    
+    {{-- Bloco de botões da ABA --}}
+    <div class="d-flex flex-column flex-md-row mt-4 gap-3">
+        {{-- Deletar Avaliação --}}
+        <button type="button" class="btn btn-md btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{$trabalho->id}}">
             Deletar Avaliação
         </button>
 
-        <div class="px-2">
-            <button type="submit" class="btn btn-primary" id="submeterFormBotao">
-                {{ __('Atualizar Avaliação') }}
-            </button>
-        </div>
-        @if ($arquivoAvaliacao != null)
-            <a class="btn btn-primary btn-group" href="{{route('downloadAvaliacao', ['trabalhoId' => $trabalho->id, 'revisorUserId' => $revisorUser->id])}}">
-                <img class="mr-1" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:1em">Baixar trabalho corrigido
-            </a>
+        {{-- Editar Avaliação (Submeter Formulário) --}}
+        <button type="submit" class="btn btn-md btn-primary" form="editarRespostas" id="submeterFormBotao">
+            {{ __('Editar Avaliação') }}
+        </button>
 
-        @else
-            <div class="mx-2 text-danger">
-                <h6>A correção não foi <br> enviada pelo parecerista.</h6>
-            </div>
+
+        @if ($trabalho->avaliado($revisor->user))
+            @if ($trabalho->getParecerAtribuicao($revisor->user) != 'encaminhado')
+                <a href="{{ route('trabalho.encaminhar', [$trabalho->id, $revisor]) }}" class="btn btn-md btn-success">
+                    Encaminhar parecer para autor/a
+                </a>
+            @else
+                <a href="{{ route('trabalho.encaminhar', [$trabalho->id, $revisor]) }}" class="btn btn-md btn-secondary">
+                    Desfazer encaminhamento da avaliação
+                </a>
+            @endif
         @endif
-        <div class="px-2">
-            <form action="{{route('coord.evento.avisoCorrecao', $evento->id)}}" method="POST" id="avisoCorrecao">
-                @csrf
-                <input type="hidden" name="trabalhosSelecionados[]" value="{{$trabalho->id}}">
-                <button class="btn btn-primary" type="submit">Lembrete de envio de versão corrigida do texto</button>
-            </form>
-        </div>
-        @can('isCoordenadorOrCoordenadorDasComissoes', $evento)
-            <div>
-                @if ($trabalho->avaliado($revisor->user))
-                    @if ($trabalho->getParecerAtribuicao($revisor->user) != "encaminhado")
-                        <a href="{{ route('trabalho.encaminhar', [$trabalho->id, $revisor]) }}" class="btn btn-success">
-                            Encaminhar avaliação ao autor
-                        </a>
-                    @else
-                        <a href="{{ route('trabalho.encaminhar', [$trabalho->id, $revisor]) }}" class="btn btn-secondary">
-                            Desfazer encaminhamento da avaliação
-                        </a>
-                    @endif
-                @endif
-            </div>
-        @endcan
+        
+        <button class="btn btn-md btn-success" data-bs-toggle="modal" data-bs-target="#avaliacao-corrigir-{{ $trabalho->id }}">
+            @if ($trabalho->permite_correcao)
+                Bloquear para correção
+            @else
+                Liberar para correção
+            @endif
+        </button>
+        @push('modais')
+            @include('coordenador.trabalhos.avaliacao-modal', [
+                'trabalho' => $trabalho,
+                'valor' => 'null',
+                'descricao' => 'corrigir',
+            ])
+        @endpush
     </div>
 
-
-    <hr class="my-5">
-
-    <div class="d-flex justify-content-center">
-        <div class="mr-2">
-            <button class="btn btn-danger"
-            data-toggle="modal" data-target="#avaliacao-reprovar-{{$trabalho->id}}" @disabled($trabalho->aprovado === false)>
-                Reprovar Trabalho
-            </button>
-        </div>
-        @if($trabalho->avaliado == 'Avaliado')
-            <div>
-                <button class="btn btn-primary"
-                    data-toggle="modal" data-target="#avaliacao-corrigir-{{$trabalho->id}}">
-                    Aprovar com pendências
-                </button>
-                @push('modais')
-                    @include('coordenador.trabalhos.avaliacao-modal', ['trabalho' => $trabalho, 'valor' => 'null', 'descricao' => 'corrigir'])
-                @endpush
-
-            </div>
-        @endif
-        <div class="ml-2">
-            <button class="btn btn-success"
-            data-toggle="modal" data-target="#avaliacao-aprovar-{{$trabalho->id}}" @disabled($trabalho->aprovado === true)>
-                Aprovar Trabalho
-            </button>
-        </div>
-    </div>
-    @include('components.delete_modal', ['route' => 'coord.avaliacao.destroy', 'param' => 'trabalho_id', 'entity_id' => $trabalho->id, 'element' => $revisor->id, 'param_element' => 'revisor_id'])
-    @include('coordenador.trabalhos.avaliacao-modal', ['trabalho' => $trabalho, 'valor' => 'true', 'descricao' => 'aprovar'])
-    @include('coordenador.trabalhos.avaliacao-modal', ['trabalho' => $trabalho, 'valor' => 'false', 'descricao' => 'reprovar'])
+    @include('components.delete_modal', [
+        'route' => 'coord.avaliacao.destroy',
+        'param' => 'trabalho_id',
+        'entity_id' => $trabalho->id,
+        'element' => $revisor->id,
+        'param_element' => 'revisor_id',
+    ])
+    
     @stack('modais')
-
+    
 
 @endsection
 
@@ -245,7 +208,7 @@
             if (document.getElementById('selecionarTodas').checked)
             {
                 for (i = 0; i < respostas.length; i++) {
-                    if(!respostas[i].checked & !respostas[i].disabled){
+                    if(!respostas[i].checked && !respostas[i].disabled){
                         respostas[i].checked = true;
                     }
                 }

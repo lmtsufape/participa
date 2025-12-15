@@ -220,7 +220,9 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
             Route::delete('avaliacao/trabalho/{trabalho_id}', [TrabalhoController::class, 'destroyAvaliacao'])->name('avaliacao.destroy');
             Route::get('trabalhos/form/listarRepostasTrabalhos/{column?}/{direction?}/{status?}', [EventoController::class, 'listarRespostasTrabalhos'])->name('respostasTrabalhos');
             Route::get('trabalhos/form/visualizarRespostaFormulario', [EventoController::class, 'visualizarRespostaFormulario'])->name('visualizarRespostaFormulario');
-            Route::get('trabalhos/listarCorrecoes/{column?}/{direction?}', [EventoController::class, 'listarCorrecoes'])->name('listarCorrecoes');
+            Route::get('trabalhos/listarCorrecoes/{eventoId}/{column?}/{direction?}', [EventoController::class, 'listarCorrecoes'])->name('listarCorrecoes');
+            Route::get('trabalhos/listarValidacoes/{eventoId}/{column?}/{direction?}', [EventoController::class, 'listarValidacoes'])->name('listarValidacoes');
+            Route::post('/coordenador/trabalho/{trabalho}/resetar-validacao', [EventoController::class, 'resetarValidacao'])->name('trabalho.resetarValidacao');
 
             Route::get('areas/cadastrarAreas', [EventoController::class, 'cadastrarAreas'])->name('cadastrarAreas');
             Route::get('areas/listarAreas', [EventoController::class, 'listarAreas'])->name('listarAreas');

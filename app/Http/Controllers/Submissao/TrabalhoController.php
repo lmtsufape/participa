@@ -1041,26 +1041,82 @@ class TrabalhoController extends Controller
 
     public function aprovacaoTrabalho(Request $request)
     {
-        $trabalho = Trabalho::find($request->trabalho_id);
+        $resultado = DB::transaction(function () use ($request){
+            $trabalho = Trabalho::lockForUpdate()->find($request->trabalho_id);
 
-        switch ($request->aprovado) {
-            case 'true':
-                $trabalho->update(['aprovado' => true]);
-                $mensagem = 'Trabalho aprovado com sucesso!';
-                break;
-            case 'false':
-                $trabalho->update(['aprovado' => false]);
-                $mensagem = 'Trabalho reprovado com sucesso!';
-                break;
-            case 'null':
-                $trabalho->update(['aprovado' => null]);
-                $mensagem = 'Trabalho liberado para correção com sucesso!';
+            switch ($request->aprovado) {
+                case 'true':
+                    if($trabalho->coautors->count() <= $trabalho->modalidade->numMaxCoautores){
+                        $autor_inscrito = Inscricao::where('user_id', $trabalho->autor->id)
+                            ->where('evento_id', $trabalho->eventoId)
+                            ->where('finalizada', true)
+                            ->exists();
 
-                break;
+                        if(!$autor_inscrito){
+                            $coautor_inscrito = $trabalho->coautors()
+                                ->whereHas('user.inscricaos', function ($query) use ($trabalho) {
+                                    $query->where('evento_id', $trabalho->eventoId)
+                                        ->where('finalizada', true);
+                                })
+                                ->exists();
+                        }
 
-        }
+                        if($autor_inscrito || ($coautor_inscrito ?? false)){
+                            $codigo = Trabalho::gerarCodigo();
 
-        return redirect()->back()->with(['success' => $mensagem ?? '']);
+                            $trabalho->aprovado                 = true;
+                            $trabalho->hash_codigo_aprovacao    = hash('sha256', str_replace('-', '', $codigo));
+                            $trabalho->aprovacao_emitida_em   = now();
+                            $trabalho->saveOrFail();
+
+                            Mail::to($trabalho->autor->email)->send(new CartaDeAceiteMail($trabalho, $codigo));
+                            return ['flash' => 'success', 'msg' => 'Trabalho aprovado com sucesso!'];
+
+                        }else{
+                            $codigo = Trabalho::gerarCodigo();
+
+                            $trabalho->aprovado                 = true;
+                            $trabalho->hash_codigo_aprovacao    = hash('sha256', str_replace('-', '', $codigo));
+                            $trabalho->aprovacao_emitida_em   = now();
+                            $trabalho->saveOrFail();
+
+                            Mail::to($trabalho->autor->email)->send(new CartaDeAceiteMail($trabalho, $codigo));
+                            return ['flash' => 'success', 'msg' => 'Trabalho aprovado com sucesso!'];
+                        }
+                    }
+                    return ['flash' => 'error', 'msg' => 'Número de coautores superior ao permitido na modalidade do trabalho'];
+
+                case 'false':
+                    $trabalho->update(['aprovado' => false]);
+                    return ['flash' => 'success', 'msg' => 'Trabalho reprovado com sucesso!'];
+
+                case 'restaurar':
+                    if(in_array($trabalho->aprovado, [true, false], true)){
+                        $trabalho->aprovado                 = null;
+                        $trabalho->hash_codigo_aprovacao    = null;
+                        $trabalho->aprovacao_emitida_em   = null;
+                        $trabalho->saveOrFail();
+
+                        return ['flash' => 'success', 'msg' => 'Trabalho restaurado com sucesso!'];
+                    }
+
+                    return ['flash' => 'success', 'msg' => 'Este trabalho já se encontra no status inicial!'];
+
+                case 'null':
+                    if(!$trabalho->permite_correcao){
+                        $trabalho->update(['permite_correcao' => true]);
+
+                        return ['flash' => 'success', 'msg' => 'Trabalho liberado para correção com sucesso!'];
+                    }else{
+                        $trabalho->update(['permite_correcao' => false]);
+
+                        return ['flash' => 'success', 'msg' => 'Trabalho bloqueado para correção com sucesso!'];
+                    }
+
+            }
+
+        });
+        return back()->with([$resultado['flash'] => $resultado['msg']]);
     }
 
     public function correcaoTrabalho(Request $request)
@@ -1380,5 +1436,38 @@ class TrabalhoController extends Controller
 
             return false;
         }
+    }
+
+    public function verificarCorrecao(Request $request, $trabalho_id){
+        $trabalho = Trabalho::find($trabalho_id);
+        $user = auth()->user();
+        
+        if (! (Gate::any(['isCoordenadorOrCoordenadorDasComissoes', 'isCoordenadorEixo'], $trabalho->evento) || $user->administradors()->exists())) {
+            abort(403, 'Acesso não autorizado');
+        }
+
+        if (Gate::allows('isCoordenadorEixo', $trabalho->evento) && !Gate::any(['isCoordenadorOrCoordenadorDasComissoes'], $trabalho->evento)) {
+            $areasCoordEixo = $user->areasComoCoordEixoNoEvento($trabalho->evento->id)->pluck('id');
+            if (!$areasCoordEixo->contains($trabalho->areaId)) {
+                abort(403, 'Você só pode gerenciar trabalhos do seu eixo temático.');
+            }
+        }
+
+        $statusCorrecao = $request->input('status_correcao_' . $trabalho->id) ?? $request->input('status_correcao');
+
+        $trabalho->avaliado = $statusCorrecao;
+
+        if ($statusCorrecao == 'corrigido_parcialmente' || $statusCorrecao == 'nao_corrigido') {
+            $request->validate([
+                'justificativa_correcao' => 'nullable|string|max:2000',
+            ]);
+            $trabalho->justificativa_correcao = $request->justificativa_correcao;
+        } else {
+            $trabalho->justificativa_correcao = null;
+        }
+
+        $trabalho->update();
+
+        return redirect()->back()->with('success', 'Validação da correção realizada com sucesso!');
     }
 }
