@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Inscricao;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Submissao\EventoController;
+use App\Mail\EmailInscritosPersonalizado;
 use App\Models\Inscricao\CampoFormulario;
 use App\Models\Inscricao\CategoriaParticipante;
 use App\Models\Inscricao\CupomDeDesconto;
@@ -18,6 +19,7 @@ use App\Notifications\InscricaoAprovada;
 use App\Notifications\InscricaoEvento;
 use App\Notifications\PreInscricao;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Users\User;
@@ -93,6 +95,62 @@ class InscricaoController extends Controller
                             ->withQueryString();
 
         return view('coordenador.inscricoes.inscritos', compact('inscricoes', 'evento'));
+    }
+
+    public function enviarEmail(Request $request, Evento $evento)
+    {
+        $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
+
+        $validated = $request->validate([
+            'assunto' => ['required', 'string', 'max:255'],
+            'mensagem' => ['required', 'string'],
+            'inscricoes' => ['required', 'string'],
+        ]);
+
+        $inscricaoIds = collect(explode(',', $validated['inscricoes']))
+            ->filter()
+            ->map(fn ($id) => (int) $id)
+            ->filter(fn ($id) => $id > 0)
+            ->unique()
+            ->values();
+
+        if ($inscricaoIds->isEmpty()) {
+            return redirect()->back()->withErrors(['email_inscritos' => 'Selecione ao menos um inscrito para enviar o e-mail.']);
+        }
+
+        $inscricoes = Inscricao::whereIn('id', $inscricaoIds)
+            ->where('evento_id', $evento->id)
+            ->with('user')
+            ->get();
+
+        if ($inscricoes->isEmpty()) {
+            return redirect()->back()->withErrors(['email_inscritos' => 'Não foi possível localizar os inscritos selecionados.']);
+        }
+
+        $emails = $inscricoes
+            ->map(fn ($inscricao) => $inscricao->user?->email)
+            ->filter()
+            ->unique()
+            ->values();
+
+        if ($emails->isEmpty()) {
+            return redirect()->back()->withErrors(['email_inscritos' => 'Nenhum e-mail válido encontrado para os inscritos selecionados.']);
+        }
+
+        $emailsArray = $emails->toArray();
+        $destinatariosTotais = count($emailsArray);
+        $emailPrincipal = array_shift($emailsArray);
+        $bccList = $emailsArray;
+
+        Mail::to($emailPrincipal)
+            ->bcc($bccList)
+            ->send(new EmailInscritosPersonalizado(
+                $evento,
+                $validated['assunto'],
+                $validated['mensagem']
+            ));
+
+        return redirect()->back()->with('message', 'E-mail enviado para '.$destinatariosTotais.' inscrito(s).');
     }
 
     public function formulario(Evento $evento)
