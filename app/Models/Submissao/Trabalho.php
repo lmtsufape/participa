@@ -113,6 +113,10 @@ class Trabalho extends Model
         return $this->hasMany(Arquivoextra::class, 'trabalhoId');
     }
 
+    public static function gerarCodigo(){
+        return strtoupper(implode('-', str_split(bin2hex(random_bytes(16)), 4)));
+    }
+
     public function avaliado(User $user)
     {
         $revisor = Revisor::where([['user_id', $user->id], ['areaId', $this->area->id],

@@ -1437,4 +1437,37 @@ class TrabalhoController extends Controller
             return false;
         }
     }
+
+    public function verificarCorrecao(Request $request, $trabalho_id){
+        $trabalho = Trabalho::find($trabalho_id);
+        $user = auth()->user();
+        
+        if (! (Gate::any(['isCoordenadorOrCoordenadorDasComissoes', 'isCoordenadorEixo'], $trabalho->evento) || $user->administradors()->exists())) {
+            abort(403, 'Acesso não autorizado');
+        }
+
+        if (Gate::allows('isCoordenadorEixo', $trabalho->evento) && !Gate::any(['isCoordenadorOrCoordenadorDasComissoes'], $trabalho->evento)) {
+            $areasCoordEixo = $user->areasComoCoordEixoNoEvento($trabalho->evento->id)->pluck('id');
+            if (!$areasCoordEixo->contains($trabalho->areaId)) {
+                abort(403, 'Você só pode gerenciar trabalhos do seu eixo temático.');
+            }
+        }
+
+        $statusCorrecao = $request->input('status_correcao_' . $trabalho->id) ?? $request->input('status_correcao');
+
+        $trabalho->avaliado = $statusCorrecao;
+
+        if ($statusCorrecao == 'corrigido_parcialmente' || $statusCorrecao == 'nao_corrigido') {
+            $request->validate([
+                'justificativa_correcao' => 'nullable|string|max:2000',
+            ]);
+            $trabalho->justificativa_correcao = $request->justificativa_correcao;
+        } else {
+            $trabalho->justificativa_correcao = null;
+        }
+
+        $trabalho->update();
+
+        return redirect()->back()->with('success', 'Validação da correção realizada com sucesso!');
+    }
 }
