@@ -44,16 +44,16 @@
                             <tbody>
                               @foreach($revisores as $revisor)
                                 <tr>
-                                    <td data-toggle="modal" data-target="#modalEditarRevisor{{$revisor->id}}">{{$revisor->name}}</td>
-                                    <td data-toggle="modal" data-target="#modalEditarRevisor{{$revisor->id}}">{{$revisor->email}}</td>
-                                    <td data-toggle="modal" data-target="#modalEditarRevisor{{$revisor->id}}" style="text-align:center">
+                                    <td data-bs-toggle="modal" data-bs-target="#modalEditarRevisor{{$revisor->id}}">{{$revisor->name}}</td>
+                                    <td data-bs-toggle="modal" data-bs-target="#modalEditarRevisor{{$revisor->id}}">{{$revisor->email}}</td>
+                                    <td data-bs-toggle="modal" data-bs-target="#modalEditarRevisor{{$revisor->id}}" style="text-align:center">
                                         @if($contadores->where('user_id', $revisor->id)->isNotEmpty())
                                             {{$contadores->where('user_id', $revisor->id)->sum('processando_count')}}
                                         @else
                                             0
                                         @endif
                                     </td>
-                                    <td data-toggle="modal" data-target="#modalEditarRevisor{{$revisor->id}}" style="text-align:center">
+                                    <td data-bs-toggle="modal" data-bs-target="#modalEditarRevisor{{$revisor->id}}" style="text-align:center">
                                         @if($contadores->where('user_id', $revisor->id)->isNotEmpty())
                                             {{$contadores->where('user_id', $revisor->id)->sum('avaliados_count')}}
                                         @else
