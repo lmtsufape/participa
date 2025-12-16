@@ -185,67 +185,54 @@ class RevisorController extends Controller
     {
         $user = User::find($request->editarRevisor);
         $evento = Evento::find($request->eventoId);
+        
         $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
 
         $validatedData = $request->validate([
             'editarRevisor' => 'required',
-            'areasEditadas_'.$user->id => 'required',
-            'modalidadesEditadas_'.$user->id => 'required',
+            'areasEditadas_'.$user->id => 'required|array',
+            'modalidadesEditadas_'.$user->id => 'required|array',
         ]);
 
-        $revisores = $user->revisor()->where('evento_id', '=', $evento->id)->get();
-        $revisoresRetirados = collect();
+        $areasNovas = $request->input('areasEditadas_'.$user->id);
+        $modalidadesNovas = $request->input('modalidadesEditadas_'.$user->id);
 
-        // Checando se o alguma área e modalidade foiram retiradas
-        foreach ($revisores as $revisor) {
-            foreach ($request->input('areasEditadas_'.$user->id) as $area) {
-                foreach ($request->input('modalidadesEditadas_'.$user->id) as $modalidade) {
-                    if ($revisor->areaId == $area && $revisor->modalidadeId == $modalidade) {
-                        $revisoresRetirados->push($revisor);
-                    }
+        $revisoresAtuais = Revisor::where('user_id', $user->id)
+                                ->where('evento_id', $evento->id)
+                                ->get();
+
+        foreach ($revisoresAtuais as $revisor) {
+            if (!in_array($revisor->areaId, $areasNovas) || !in_array($revisor->modalidadeId, $modalidadesNovas)) {
+                if ($revisor->trabalhosAtribuidos()->count() > 0) {
+                    return redirect()->back()->withErrors(['errorRevisor' => "Não é possível remover a área {$revisor->area->nome} pois existem trabalhos atribuídos."]);
                 }
-            }
-        }
-
-        $revisoresRetirados = $revisores->diff($revisoresRetirados);
-        if (count($revisoresRetirados) > 0) {
-            foreach ($revisoresRetirados as $revisor) {
-                if (count($revisor->trabalhosAtribuidos) > 0) {
-                    return redirect()->back()->withErrors(['errorRevisor' => 'Existem trabalhos atribuidos para esse revisor na área de '.$revisor->area->nome.' na modalidade de '.$revisor->modalidade->nome.'.']);
-                }
-            }
-        }
-
-        // Deletando os revisores que foram retirados
-        if (count($revisoresRetirados) > 0) {
-            foreach ($revisoresRetirados as $revisor) {
                 $revisor->delete();
             }
         }
 
-        // Adicionando os novos revisores
-        foreach ($request->input('areasEditadas_'.$user->id) as $area) {
-            foreach ($request->input('modalidadesEditadas_'.$user->id) as $modalidade) {
-                $encontrado = false;
-                foreach ($revisores as $revisor) {
-                    if ($revisor->areaId == $area && $revisor->modalidadeId == $modalidade) {
-                        $encontrado = true;
-                    }
-                }
-                if ($encontrado == false) {
-                    $revisor = new Revisor();
-                    $revisor->trabalhosCorrigidos = 0;
-                    $revisor->correcoesEmAndamento = 0;
-                    $revisor->user_id = $user->id;
-                    $revisor->areaId = $area;
-                    $revisor->modalidadeId = $modalidade;
-                    $revisor->evento_id = $evento->id;
-                    $revisor->save();
+        foreach ($areasNovas as $areaId) {
+            foreach ($modalidadesNovas as $modalidadeId) {
+                $existe = Revisor::where([
+                    ['user_id', $user->id],
+                    ['evento_id', $evento->id],
+                    ['areaId', $areaId],
+                    ['modalidadeId', $modalidadeId]
+                ])->exists();
+
+                if (!$existe) {
+                    Revisor::create([
+                        'user_id' => $user->id,
+                        'evento_id' => $evento->id,
+                        'areaId' => $areaId,
+                        'modalidadeId' => $modalidadeId,
+                        'trabalhosCorrigidos' => 0,
+                        'correcoesEmAndamento' => 0,
+                    ]);
                 }
             }
         }
 
-        return redirect()->back()->with(['success' => 'Revisor salvo com sucesso!']);
+        return redirect()->back()->with(['success' => 'Avaliador atualizado com sucesso!']);
     }
 
     /**
