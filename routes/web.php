@@ -497,6 +497,10 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
         Route::get('/obrigado', [CheckoutController::class, 'obrigado'])->name('obrigado');
         Route::get('/{id}/pagamentos', [CheckoutController::class, 'listarPagamentos'])->name('pagamentos');
         Route::post('/pag-boleto', [CheckoutController::class, 'pagBoleto'])->name('boleto');
+        
+        // PayPal routes
+        Route::get('/paypal/success/{evento}', [CheckoutController::class, 'paypalSuccess'])->name('paypal.success');
+        Route::get('/paypal/cancel/{evento}', [CheckoutController::class, 'paypalCancel'])->name('paypal.cancel');
 
     });
     //Pagamentos

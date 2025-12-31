@@ -13,6 +13,7 @@ use App\Payment\PagSeguro\CartaoCredito;
 use App\Payment\PagSeguro\Notification;
 use Artistas\PagSeguro\PagSeguro;
 use Artistas\PagSeguro\PagSeguroException;
+use App\Services\PayPalService;
 use Exception;
 use Illuminate\Http\Request;
 use Ramsey\Uuid\Uuid;
@@ -30,7 +31,41 @@ use Carbon\Carbon;
 class CheckoutController extends Controller
 {
 
-    public function telaPagamento(Evento $evento)
+    public function telaPagamento(Request $request, Evento $evento)
+    {
+        $user = auth()->user();
+        $inscricao = $evento->inscricaos()->where('user_id', $user->id)->first();
+        $categoria = $inscricao?->categoria;
+
+        if ($inscricao->pagamento != null) {
+            return redirect()->route('checkout.statusPagamento', ['evento' => $evento->id]);
+        }
+
+        // Verifica se o usuário é estrangeiro (não tem CPF ou tem passaporte)
+        $isEstrangeiro = empty($user->cpf) || !empty($user->passaporte);
+        
+        // Se já escolheu o gateway, redireciona para o pagamento
+        if ($request->has('gateway')) {
+            return $this->processarGateway($evento, $request->gateway);
+        }
+
+        return view('inscricao.pagamento.selecionar-gateway', compact('evento', 'inscricao', 'user', 'categoria', 'isEstrangeiro'));
+    }
+
+    private function processarGateway(Evento $evento, $gateway)
+    {
+        $user = auth()->user();
+        $inscricao = $evento->inscricaos()->where('user_id', $user->id)->first();
+        $categoria = $inscricao?->categoria;
+
+        if ($gateway === 'paypal') {
+            return $this->telaPagamentoPayPal($evento);
+        } else {
+            return $this->telaPagamentoMercadoPago($evento);
+        }
+    }
+
+    public function telaPagamentoMercadoPago(Evento $evento)
     {
         $key = config('mercadopago.public_key');
         $user = auth()->user();
@@ -44,17 +79,100 @@ class CheckoutController extends Controller
         return view('inscricao.pagamento.brick', compact('evento', 'inscricao', 'user', 'categoria', 'key'));
     }
 
+    public function telaPagamentoPayPal(Evento $evento)
+    {
+        $user = auth()->user();
+        $inscricao = $evento->inscricaos()->where('user_id', $user->id)->first();
+        $categoria = $inscricao?->categoria;
+
+        if ($inscricao->pagamento != null) {
+            return redirect()->route('checkout.statusPagamento', ['evento' => $evento->id]);
+        }
+
+        try {
+            $paypalService = new PayPalService();
+            
+            // O PayPal aceita BRL, então vamos usar BRL diretamente
+            // Se você quiser converter para USD, pode usar uma API de conversão aqui
+            $currency = 'BRL'; // Usar BRL diretamente, já que o valor está em reais
+            $amount = (float) str_replace(',', '.', $categoria->valor_total);
+            
+            Log::info('PayPal: Criando ordem de pagamento', [
+                'evento_id' => $evento->id,
+                'user_id' => $user->id,
+                'inscricao_id' => $inscricao->id,
+                'amount' => $amount,
+                'currency' => $currency,
+                'valor_total_original' => $categoria->valor_total
+            ]);
+            
+            $description = 'Inscrição no evento ' . $evento->nome;
+            $returnUrl = route('checkout.paypal.success', ['evento' => $evento->id]);
+            $cancelUrl = route('checkout.paypal.cancel', ['evento' => $evento->id]);
+
+            $order = $paypalService->createOrder($amount, $currency, $description, $returnUrl, $cancelUrl, $inscricao->id);
+
+            // Buscar link de aprovação
+            $approveLink = collect($order['links'])->firstWhere('rel', 'approve')['href'] ?? null;
+
+            if (!$approveLink) {
+                throw new Exception('Erro ao criar ordem PayPal: link de aprovação não encontrado');
+            }
+
+            // Salvar ordem temporariamente na sessão
+            session(['paypal_order_' . $evento->id => $order['id']]);
+
+            return view('inscricao.pagamento.paypal', compact('evento', 'inscricao', 'user', 'categoria', 'approveLink', 'order'));
+
+        } catch (\Exception $e) {
+            Log::error('Erro ao criar ordem PayPal', [
+                'message' => $e->getMessage(),
+                'evento_id' => $evento->id,
+                'user_id' => $user->id,
+                'inscricao_id' => $inscricao->id ?? null,
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            return redirect()->route('checkout.telaPagamento', ['evento' => $evento->id])
+                ->withErrors(['msg' => 'Erro ao processar pagamento PayPal. Tente novamente ou entre em contato com o suporte.']);
+        }
+    }
+
     public function statusPagamento(Evento $evento)
     {
-        $key = config('mercadopago.public_key');
         $user = auth()->user();
         $inscricao = $evento->inscricaos()->where('user_id', $user->id)->first();
         $pagamento = $inscricao?->pagamento;
+        
         if ($pagamento == null) {
             return redirect()->route('evento.visualizar', ['id' => $evento->id])->with('message', 'Não existe um pagamento para esse evento.');
         }
 
+        // Se for PayPal, mostrar status diferente
+        if ($pagamento->gateway === 'paypal') {
+            return $this->statusPagamentoPayPal($evento, $pagamento);
+        }
+
+        // Mercado Pago
+        $key = config('mercadopago.public_key');
         return view('inscricao.pagamento.status', compact('pagamento', 'key'));
+    }
+
+    public function statusPagamentoPayPal(Evento $evento, Pagamento $pagamento)
+    {
+        try {
+            $paypalService = new PayPalService();
+            $order = $paypalService->getOrder($pagamento->paypal_order_id);
+            
+            return view('inscricao.pagamento.status-paypal', compact('pagamento', 'order', 'evento'));
+        } catch (\Exception $e) {
+            Log::error('Erro ao obter status PayPal', [
+                'message' => $e->getMessage(),
+                'order_id' => $pagamento->paypal_order_id
+            ]);
+            
+            return view('inscricao.pagamento.status-paypal', compact('pagamento', 'evento'));
+        }
     }
 
     public function listarPagamentos($id)
@@ -93,6 +211,7 @@ class CheckoutController extends Controller
                 'descricao' => $descricao,
                 'codigo' => $payment->id,
                 'status' => $payment->status,
+                'gateway' => 'mercadopago',
             ]);
             $inscricao->pagamento_id = $pagamento->id;
             $inscricao->save();
@@ -189,14 +308,18 @@ class CheckoutController extends Controller
 
     public function notifications(Request $request)
     {
-        MercadoPagoConfig::setAccessToken(config('mercadopago.access_token'));
-        $client = new PaymentClient();
-
+        // Verifica se é notificação do Mercado Pago ou PayPal
         $contents = $request->all();
-        switch($contents["type"]) {
-            case "payment":
-                $payment = $client->get($contents["data"]["id"]);
-                $pagamento = Pagamento::where('codigo', $contents["data"]["id"])->first();
+        
+        // Mercado Pago
+        if (isset($contents["type"]) && $contents["type"] === "payment") {
+            MercadoPagoConfig::setAccessToken(config('mercadopago.access_token'));
+            $client = new PaymentClient();
+
+            $payment = $client->get($contents["data"]["id"]);
+            $pagamento = Pagamento::where('codigo', $contents["data"]["id"])->where('gateway', 'mercadopago')->first();
+            
+            if ($pagamento) {
                 if ($payment->status == 'approved') {
                     $inscricao = $pagamento->inscricao;
                     $inscricao->finalizada = true;
@@ -207,14 +330,113 @@ class CheckoutController extends Controller
                 }
                 $pagamento->status = $payment->status;
                 $pagamento->save();
-                break;
-            case "plan":
-            case "subscription":
-            case "invoice":
-            case "point_integration_wh":
-                break;
+            }
         }
+        
         return response(status: 200);
+    }
+
+    /**
+     * Callback de sucesso do PayPal
+     */
+    public function paypalSuccess(Request $request, Evento $evento)
+    {
+        $user = auth()->user();
+        $inscricao = $evento->inscricaos()->where('user_id', $user->id)->first();
+
+        $orderId = $request->get('token'); 
+        $payerId = $request->input('PayerID');
+
+        if (!$orderId) {
+            $orderId = session('paypal_order_' . $evento->id);
+        }
+    
+        if (!$orderId) {
+            return redirect()->route('checkout.telaPagamento', $evento->id)
+                ->withErrors(['msg' => 'Token de pagamento não retornado pelo PayPal.']);
+        }
+
+        try {
+            $paypalService = new PayPalService();
+            
+            $capture = $paypalService->captureOrder($orderId);
+            
+            if (isset($capture['status']) && $capture['status'] === 'COMPLETED') {
+                $purchaseUnit = $capture['purchase_units'][0];
+                $amount = $purchaseUnit['payments']['captures'][0]['amount']['value'];
+                
+                // Criar ou atualizar pagamento
+                $pagamento = Pagamento::where('paypal_order_id', $orderId)->first();
+                
+                if (!$pagamento) {
+                    $pagamento = Pagamento::create([
+                        'valor' => (float) $amount,
+                        'descricao' => 'Inscrição no evento ' . $evento->nome,
+                        'codigo' => $orderId,
+                        'status' => 'approved',
+                        'gateway' => 'paypal',
+                        'paypal_order_id' => $orderId,
+                        'paypal_payer_id' => $payerId,
+                    ]);
+                    
+                    $inscricao->pagamento_id = $pagamento->id;
+                    $inscricao->finalizada = true;
+                    $inscricao->save();
+                    
+                    Mail::to($inscricao->user->email)->send(new EmailConfirmacaoPagamento($inscricao, $evento));
+                    
+                    Log::info('PayPal: Pagamento criado e inscrição finalizada', [
+                        'pagamento_id' => $pagamento->id,
+                        'inscricao_id' => $inscricao->id
+                    ]);
+                } else {
+                    $pagamento->status = 'approved';
+                    $pagamento->paypal_payer_id = $payerId;
+                    $pagamento->save();
+                    
+                    if (!$inscricao->finalizada) {
+                        $inscricao->finalizada = true;
+                        $inscricao->save();
+                        Mail::to($inscricao->user->email)->send(new EmailConfirmacaoPagamento($inscricao, $evento));
+                        
+                        Log::info('PayPal: Inscrição finalizada', [
+                            'inscricao_id' => $inscricao->id
+                        ]);
+                    }
+                }
+                
+                // Limpar sessão
+                session()->forget('paypal_order_' . $evento->id);
+                
+                return redirect()->route('checkout.statusPagamento', ['evento' => $evento->id])
+                    ->with('success', 'Pagamento realizado com sucesso!');
+            } else {
+                Log::warning('PayPal: Pagamento não completado', [
+                    'order_id' => $orderId,
+                    'status' => $capture['status'] ?? 'unknown',
+                    'capture_response' => $capture
+                ]);
+                
+                return redirect()->route('checkout.telaPagamento', ['evento' => $evento->id])
+                    ->withErrors(['msg' => 'Pagamento não foi completado. Status: ' . ($capture['status'] ?? 'desconhecido')]);
+            }
+            
+        } catch (\Exception $e) {
+            Log::error('PayPal Success Callback Error: ' . $e->getMessage());
+            return redirect()->route('checkout.telaPagamento', ['evento' => $evento->id])
+                ->withErrors(['msg' => 'Erro interno ao processar a confirmação do PayPal.']);
+            }
+    }
+
+    /**
+     * Callback de cancelamento do PayPal
+     */
+    public function paypalCancel(Request $request, Evento $evento)
+    {
+        session()->forget('paypal_order_' . $evento->id);
+        
+        return redirect()->route('checkout.telaPagamento', ['evento' => $evento->id])
+            ->with('message', 'Pagamento cancelado. Você pode tentar novamente.');
     }
 
     public function index(Request $request, $id)
