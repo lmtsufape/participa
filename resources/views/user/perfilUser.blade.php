@@ -247,8 +247,8 @@
                                 {{-- Email | Senha | Confirmar Senha --}}
                                 <div class="form-group row mb-3">
                                     <div class="col-md-6">
-                                        <label for="senha_atual" class="col-form-label"><strong>{{ __('Senha atual') }}</strong></label>
-                                        <input id="senha_atual" type="password" class="form-control @error('senha_atual') is-invalid @enderror" name="senha_atual">
+                                        <label for="senha_atual" class="col-form-label required-field"><strong>{{ __('Senha atual') }}</strong></label>
+                                        <input id="senha_atual" type="password" class="form-control @error('senha_atual') is-invalid @enderror" name="senha_atual" autocomplete="new-password" required>
                                         <small>{{__('Para alterar a senha digite a atual e a nova')}}.</small>
                                         @error('senha_atual')
                                         <span class="invalid-feedback" role="alert">

@@ -85,7 +85,7 @@ class UserController extends Controller
             'cep' => 'required|string',
             'pais' => 'required',
             'email' => 'required|string|email|max:255',
-            'senha_atual' => 'nullable|string|min:8',
+            'senha_atual' => 'required|string|min:8',
             'password' => 'nullable|string|min:8',
             'password-confirm' => 'nullable|string|min:8',
         ];
@@ -98,21 +98,19 @@ class UserController extends Controller
         }
         $validator = $request->validate($validations);
 
-        if ($request->senha_atual != null) {
-            if (! (Hash::check($request->senha_atual, $user->password))) {
-                return redirect()->back()->withErrors(['senha_atual' => 'A senha digitada não corresponde à senha cadastrada.'])->withInput($validator);
+        if (! (Hash::check($request->senha_atual, $user->password))) {
+            return redirect()->back()->withErrors(['senha_atual' => 'A senha digitada não corresponde à senha cadastrada.'])->withInput($validator);
+        }
+        // Só exige nova senha se o campo de nova senha for preenchido
+        if ($request->password != null) {
+            if (! ($request->input('password-confirm') != null)) {
+                return redirect()->back()->withErrors(['password-confirm' => 'Digite a confirmação da senha.'])->withInput($validator);
             }
-            // Só exige nova senha se o campo de nova senha for preenchido
-            if ($request->password != null) {
-                if (! ($request->input('password-confirm') != null)) {
-                    return redirect()->back()->withErrors(['password-confirm' => 'Digite a confirmação da senha.'])->withInput($validator);
-                }
-                if (! ($request->password == $request->input('password-confirm'))) {
-                    return redirect()->back()->withErrors(['password' => 'A confirmação não confere com a nova senha.'])->withInput($validator);
-                }
-                $password = Hash::make($request->password);
-                $user->password = $password;
+            if (! ($request->password == $request->input('password-confirm'))) {
+                return redirect()->back()->withErrors(['password' => 'A confirmação não confere com a nova senha.'])->withInput($validator);
             }
+            $password = Hash::make($request->password);
+            $user->password = $password;
         }
 
 
