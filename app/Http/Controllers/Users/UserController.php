@@ -100,24 +100,19 @@ class UserController extends Controller
 
         if ($request->senha_atual != null) {
             if (! (Hash::check($request->senha_atual, $user->password))) {
-                return redirect()->back()->withErrors(['senha_atual' => 'A senha digitada não correspondente a senha cadastrada.'])->withInput($validator);
+                return redirect()->back()->withErrors(['senha_atual' => 'A senha digitada não corresponde à senha cadastrada.'])->withInput($validator);
             }
-
-            if (! ($request->password != null)) {
-                return redirect()->back()->withErrors(['password' => 'Digite a nova senha.'])->withInput($validator);
+            // Só exige nova senha se o campo de nova senha for preenchido
+            if ($request->password != null) {
+                if (! ($request->input('password-confirm') != null)) {
+                    return redirect()->back()->withErrors(['password-confirm' => 'Digite a confirmação da senha.'])->withInput($validator);
+                }
+                if (! ($request->password == $request->input('password-confirm'))) {
+                    return redirect()->back()->withErrors(['password' => 'A confirmação não confere com a nova senha.'])->withInput($validator);
+                }
+                $password = Hash::make($request->password);
+                $user->password = $password;
             }
-
-            if (! ($request->input('password-confirm') != null)) {
-                return redirect()->back()->withErrors(['password-confirm' => 'Digite a confirmação da senha.'])->withInput($validator);
-            }
-
-            if (! ($request->password == $request->input('password-confirm'))) {
-                return redirect()->back()->withErrors(['password' => 'A confirmação não confere com a nova senha.'])->withInput($validator);
-            }
-
-            $password = Hash::make($request->password);
-
-            $user->password = $password;
         }
 
 
@@ -155,12 +150,8 @@ class UserController extends Controller
         }
 
 
-        if($temp){
-            return redirect()->route('index')->with(['message' => 'Perfil atualizado com sucesso!']);
+        return redirect()->route('index')->with(['message' => 'Perfil atualizado com sucesso!']);
         }
-
-        return back()->with(['message' => 'Atualizado com sucesso!']);
-    }
 
     public function meusCertificados()
     {
