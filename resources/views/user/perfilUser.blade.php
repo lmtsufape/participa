@@ -120,7 +120,7 @@
                                             </div>
 
                                             <div id="fieldCPF" @error('cpf') style="display: none" @enderror>
-                                                <input id="cpf" type="text" class="form-control @error('cpf') is-invalid @enderror" name="cpf" @if(old('cpf') != null) @else value="{{$user->cpf}}" @endif autocomplete="cpf" placeholder="CPF" autofocus >
+                                                <input id="cpf" type="text" class="form-control @error('cpf') is-invalid @enderror" name="cpf" value="{{ old('cpf', $user->cpf) }}" autocomplete="cpf" placeholder="CPF" autofocus >
 
                                                 @error('cpf')
                                                 <span class="invalid-feedback" role="alert">
