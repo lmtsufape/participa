@@ -93,11 +93,8 @@ class PayPalService
                 ]);
             
             if (!$response->successful()) {
-                dd([
-                    'Erro_ao_gerar_token' => $response->json(),
-                    'Client_ID' => $this->clientId,
-                    'URL_Base' => $this->baseUrl
-                ]);
+                Log::error('PayPal Token Error', ['response' => $response->json()]);
+                throw new \Exception('Erro ao obter access token do PayPal');
             }
 
             if ($response->successful()) {
@@ -169,7 +166,7 @@ class PayPalService
             throw new \Exception('Erro ao criar ordem no PayPal: ' . $errorMessage);
         } catch (\Exception $e) {
 
-            dd('Erro na Exception: ' . $e->getMessage());
+            Log::error('PayPal Create Order Exception: ' . $e->getMessage());
             throw $e;
         }
     }
