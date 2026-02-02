@@ -70,7 +70,8 @@
                     <input type="hidden" name="cnpj" class="form-control" value="{{ session('cnpj') ?? old('cnpj') }}">
                     <input type="hidden" name="passaporte" class="form-control"
                         value="{{ session('passaporte') ?? old('passaporte') }}">
-                    <input type="hidden" name="pais" class="form-control" value="{{ session('pais') }}">
+                    <input type="hidden" name="pais" class="form-control" 
+                        value="{{ session('pais') ?? (Auth::check() ? 'brasil' : '') }}">
 
                     @csrf
                     {{-- Nome | CPF --}}
