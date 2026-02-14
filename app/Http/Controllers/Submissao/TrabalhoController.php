@@ -28,6 +28,7 @@ use App\Models\Users\Coautor;
 use App\Models\Users\CoordEixoTematico;
 use App\Models\Users\Revisor;
 use App\Models\Users\User;
+use App\Mail\CartaDeAceiteMail;
 use App\Notifications\SubmissaoTrabalhoNotification;
 use App\Policies\EventoPolicy;
 use Auth;
