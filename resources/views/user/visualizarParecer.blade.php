@@ -23,7 +23,7 @@
 
                 @foreach ($form->perguntas as $index => $pergunta)
                     @if($pergunta->visibilidade == true)
-                        @if($pergunta->respostas->first()->opcoes->count())
+                        @if($pergunta->respostas->first() && $pergunta->respostas->first()->opcoes && $pergunta->respostas->first()->opcoes->count())
                             @if ($respostas[$loop->index]->opcoes()->first()->visibilidade == true)
                                 <div class="card">
                                     <div class="card-body">
@@ -43,7 +43,7 @@
                                     </div>
                                 </div>
                             @endif
-                        @elseif($pergunta->respostas->first()->paragrafo->count())
+                        @elseif($pergunta->respostas->first() && $pergunta->respostas->first()->paragrafo)
                             @forelse ($pergunta->respostas as $resposta)
                                 @if(($resposta->revisor != null || $resposta->trabalho != null) && $resposta->revisor_id == $revisor->id)
                                     @if(($resposta->trabalho->id == $trabalho->id) && $resposta->paragrafo->visibilidade == true)
