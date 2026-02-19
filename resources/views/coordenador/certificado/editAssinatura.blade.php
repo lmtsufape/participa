@@ -47,6 +47,11 @@
                                 @else
                                     <img id="logo-preview" class="img-fluid" src="{{asset('/img/nova_imagem.PNG')}}" alt="">
                                 @endif
+
+                                <div class="overlay-trocar">
+                                    <i class="bi bi-camera-fill"></i>
+                                    <span>Trocar imagem</span>
+                                </div>
                             </div>
                             <div style="display: none;">
                                 <input type="file" id="logo-input" accept="image/*" class="form-control @error('fotoAssinatura') is-invalid @enderror" name="fotoAssinatura" value="{{ old('fotoAssinatura') }}">
@@ -94,4 +99,38 @@
             });
         });
     </script>
+    <style>
+        .imagem-loader{
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+            max-width: 100%;
+            }
+
+            .imagem-loader img{
+            display: block;
+            border-radius: 8px;
+            }
+
+            .imagem-loader .overlay-trocar{
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background: rgba(0,0,0,.45);
+            color: #fff;
+            opacity: 0;
+            transition: .2s;
+            border-radius: 8px;
+            font-weight: 600;
+            }
+
+            .imagem-loader:hover .overlay-trocar{
+            opacity: 1;
+            }
+    </style>
+
+
 @endsection
