@@ -53,12 +53,12 @@
                         <div>
                             <div>
                                 <a href="{{route('coord.editarAssinatura', ['eventoId' => $assinatura->evento->id, 'id' => $assinatura->id])}}">
-                                    <i class="fas fa-cog" style="color: black"></i>&nbsp;&nbsp;Editar
+                                    <i class="bi bi-gear-fill" style="color: black"></i>&nbsp;&nbsp;Editar
                                 </a>
                             </div>
                             <div>
                                 <a data-bs-toggle="modal" data-bs-target="#modalStaticDeletarAssinatura_{{$assinatura->id}}" style="color: red; cursor: pointer;">
-                                    <i class="far fa-trash-alt" style="color: black"></i>&nbsp;&nbsp;Deletar assinatura
+                                    <i class="bi bi-trash3-fill" style="color: black"></i>&nbsp;&nbsp;Deletar assinatura
                                 </a>
                             </div>
                         </div>
