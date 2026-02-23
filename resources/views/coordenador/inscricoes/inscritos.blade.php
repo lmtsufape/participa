@@ -80,6 +80,7 @@
                     @include('coordenador.inscricoes.inscrever_participante')
 
                     <p class="card-text">
+                    <input type="hidden" name="selecao_total" id="input-selecao-total" value="0">
                     <table class="table table-hover table-responsive-lg table-sm" style="position: relative;">
                         <thead>
                             <tr>
@@ -185,53 +186,64 @@
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const selectAllCheckbox = document.getElementById('selecionar-todos-inscritos');
-        const checkboxNodes = document.querySelectorAll('.checkbox-inscricao');
+        const inputSelecaoTotal = document.getElementById('input-selecao-total');
         const openModalButton = document.getElementById('btn-abrir-modal-email');
-        const hiddenInput = document.getElementById('inscricoes-email-input');
-        const modalElement = document.getElementById('modal-enviar-email');
+        const hiddenInputIds = document.getElementById('inscricoes-email-input');
         const totalSelectedSpan = document.getElementById('total-inscricoes-selecionadas');
 
-        if (!selectAllCheckbox || !openModalButton || !modalElement) {
-            return;
-        }
-
-        const checkboxList = Array.from(checkboxNodes);
+        if (!selectAllCheckbox) return;
 
         const updateButtonState = () => {
-            const anyChecked = checkboxList.some((checkbox) => checkbox.checked);
-            openModalButton.disabled = !anyChecked;
+            const checkboxes = document.querySelectorAll('.checkbox-inscricao');
+            const anyChecked = Array.from(checkboxes).some(cb => cb.checked);
+            if (openModalButton) openModalButton.disabled = !anyChecked;
         };
 
-        const syncSelectAll = () => {
-            if (!checkboxList.length) {
-                selectAllCheckbox.checked = false;
-                return;
-            }
+        selectAllCheckbox.addEventListener('change', function() {
+            const checkboxes = document.querySelectorAll('.checkbox-inscricao');
+            const isChecked = this.checked;
 
-            selectAllCheckbox.checked = checkboxList.every((checkbox) => checkbox.checked);
-        };
-
-        selectAllCheckbox.addEventListener('change', () => {
-            checkboxList.forEach((checkbox) => {
-                checkbox.checked = selectAllCheckbox.checked;
+            checkboxes.forEach(cb => {
+                cb.checked = isChecked;
             });
+
+            inputSelecaoTotal.value = isChecked ? "1" : "0";
+            
             updateButtonState();
         });
 
-        checkboxList.forEach((checkbox) => {
-            checkbox.addEventListener('change', () => {
-                syncSelectAll();
+        document.addEventListener('change', function(e) {
+            if (e.target && e.target.classList.contains('checkbox-inscricao')) {
+                const checkboxes = document.querySelectorAll('.checkbox-inscricao');
+                const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+
+                if (!e.target.checked) {
+                    selectAllCheckbox.checked = false;
+                    inputSelecaoTotal.value = "0";
+                } else if (allChecked) {
+                    selectAllCheckbox.checked = true;
+                    inputSelecaoTotal.value = "1";
+                }
+                
                 updateButtonState();
+            }
+        });
+
+        const modalElement = document.getElementById('modal-enviar-email');
+        if (modalElement) {
+            modalElement.addEventListener('show.bs.modal', () => {
+                const checkboxes = document.querySelectorAll('.checkbox-inscricao:checked');
+                
+                if (inputSelecaoTotal.value === "1") {
+                    hiddenInputIds.value = "todos"; 
+                    if (totalSelectedSpan) totalSelectedSpan.textContent = "{{ $inscricoes->total() }}";
+                } else {
+                    const selectedIds = Array.from(checkboxes).map(cb => cb.value);
+                    hiddenInputIds.value = selectedIds.join(',');
+                    if (totalSelectedSpan) totalSelectedSpan.textContent = selectedIds.length;
+                }
             });
-        });
-
-        modalElement.addEventListener('show.bs.modal', () => {
-            const selectedIds = checkboxList.filter((checkbox) => checkbox.checked).map((checkbox) => checkbox.value);
-            hiddenInput.value = selectedIds.join(',');
-            totalSelectedSpan.textContent = selectedIds.length;
-        });
-
-        updateButtonState();
+        }
     });
 </script>
 
