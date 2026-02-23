@@ -88,11 +88,12 @@ class InscricaoController extends Controller
             }
         }
 
-        $inscricoes = $query->orderBy('finalizada', 'desc')
-                            ->orderBy(User::select('name')
-                                ->whereColumn('user_id', 'users.id'), 'asc')
-                            ->paginate(50) 
-                            ->withQueryString();
+        $inscricoes = $query->join('users', 'inscricaos.user_id', '=', 'users.id')
+                        ->select('inscricaos.*')
+                        ->orderBy('inscricaos.finalizada', 'desc')
+                        ->orderBy('users.name', 'asc')
+                        ->paginate(50) 
+                        ->withQueryString();
 
         return view('coordenador.inscricoes.inscritos', compact('inscricoes', 'evento'));
     }
