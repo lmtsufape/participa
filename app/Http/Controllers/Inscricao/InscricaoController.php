@@ -102,6 +102,19 @@ class InscricaoController extends Controller
     {
         $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
 
+        if ($request->input('selecao_total') == "1") {
+            $query = $evento->inscricaos();
+
+            if ($request->filled('nome')) {
+                $query->whereHas('user', fn($q) => $q->where('name', 'ilike', "%{$request->nome}%"));
+            }
+
+            $inscricoes = $query->with('user')->get();
+        } else {
+            $ids = explode(',', $request->inscricoes);
+            $inscricoes = Inscricao::whereIn('id', $ids)->with('user')->get();
+        }
+
         $validated = $request->validate([
             'assunto' => ['required', 'string', 'max:255'],
             'mensagem' => ['required', 'string'],
