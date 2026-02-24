@@ -102,53 +102,48 @@ class InscricaoController extends Controller
     {
         $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
 
+        $request->validate([
+            'assunto'    => ['required', 'string', 'max:255'],
+            'mensagem'   => ['required', 'string'],
+            'inscricoes' => [$request->selecao_total == '1' ? 'nullable' : 'required', 'string'],
+        ]);
+
         if ($request->input('selecao_total') == "1") {
             $query = $evento->inscricaos();
 
             if ($request->filled('nome')) {
-                $query->whereHas('user', fn($q) => $q->where('name', 'ilike', "%{$request->nome}%"));
+                $query->whereHas('user', function($q) use ($request) {
+                    $q->where('name', 'LIKE', "%{$request->nome}%");
+                });
+            }
+            if ($request->filled('email')) {
+                $query->whereHas('user', function($q) use ($request) {
+                    $q->where('email', 'LIKE', "%{$request->email}%");
+                });
             }
 
             $inscricoes = $query->with('user')->get();
         } else {
-            $ids = explode(',', $request->inscricoes);
-            $inscricoes = Inscricao::whereIn('id', $ids)->with('user')->get();
+            $inscricaoIds = collect(explode(',', $request->inscricoes))
+                ->filter()
+                ->map(fn($id) => (int) $id)
+                ->unique()
+                ->values();
+
+            $inscricoes = Inscricao::whereIn('id', $inscricaoIds)
+                ->where('evento_id', $evento->id)
+                ->with('user')
+                ->get();
         }
-
-        $validated = $request->validate([
-            'assunto' => ['required', 'string', 'max:255'],
-            'mensagem' => ['required', 'string'],
-            'inscricoes' => ['required', 'string'],
-        ]);
-
-        $inscricaoIds = collect(explode(',', $validated['inscricoes']))
-            ->filter()
-            ->map(fn ($id) => (int) $id)
-            ->filter(fn ($id) => $id > 0)
-            ->unique()
-            ->values();
-
-        if ($inscricaoIds->isEmpty()) {
-            return redirect()->back()->withErrors(['email_inscritos' => 'Selecione ao menos um inscrito para enviar o e-mail.']);
-        }
-
-        $inscricoes = Inscricao::whereIn('id', $inscricaoIds)
-            ->where('evento_id', $evento->id)
-            ->with('user')
-            ->get();
 
         if ($inscricoes->isEmpty()) {
-            return redirect()->back()->withErrors(['email_inscritos' => 'Não foi possível localizar os inscritos selecionados.']);
+            return redirect()->back()->withErrors(['email_inscritos' => 'Nenhum inscrito selecionado ou encontrado para o envio.']);
         }
 
-        $emails = $inscricoes
-            ->map(fn ($inscricao) => $inscricao->user?->email)
-            ->filter()
-            ->unique()
-            ->values();
+        $emails = $inscricoes->map(fn($i) => $i->user?->email)->filter()->unique()->values();
 
         if ($emails->isEmpty()) {
-            return redirect()->back()->withErrors(['email_inscritos' => 'Nenhum e-mail válido encontrado para os inscritos selecionados.']);
+            return redirect()->back()->withErrors(['email_inscritos' => 'Nenhum endereço de e-mail válido foi encontrado.']);
         }
 
         $emailsArray = $emails->toArray();
@@ -160,11 +155,11 @@ class InscricaoController extends Controller
             ->bcc($bccList)
             ->send(new EmailInscritosPersonalizado(
                 $evento,
-                $validated['assunto'],
-                $validated['mensagem']
+                $request->assunto,
+                $request->mensagem
             ));
 
-        return redirect()->back()->with('message', 'E-mail enviado para '.$destinatariosTotais.' inscrito(s).');
+        return redirect()->back()->with('message', 'E-mail enviado com sucesso para ' . $destinatariosTotais . ' inscrito(s).');
     }
 
     public function formulario(Evento $evento)
