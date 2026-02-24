@@ -36,11 +36,9 @@
                     <div class="col-md-2 d-flex gap-2 flex-column align-items-end">
                         <button
                             type="button"
-                            class="button-prevent-multiple-submits btn btn-outline-primary my-1 ml-1"
-                            id="btn-abrir-modal-email"
+                            class="btn btn-outline-primary my-1 ml-1"
                             data-bs-toggle="modal"
                             data-bs-target="#modal-enviar-email"
-                            disabled
                         >
                             Enviar e-mail
                         </button>
@@ -80,7 +78,6 @@
                     @include('coordenador.inscricoes.inscrever_participante')
 
                     <p class="card-text">
-                    <input type="hidden" name="selecao_total" id="input-selecao-total" value="0">
                     <table class="table table-hover table-responsive-lg table-sm" style="position: relative;">
                         <thead>
                             <tr>
@@ -162,7 +159,17 @@
             </div>
             <form method="POST" action="{{ route('inscricao.enviarEmail', $evento) }}" id="form-enviar-email-inscritos">
                 @csrf
+                <input type="hidden" name="selecao_total" id="input-selecao-total" value="0">
                 <div class="modal-body">
+                    <div class="form-check form-switch mb-3 p-3 border rounded bg-light">
+                        <input class="form-check-input" type="checkbox" id="check-enviar-todos" name="selecao_total" value="1" style="margin-left: 0;">
+                        <label class="form-check-label fw-bold" for="check-enviar-todos" style="margin-left: 10px;">
+                            Enviar para TODOS os {{ $inscricoes->total() }} inscritos
+                        </label>
+                        <div class="text-muted small" style="margin-left: 10px;">
+                            (Isso ignorará as seleções individuais feitas na lista)
+                        </div>
+                    </div>
                     <input type="hidden" name="inscricoes" id="inscricoes-email-input">
                     <p class="text-muted mb-3">Este e-mail será enviado para <span id="total-inscricoes-selecionadas">0</span> inscrito(s) selecionado(s).</p>
                     <div class="form-group">
@@ -185,64 +192,41 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        const selectAllCheckbox = document.getElementById('selecionar-todos-inscritos');
+        const modalElement = document.getElementById('modal-enviar-email');
+        const checkEnviarTodos = document.getElementById('check-enviar-todos');
         const inputSelecaoTotal = document.getElementById('input-selecao-total');
-        const openModalButton = document.getElementById('btn-abrir-modal-email');
+        const btnEnviarFinal = document.getElementById('btn-enviar-final');
         const hiddenInputIds = document.getElementById('inscricoes-email-input');
         const totalSelectedSpan = document.getElementById('total-inscricoes-selecionadas');
+        const avisoSelecionados = document.getElementById('aviso-selecionados');
 
-        if (!selectAllCheckbox) return;
+        function validarEstadoDoEnvio() {
+            const selecionadosNaLista = document.querySelectorAll('.checkbox-inscricao:checked').length;
+            const mandarParaTodos = checkEnviarTodos.checked;
 
-        const updateButtonState = () => {
-            const checkboxes = document.querySelectorAll('.checkbox-inscricao');
-            const anyChecked = Array.from(checkboxes).some(cb => cb.checked);
-            if (openModalButton) openModalButton.disabled = !anyChecked;
-        };
+            inputSelecaoTotal.value = mandarParaTodos ? "1" : "0";
 
-        selectAllCheckbox.addEventListener('change', function() {
-            const checkboxes = document.querySelectorAll('.checkbox-inscricao');
-            const isChecked = this.checked;
+            if (totalSelectedSpan) totalSelectedSpan.textContent = selecionadosNaLista;
 
-            checkboxes.forEach(cb => {
-                cb.checked = isChecked;
-            });
+            if (avisoSelecionados) avisoSelecionados.style.opacity = mandarParaTodos ? "0.3" : "1";
 
-            inputSelecaoTotal.value = isChecked ? "1" : "0";
-            
-            updateButtonState();
-        });
-
-        document.addEventListener('change', function(e) {
-            if (e.target && e.target.classList.contains('checkbox-inscricao')) {
-                const checkboxes = document.querySelectorAll('.checkbox-inscricao');
-                const allChecked = Array.from(checkboxes).every(cb => cb.checked);
-
-                if (!e.target.checked) {
-                    selectAllCheckbox.checked = false;
-                    inputSelecaoTotal.value = "0";
-                } else if (allChecked) {
-                    selectAllCheckbox.checked = true;
-                    inputSelecaoTotal.value = "1";
-                }
-                
-                updateButtonState();
+            if (btnEnviarFinal) {
+                btnEnviarFinal.disabled = !(mandarParaTodos || selecionadosNaLista > 0);
             }
-        });
+        }
 
-        const modalElement = document.getElementById('modal-enviar-email');
         if (modalElement) {
-            modalElement.addEventListener('show.bs.modal', () => {
+            modalElement.addEventListener('show.bs.modal', function() {
                 const checkboxes = document.querySelectorAll('.checkbox-inscricao:checked');
+                const selectedIds = Array.from(checkboxes).map(cb => cb.value);
+                hiddenInputIds.value = selectedIds.join(',');
                 
-                if (inputSelecaoTotal.value === "1") {
-                    hiddenInputIds.value = "todos"; 
-                    if (totalSelectedSpan) totalSelectedSpan.textContent = "{{ $inscricoes->total() }}";
-                } else {
-                    const selectedIds = Array.from(checkboxes).map(cb => cb.value);
-                    hiddenInputIds.value = selectedIds.join(',');
-                    if (totalSelectedSpan) totalSelectedSpan.textContent = selectedIds.length;
-                }
+                validarEstadoDoEnvio();
             });
+        }
+
+        if (checkEnviarTodos) {
+            checkEnviarTodos.addEventListener('change', validarEstadoDoEnvio);
         }
     });
 </script>
