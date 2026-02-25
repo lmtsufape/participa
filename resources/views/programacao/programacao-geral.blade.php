@@ -1,0 +1,17 @@
+@extends('layouts.app')
+
+@section('content')
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <h1 class="display-4 mb-4 fw-bold" style="color: #3d93a9; border-bottom: 3px solid #f2a440; padding-bottom: 10px;">
+                Programação Geral
+            </h1>
+
+            <div class="shadow-sm p-4 mb-5 bg-white rounded border-start border-4" style="border-color: #f2a440 !important;">
+                <img src="{{ asset('/img/programacao-geral.png') }}" alt="Programação Geral" style="width: 100%;">
+            </div>
+        </div>
+    </div>
+</div>
+@endsection
