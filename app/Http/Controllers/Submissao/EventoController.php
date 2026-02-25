@@ -1355,6 +1355,19 @@ class EventoController extends Controller
     public function store(StoreEventoRequest $request)
     {
         $data = $request->all();
+
+        // Remove tags <p> desnecessárias das descrições (CKEditor adiciona automaticamente)
+        // Se a descrição contém apenas texto simples envolvido em <p>, remove a tag
+        if (isset($data['descricao'])) {
+            $data['descricao'] = $this->formatDescription($data['descricao']);
+        }
+        if (isset($data['descricao_en'])) {
+            $data['descricao_en'] = $this->formatDescription($data['descricao_en']);
+        }
+        if (isset($data['descricao_es'])) {
+            $data['descricao_es'] = $this->formatDescription($data['descricao_es']);
+        }
+
         $endereco = Endereco::create($data);
         $data['enderecoId'] = $endereco->id;
         $data['coordenadorId'] = Auth::user()->id;
@@ -1412,7 +1425,12 @@ class EventoController extends Controller
         ]);
 
         $subject = 'Evento Criado';
-        Mail::to($user->email)->send(new EventoCriado($user, $subject, $evento));
+
+        //TODO: Descomentar isso no ultimo commit
+
+        /* //testando enviar o email depois -> ainda retorna erro
+       Mail::to($user->email)->queue(new EventoCriado($user, $subject, $evento)); */
+
 
         return redirect()->route('home')->with(['message' => 'Evento criado com sucesso!']);
     }
@@ -1631,6 +1649,19 @@ class EventoController extends Controller
         $evento = Evento::find($id);
         $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
         $data = $request->all();
+
+        // Remove tags <p> desnecessárias das descrições (CKEditor adiciona automaticamente)
+        // Se a descrição contém apenas texto simples envolvido em <p>, remove a tag
+        if (isset($data['descricao'])) {
+            $data['descricao'] = $this->formatDescription($data['descricao']);
+        }
+        if (isset($data['descricao_en'])) {
+            $data['descricao_en'] = $this->formatDescription($data['descricao_en']);
+        }
+        if (isset($data['descricao_es'])) {
+            $data['descricao_es'] = $this->formatDescription($data['descricao_es']);
+        }
+
         $evento->update($data);
 
         $validated = $request->validated();
@@ -2028,6 +2059,37 @@ class EventoController extends Controller
         $proximosEventos = $query->paginate(9);
 
         return view('coordenador.evento.eventosProximos', compact('proximosEventos'));
+    }
+
+    /**
+     * Remove tags <p> desnecessárias adicionadas pelo CKEditor
+     * Se o conteúdo é apenas texto simples envolvido em <p>, remove a tag
+     *
+     * @param string $conteudo Conteúdo HTML da descrição
+     * @return string Conteúdo limpo sem tags <p> desnecessárias
+     */
+    private function formatDescription($conteudo)
+    {
+        if (empty($conteudo)) {
+            return $conteudo;
+        }
+
+        // Remove espaços em branco no início e fim
+        $conteudo = trim($conteudo);
+
+        // Se o conteúdo começa com <p> e termina com </p>, e não contém outras tags HTML complexas
+        // Remove as tags <p> e </p> mantendo apenas o conteúdo interno
+        $conteudo = preg_replace('/^<p[^>]*>(.*?)<\/p>$/is', '$1', $conteudo);
+
+        // Remove múltiplas tags <p> vazias ou com apenas espaços
+        $conteudo = preg_replace('/<p[^>]*>\s*<\/p>/i', '', $conteudo);
+
+        // Se após a limpeza o conteúdo está vazio ou contém apenas espaços, retorna vazio
+        if (trim(strip_tags($conteudo)) === '') {
+            return '';
+        }
+
+        return $conteudo;
     }
 
 }
