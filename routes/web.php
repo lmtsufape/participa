@@ -113,6 +113,16 @@ Auth::routes(['verify' => true, 'register' => false]);
                 return view('administrador.cadastrarUsuario');
             })->name('admin.cadastrarUsuario');
             Route::post('/criarUsuario', [AdministradorController::class, 'criarUsuario'])->name('administrador.criarUsuario');
+            Route::view('/sobre-o-cbee', 'sobre.cbee')->name('sobre.cbee');
+            Route::view('/sobre-o-sbee', 'sobre.sbee')->name('sobre.sbee');
+            Route::view('/associe-se', 'associe-se')->name('associe-se');
+            Route::view('/informacoes-uteis', 'informacoes-uteis')->name('informacoes.uteis');
+            Route::view('/cronograma', 'cronograma')->name('cronograma');
+            Route::view('/programacao-geral', 'programacao.programacao-geral')->name('programacao.geral');
+            Route::view('/feira', 'programacao.feira')->name('programacao.feira');
+            Route::view('/mostra-audiovisual', 'programacao.mostra')->name('programacao.mostra');
+            Route::view('/premiacoes', 'premiacoes')->name('premiacoes');
+            Route::view('/normas', 'normas')->name('normas');
         });
 
 

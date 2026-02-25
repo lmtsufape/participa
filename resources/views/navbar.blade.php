@@ -1,7 +1,7 @@
 <style>
     .cbee-header-top {
         background-color: #f2a440;
-        padding: 15px 0;
+        width: 100vw;
     }
 
     .auth-buttons .btn-auth {
@@ -64,31 +64,10 @@
     @php $incompleto = optional(Auth::user())->usuarioTemp; @endphp
 
     <div class="cbee-header-top">
-        <div class="container d-flex justify-content-between align-items-center">
+        <div style=" width: 100vw; display: flex; justify-content: center; align-items: center;">
             <a href="{{ $incompleto ? '#' : route('index') }}">
-                <img src="{{ asset('/img/logo_congresso_etno.png') }}" alt="Logo" style="max-height: 120px;">
+                <img src="{{ asset('/img/banner-site-cbee.jpg') }}" alt="Logo" style="width:eight: 100vw;">
             </a>
-
-            <div class="d-flex align-items-center gap-3">
-                @guest
-                    <div class="auth-buttons d-none d-md-flex align-items-center">
-                        <a href="{{ route('login') }}" class="btn-auth btn-login">Login</a>
-                        <a href="{{ route('preRegistro') }}" class="btn-auth btn-register">Cadastre-se</a>
-                    </div>
-                @endguest
-
-                <div class="dropdown">
-                    <a class="nav-link dropdown-toggle text-white fw-bold" href="#" role="button" data-bs-toggle="dropdown">
-                        <img src="https://flagicons.lipis.dev/flags/4x3/{{ Session::get('locale') == 'en' ? 'us' : (Session::get('locale') == 'es' ? 'es' : 'br') }}.svg" width="20">
-                        {{ strtoupper(Session::get('locale') ?? 'PT') }}
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item" href="{{ route('alterar-idioma', ['lang' => 'pt-BR']) }}?url={{ urlencode(request()->fullUrl()) }}">Português</a></li>
-                        <li><a class="dropdown-item" href="{{ route('alterar-idioma', ['lang' => 'en']) }}?url={{ urlencode(request()->fullUrl()) }}">English</a></li>
-                        <li><a class="dropdown-item" href="{{ route('alterar-idioma', ['lang' => 'es']) }}?url={{ urlencode(request()->fullUrl()) }}">Español</a></li>
-                    </ul>
-                </div>
-            </div>
         </div>
     </div>
 
@@ -104,41 +83,62 @@
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Sobre</a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Sobre o CBEE</a></li>
-                            <li><a class="dropdown-item" href="#">Sobre a SBEE</a></li>
+                            <li><a class="dropdown-item" href="{{ route('sobre.cbee', ['locale' => app()->getLocale()]) }}">Sobre o CBEE</a></li>
+                            <li><a class="dropdown-item" href="{{ route('sobre.sbee', ['locale' => app()->getLocale()]) }}">Sobre a SBEE</a></li>
                         </ul>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Cronograma</a>
+                        <a class="nav-link" href="{{ route('cronograma', ['locale' => app()->getLocale()]) }}">Cronograma</a>
                     </li>
 
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Inscrições</a>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="#">Inscreva-se</a></li>
-                            <li><a class="dropdown-item" href="#">Normas</a></li>
-                            <li><a class="dropdown-item" href="#">Premiações</a></li>
+                            <li><a class="dropdown-item" href="{{ route('normas', ['locale' => app()->getLocale()]) }}">Normas</a></li>
+                            <li><a class="dropdown-item" href="{{ route('premiacoes', ['locale' => app()->getLocale()]) }}">Premiações</a></li>
                         </ul>
                     </li>
 
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Programação</a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Programação Geral</a></li>
-                            <li><a class="dropdown-item" href="#">Feira da Agrobiodiversidade</a></li>
-                            <li><a class="dropdown-item" href="#">Mostra Audiovisual</a></li>
+                            <li><a class="dropdown-item" href="{{ route('programacao.geral', ['locale' => app()->getLocale()]) }}">Programação Geral</a></li>
+                            <li><a class="dropdown-item" href="{{ route('programacao.feira', ['locale' => app()->getLocale()]) }}">Feira da Agrobiodiversidade</a></li>
+                            <li><a class="dropdown-item" href="{{ route('programacao.mostra', ['locale' => app()->getLocale()]) }}">Mostra Audiovisual</a></li>
                         </ul>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Associe-se</a>
+                        <a class="nav-link" href="{{ route('associe-se', ['locale' => app()->getLocale()]) }}">Associe-se</a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Informações Úteis</a>
+                        <a class="nav-link" href="{{ route('informacoes.uteis', ['locale' => app()->getLocale()]) }}">Informações Úteis</a>
+                    </li>
+                    @guest
+                        <li class="nav-item">
+                            <a href="{{ route('login') }}" class="nav-link">Entrar</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('preRegistro') }}" class="nav-link">Cadastre-se</a>
+                        </li>
+                    @endguest
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <img src="https://flagicons.lipis.dev/flags/4x3/{{ Session::get('locale') == 'en' ? 'us' : (Session::get('locale') == 'es' ? 'es' : 'br') }}.svg" width="20">
+                            {{ strtoupper(Session::get('locale') ?? 'PT') }}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="{{ route('alterar-idioma', ['lang' => 'pt-BR']) }}?url={{ urlencode(request()->fullUrl()) }}">Português</a></li>
+                            <li><a class="dropdown-item" href="{{ route('alterar-idioma', ['lang' => 'en']) }}?url={{ urlencode(request()->fullUrl()) }}">English</a></li>
+                            <li><a class="dropdown-item" href="{{ route('alterar-idioma', ['lang' => 'es']) }}?url={{ urlencode(request()->fullUrl()) }}">Español</a></li>
+                        </ul>
                     </li>
                 </ul>
+
+                
 
                 @auth
                 <ul class="navbar-nav ms-auto">
