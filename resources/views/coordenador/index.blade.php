@@ -12,17 +12,16 @@
     </style>
 
     <div class="container">
-
-        {{-- titulo da página --}}
         <div class="d-flex justify-content-between align-items-center mb-5">
             <div>
                 <h1>{{__('Meus Eventos')}}</h1>
             </div>
-{{--            <div>--}}
-{{--                <a href="{{route('evento.criar')}}" class="btn btn-primary">{{__('Novo Evento')}}</a>--}}
-{{--            </div>--}}
+            <div>
+                <a href="{{route('evento.criar')}}" class="btn btn-primary">{{__('Novo Evento')}}</a>
+           </div>
 
         </div>
+
         <div class="row">
             @php
                 use Illuminate\Support\Str;

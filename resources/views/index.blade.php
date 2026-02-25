@@ -97,7 +97,7 @@
 @endsection
 
 @section('content')
-    <div class="modal fade" id="infoModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
+    {{--<div class="modal fade" id="infoModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
@@ -115,7 +115,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div>--}}
     @if($eventos_destaques->isNotEmpty())
         <div class="container d-flex flex-column pb-5">
             <div class="container d-flex align-items-center mb-3 position-relative">
