@@ -548,10 +548,10 @@
                     </div>
                 </div>
 
-                {{-- Pessoa com deficiência ou idosos --}}
+                {{-- Pessoa com deficiência --}}
                 <div>
                     <div class="form-group mt-3">
-                        <label class="col-form-label required-field"><strong>Você é uma pessoa idosa ou com deficiência?</strong></label>
+                        <label class="col-form-label required-field"><strong>Você é uma pessoa com deficiência?</strong></label>
                         <div>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="deficienciaIdoso" id="deficiencia_sim" value="true" required>
@@ -567,10 +567,10 @@
             </div>
 
             <div>
-                {{-- Associado da ABA Agroecologia --}}
+                {{-- Associado --}}
                 <div >
                     <div class="form-group mt-3">
-                        <label class="col-form-label required-field"><strong>Você é uma pessoa associada à Associação Brasileira de Agroecologia (ABA-Agroecologia)?</strong></label>
+                        <label class="col-form-label required-field"><strong>Você é uma pessoa associada à Sociedade Brasileira de Etnobiologia e Etnoecologia (SBEE)?</strong></label>
                         <div>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="associadoAba" id="associado_sim" value="true" required>
@@ -584,10 +584,10 @@
                     </div>
                 </div>
 
-                {{-- Gostaria de receber mais informações sobre ABA --}}
+                {{-- Gostaria de receber mais informações sobre SBEE --}}
                 <div>
                     <div class="form-group mt-3">
-                        <label class="col-form-label required-field"><strong>Se não, gostaria de receber mais informações sobre a ABA-Agroecologia?</strong></label>
+                        <label class="col-form-label required-field"><strong>Se não, gostaria de receber mais informações sobre a SBEE?</strong></label>
                         <div>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="receberInfoAba" id="receber_info_sim" value="true" required>
