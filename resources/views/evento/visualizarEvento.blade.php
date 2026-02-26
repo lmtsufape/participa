@@ -208,25 +208,24 @@
                         {!! $evento->descricao !!}
                     @endif
                 </div>
-                <br>
-                <strong>Para mais informações, <a href="https://cba.aba-agroecologia.org.br/">clique aqui</a> e acesse o site oficial do 13º CBA.</strong>
+                <br>  
             </div>
 
         </div>
         <hr class="border-dark">
 
         <div class="row">
-            <h4 class="text-my-primary">{{ __('Valores das inscrições para o 13º CBA') }}</h4>
+            <h4 class="text-my-primary">{{ __('Valores das inscrições para o XV CBEE') }}</h4>
             <div class="col-md-12 overflow-auto text-break" style="word-wrap: break-word; white-space: normal;">
                 <div>
                     <img src="{{asset('img/tabela_de_valores.jpg')}}" style="width: 700px;">
                 </div>
                 <br>
                 <div class="container-associar btn" style="cursor: default;">
-                    <h5>{{ __('Associe-se à ABA-Agroecologia e garanta seu desconto na inscrição!') }}</h5>
+                    <h5>{{ __('Associe-se à Sociedade Brasileira de Etnobiologia e Etnoecologia (SBEE) e garanta seu desconto na inscrição!') }}</h5>
                     <div class="btn-associacao">
-                        <a href="https://associados.aba-agroecologia.org.br/register/solicitation" target="_blank" style="width: 210px;" class="btn-associar">QUERO ME ASSOCIAR <img src="{{asset('img/icons/fora.png')}}" style="width: 30px;"></a>
-                        <a href="https://associados.aba-agroecologia.org.br/login" class="btn-associar" target="_blank">REGULARIZE A SUA ASSOCIAÇÃO <img src="{{asset('img/icons/fora.png')}}" style="width: 30px; margin-left:10px;"></a>
+                        <a href="https://www.etnobiologia.org/participe" target="_blank" style="width: 210px;" class="btn-associar">QUERO ME ASSOCIAR <img src="{{asset('img/icons/fora.png')}}" style="width: 30px;"></a>
+                        <a href="https://www.etnobiologia.org/participe" class="btn-associar" target="_blank">REGULARIZE A SUA ASSOCIAÇÃO <img src="{{asset('img/icons/fora.png')}}" style="width: 30px; margin-left:10px;"></a>
                     </div>
                     <br>
                 </div>
@@ -863,19 +862,11 @@
             </div> -->
             <div class="col-md-12 overflow-auto text-break" style="word-wrap: break-word; white-space: normal;">
                 <div style="text-align: justify; color: #034652;">
-                    <h5 class="text-my-primary mb-0">{{ __('Associação Brasileira de Agroecologia (ABA-Agroecologia)') }}</h5>
-                    Reunimos pessoas físicas das mais diversas áreas do conhecimento e de atuação, que desde 2004 realizam e apoiam ações dedicadas ao fortalecimento das práticas agroecológicas. <a href="https://aba-agroecologia.org.br/sobre-a-aba-agroecologia/sobre-a-aba/" target="_blank">Saiba mais.</a>
+                    <h5 class="text-my-primary mb-0">{{ __('Sociedade Brasileira de Etnobiologia e Etnoecologia (SBEE)') }}</h5>
                 </div>
                 <br>
             </div>
             <hr class="border-dark">
-            <h4 class="text-my-primary mb-4">{{ __('Dúvidas sobre o CBA?') }}</h4>
-            <div class="col-md-12 overflow-auto text-break" style="word-wrap: break-word; white-space: normal;">
-                <div style="text-align: justify; color: #034652;">
-                    Quer saber mais sobre hospedagens, alimentação, caravanas, isenções? Tem vontade de propor alguma atividade ou deseja participar de alguma comissão da organização? <a href="https://cba.aba-agroecologia.org.br/perguntas-frequentes/" target="_blank">Acesse a página de perguntas frequentes aqui!</a>
-                </div>
-                <br>
-            </div>
 
              <div class="col-12 d-flex justify-content-center align-items-center gap-2">
                 <a href="mailto:@if($evento->email){{ $evento->email }}@else{{ $evento->coordenador->email }}@endif" class="btn btn-my-secondary rounded-3">
@@ -903,7 +894,7 @@
             </div>
         </div>
 
-
+            {{--
             <hr class="border-dark">
 
 
@@ -912,6 +903,7 @@
                 <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3936.088668407275!2d-40.51881532409689!3d-9.413620090663885!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x7737101a3531eb9%3A0x36e94720fbc52c53!2sAv.%20Ant%C3%B4nio%20C.%20Magalh%C3%A3es%2C%20510%20-%20Country%20Club%2C%20Juazeiro%20-%20BA%2C%2048902-300!5e0!3m2!1spt-BR!2sbr!4v1749258428058!5m2!1spt-BR!2sbr" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
 
             </div>
+            --}}
         </div>
 
         @include('evento.modal-inscricao')
