@@ -12,14 +12,14 @@
                 <li>
                     <ul style="list-style-type: none;"> 
                         <li><h5>1. Introdução</h5></li>
-                        <li><p style="text-align: justify;">Bem-vindo aos termos de uso da Plataforma de inscrições e submissão de trabalhos da Associação Brasileira de Agroecologia (ABA). Estes termos regem o uso do nosso aplicativo web.</p></li>
+                        <li><p style="text-align: justify;">Bem-vindo aos termos de uso da Plataforma de inscrições e submissão de trabalhos da Sociedade Brasileira de Etnobiologia e Etnoecologia (SBEE). Estes termos regem o uso do nosso aplicativo web.</p></li>
                     </ul>
                 </li>
                 <br/>
                 <li>
                     <ul style="list-style-type: none;"> 
                         <li><h5>2. Aceitação do Termo de Uso e Política de Privacidade</h5></li>
-                        <li><p style="text-align: justify;">2.1 - Ao utilizar a Plataforma de inscrições e submissão de trabalhos da Associação Brasileira de Agroecologia (ABA), o usuário confirma que leu, compreendeu e que aceita os termos e políticas aplicáveis e fica a eles vinculado.</p></li>
+                        <li><p style="text-align: justify;">2.1 - Ao utilizar a Plataforma de inscrições e submissão de trabalhos da Sociedade Brasileira de Etnobiologia e Etnoecologia (SBEE), o usuário confirma que leu, compreendeu e que aceita os termos e políticas aplicáveis e fica a eles vinculado.</p></li>
                         <li><p style="text-align: justify;">2.2 - Caso não concorde com as regras presentes nestes Termos, o Usuário não poderá acessar e utilizar o sistema e dispor dos seus serviços.</p></li>
                     </ul style="list-style-type: none;">
                 </li>
@@ -95,14 +95,14 @@
                 <li>
                     <ul style="list-style-type: none;"> 
                         <li><h5>1. Introdução</h5></li>
-                        <li><p style="text-align: justify;">Bem-vindo ao aviso de privacidade da Plataforma de inscrições e submissão de trabalhos da Associação Brasileira de Agroecologia (ABA). Estes termos regem o uso do nosso aplicativo web.</p></li>
+                        <li><p style="text-align: justify;">Bem-vindo ao aviso de privacidade da Plataforma de inscrições e submissão de trabalhos da Sociedade Brasileira de Etnobiologia e Etnoecologia (SBEE). Estes termos regem o uso do nosso aplicativo web.</p></li>
                     </ul>
                 </li>
                 <br/>
                 <li>
                     <ul style="list-style-type: none;"> 
                         <li><h5>2. Aceitação da Política de Privacidade</h5></li>
-                        <li><p style="text-align: justify;">2.1 - Ao utilizar a Plataforma de inscrições e submissão de trabalhos da Associação Brasileira de Agroecologia (ABA), o usuário confirma que leu, compreendeu e que aceita os termos e políticas aplicáveis e fica a eles vinculado.</p></li>
+                        <li><p style="text-align: justify;">2.1 - Ao utilizar a Plataforma de inscrições e submissão de trabalhos da Sociedade Brasileira de Etnobiologia e Etnoecologia (SBEE), o usuário confirma que leu, compreendeu e que aceita os termos e políticas aplicáveis e fica a eles vinculado.</p></li>
                         <li><p style="text-align: justify;">2.2 - Caso não concorde com as regras presentes nestes Termos, o Usuário não poderá acessar e utilizar o sistema e dispor dos seus serviços.</p></li>
                     </ul style="list-style-type: none;">
                 </li>
@@ -147,7 +147,7 @@
                         <li><h5>7. Compartilhamento de dados</h5></li>
                         <li><p style="text-align: justify;">7.1 - Tendo em vista a preservação de privacidade, o portal gov.br não compartilhará dados pessoais com nenhum terceiro não autorizado, salvo por:</p></li>
                         <li><p style="text-align: justify;">7.1.1 - Determinação legal, requirimento, requisição ou ordem judicial, com autoridades judiciais, administrativas ou governamentais competentes.</p></li>
-                        <li><p style="text-align: justify;">7.1.2 - Proteção dos direitos da Universidade Federal do Agreste de Pernambuco ou da Plataforma de inscrições e submissão de trabalhos da Associação Brasileira de Agroecologia (ABA) em qualquer tipo de conflito, inclusive os de teor judicial.</p></li>
+                        <li><p style="text-align: justify;">7.1.2 - Proteção dos direitos da Universidade Federal do Agreste de Pernambuco ou da Plataforma de inscrições e submissão de trabalhos da Sociedade Brasileira de Etnobiologia e Etnoecologia (SBEE) em qualquer tipo de conflito, inclusive os de teor judicial.</p></li>
                     </ul>
                 </li>
                 <br/>
@@ -163,7 +163,7 @@
                 <li>
                     <ul style="list-style-type: none;"> 
                         <li><h5>9. Responsabilidade</h5></li>
-                        <li><p style="text-align: justify;">A Plataforma de inscrições e submissão de trabalhos da Associação Brasileira de Agroecologia (ABA) prevê  a responsabilidade dos agentes que atuam nos processos de tratamento de dados, em conformidade com os arts. 42 ao 45 da LGPD.</p></li>
+                        <li><p style="text-align: justify;">A Plataforma de inscrições e submissão de trabalhos da Sociedade Brasileira de Etnobiologia e Etnoecologia (SBEE) prevê  a responsabilidade dos agentes que atuam nos processos de tratamento de dados, em conformidade com os arts. 42 ao 45 da LGPD.</p></li>
                         <li><p style="text-align: justify;">E se compromete em manter este Aviso de Privacidade atualizado, observando suas determinações e zelando por seu cumprimento. Além disso, também assume o compromisso de buscar condições técnicas e organizacionais aptas a proteger todo o processo de tratamento de dados.</p></li>
                     </ul>
                 </li>
@@ -173,7 +173,7 @@
                         <li><h5>10. Isenção de responsabilidade</h5></li>
                         <li><p style="text-align: justify;">Conforme mencionado anteriormente, embora sejam adotados elevados padrões de segurança a fim de evitar incidentes, não há nenhuma página virtual inteiramente livre de riscos. Nesse sentido, a Universidade Federal do Agreste de Pernambuco não se responsabiliza por:</p></li>
                         <li><p style="text-align: justify;">I - Quaisquer consequências decorrentes do descaso ou descuido dos usuários em relação a seus dados individuais. A Universidade se responsabiliza apenas pela segurança dos processos de tratamento de dados e do cumprimento das finalidades descritas neste Aviso de Privacidade. Destaca-se ainda que a responsabilidade em relação à confidencialidade dos dados de acesso é do usuário.</p></li>
-                        <li><p style="text-align: justify;">II - Ações maliciosas de terceiros, como ataques cibernéticos, exceto se comprovada conduta culposa ou deliberada da Plataforma de inscrições e submissão de trabalhos da Associação Brasileira de Agroecologia (ABA).</p></li>
+                        <li><p style="text-align: justify;">II - Ações maliciosas de terceiros, como ataques cibernéticos, exceto se comprovada conduta culposa ou deliberada da Plataforma de inscrições e submissão de trabalhos da Sociedade Brasileira de Etnobiologia e Etnoecologia (SBEE).</p></li>
                         <li><p style="text-align: justify;">III - Inveracidade das informações inseridas pelo usuário nos registros necessários para a utilização dos serviços e quaisquer consequências decorrentes de informações falsas ou inseridas de má-fé são de total responsabilidade do usuário.</p></li>
                     </ul>
                 </li>

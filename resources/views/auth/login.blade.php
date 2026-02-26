@@ -22,10 +22,10 @@ p{
     <div class="row">
         <section class="col-md-6 d-flex flex-column justify-content-center">
             <a class="navbar-brand" href="{{route('index')}}">
-                <img src="{{ asset('/img/logoatualizada.png') }}" alt="logo" width="50%">
+                <img src="{{ asset('/img/logo_congresso_etno.png') }}" alt="logo" width="70%">
             </a>
 
-            <p class="mt-3 fs-4 text-justify">{{ __('Plataforma de inscrições e submissão de trabalhos da Associação Brasileira de Agroecologia (ABA), desenvolvida e mantida pelo Laboratório Multidisciplinar de Tecnologias Sociais da Universidade Federal do Agreste de Pernambuco') }}.</p>
+            <p class="mt-3 fs-4 text-justify">{{ __('Plataforma de inscrições e submissão de trabalhos da Sociedade Brasileira de Etnobiologia e Etnoecologia (SBEE), desenvolvida e mantida pelo Laboratório Multidisciplinar de Tecnologias Sociais da Universidade Federal do Agreste de Pernambuco') }}.</p>
         </section>
 
         <div class="col-md-6 d-flex align-items-center justify-content-end">
