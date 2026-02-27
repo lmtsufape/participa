@@ -1356,17 +1356,8 @@ class EventoController extends Controller
     {
         $data = $request->all();
 
-        // Remove tags <p> desnecessárias das descrições (CKEditor adiciona automaticamente)
-        // Se a descrição contém apenas texto simples envolvido em <p>, remove a tag
-        if (isset($data['descricao'])) {
-            $data['descricao'] = $this->formatDescription($data['descricao']);
-        }
-        if (isset($data['descricao_en'])) {
-            $data['descricao_en'] = $this->formatDescription($data['descricao_en']);
-        }
-        if (isset($data['descricao_es'])) {
-            $data['descricao_es'] = $this->formatDescription($data['descricao_es']);
-        }
+        //remove tags da descrição
+        $data = $this->formatDescription($data);
 
         $endereco = Endereco::create($data);
         $data['enderecoId'] = $endereco->id;
@@ -1426,9 +1417,8 @@ class EventoController extends Controller
 
         $subject = 'Evento Criado';
 
-        //TODO: Descomentar isso no ultimo commit
 
-       Mail::to($user->email)->queue(new EventoCriado($user, $subject, $evento));
+       //Mail::to($user->email)->queue(new EventoCriado($user, $subject, $evento));
 
 
         return redirect()->route('home')->with(['message' => 'Evento criado com sucesso!']);
@@ -1648,24 +1638,18 @@ class EventoController extends Controller
     {
         $evento = Evento::find($id);
         $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
+
         $data = $request->all();
 
-        // Remove tags <p> desnecessárias das descrições (CKEditor adiciona automaticamente)
-        // Se a descrição contém apenas texto simples envolvido em <p>, remove a tag
-        if (isset($data['descricao'])) {
-            $data['descricao'] = $this->formatDescription($data['descricao']);
-        }
-        if (isset($data['descricao_en'])) {
-            $data['descricao_en'] = $this->formatDescription($data['descricao_en']);
-        }
-        if (isset($data['descricao_es'])) {
-            $data['descricao_es'] = $this->formatDescription($data['descricao_es']);
-        }
+        // 1. Passa o array inteiro para a função e recebe ele limpo de volta
+        $data = $this->formatDescription($data);
 
+        // 2. Faz o update (agora garantido que $data é um array)
         $evento->update($data);
 
         $validated = $request->validated();
         $user = auth()->user();
+
         if ($evento->eventoPai()->exists()) {
             $coordenador = User::where('email', $data['email_coordenador'])->first();
             $coordenador = $this->criarUsuarioDoCoordenador($coordenador, $evento, $validated['email_coordenador'], $user);
@@ -1677,13 +1661,13 @@ class EventoController extends Controller
         }
 
         $evento->recolhimento = $request->recolhimento;
-        $evento->update();
+        $evento->save(); // CORRIGIDO PARA SAVE()
 
         $endereco = Endereco::find($evento->enderecoId);
         $evento->enderecoId = $endereco->id;
         $endereco->update($data);
 
-        //ATUALIZA TODAS AS IMAGENS (principais e multilingues)
+        // ATUALIZA TODAS AS IMAGENS (principais e multilingues)
         $camposImagem = ['fotoEvento', 'fotoEvento_en', 'fotoEvento_es', 'icone', 'icone_en', 'icone_es'];
 
         foreach ($camposImagem as $campo) {
@@ -1705,7 +1689,7 @@ class EventoController extends Controller
             $evento->data_limite_inscricao = $request->dataLimiteInscricao;
         }
 
-        $evento->update();
+        $evento->save(); // CORRIGIDO PARA SAVE()
 
         return redirect()->route('home')->with(['message' => 'Evento editado com sucesso!']);
     }
@@ -2053,31 +2037,23 @@ class EventoController extends Controller
      * Remove tags <p> desnecessárias adicionadas pelo CKEditor
      * Se o conteúdo é apenas texto simples envolvido em <p>, remove a tag
      *
-     * @param string $conteudo Conteúdo HTML da descrição
-     * @return string Conteúdo limpo sem tags <p> desnecessárias
+     * @param array $conteudo Conteúdo HTML da descrição
+     * @return array Conteúdo limpo sem tags <p> desnecessárias
      */
-    private function formatDescription($conteudo)
+    private function formatDescription(array $data)
     {
-        if (empty($conteudo)) {
-            return $conteudo;
+
+        if (isset($data['descricao'])) {
+            $data['descricao'] = strip_tags($data['descricao']);
+        }
+        if (isset($data['descricao_en'])) {
+            $data['descricao_en'] = strip_tags($data['descricao_en']);
+        }
+        if (isset($data['descricao_es'])) {
+            $data['descricao_es'] = strip_tags($data['descricao_es']);
         }
 
-        // Remove espaços em branco no início e fim
-        $conteudo = trim($conteudo);
-
-        // Se o conteúdo começa com <p> e termina com </p>, e não contém outras tags HTML complexas
-        // Remove as tags <p> e </p> mantendo apenas o conteúdo interno
-        $conteudo = preg_replace('/^<p[^>]*>(.*?)<\/p>$/is', '$1', $conteudo);
-
-        // Remove múltiplas tags <p> vazias ou com apenas espaços
-        $conteudo = preg_replace('/<p[^>]*>\s*<\/p>/i', '', $conteudo);
-
-        // Se após a limpeza o conteúdo está vazio ou contém apenas espaços, retorna vazio
-        if (trim(strip_tags($conteudo)) === '') {
-            return '';
-        }
-
-        return $conteudo;
+        return $data;
     }
 
 }
