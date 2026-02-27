@@ -218,7 +218,7 @@
             <h4 class="text-my-primary">{{ __('Valores das inscrições para o XV CBEE') }}</h4>
             <div class="col-md-12 overflow-auto text-break" style="word-wrap: break-word; white-space: normal;">
                 <div>
-                    <img src="{{asset('img/tabela_de_valores.jpg')}}" style="width: 700px;">
+                    <img src="{{asset('img/tabela_de_valores.png')}}" style="width: 700px;">
                 </div>
                 <br>
                 <div class="container-associar btn" style="cursor: default;">
