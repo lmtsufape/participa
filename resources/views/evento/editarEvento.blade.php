@@ -387,9 +387,9 @@
                             <label for="fotoEvento_en" class="fw-bold mb-1">{{ __('Banner Inglês') }}</label>
                             <div id="imagem-loader-en" class="imagem-loader">
                                 @if ($evento->fotoEvento_en != null)
-                                        <img id="logo-preview" class="img-fluid" src="{{asset('storage/'.$evento->fotoEvento_en)}}" alt="">
+                                        <img id="logo-preview-en" class="img-fluid" src="{{asset('storage/'.$evento->fotoEvento_en)}}" alt="">
                                     @else
-                                        <img id="logo-preview" class="img-fluid" src="{{asset('/img/nova_imagem.PNG')}}" alt="">
+                                        <img id="logo-preview-en" class="img-fluid" src="{{asset('/img/nova_imagem.PNG')}}" alt="">
                                 @endif
                             </div>
                             <div style="display: none;">
@@ -408,9 +408,9 @@
                             <label for="icone_en" class="fw-bold mb-1">{{ __('Ícone inglês') }}</label>
                             <div id="imagem-loader-icone-en" class="imagem-loader">
                                 @if ($evento->icone_en != null)
-                                        <img id="icone-preview" class="img-fluid" src="{{asset('storage/'.$evento->icone_en)}}" alt="">
+                                        <img id="icone-preview-en" class="img-fluid" src="{{asset('storage/'.$evento->icone_en)}}" alt="">
                                     @else
-                                        <img id="icone-preview" class="img-fluid" src="{{asset('/img/nova_imagem.PNG')}}" alt="">
+                                        <img id="icone-preview-en" class="img-fluid" src="{{asset('/img/nova_imagem.PNG')}}" alt="">
                                 @endif
                             </div>
                             <div style="display: none;">
@@ -432,9 +432,9 @@
                             <label for="fotoEvento_es" class="fw-bold mb-1">{{ __('Banner Espanhol') }}</label>
                             <div id="imagem-loader-es" class="imagem-loader">
                                 @if ($evento->fotoEvento_es != null)
-                                        <img id="logo-preview" class="img-fluid" src="{{asset('storage/'.$evento->fotoEvento_es)}}" alt="">
+                                        <img id="logo-preview-es" class="img-fluid" src="{{asset('storage/'.$evento->fotoEvento_es)}}" alt="">
                                     @else
-                                        <img id="logo-preview" class="img-fluid" src="{{asset('/img/nova_imagem.PNG')}}" alt="">
+                                        <img id="logo-preview-es" class="img-fluid" src="{{asset('/img/nova_imagem.PNG')}}" alt="">
                                 @endif
                             </div>
                             <div style="display: none;">
@@ -454,9 +454,9 @@
                             <label for="icone_es" class="fw-bold mb-1">{{__('Ícone espanhol')}}</label>
                             <div id="imagem-loader-icone-es" class="imagem-loader">
                                 @if ($evento->icone_es != null)
-                                        <img id="icone-preview" class="img-fluid" src="{{asset('storage/'.$evento->icone_es)}}" alt="">
+                                        <img id="icone-preview-es" class="img-fluid" src="{{asset('storage/'.$evento->icone_es)}}" alt="">
                                     @else
-                                        <img id="icone-preview" class="img-fluid" src="{{asset('/img/nova_imagem.PNG')}}" alt="">
+                                        <img id="icone-preview-es" class="img-fluid" src="{{asset('/img/nova_imagem.PNG')}}" alt="">
                                 @endif
                             </div>
                             <div style="display: none;">
@@ -472,6 +472,9 @@
                             @enderror
                         </div>
                     </div>
+
+                    <!-- Campo hidden para manter estado do termos entre etapas -->
+                    <input type="hidden" name="termos" id="termos-hidden" value="{{ old('termos', $evento->termos ?? '') }}">
 
                     <div class="row form-group pb-4 pt-4">
                         <div class="col-md-10"></div>
@@ -718,8 +721,23 @@
 
 @section('javascript')
     <script type="text/javascript">
-        CKEDITOR.replaceAll('ckeditor-texto');
-        $.fn.modal.Constructor.prototype._enforceFocus = function() {};
+       {/* CKEDITOR.replaceAll('ckeditor-texto');
+        $.fn.modal.Constructor.prototype._enforceFocus = function() {};*/}
+        // 1. CONFIGURAÇÕES (não inicializa ainda)
+        CKEDITOR.config.enterMode = CKEDITOR.ENTER_BR;
+        CKEDITOR.config.shiftEnterMode = CKEDITOR.ENTER_BR;
+        CKEDITOR.on('instanceReady', function(ev) {
+            ev.editor.dataProcessor.htmlFilter.addRules({
+                elements: {
+                    p: function(element) {
+                        var text = element.getText();
+                        if (text && !element.getChildren().length) {
+                            element.replaceWith(new CKEDITOR.htmlParser.text(text));
+                        }
+                    }
+                }
+            });
+        });
     </script>
 
     <script type="text/javascript">
@@ -757,6 +775,13 @@
                 }
             });*/
 
+            // 2. VERIFICA SE DEVE MOSTRAR MULTILINGUE (antes de inicializar CKEditor)
+            @if(old('is_multilingual') || $evento->is_multilingual)
+            var deveMostrarMultilingue = true;
+            @else
+            var deveMostrarMultilingue = false;
+            @endif
+
             $('#is_multilingual').change(function() {
                 if ($(this).is(':checked')) {
                     $('.multilingual_fields').show();
@@ -764,6 +789,32 @@
                     $('.multilingual_fields').hide();
                 }
             });
+
+            if (deveMostrarMultilingue) {
+                $('#is_multilingual').prop('checked', true).trigger('change');
+
+                // Mostra imagens salvas no banco
+                @if($evento->fotoEvento)
+                $('#logo-preview').attr('src', '{{ asset("storage/" . $evento->fotoEvento) }}');
+                @endif
+                @if($evento->icone)
+                $('#icone-preview').attr('src', '{{ asset("storage/" . $evento->icone) }}');
+                @endif
+                @if($evento->fotoEvento_en)
+                $('#logo-preview-en').attr('src', '{{ asset("storage/" . $evento->fotoEvento_en) }}');
+                @endif
+                @if($evento->icone_en)
+                $('#icone-preview-en').attr('src', '{{ asset("storage/" . $evento->icone_en) }}');
+                @endif
+                @if($evento->fotoEvento_es)
+                $('#logo-preview-es').attr('src', '{{ asset("storage/" . $evento->fotoEvento_es) }}');
+                @endif
+                @if($evento->icone_es)
+                $('#icone-preview-es').attr('src', '{{ asset("storage/" . $evento->icone_es) }}');
+                @endif
+            } else {
+                $('#is_multilingual').trigger('change');
+            }
 
             $('#imagem-loader').click(function() {
                 $('#logo-input').click();

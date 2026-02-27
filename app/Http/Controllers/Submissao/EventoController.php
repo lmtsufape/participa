@@ -1392,28 +1392,28 @@ class EventoController extends Controller
         $evento->save();
         // Se o evento tem foto
         if ($request->fotoEvento != null) {
-            $evento->fotoEvento = $this->uploadFile($request, $evento);
+            $evento->fotoEvento = $this->uploadFile($request,"fotoEvento", $evento);
             $evento->save();
         }
         if ($request->fotoEvento_en != null) {
-            $evento->fotoEvento_en = $this->uploadFile($request, $evento);
+            $evento->fotoEvento_en = $this->uploadFile($request, "fotoEvento_en", $evento);
             $evento->save();
         }
         if ($request->fotoEvento_es != null) {
-            $evento->fotoEvento_es = $this->uploadFile($request, $evento);
+            $evento->fotoEvento_es = $this->uploadFile($request,"fotoEvento_es", $evento);
             $evento->save();
         }
 
         if ($request->icone != null) {
-            $evento->icone = $this->uploadIconeFile($request, $evento);
+            $evento->icone = $this->uploadFile($request,"icone", $evento);
             $evento->save();
         }
         if ($request->icone_en != null) {
-            $evento->icone_en = $this->uploadIconeFile($request, $evento);
+            $evento->icone_en = $this->uploadFile($request,"icone_en", $evento);
             $evento->save();
         }
         if ($request->icone_es != null) {
-            $evento->icone_es = $this->uploadIconeFile($request, $evento);
+            $evento->icone_es = $this->uploadFile($request,"icone_es", $evento);
             $evento->save();
         }
 
@@ -1435,77 +1435,44 @@ class EventoController extends Controller
         return redirect()->route('home')->with(['message' => 'Evento criado com sucesso!']);
     }
 
-    public function uploadFile($request, $evento)
+    public function uploadFile($request, $campo, $evento)
     {
-        if ($request->hasFile('fotoEvento')) {
-            $file = $request->fotoEvento;
-            $path = 'eventos/' . $evento->id;
-            $nome = $request->file('fotoEvento')->getClientOriginalName();
-            Storage::disk('public')->putFileAs($path, $file, $nome);
-
-            return 'eventos/'.$evento->id.'/'.$nome;
+        if (!$request->hasFile($campo)) {
+            return null;
         }
 
-        if ($request->hasFile('fotoEvento_en')) {
-            $file = $request->fotoEvento_en;
-            $path = 'eventos/'.$evento->id;
-            $extensao = $request->file('fotoEvento_en')->getClientOriginalExtension();
-            $nome = 'banner-en.'.$extensao;
-            Storage::disk('public')->putFileAs($path, $file, $nome);
+        $file = $request->file($campo);
+        $path = 'eventos/' . $evento->id;
 
-            return 'eventos/' . $evento->id . '/' . $nome;
+        // Descobre se é ícone ou banner pelo nome do campo
+        $tipo = str_contains($campo, 'icone') ? 'icone' : 'banner';
+
+        // Define sufixo do idioma
+        $sufixo = '';
+        if (str_contains($campo, '_en')) {
+            $sufixo = '-en';
+        } elseif (str_contains($campo, '_es')) {
+            $sufixo = '-es';
         }
 
-        if ($request->hasFile('fotoEvento_es')) {
-            $file = $request->fotoEvento_es;
-            $path = 'eventos/'.$evento->id;
-            $extensao = $request->file('fotoEvento_es')->getClientOriginalExtension();
-            $nome = 'banner-es.'.$extensao;
-            Storage::disk('public')->putFileAs($path, $file, $nome);
+        $extensao = $file->getClientOriginalExtension();
 
-            return 'eventos/' . $evento->id . '/' . $nome;
+        if ($tipo == 'icone') {
+            $nome = 'icone' . $sufixo . '.' . $extensao;
+        } else {
+            // Banner
+            if ($campo == 'fotoEvento') {
+                $nome = $file->getClientOriginalName(); // mantém nome original só no principal
+            } else {
+                $nome = 'banner' . $sufixo . '.' . $extensao;
+            }
         }
 
-        return null;
+        Storage::disk('public')->putFileAs($path, $file, $nome);
+
+        return $path . '/' . $nome;
     }
 
-    public function uploadIconeFile($request, $evento)
-    {
-        if ($request->hasFile('icone')) {
-            $file = $request->icone;
-            $path = 'eventos/' . $evento->id;
-            $extensao = $request->file('icone')->getClientOriginalExtension();
-            $nome = 'icone.' . $extensao;
-            $image = Image::make($file)->encode();
-            Storage::disk('public')->put($path . '/' . $nome, $image);
-
-            return $path.'/'.$nome;
-        }
-
-        if ($request->hasFile('icone_en')) {
-            $file = $request->icone_en;
-            $path = 'eventos/'.$evento->id;
-            $extensao= $request->file('icone_en')->getClientOriginalExtension();
-            $nome = 'icone-en.'.$extensao;
-            $image = Image::make($file)->encode();
-            Storage::disk('public')->put($path.'/'.$nome, $image);
-
-            return $path . '/' . $nome;
-        }
-
-        if ($request->hasFile('icone_es')) {
-            $file = $request->icone_es;
-            $path = 'eventos/'.$evento->id;
-            $extensao= $request->file('icone_es')->getClientOriginalExtension();
-            $nome = 'icone-es.'.$extensao;
-            $image = Image::make($file)->encode();
-            Storage::disk('public')->put($path.'/'.$nome, $image);
-
-            return $path . '/' . $nome;
-        }
-
-        return null;
-    }
 
     /**
      * Display the specified resource.
@@ -1683,31 +1650,19 @@ class EventoController extends Controller
         $evento->enderecoId = $endereco->id;
         $endereco->update($data);
 
-        if ($request->fotoEvento != null) {
-            if (Storage::disk('public')->exists($evento->fotoEvento)) {
-                Storage::delete('storage/' . $evento->fotoEvento);
+        //ATUALIZA TODAS AS IMAGENS (principais e multilingues)
+        $camposImagem = ['fotoEvento', 'fotoEvento_en', 'fotoEvento_es', 'icone', 'icone_en', 'icone_es'];
+
+        foreach ($camposImagem as $campo) {
+            if ($request->hasFile($campo)) {
+                // Deleta imagem antiga se existir
+                if ($evento->$campo && Storage::disk('public')->exists($evento->$campo)) {
+                    Storage::disk('public')->delete($evento->$campo);
+                }
+
+                // Salva nova imagem
+                $evento->$campo = $this->uploadFile($request, $campo, $evento);
             }
-            $file = $request->fotoEvento;
-            $path = 'eventos/' . $evento->id;
-            $nome = $request->file('fotoEvento')->getClientOriginalName();
-            Storage::disk('public')->putFileAs($path, $file, $nome);
-            $evento->fotoEvento = 'eventos/' . $evento->id . '/' . $nome;
-        }
-
-        if ($request->icone != null) {
-            if (Storage::disk('public')->exists($evento->icone)) {
-                Storage::disk('public')->delete($evento->icone);
-            }
-            $file = $request->icone;
-            $path = 'eventos/' . $evento->id;
-            $extensao = $request->file('icone')->getClientOriginalExtension();
-            $nome = 'icone.' . $extensao;
-            $evento->icone = $path . '/' . $nome;
-
-            $evento->update();
-
-            $image = Image::make($file)->encode();
-            Storage::disk('public')->put($path . '/' . $nome, $image);
         }
 
         if ($request->dataLimiteInscricao != null) {
