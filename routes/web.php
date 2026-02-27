@@ -118,6 +118,7 @@ Route::namespace('Submissao')->group(function () {
     Route::get('certificado/{hash}', [CertificadoController::class, 'verificar'])->name('certificado.view')->where('hash', '.*');;
     Route::view('validarCertificado', 'validar')->name('validarCertificado')->middleware('block.get.params');
     Route::post('validarCertificado', [CertificadoController::class, 'validar'])->name('validarCertificadoPost');
+    Route::post('/evento/validar-etapa-1', [EventoController::class, 'validarEtapa1'])->name('evento.validar-etapa-1');
     Route::get('/home', [CertificadoController::class, 'validar'])->name('home')->middleware('verified', 'isTemp');
 
 });

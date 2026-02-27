@@ -98,13 +98,13 @@
                             <div id="erro-email" class="text-danger mt-1" style="display: none;">
                                 <small>{{ __('O e-mail de contato é obrigatório') }}</small>
                             </div>
-
                             @error('email')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>
                             @enderror
                         </div>
+                            <br>
                          @if($evento->evento_pai_id != null)
                             <div class="col-sm-6 form-group">
                                 <label for="email_coordenador" class="col-form-label">{{ __('E-mail do coordenador') }}</label>
@@ -147,6 +147,7 @@
                             @enderror
                         </div>
                     </div>
+                        <br>
 
                     <div class="form-group row">
                         <div class="@if ($eventoPai ?? '') col-md-3 @else col-md-4 @endif">

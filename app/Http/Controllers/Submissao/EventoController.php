@@ -1428,11 +1428,44 @@ class EventoController extends Controller
 
         //TODO: Descomentar isso no ultimo commit
 
-        /* //testando enviar o email depois -> ainda retorna erro
-       Mail::to($user->email)->queue(new EventoCriado($user, $subject, $evento)); */
+       Mail::to($user->email)->queue(new EventoCriado($user, $subject, $evento));
 
 
         return redirect()->route('home')->with(['message' => 'Evento criado com sucesso!']);
+    }
+
+    //metodo adicionado para remover validação do html e validar por etapas no backend
+    public function validarEtapa1(Request $request)
+    {
+        $regras = [
+            'nome' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'tipo' => 'required|string',
+            'recolhimento' => 'required|string',
+            'descricao' => 'required|string',
+            'fotoEvento' => 'required|image',
+            'icone' => 'required|image',
+        ];
+
+        // Se o evento for multilingue, exige os campos extras
+        if ($request->has('is_multilingual') && $request->is_multilingual) {
+            $regras['nome_en'] = 'required|string|max:255';
+            $regras['nome_es'] = 'required|string|max:255';
+            $regras['descricao_en'] = 'required|string';
+            $regras['descricao_es'] = 'required|string';
+
+            // Mantive os banners e ícones gringos como opcionais (nullable)
+            // pois no seu HTML eles não tinham a tag de "required-field".
+            // Se forem obrigatórios, troque 'nullable' por 'required'.
+            $regras['fotoEvento_en'] = 'nullable|image';
+            $regras['fotoEvento_es'] = 'nullable|image';
+            $regras['icone_en'] = 'nullable|image';
+            $regras['icone_es'] = 'nullable|image';
+        }
+        $request->validate($regras);
+
+        // Se passou na validação, retorna sucesso para o JavaScript
+        return response()->json(['success' => true]);
     }
 
     public function uploadFile($request, $campo, $evento)

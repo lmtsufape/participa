@@ -38,8 +38,7 @@
                 </h2>
             </div>
         </div>
-
-        <form action="{{ route('evento.store') }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('evento.store') }}" method="POST" enctype="multipart/form-data" id="form-evento" novalidate>
             @csrf
             @if ($eventoPai ?? '')
                 <input type="hidden" name="eventoPai" value="{{ $eventoPai->id }}">
@@ -94,7 +93,32 @@
                             @enderror
                         </div>
                     </div>
+                    <br>
+                    <div class="form-group row align-items-center">
+                        <div class="col-md-6">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="is_multilingual" name="is_multilingual" value="1" {{ old('is_multilingual') ? 'checked' : '' }}>
+                                <label class="form-check-label fw-bold" for="is_multilingual">
+                                    {{ __('Evento Multilingue') }}
+                                </label>
+                            </div>
+                        </div>
 
+                        <div class="col-md-6">
+                            <div class="custom-control custom-radio custom-control-inline col-form-label mt-3 mt-md-0">
+                                <span class="fw-bold mb-3 d-block">{{ __('O seu evento será:') }}</span>
+
+                                <input type="radio" id="customRadioInline1" name="customRadioInline" class="custom-control-input" checked>
+                                <label class="custom-control-label me-2" for="customRadioInline1">{{ __('Online') }}</label>
+
+                                <input type="radio" id="customRadioInline2" name="customRadioInline" class="custom-control-input">
+                                <label class="custom-control-label me-2" for="customRadioInline2">{{__('Presencial')}}</label>
+
+                                <input type="radio" id="customRadioInline3" name="customRadioInline" class="custom-control-input">
+                                <label class="custom-control-label" for="customRadioInline3">{{__('Híbrido')}}</label>
+                            </div>
+                        </div>
+                    </div>
                     <br>
 
                     <div class="form-group row">
@@ -201,25 +225,7 @@
                             @enderror
                         </div>
                     </div>
-                    <br>
-                    <div class="form-group row">
-                        <div class="col-md-6">
-                            <div class="custom-control custom-radio custom-control-inline col-form-label">
-                                <span class="fw-bold mb-3">{{ __('O seu evento será:') }}</span> <br>
-                                <input type="radio" id="customRadioInline1" name="customRadioInline" class="custom-control-input" checked>
-                                <label class="custom-control-label me-2" for="customRadioInline1">{{ __('Online') }}</label>
 
-                                <input type="radio"  name="customRadioInline" class="custom-control-input">
-                                <label class="custom-control-label me-2" for="customRadioInline2">{{__('Presencial')}}</label>
-
-                                <input type="radio" name="customRadioInline" class="custom-control-input">
-                                <label class="custom-control-label " for="customRadioInline3">{{__('Híbrido')}}</label>
-                            </div>
-
-                        </div>
-                    </div>
-
-                    <br>
 
                     <div class="form-group row">
 
@@ -256,17 +262,6 @@
 
                     <br>
 
-                    <div class="row">
-                        <div class="form-check col-sm-12 form-group">
-                            <div class="form-check col-sm-12 form-group">
-                                    <input class="form-check-input" type="checkbox" id="is_multilingual" name="is_multilingual">
-                                {{ old('is_multilingual') ? 'checked' : '' }}
-                                    <label class="form-check-label text-start d-block fw-bold" for="is_multilingual">{{ __('Evento Multilingue') }}</label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <br>
 
                     <div class="form-group row multilingual_fields" style="display: none;">
                         <div class="col-md-12">
@@ -739,6 +734,7 @@
                 // For all inputs and textareas within multilingual_fields
                 $('.multilingual_fields').find('input[type="text"], textarea, input[type="file"]').each(function() {
                     const campoMulti = $(this);
+                    campoMulti.prop('required', isChecked); // Set required based on checkbox
 
                     if (!isChecked) { // If checkbox is unchecked (fields are hidden and not required)
                         campoMulti.removeClass('is-invalid'); // Remove validation class from input/textarea
@@ -889,90 +885,92 @@
             }
         };
 
-        function proximaEtapa() {
-            let primeiroCampoInvalido = null;
-            let formEtapa1Valido = true;
+        async function proximaEtapa() {
+            // 1. Atualiza os textareas do CKEditor para que o FormData consiga capturar os textos
+            for (var instanceName in CKEDITOR.instances) {
+                CKEDITOR.instances[instanceName].updateElement();
+            }
 
-            // Seleciona todos os campos que podem ser validados na etapa 1
-            const camposEtapa1 = $('#etapa-1').find('input, select, textarea');
+            const form = document.getElementById('form-evento');
+            const formData = new FormData(form);
 
-            camposEtapa1.each(function() {
-                const campo = $(this);
-                // Limpa a validação anterior do Bootstrap (se houver)
-                campo.removeClass('is-invalid');
-                if (campo.is('input[type="file"]')) {
-                    const loaderDiv = campo.parent().prev('.imagem-loader');
-                    if (loaderDiv.length) {
-                        loaderDiv.removeClass('border border-danger'); // Clear previous error style
+            // 2. Limpa mensagens de erro e marcações vermelhas anteriores
+            $('.is-invalid').removeClass('is-invalid');
+            $('.ajax-error').remove();
+            $('.imagem-loader').removeClass('border border-danger');
+
+            try {
+                const btnContinuar = document.querySelector('button[onclick="proximaEtapa()"]');
+                const textoOriginal = btnContinuar.innerHTML;
+                btnContinuar.innerHTML = 'Validando...';
+                btnContinuar.disabled = true;
+
+                // 3. Envia os dados para o Controller validar
+                const response = await fetch("{{ route('evento.validar-etapa-1') }}", {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
                     }
-                }
+                });
 
-                if (campo.prop('required')) { // Verifica se o campo está marcado como 'required'
-                    let isFieldValid = true;
-                    let fieldIsEffectivelyVisible = campo.is(':visible');
+                // Restaura o botão
+                btnContinuar.innerHTML = textoOriginal;
+                btnContinuar.disabled = false;
 
-                    // Para campos de arquivo, a visibilidade efetiva depende se sua seção (multilíngue ou não) está visível.
-                    if (campo.is('input[type="file"]')) {
-                        const multilingualParent = campo.closest('.multilingual_fields');
-                        if (multilingualParent.length > 0) { // É um campo de arquivo multilíngue
-                            fieldIsEffectivelyVisible = multilingualParent.is(':visible');
-                        } else { // É um campo de arquivo principal (não multilíngue)
-                            fieldIsEffectivelyVisible = true; // Considerado sempre visível para validação se 'required'
+                if (response.ok) {
+                    // SUCESSO! Vai para a etapa 2
+                    document.getElementById('etapa-1').style.display = 'none';
+                    document.getElementById('etapa-2').style.display = 'block';
+                    $('.etapas .etapa').removeClass('ativa');
+                    $('.etapas .etapa').eq(1).addClass('ativa');
+                    window.scrollTo(0, 0);
+
+                } else if (response.status === 422) {
+                    // ERRO DE VALIDAÇÃO!
+                    const data = await response.json();
+
+                    // 1. Primeiro, colocamos todos os erros na tela
+                    for (const [campo, mensagens] of Object.entries(data.errors)) {
+                        let $input = $('#' + campo);
+
+                        if ($input.length === 0) {
+                            $input = $(`[name="${campo}"]`);
+                        }
+
+                        // Tratamento especial para as imagens
+                        if (['fotoEvento', 'icone', 'fotoEvento_en', 'icone_en', 'fotoEvento_es', 'icone_es'].includes(campo)) {
+                            let $loader = $(`input[name="${campo}"]`).parent().prev('.imagem-loader');
+                            if ($loader.length) {
+                                // Adicionamos a classe 'erro-scroll' para facilitar a busca depois
+                                $loader.addClass('border border-danger erro-scroll');
+                                $loader.after(`<span class="invalid-feedback ajax-error" style="display:block; font-weight: bold; margin-top: 5px;">${mensagens[0]}</span>`);
+                            }
+                        } else if ($input.length > 0) {
+                            // Tratamento normal para inputs de texto, selects, etc.
+                            $input.addClass('is-invalid erro-scroll');
+                            $input.after(`<span class="invalid-feedback ajax-error" style="display:block; font-weight: bold;" role="alert">${mensagens[0]}</span>`);
                         }
                     }
 
-                    if (fieldIsEffectivelyVisible) { // Apenas valida se o campo (ou seu controlador) está visível
-                        if (campo.is('input[type="file"]')) {
-                            if (this.files.length === 0) {
-                                isFieldValid = false;
-                                campo.addClass('is-invalid'); // Adiciona classe ao próprio input
-                                const loaderDiv = campo.parent().prev('.imagem-loader');
-                                if (loaderDiv.length) {
-                                    loaderDiv.addClass('border border-danger'); // Adiciona borda ao visualizador
-                                    if (!primeiroCampoInvalido) {
-                                        primeiroCampoInvalido = loaderDiv; // Prioriza o visualizador para foco/scroll
-                                    }
-                                } else if (!primeiroCampoInvalido) {
-                                    primeiroCampoInvalido = campo; // Fallback para o input se o visualizador não for encontrado
-                                }
-                            }
-                        } else { // Para text, select, textarea
-                            if (!this.checkValidity()) { // Usa a validação nativa do navegador
-                                isFieldValid = false;
-                                campo.addClass('is-invalid');
-                                if (!primeiroCampoInvalido) {
-                                    primeiroCampoInvalido = campo;
-                                }
-                            }
-                        }
-                    }
-                    // Se o campo não for válido E era para ser validado (visível e obrigatório), marca o formulário como inválido.
-                    if (!isFieldValid && fieldIsEffectivelyVisible) {
-                        formEtapa1Valido = false;
-                    }
-                }
-            });
+                    // 2. A ASSERTION: Busca o primeiro elemento marcado com erro que está REALMENTE VISÍVEL
+                    let primeiroCampoVisivel = $('.erro-scroll:visible').first();
 
-            if (formEtapa1Valido) {
-                document.getElementById('etapa-1').style.display = 'none';
-                document.getElementById('etapa-2').style.display = 'block';
-                // Atualiza a interface de etapas
-                $('.etapas .etapa').removeClass('ativa');
-                $('.etapas .etapa').eq(1).addClass('ativa');
-                window.scrollTo(0, 0); // Rola para o topo para o usuário ver a nova etapa
-            } else {
-                if (primeiroCampoInvalido) {
-                    // Rola para o elemento e tenta focar
-                    if (primeiroCampoInvalido.is('div.imagem-loader')) { // Se for o nosso visualizador de imagem
+                    // Se encontrou algum elemento visível, faz o scroll até ele
+                    if (primeiroCampoVisivel.length > 0) {
                         $('html, body').animate({
-                            scrollTop: primeiroCampoInvalido.offset().top - 100 // Ajuste o offset conforme necessário
+                            scrollTop: primeiroCampoVisivel.offset().top - 100
                         }, 500);
-                        // Adicionar tabindex para tornar o div focável pode ser uma opção para leitores de tela
-                        // primeiroCampoInvalido.attr('tabindex', -1).focus();
-                    } else {
-                        primeiroCampoInvalido.focus(); // Foca em inputs de texto, select, etc.
                     }
                 }
+            } catch (error) {
+                console.error("Erro na requisição:", error);
+                alert("Ocorreu um erro de comunicação com o servidor.");
+
+                const btnContinuar = document.querySelector('button[onclick="proximaEtapa()"]');
+                btnContinuar.innerHTML = 'Continuar';
+                btnContinuar.disabled = false;
             }
         }
 
@@ -984,7 +982,6 @@
             $('.etapas .etapa').eq(0).addClass('ativa'); // Ativa a primeira etapa
             window.scrollTo(0, 0);
         }
-
         // Mostra campos multilingues se marcado
         @if(old('is_multilingual'))
         $('#is_multilingual').prop('checked', true).trigger('change');
