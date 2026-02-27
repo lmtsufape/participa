@@ -260,6 +260,7 @@
                         <div class="form-check col-sm-12 form-group">
                             <div class="form-check col-sm-12 form-group">
                                     <input class="form-check-input" type="checkbox" id="is_multilingual" name="is_multilingual">
+                                {{ old('is_multilingual') ? 'checked' : '' }}
                                     <label class="form-check-label text-start d-block fw-bold" for="is_multilingual">{{ __('Evento Multilingue') }}</label>
                             </div>
                         </div>
@@ -738,7 +739,6 @@
                 // For all inputs and textareas within multilingual_fields
                 $('.multilingual_fields').find('input[type="text"], textarea, input[type="file"]').each(function() {
                     const campoMulti = $(this);
-                    campoMulti.prop('required', isChecked); // Set required based on checkbox
 
                     if (!isChecked) { // If checkbox is unchecked (fields are hidden and not required)
                         campoMulti.removeClass('is-invalid'); // Remove validation class from input/textarea
@@ -984,6 +984,14 @@
             $('.etapas .etapa').eq(0).addClass('ativa'); // Ativa a primeira etapa
             window.scrollTo(0, 0);
         }
+
+        // Mostra campos multilingues se marcado
+        @if(old('is_multilingual'))
+        $('#is_multilingual').prop('checked', true).trigger('change');
+        @else
+        $('#is_multilingual').trigger('change');
+        @endif;
+
 
     </script>
 @endsection

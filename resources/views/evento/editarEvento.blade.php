@@ -298,7 +298,7 @@
                         <div class="form-check col-sm-12 form-group">
                             <div class="form-check col-sm-12 form-group">
                                 <input class="form-check-input" type="checkbox" id="is_multilingual" name="is_multilingual"
-                                 value="1" {{ old('is_multilingual', $evento->is_multilingual ? '1' : '') == '1' ? 'checked' : '' }}>
+                                        {{ old('is_multilingual') ? 'checked' : ($evento->nome_en || $evento->nome_es || $evento->descricao_en || $evento->descricao_es ? 'checked' : '') }}>
                                 <label class="form-check-label text-start d-block" for="is_multilingual">{{ __('Evento Multilingue') }}</label>
                             </div>
                         </div>
