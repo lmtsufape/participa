@@ -123,6 +123,7 @@ Auth::routes(['verify' => true, 'register' => false]);
             Route::view('/mostra-audiovisual', 'programacao.mostra')->name('programacao.mostra');
             Route::view('/premiacoes', 'premiacoes')->name('premiacoes');
             Route::view('/normas', 'normas')->name('normas');
+            Route::view('/noticias', 'noticias')->name('noticias');
         });
 
 

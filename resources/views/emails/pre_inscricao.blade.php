@@ -31,8 +31,8 @@
             <td bgcolor="#f4f4f4" align="center" style="padding: 0px 10px 0px 10px;">
                 <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;">
                     <tr>
-                        <td bgcolor="#004d51" align="center" valign="top" style="padding: 40px 20px 20px 20px; border-radius: 4px 4px 0px 0px; color: #ffffff; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 48px; font-weight: 400; letter-spacing: 4px; line-height: 48px;">
-                            <img src="{{ $message->embed(public_path('img/LOGO-RODAPE.png')) }}" width="125" height="120" style="display: block; border: 0px;"  />
+                        <td bgcolor="#f2a440" align="center" valign="top" style="padding: 40px 20px 20px 20px; border-radius: 4px 4px 0px 0px; color: #ffffff; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 48px; font-weight: 400; letter-spacing: 4px; line-height: 48px;">
+                            <img src="{{ $message->embed(public_path('img/logo-cbee.png')) }}" width="125" height="120" style="display: block; border: 0px;"  />
                             <h5 class="small" style="font-weight: 400; margin: 2; font-size: 24px;">Pré-inscrição realizada</h5>
                         </td>
                     </tr>
@@ -70,9 +70,9 @@
                         <td bgcolor="#ffffff" align="left" style="padding: 0px 30px 40px 30px; color: #666666; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;">
                             <p style="margin: 0;">
                                 Abraços,<br>
+                                Sociedade Brasileira de Etnobiologia e Etnoecologia (SBEE) <br>
                                 Plataforma de inscrições e submissões de trabalhos <br>
                                 Participa (UFAPE/LMTS) <br>
-                                Associação Brasileira de Agroecologia (ABA) <br>
                             </p>
                         </td>
                     </tr>

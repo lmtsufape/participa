@@ -126,6 +126,18 @@
                                     {{ __('Realize sua inscrição aqui!') }}
                                 @endif
                             </button>
+                            {{--
+                            
+                             <button class="btn btn-my-success w-60 rounded btn-lg" 
+                                @if (!$encerrada && !($isInscrito && isset($inscricao) && $inscricao->finalizada))
+                                    data-bs-toggle="modal" data-bs-target="#modalInscricaoPCD"
+                                @endif
+                                @if ($encerrada || ($isInscrito && isset($inscricao) && $inscricao->finalizada))
+                                    style="display: none;"
+                                @endif
+                                @if (isset($solicitacaoPCD) && $solicitacaoPCD->status == 'rejeitado' || isset($solicitacaoPCD) && $solicitacaoPCD->status == 'aprovado')
+                                    disabled
+                                @endif
                             <button class="btn btn-my-success w-60 rounded btn-lg" 
                                 @if (!$encerrada && !($isInscrito && isset($inscricao) && $inscricao->finalizada))
                                     data-bs-toggle="modal" data-bs-target="#modalInscricaoPCD"
@@ -148,6 +160,7 @@
                                     {{ __('Solicitação como PCD') }}
                                 @endif
                             </button>
+                             --}}
                         @endif
                     </div>
                     <br>
@@ -222,7 +235,7 @@
                 </div>
                 <br>
                 <div class="container-associar btn" style="cursor: default;">
-                    <h5>{{ __('Associe-se à Sociedade Brasileira de Etnobiologia e Etnoecologia (SBEE) e garanta seu desconto na inscrição!') }}</h5>
+                    <h5 style="text-align: center;">{{ __('Associe-se à Sociedade Brasileira de Etnobiologia e Etnoecologia (SBEE)') }} <br> {{ __('e garanta seu desconto na inscrição!') }}</h5>
                     <div class="btn-associacao">
                         <a href="https://www.etnobiologia.org/participe" target="_blank" style="width: 210px;" class="btn-associar">QUERO ME ASSOCIAR <img src="{{asset('img/icons/fora.png')}}" style="width: 30px;"></a>
                         <a href="https://www.etnobiologia.org/participe" class="btn-associar" target="_blank">REGULARIZE A SUA ASSOCIAÇÃO <img src="{{asset('img/icons/fora.png')}}" style="width: 30px; margin-left:10px;"></a>
