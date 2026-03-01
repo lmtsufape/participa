@@ -1,4 +1,4 @@
-<div class="modal fade" id="modalInscrever" tabindex="-1" role="dialog" aria-labelledby="#label" aria-hidden="true">
+<div class="modal fade" id="modalInscrever" tabindex="-1" role="dialog" aria-labelledby="label" aria-hidden="true">
     <div class="modal-dialog modal-lg " role="document">
         <div class="modal-content">
             <div class="modal-header position-relative" style="background-color: #114048ff; color: white;">

@@ -1351,7 +1351,7 @@
                         var idModal = "#modalAtividadeShow" + info.event.id;
                         $(idModal).modal('show');
                     },
-                    events: "{{ route('atividades.json', ['id' => $evento->id]) }}",
+                    events: "{!! route('atividades.json', ['id' => $evento->id]) !!}",
                 });
                 calendar.render();
             });
