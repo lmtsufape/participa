@@ -28,7 +28,7 @@
 
 <body style="margin:0;padding:0;background:#f5f7fb;">
     <div style="display:none;max-height:0;overflow:hidden;opacity:0;color:transparent;">
-        Carta de Aceite do 13º CBA — confirmação de aprovação do trabalho.
+        Carta de Aceite do XV CBEE — confirmação de aprovação do trabalho.
     </div>
 
     <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:#f5f7fb;">
@@ -61,7 +61,7 @@
                                 foi <strong>aprovado</strong> na modalidade
                                 <strong>{{$trabalho->modalidade->nome}}</strong> para apresentação no
                                 evento
-                                <strong>13º CONGRESSO BRASILEIRO DE AGROECOLOGIA (CBA)</strong> — Agroecologia,
+                                <strong>XV CONGRESSO BRASILEIRO DE ETNOBIOLOGIA E ETNOECOLOGIA (CBEE)</strong>,
                                 Convivência com os Territórios Brasileiros e Justiça Climática.
                                 A ser realizado de <strong>15 a 18 de outubro de 2025</strong>, na
                                 <strong>Universidade Federal do Vale do São Francisco (UNIVASF), Juazeiro-BA</strong>.
@@ -95,15 +95,7 @@
                                 </tr>
                                 </table>
 
-                            <p style="margin:22px 0 4px 0;font-size:16px;text-align:center;">
-                                Comissão Saberes e Conhecimentos Técnico-Científicos do 13º CBA
-                            </p>
-                            <p style="margin:0 0 4px 0;font-size:14px;text-align:center;">
-                                <a href="mailto:tapirisdesaberes.cba@gmail.com"
-                                    style="color:#2563eb;text-decoration:underline;">
-                                    tapirisdesaberes.cba@gmail.com
-                                </a>
-                            </p>
+    
                         </td>
                     </tr>
 
@@ -111,7 +103,7 @@
                         <td align="center"
                             style="padding:14px 24px 24px 24px;font-family:Arial,Helvetica,sans-serif;color:#6b7280;font-size:12px;">
                             <div style="color:#6b7280;">
-                                © {{ date('Y') }} 13º CBA • Este é um e-mail automático. Não responda.
+                                © {{ date('Y') }} XV CBEE • Este é um e-mail automático. Não responda.
                             </div>
                         </td>
                     </tr>

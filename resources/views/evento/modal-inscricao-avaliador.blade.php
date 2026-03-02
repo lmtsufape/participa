@@ -44,7 +44,7 @@
                         </div>
 
                     <div class="mb-3">
-                        <label class="form-label"><strong>Já avaliou resumos do CBA em outros anos? </strong><span class="text-danger">*</span></label>
+                        <label class="form-label"><strong>Já avaliou resumos do CBEE em outros anos? </strong><span class="text-danger">*</span></label>
                         <div>
                             <div class="form-check form-check-inline">
                                 <input class="form-check-input" type="radio" name="avaliou_antes" id="avaliou_sim" value="sim" required>

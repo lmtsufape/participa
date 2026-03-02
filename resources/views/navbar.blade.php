@@ -160,6 +160,7 @@
 
                             @if (isset(Auth::user()->administradors))
                                 <li><a class="dropdown-item" href="{{ route('admin.home') }}"><i class="bi bi-people-fill me-2"></i>{{ __('Área do Administrador') }}</a></li>
+                                <li><a class="dropdown-item" href="{{ route('coord.index') }}"><i class="bi bi-people-fill me-2"></i>{{ __('Área do Coordenador de Evento') }}</a></li>
                             @endif
 
                             @if (Auth::user()->coordComissaoCientifica->count() != 0 || isset(Auth::user()->administradors))
@@ -173,8 +174,6 @@
                             @if (Auth::user()->coordEixosTematicos()->exists())
                                 <li><a class="dropdown-item" href="{{ route('coord.eixo.index') }}"><i class="bi bi-people-fill me-2"></i>{{ __('Área do Coordenador de Eixo') }}</a></li>
                             @endif
-
-                            <li><a class="dropdown-item" href="{{ route('coord.index') }}"><i class="bi bi-people-fill me-2"></i>{{ __('Área do Coordenador de Evento') }}</a></li>
 
                             <li><hr class="dropdown-divider opacity-50"></li>
                             <li>
