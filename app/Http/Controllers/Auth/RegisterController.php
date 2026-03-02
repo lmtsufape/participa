@@ -201,6 +201,6 @@ class RegisterController extends Controller
 
     protected function redirectTo()
     {
-        return route('evento.visualizar', ['id' => 2]);
+        return route('evento.visualizar', ['id' => 1]);
     }
 }

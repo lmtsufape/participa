@@ -236,7 +236,7 @@
 
         <div class="row mb-3">
             <div class="col-md-6">
-                <label class="form-label fw-bold">Já avaliou resumos do CBA em outros anos?</label>
+                <label class="form-label fw-bold">Já avaliou resumos do CBEE em outros anos?</label>
                 <p class="text-capitalize">{{$candidatura->avaliou_antes}}</p>
             </div>
             <div class="col-md-6">

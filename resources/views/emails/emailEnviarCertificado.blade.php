@@ -54,13 +54,13 @@
 
                                 <br><br>
 
-                                Em anexo está o seu certificado de participação, de atividades em comissões ou apresentação de trabalho no 13º CBA.
+                                Em anexo está o seu certificado de participação, de atividades em comissões ou apresentação de trabalho no XV CBEE.
 
                                 <br><br>
 
                                 Abraços,<br>
                                 Plataforma de Inscrições e Submissões de Trabalhos - Participa (UFAPE/LMTS)<br>
-                                Associação Brasileira de Agroecologia (ABA-Agroecologia) <br>
+                                Sociedade Brasileira de Etnobiologia e Etnoecologia (SBEE) <br>
                             </p>
                         </td>
                     </tr>
