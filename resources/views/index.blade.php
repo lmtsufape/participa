@@ -137,7 +137,7 @@
                             <img src="{{ Storage::url($evento->fotoEvento) }}" alt="Foto do evento">
                             <div class="carousel-caption">
                                 <a href="{{ route('evento.visualizar', ['id' => $evento->id]) }}">
-                                    <h1 class="text-start mb-4">{{ __('13º Congresso Brasileiro de Agroecologia: inscrições e submissões de trabalhos') }}</h1>
+                                    <h1 class="text-start mb-4">{{ __('XV Congresso Brasileiro de Etnobiologia e Etnoecologia: inscrições e submissões de trabalhos') }}</h1>
                                 </a>
                                 <div class="caption-row">
                                     <p class="info mb-2">
