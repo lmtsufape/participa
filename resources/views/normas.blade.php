@@ -67,23 +67,43 @@
                 </p>
 
                 <p style="text-align: justify; line-height: 1.6;">
-                    O título da proposta deverá conter até 200 caracteres com espaços, e o resumo até 3000 caracteres com espaços.
+                   O título da proposta deverá conter até 200 caracteres com espaços, e o resumo até 3000 caracteres com espaços. 
                 </p>
 
                 <p style="text-align: justify; line-height: 1.6;">
-                    A submissão do trabalho completo é fortemente recomendada. As normas de formatação para trabalhos completos devem ser consultadas no documento específico disponibilizado pelo evento.
+                    Caso o resumo seja aprovado, a submissão do trabalho completo é fortemente recomendada. As normas de formatação para trabalhos completos devem ser consultadas no documento específico disponibilizado pelo evento.    
                 </p>
 
                 <hr>
 
-                <h5 class="mb-4 fw-bold" style="color: #3d93a9; padding-bottom: 10px;">2. Mesas Redondas (MRs)</h5>
+                <h5 class="mb-4 fw-bold" style="color: #3d93a9; padding-bottom: 10px;">2. Sessão de Pôsteres</h5>
+                
+                <p class="fw-bold" style="text-align: justify; line-height: 1.6;">
+                    Diretrizes para submissão
+                </p>
+                
+                <p style="text-align: justify; line-height: 1.6;">
+                    Os trabalhos poderão contar com coautoria, sendo obrigatório o registro de todas as pessoas autoras no momento da submissão.    
+                </p>
+
+                <p style="text-align: justify; line-height: 1.6;">
+                    O título da proposta deverá conter até 200 caracteres com espaços, e o resumo até 3000 caracteres com espaços.
+                </p>
+
+                <p style="text-align: justify; line-height: 1.6;">
+                    As normas para formatação e confecção dos banners devem ser consultadas no documento específico disponibilizado pelo evento.
+                </p>
+                
+                <hr>
+
+                <h5 class="mb-4 fw-bold" style="color: #3d93a9; padding-bottom: 10px;">3. Mesas Redondas (MRs)</h5>
 
                 <p class="fw-bold" style="text-align: justify; line-height: 1.6;">
                     Estrutura e composição
                 </p>
 
                 <p style="text-align: justify; line-height: 1.6;">
-                    Cada Mesa Redonda deverá ser composta por uma pessoa responsável pela coordenação e três participantes. A critério da coordenação, poderá haver ainda uma pessoa debatedora, que não poderá integrar o grupo de participantes.
+                    Cada Mesa Redonda deverá ser composta por uma pessoa responsável pela coordenação e três participantes. A critério da coordenação, poderá haver ainda uma pessoa debatedora, que não poderá integrar o grupo de participantes.    
                 </p>
 
                 <p style="text-align: justify; line-height: 1.6;">
@@ -104,7 +124,7 @@
 
                 <ul>
                     <li>título da atividade (até 200 caracteres com espaços);</li>
-                    <li>resumo da proposta (até 1500 caracteres com espaços);</li>
+                    <li>resumo da proposta (até 3000 caracteres com espaços);</li>
                 </ul>
 
                 <p style="text-align: justify; line-height: 1.6;">
@@ -113,7 +133,7 @@
 
                 <hr>
 
-                <h5 class="mb-4 fw-bold" style="color: #3d93a9; padding-bottom: 10px;">3. Simpósios Especiais (SEs)</h5>
+                <h5 class="mb-4 fw-bold" style="color: #3d93a9; padding-bottom: 10px;">4. Simpósios Especiais (SEs)</h5>
 
                 <p style="text-align: justify; line-height: 1.6;">
                     Os Simpósios Especiais poderão ser organizados em até duas sessões.
@@ -141,12 +161,16 @@
 
                 <ul>
                     <li>título (até 200 caracteres com espaços);</li>
-                    <li>resumo (até 1500 caracteres com espaços);</li>
+                    <li>resumo (até 3000 caracteres com espaços);</li>
                 </ul>
+
+                <p style="text-align: justify; line-height: 1.6;">
+                    Após a aprovação, cada participante — exceto a pessoa debatedora — deverá inserir o título de sua apresentação (até 200 caracteres com espaços) e o respectivo resumo (até 2500 caracteres com espaços).
+                </p>
 
                 <hr>
 
-                <h5 class="mb-4 fw-bold" style="color: #3d93a9; padding-bottom: 10px;">4. Minicursos (MCs)</h5>
+                <h5 class="mb-4 fw-bold" style="color: #3d93a9; padding-bottom: 10px;">5. Minicursos (MCs)</h5>
                 
                 <p class="fw-bold" style="text-align: justify; line-height: 1.6;">
                     Estrutura e composição
@@ -170,7 +194,7 @@
 
                 <ul>
                     <li>título (até 200 caracteres com espaços);</li>
-                    <li>resumo (até 1500 caracteres com espaços);</li>
+                    <li>resumo (até 2000 caracteres com espaços);</li>
                 </ul>
 
                 <p style="text-align: justify; line-height: 1.6;">
@@ -183,7 +207,7 @@
 
                 <hr>
 
-                <h5 class="mb-4 fw-bold" style="color: #3d93a9; padding-bottom: 10px;">5. Oficinas (OFs)</h5>
+                <h5 class="mb-4 fw-bold" style="color: #3d93a9; padding-bottom: 10px;">6. Oficinas (OFs)</h5>
                 
                 <p class="fw-bold" style="text-align: justify; line-height: 1.6;">
                     Estrutura e composição
@@ -203,7 +227,7 @@
 
                 <ul>
                     <li>título (até 200 caracteres com espaços);</li>
-                    <li>resumo (até 1500 caracteres com espaços);</li>
+                    <li>resumo (até 2000 caracteres com espaços);</li>
                 </ul>
 
                 <p style="text-align: justify; line-height: 1.6;">
