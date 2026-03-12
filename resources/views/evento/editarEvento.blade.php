@@ -245,14 +245,14 @@
                         <div class="col-md-6">
                             <div class="custom-control custom-radio custom-control-inline col-form-label">
                                 <span class="fw-bold mb-3">{{ __('O seu evento será:') }}</span> <br>
-                                <input type="radio" id="customRadioInline1" name="customRadioInline" class="custom-control-input" checked>
-                                <label class="custom-control-label me-2" for="customRadioInline1">{{ __('Online') }}</label>
+                                <input type="radio" id="online" name="formato" value="online" class="custom-control-input" @checked(old('formato', $evento->formato) == 'online')>
+                                <label class="custom-control-label me-2" for="online">{{ __('Online') }}</label>
 
-                                <input type="radio" name="customRadioInline" class="custom-control-input">
-                                <label class="custom-control-label me-2" for="customRadioInline2">{{__('Presencial')}}</label>
+                                <input type="radio" id="presencial" name="formato" value="presencial" class="custom-control-input" @checked(old('formato', $evento->formato) == 'presencial')>
+                                <label class="custom-control-label me-2" for="presencial">{{__('Presencial')}}</label>
 
-                                <input type="radio" name="customRadioInline" class="custom-control-input">
-                                <label class="custom-control-label" for="customRadioInline3">{{__('Híbrido')}}</label>
+                                <input type="radio" id="hibrido" name="formato" value="hibrido" class="custom-control-input" @checked(old('formato', $evento->formato) == 'hibrido')>
+                                <label class="custom-control-label" for="hibrido">{{__('Híbrido')}}</label>
                             </div>
                         </div>
                         <div class="col-md-6 d-flex justify-content-end align-items-center">
