@@ -102,8 +102,10 @@
                                     {{ __('Já inscrito') }}
                                 @elseif($InscritoSemCategoria)
                                     {{ __('Realize sua inscrição aqui!') }}
-                                @else
+                                @elseif($inscricao->categoria->valor_total > 0)
                                     {{ __('Inscrição com pendência de pagamento!') }}
+                                @else
+                                    {{ __('Aguardando aprovação') }}
                                 @endif
                             @elseif($encerrada)
                                 {{ __('Encerradas!') }}
@@ -115,7 +117,7 @@
                     <br>
 
                     @if(isset($inscricao) && $inscricao)
-                        @if(!$inscricao->finalizada)
+                        @if(!$inscricao->finalizada && $inscricao->categoria->valor_total > 0)
                             <span class="text mt-2" style="font-style: semi-bold;">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-triangle" viewBox="0 0 16 16" style="color: red">
                                 <path d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.15.15 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.2.2 0 0 1-.054.06.1.1 0 0 1-.066.017H1.146a.1.1 0 0 1-.066-.017.2.2 0 0 1-.054-.06.18.18 0 0 1 .002-.183L7.884 2.073a.15.15 0 0 1 .054-.057m1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767z"/>
@@ -140,7 +142,7 @@
                         @if(isset($inscricao->pagamento))
                             <a href="{{ route('checkout.statusPagamento', $evento->id) }}"
                                 class="text-center mt-2 w-100">{{ __('Visualizar status do pagamento') }}</a>
-                        @elseif(!$InscritoSemCategoria)
+                        @elseif(!$InscritoSemCategoria && $inscricao->categoria->valor_total > 0)
                             <a href="{{ route('checkout.telaPagamento', $evento) }}"
                                     class="text-center mt-2 w-100">{{ __('Realizar pagamento') }}</a>
 
