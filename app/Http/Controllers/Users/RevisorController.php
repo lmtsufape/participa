@@ -54,7 +54,10 @@ class RevisorController extends Controller
         foreach ($revisores as $revisorEvento) {
             $trabalhos = collect();
             foreach ($revisorEvento as $revisor) {
-                $trabalhosAtribuidos = $revisor->trabalhosAtribuidos()->orderBy('titulo')->get();
+                $trabalhosAtribuidos = $revisor->trabalhosAtribuidos()
+                    ->orderBy('atribuicaos.id', 'desc') 
+                    ->get();
+
                 if (count($trabalhosAtribuidos) > 0) {
                     $trabalhos->push($trabalhosAtribuidos);
                 }
@@ -423,7 +426,11 @@ class RevisorController extends Controller
         $revisores = Revisor::where([['user_id', auth()->user()->id], ['evento_id', $id]])->get();
         $trabalhos = collect();
         foreach ($revisores as $revisor) {
-            $trabalhos->push($revisor->trabalhosAtribuidos()->orderBy('titulo')->get());
+            $trabalhosAtribuidos = $revisor->trabalhosAtribuidos()
+                ->orderBy('atribuicaos.id', 'desc') 
+                ->get();
+                
+            $trabalhos->push($trabalhosAtribuidos);
         }
         // dd($trabalhos);
         return view('revisor.listarTrabalhos')->with(['evento' => $evento, 'trabalhosPorRevisor' => $trabalhos]);
