@@ -46,7 +46,7 @@
                 <dd class="col-sm-8">{{ $trabalho->modalidade->nome ?? '—' }}</dd>
 
                 <dt class="col-sm-4">Emitido em</dt>
-                <dd class="col-sm-8">{{ $trabalho->aprovacao_emitida_em->format('d/m/Y H:i') }}</dd>
+                <dd class="col-sm-8">{{ \Carbon\Carbon::parse($trabalho->aprovacao_emitida_em)->format('d/m/Y H:i') }}</dd>
                 </dl>
             </div>
             </div>
