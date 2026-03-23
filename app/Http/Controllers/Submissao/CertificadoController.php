@@ -867,7 +867,9 @@ class CertificadoController extends Controller
             if ($certificado_user) {
                 return $this->gerar_pdf($certificado_user);
             } else {
-                return redirect()->route('validarCertificado')->withErrors(['hash' => 'Código de validação não encontrado ou inválido.'])->withInput(['hash' => $hash_url]);
+                return redirect()->route('validarCertificado')
+                    ->withErrors(['hash' => 'Código de validação não encontrado ou inválido.'])
+                    ->withInput(); 
             }
         }
         
