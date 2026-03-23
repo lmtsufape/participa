@@ -857,10 +857,10 @@ class CertificadoController extends Controller
     {
         $hash = $request->input('hash') ?: $request->route('hash');
 
-         if ($hash) {
+        if ($hash && !$request->has('tipo')) {
             $hash_decodificado = urldecode($hash);
             $certificado_user = DB::table('certificado_user')->where([
-                ['validacao', '=', urldecode($hash)], 
+                ['validacao', '=', $hash_decodificado], 
                 ['valido', '=', true],
             ])->first();
 
@@ -869,63 +869,48 @@ class CertificadoController extends Controller
             } else {
                 return redirect()->route('validarCertificado')
                     ->withErrors(['hash' => 'Código de validação não encontrado ou inválido.'])
-                    ->withInput(); 
+                    ->withInput();
             }
         }
-        
-        if ($request->tipo == 'cpf_evento') {
-            return $this->validarCertificadoPorCpf($request);
-        }
 
-        if ($request->tipo == 'nome') {
-            return $this->validarCertificadoPorNome($request);
-        }
-
-        if($request->tipo == 'aceite'){
+        if ($request->isMethod('post')) {
             $request->validate([
-                'hash' => ['required','string','max:128'],
-                'tipo' => ['required','in:certificado,aceite'],
+                'hash' => ['required', 'string', 'max:128'],
+                'tipo' => ['required', 'in:certificado,aceite,cpf_evento,nome'],
             ]);
 
-            $codigo = trim((string) $request->input('hash'));
+            $codigoDigitado = trim((string) $request->input('hash'));
 
-            $norm = strtoupper(str_replace(['-', ' '], '', $codigo));
+            if ($request->tipo == 'aceite') {
+                $norm = strtoupper(str_replace(['-', ' '], '', $codigoDigitado));
+                
+                $digest = hash('sha256', $norm);
+                $trabalho = Trabalho::where('hash_codigo_aprovacao', $digest)->first();
 
-            if (!preg_match('/^[A-F0-9]{32}$/', $norm)) {
-                return back()->withErrors(['hash' => 'Formato inválido.']);
+                if (!$trabalho) {
+                    return back()->withErrors(['hash' => 'Código de aceite não encontrado.'])->withInput();
+                }
+
+                return view('carta_de_aceite_sucesso_validacao', [
+                    'codigo' => $codigoDigitado,
+                    'trabalho' => $trabalho,
+                ]);
             }
 
-            $digest = hash('sha256', $norm);
-            $trabalho = Trabalho::where('hash_codigo_aprovacao', $digest)->first();
+            if ($request->tipo == 'certificado') {
+                $certificado_user = DB::table('certificado_user')->where([
+                    ['validacao', '=', $codigoDigitado],
+                    ['valido', '=', true],
+                ])->first();
 
-            if (!$trabalho) {
-                return back()->withErrors(['hash' => 'Código não encontrado.']);
+                if ($certificado_user) {
+                    return $this->gerar_pdf($certificado_user);
+                }
+                
+                return back()->withErrors(['hash' => 'Certificado não encontrado ou inválido.'])->withInput();
             }
-
-            return view('carta_de_aceite_sucesso_validacao', [
-                'codigo' => $codigo,
-                'trabalho' => $trabalho,
-            ]);
         }
 
-        if ($request->has('hash')) {
-            $request->validate([
-                'hash' => ['required','string','max:128'],
-                'tipo' => ['required','in:certificado,aceite'],
-            ]);
-            
-            $hash_form = trim($request->input('hash'));
-            
-            $certificado_users = DB::table('certificado_user')
-                ->where('valido', true)
-                ->get();
-            
-            $certificado_user = $certificado_users->filter(function ($item) use ($hash_form) {
-                return Hash::check($hash_form, $item->validacao);
-            })->first();
-
-            return $this->gerar_pdf($certificado_user);
-        }
         return $this->validarCertificadoForm();
     }
 
