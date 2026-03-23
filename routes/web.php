@@ -90,6 +90,9 @@ Route::view('/aviso-de-privacidade', 'avisodeprivacidade')->name('aviso.de.priva
 Route::get('/evento/busca', [EventoController::class, 'buscaLivre'])->name('busca.eventos');
 Route::get('/evento/buscar-livre', [EventoController::class, 'buscaLivreAjax'])->name('busca.livre.ajax');
 
+Route::post('/inscricao/cancelar-propria/{id}', [InscricaoController::class, 'cancelarPropriaInscricao'])->name('inscricao.cancelar-propria');
+
+
 Auth::routes(['verify' => true, 'register' => false]);
 
 
@@ -486,7 +489,6 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
     Route::post('inscricoes/editar-campo/{id}', [CampoFormularioController::class, 'update'])->name('campo.edit');
     Route::post('/inscricoes/inscreverParticipante', [InscricaoController::class, 'inscreverParticipante'])->name('inscricao.inscreverParticipante');
     Route::put('/inscricoes/{inscricao}/alterar-categoria', [InscricaoController::class, 'alterarCategoria'])->name('inscricao.alterarCategoria');
-
     // Checkout
     Route::prefix('checkout')->name('checkout.')->group(function () {
         Route::get('/tela-pagamento/{evento}', [CheckoutController::class, 'telaPagamento'])->name('telaPagamento');

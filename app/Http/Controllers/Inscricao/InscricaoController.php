@@ -845,4 +845,29 @@ class InscricaoController extends Controller
 
         return view('validacao.recibo_valido', $data);
     }
+
+    public function cancelarPropriaInscricao($id)
+    {
+        $inscricao = Inscricao::find($id);
+
+        if (!$inscricao) {
+            return redirect()->back()->with(['message' => 'Inscrição não encontrada.', 'class' => 'danger']);
+        }
+
+        if ($inscricao->user_id !== auth()->user()->id) {
+            abort(403, 'Ação não autorizada.');
+        }
+
+        if ($inscricao->finalizada) {
+            return redirect()->back()->with([
+                'message' => 'Não é possível cancelar uma inscrição já confirmada/paga por conta própria. Entre em contato com a organização.',
+                'class' => 'danger'
+            ]);
+        }
+        
+        $this->destroy($inscricao->id);
+
+        return redirect()->route('evento.visualizar', ['id' => $inscricao->evento_id])
+                        ->with('message', 'Sua pré-inscrição foi cancelada com sucesso.');
+    }
 }

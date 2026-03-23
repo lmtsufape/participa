@@ -207,6 +207,14 @@
                             <a href="#" class="ms-3" data-bs-toggle="modal" data-bs-target="#modalAlterarCategoria">
                                 {{ __('Alterar categoria') }}
                             </a>
+                            
+                            <form action="{{ route('inscricao.cancelar-propria', $inscricao->id) }}" method="POST" class="mt-2" 
+                                onsubmit="return confirm('Tem certeza que deseja cancelar sua pré-inscrição? Todos os dados preenchidos serão perdidos.')">
+                                @csrf
+                                <button type="submit" class="btn btn-link text-danger p-0" style="text-decoration: none;">
+                                    {{ __('Cancelar pré-inscrição') }}
+                                </button>
+                            </form>
                         @endif
                     @endisset
                 @endif
