@@ -63,12 +63,24 @@
                             <div class="card-body">
                                 {{-- TÍTULO E DESCRIÇÃO COM STR::limit --}}
                                 @php
-                                    $titulo = ($evento->is_multilingual && Session::get('idiomaAtual') === 'en')
-                                              ? $evento->nome_en
-                                              : $evento->nome;
-                                    $descricao = ($evento->is_multilingual && Session::get('idiomaAtual') === 'en')
-                                                 ? $evento->descricao_en
-                                                 : $evento->descricao;
+                                    $idioma = Session::get('idiomaAtual');
+                                    //faz switch entre idioma e seleciona entidades adequadas
+                                    if ($evento->is_multilingual) {
+                                        if ($idioma === 'en') {
+                                            $titulo = $evento->nome_en;
+                                            $descricao = $evento->descricao_en;
+                                        } elseif ($idioma === 'es') {
+                                            $titulo = $evento->nome_es;
+                                            $descricao = $evento->descricao_es;
+                                        } else {
+                                            $titulo = $evento->nome;
+                                            $descricao = $evento->descricao;
+                                        }
+                                    } else {
+                                        $titulo = $evento->nome;
+                                        $descricao = $evento->descricao;
+                                    }
+
                                 @endphp
 
                                 <div class="card-title text-justify">

@@ -2042,15 +2042,14 @@ class EventoController extends Controller
      */
     private function formatDescription(array $data)
     {
-
         if (isset($data['descricao'])) {
-            $data['descricao'] = strip_tags($data['descricao']);
+            $data['descricao'] = html_entity_decode(strip_tags($data['descricao']), ENT_QUOTES, 'UTF-8');
         }
         if (isset($data['descricao_en'])) {
-            $data['descricao_en'] = strip_tags($data['descricao_en']);
+            $data['descricao_en'] = html_entity_decode(strip_tags($data['descricao_en']), ENT_QUOTES, 'UTF-8');
         }
         if (isset($data['descricao_es'])) {
-            $data['descricao_es'] = strip_tags($data['descricao_es']);
+            $data['descricao_es'] = html_entity_decode(strip_tags($data['descricao_es']), ENT_QUOTES, 'UTF-8');
         }
 
         return $data;
