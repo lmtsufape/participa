@@ -126,7 +126,7 @@
                                     {{ __('Realize sua inscrição aqui!') }}
                                 @endif
                             </button>
-                            <button class="btn btn-my-success w-60 rounded btn-lg" 
+                            <button class="btn btn-my-success w-60 rounded btn-lg"
                                 @if (!$encerrada && !($isInscrito && isset($inscricao) && $inscricao->finalizada))
                                     data-bs-toggle="modal" data-bs-target="#modalInscricaoPCD"
                                 @endif
@@ -186,7 +186,7 @@
                                 <a href="{{ route('checkout.telaPagamento', $evento) }}"
                                         class="text-center mt-2 w-100">{{ __('Realizar pagamento') }}</a>
                             @endif
-                            
+
                             <a href="#" class="ms-3" data-bs-toggle="modal" data-bs-target="#modalAlterarCategoria">
                                 {{ __('Alterar categoria') }}
                             </a>
@@ -1303,54 +1303,4 @@
             document.getElementById('trabalhoNovaVersaoId').value = x;
         }
     </script>
-    @if ($dataInicial != '' && $evento->exibir_calendario_programacao)
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                /* initialize the external events
-                -----------------------------------------------------------------*/
-                // var containerEl = document.getElementById('external-events-list');
-                // new FullCalendar.Draggable(containerEl, {
-                //   itemSelector: '.fc-event',
-                //   eventData: function(eventEl) {
-                //     return {
-                //       title: eventEl.innerText.trim()
-                //     }
-                //   }
-                // });
-                //// the individual way to do it
-                // var containerEl = document.getElementById('external-events-list');
-                // var eventEls = Array.prototype.slice.call(
-                //   containerEl.querySelectorAll('.fc-event')
-                // );
-                // eventEls.forEach(function(eventEl) {
-                //   new FullCalendar.Draggable(eventEl, {
-                //     eventData: {
-                //       title: eventEl.innerText.trim(),
-                //     }
-                //   });
-                // });
-                /* initialize the calendar
-                -----------------------------------------------------------------*/
-                var calendarEl = document.getElementById('calendar');
-                var calendar = new FullCalendar.Calendar(calendarEl, {
-                    initialDate: "{{ $dataInicial->data }}",
-                    headerToolbar: {
-                        left: 'dayGridMonth,timeGridWeek,timeGridDay,listYear',
-                        center: 'title',
-                        right: 'prev,next today'
-                    },
-                    initialView: 'listYear',
-                    locale: 'pt-br',
-                    editable: false,
-                    eventClick: function(info) {
-                        var idModal = "#modalAtividadeShow" + info.event.id;
-                        $(idModal).modal('show');
-                    },
-                    events: "{{ route('atividades.json', ['id' => $evento->id]) }}",
-                });
-                calendar.render();
-            });
-        </script>
-    @endif
-
 @endsection
