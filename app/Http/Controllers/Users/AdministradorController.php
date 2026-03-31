@@ -102,7 +102,7 @@ class AdministradorController extends Controller
 
     public function eventos()
     {
-        $eventos = Evento::all();
+        $eventos = Evento::latest()->get();
 
         return view('coordenador.index', ['eventos' => $eventos]);
     }
@@ -328,7 +328,7 @@ class AdministradorController extends Controller
     {
         $this->authorize('isAdmin', Administrador::class);
         $busca = $request->search;
-        
+
         try {
             $users = User::whereRaw('unaccent(lower(email)) ILIKE unaccent(lower(?))', ['%' . $busca . '%'])
                 ->orWhereRaw('unaccent(lower(name)) ILIKE unaccent(lower(?))', ['%' . $busca . '%'])
@@ -341,7 +341,7 @@ class AdministradorController extends Controller
                 ->orWhereRaw('LOWER(cpf) like ?', ['%' . $busca . '%'])
                 ->paginate(100);
         }
-        
+
         if ($users->count() == 0) {
             return view('administrador.users', compact('users'))->with(['message' => 'Nenhum Resultado encontrado!']);
         }
