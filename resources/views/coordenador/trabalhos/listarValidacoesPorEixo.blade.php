@@ -202,7 +202,7 @@
                                                         </td>
 
                                                         <td data-col="decisao" class="text-center px-3">
-                                                            @if($trabalho->aprovado === true)
+                                                            @if($trabalho->aprovado === 1)
                                                                 <span style="
                                                                     display:inline-block; padding:.32rem .6rem; border-radius:999px;
                                                                     background:#198754; border:1px solid #146C43; color:#FFFFFF;
@@ -210,7 +210,7 @@
                                                                     letter-spacing:.2px; "
                                                                 >Aprovado</span>
 
-                                                            @elseif($trabalho->aprovado === false)
+                                                            @elseif($trabalho->aprovado === 0)
                                                                 <span style="
                                                                     display:inline-block; padding:.32rem .6rem; border-radius:999px;
                                                                     background:#DC3545; border:1px solid #B02A37; color:#FFFFFF;
