@@ -1092,11 +1092,11 @@ class TrabalhoController extends Controller
                     return ['flash' => 'success', 'msg' => 'Trabalho reprovado com sucesso!'];
 
                 case 'restaurar':
-                    if(in_array($trabalho->aprovado, [true, false], true)){
-                        $trabalho->aprovado                 = null;
-                        $trabalho->hash_codigo_aprovacao    = null;
-                        $trabalho->aprovacao_emitida_em   = null;
-                        $trabalho->saveOrFail();
+                    if(in_array($trabalho->aprovado, [true, false, 1, 0, '1', '0'], true) || !is_null($trabalho->aprovado)){
+                        $trabalho->aprovado = null;
+                        $trabalho->hash_codigo_aprovacao = null;
+                        $trabalho->aprovacao_emitida_em = null;
+                        $trabalho->save();
 
                         return ['flash' => 'success', 'msg' => 'Trabalho restaurado com sucesso!'];
                     }
@@ -1362,39 +1362,60 @@ class TrabalhoController extends Controller
     }
     //tirar lógica de avaliçao deste controller e inserir em um controller de avaliação
 
-    public function destroyAvaliacao(Request $request, $trabalho_id){
+    public function destroyAvaliacao(Request $request, $trabalho_id)
+    {
         DB::beginTransaction();
         try {
             $trabalho = Trabalho::findOrFail($trabalho_id);
+            $evento = $trabalho->evento;
 
-            $trabalho->atribuicoes()->detach($request->revisor_id);
+            if (!(Gate::allows('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento) || 
+                Gate::allows('isCoordenadorEixo', $evento) || 
+                auth()->user()->administradors()->exists())) {
+                abort(403, 'Você não tem permissão para apagar esta avaliação.');
+            }
+
+            Parecer::where('trabalhoId', $trabalho->id)
+                    ->where('revisorId', $request->revisor_id)
+                    ->delete();
 
             Resposta::where('trabalho_id', $trabalho->id)
-                    ->where('revisor_id', $request->revisor_id)->delete();
+                    ->where('revisor_id', $request->revisor_id)
+                    ->delete();
 
-            if($trabalho->atribuicoes()->count() == 0){
+            DB::table('atribuicaos')
+                ->where('trabalho_id', $trabalho->id)
+                ->where('revisor_id', $request->revisor_id)
+                ->update([
+                    'parecer' => 'processando',
+                    'confirmacao' => 1,
+                ]);
+
+            if ($trabalho->atribuicoes()->where('parecer', '!=', 'processando')->count() == 0) {
                 $trabalho->avaliado = 'nao';
             }
-            $avaliacao = ArquivoAvaliacao::where('trabalhoId', $trabalho->id)
-                                        ->where('revisorId', $request->revisor_id)->first();
-            if($avaliacao){
-                if(Storage::exists($avaliacao->nome)){
-                    Storage::delete($avaliacao->nome);
-                }
-                $avaliacao->delete();
-            }
-            $trabalho->save();
 
+            $avaliacaoArquivo = ArquivoAvaliacao::where('trabalhoId', $trabalho->id)
+                                                ->where('revisorId', $request->revisor_id)->first();
+            if($avaliacaoArquivo){
+                if(Storage::disk('public')->exists($avaliacaoArquivo->nome)){
+                    Storage::disk('public')->delete($avaliacaoArquivo->nome);
+                }
+                $avaliacaoArquivo->delete();
+            }
+
+            $trabalho->save();
             DB::commit();
 
-            return redirect()->route('coord.listarAvaliacoes')->with('success', 'Avaliação deleta com sucesso!');
+            return redirect()->back()->with('success', 'Avaliação excluída com sucesso! O status do trabalho foi resetado para pendente.');
 
         } catch (\Exception $e) {
             DB::rollBack();
-
-            return back()->with('error', 'Erro: ' . $e->getMessage());//Definir um component global para exibição de mensagens
+            Log::error("Erro ao deletar avaliação: " . $e->getMessage());
+            return back()->with('error', 'Erro ao processar a exclusão: ' . $e->getMessage());
         }
     }
+
     public function validarTipoDoArquivo($arquivo, $tiposExtensao)
     {
         if ($tiposExtensao->arquivo == true) {

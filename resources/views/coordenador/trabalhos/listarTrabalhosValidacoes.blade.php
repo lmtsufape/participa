@@ -173,37 +173,33 @@
                                                 </td>
                                                 <td class="text-center px-3">
                                                     <div class="d-flex justify-content-center gap-3">
-                                                        @if(!$trabalho->tem_pagamento && (is_null($trabalho->aprovado)))
-                                                            <button class="btn btn-warning btn-sm" name="btn-avaliacao-aprovar-{{$trabalho->id}}"
-                                                                data-bs-toggle="modal" data-bs-target="#avaliacao-aprovar-{{$trabalho->id}}">
-                                                                <strong>Aprovar</strong>
-                                                            </button>
-                                                        @elseif((is_null($trabalho->aprovado)))
-                                                            <button class="btn btn-success btn-sm" name="btn-avaliacao-aprovar-{{$trabalho->id}}"
-                                                                data-bs-toggle="modal" data-bs-target="#avaliacao-aprovar-{{$trabalho->id}}">
-                                                                Aprovar
-                                                            </button>
-                                                        @endif
+                                                        @if(is_null($trabalho->aprovado))
+                                                            @if(!$trabalho->tem_pagamento)
+                                                                <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#avaliacao-aprovar-{{$trabalho->id}}">
+                                                                    <strong>Aprovar</strong>
+                                                                </button>
+                                                            @else
+                                                                <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#avaliacao-aprovar-{{$trabalho->id}}">
+                                                                    Aprovar
+                                                                </button>
+                                                            @endif
 
-                                                        @if(auth()->user()->can('isCoordenadorOrCoordenadorDaComissaoCientifica', $trabalho->evento) && (!is_null($trabalho->aprovado)))
-                                                            <button class="btn btn-secondary btn-sm" name="btn-avaliacao-restaurar-{{$trabalho->id}}"
-                                                                data-bs-toggle="modal" data-bs-target="#avaliacao-restaurar-{{$trabalho->id}}">
-                                                                Restaurar
-                                                            </button>
-                                                        @endif
-
-                                                        @if((is_null($trabalho->aprovado)))
-                                                            <button class="btn btn-danger btn-sm" name="btn-avaliacao-reprovar-{{$trabalho->id}}"
-                                                                data-bs-toggle="modal" data-bs-target="#avaliacao-reprovar-{{$trabalho->id}}">
+                                                            <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#avaliacao-reprovar-{{$trabalho->id}}">
                                                                 Reprovar
                                                             </button>
+                                                        @else
+                                                            @can('isCoordenadorOrCoordenadorDaComissaoCientifica', $trabalho->evento)
+                                                                <button class="btn btn-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#avaliacao-restaurar-{{$trabalho->id}}">
+                                                                    Restaurar
+                                                                </button>
+                                                            @endcan
                                                         @endif
 
 
                                                     </div>
                                                 </td>
                                                 <td data-col="decisao" class="px-3 text-center">
-                                                    @if($trabalho->aprovado === true)
+                                                    @if($trabalho->aprovado === 1)
                                                         <span style="
                                                             display:inline-block; padding:.32rem .6rem; border-radius:999px;
                                                             background:#198754; border:1px solid #146C43; color:#FFFFFF;
@@ -211,7 +207,7 @@
                                                             letter-spacing:.2px; "
                                                         >Aprovado</span>
 
-                                                    @elseif($trabalho->aprovado === false)
+                                                    @elseif($trabalho->aprovado === 0)
                                                         <span style="
                                                             display:inline-block; padding:.32rem .6rem; border-radius:999px;
                                                             background:#DC3545; border:1px solid #B02A37; color:#FFFFFF;
