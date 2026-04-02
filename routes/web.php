@@ -244,10 +244,7 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
             Route::get('trabalhos/listarValidacoesPorEixo', [EventoController::class, 'listarValidacoesPorEixo'])->name('listarValidacoesPorEixo');
             Route::post('/coordenador/trabalho/{trabalho}/resetar-validacao', [EventoController::class, 'resetarValidacao'])->name('trabalho.resetarValidacao');
 
-            Route::get('areas/cadastrarAreas', [EventoController::class, 'cadastrarAreas'])->name('cadastrarAreas');
-            Route::get('areas/listarAreas', [EventoController::class, 'listarAreas'])->name('listarAreas');
-
-            Route::get('revisores/cadastrarRevisores', [EventoController::class, 'cadastrarRevisores'])->name('cadastrarRevisores');
+            Route::get('areas/listarAreas', [AreaController::class, 'index'])->name('listarAreas');
 
             Route::get('revisores/listarRevisores', [EventoController::class, 'listarRevisores'])->name('listarRevisores');
             Route::get('/evento/{evento}/exportar-revisores', [EventoController::class, 'exportarRevisoresXLSX'])->name('evento.exportarRevisores');
@@ -340,7 +337,7 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
             Route::post('atividade/{id}/excluir', [AtividadeController::class, 'destroy'])->name('atividade.destroy');
             Route::post('{id}/atividade/salvar-pdf-programacao', [EventoController::class, 'pdfProgramacao'])->name('evento.pdf.programacao');
             Route::post('{id}/atividade/salvar-pdf-adicional', [EventoController::class, 'pdfAdicional'])->name('evento.pdf.adicional');
-            Route::get('tipo-de-atividade/new', [TipoAtividadeController::class, 'storeAjax'])->name('tipo.store.ajax');
+            Route::get('tipo-de-atividade/new', [AtividadeController::class, 'storeAjax'])->name('tipo.store.ajax');
             Route::get('eventos/editarEtiqueta', [EventoController::class, 'editarEtiqueta'])->name('editarEtiqueta');
             Route::get('eventos/etiquetasTrabalhos', [EventoController::class, 'etiquetasTrabalhos'])->name('etiquetasTrabalhos');
             Route::get('{id}/modulos', [FormEventoController::class, 'indexModulo'])->name('modulos');
