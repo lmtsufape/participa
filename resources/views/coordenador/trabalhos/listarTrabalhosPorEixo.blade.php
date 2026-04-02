@@ -76,13 +76,13 @@
 
                 @if($trabalhos && $trabalhos->count() > 0)
                     <div class="d-flex flex-column align-items-end">
-                        <a href="{{ route('coord.downloadTrabalhosEixo', ['eventoId' => $evento->id, 'eixo_id' => $eixoSelecionado, 'status' => $status]) }}" 
+                        <a href="{{ route('coord.downloadTrabalhosEixo', ['eventoId' => $evento->id, 'eixo_id' => $eixoSelecionado, 'status' => $status]) }}"
                         class="btn btn-primary mb-2"
                         onclick="return confirm('Deseja baixar todos os trabalhos deste eixo (versão corrigida)? Isso pode levar alguns minutos dependendo da quantidade de trabalhos.');">
                             <img src="{{ asset('img/icons/file-download-solid.svg') }}" style="width: 16px; margin-right: 5px;" alt="Download">
                             Baixar Todos os Trabalhos (ZIP)
                         </a>
-                        <a href="{{ route('coord.downloadTrabalhosAprovadosEixo', ['eventoId' => $evento->id, 'eixo_id' => $eixoSelecionado]) }}" 
+                        <a href="{{ route('coord.downloadTrabalhosAprovadosEixo', ['eventoId' => $evento->id, 'eixo_id' => $eixoSelecionado]) }}"
                         class="btn btn-success"
                         style="margin-left: 10px;"
                         onclick="return confirm('Deseja baixar apenas os trabalhos APROVADOS deste eixo?');">
@@ -147,7 +147,7 @@
                                                                 @endif
                                                             </td>
                                                         @endforeach
-                                                        <td>{{ $trabalho->atribuicoes_count }}</td>
+                                                        <td>{{ $trabalho->revisores_count }}</td>
                                                         <td>{{ $trabalho->quantidade_avaliacoes }}</td>
                                                         <td>{{ $trabalho->created_at?->format('d/m/Y H:i') }}</td>
                                                         <td style="text-align:center">

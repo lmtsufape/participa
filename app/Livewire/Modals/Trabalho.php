@@ -35,7 +35,7 @@ class Trabalho extends Component
 
     public function mount(int $trabalhoId, int $eventoId)
     {
-        $this->trabalho = SubmissaoTrabalho::with(['autor','coautors.user','atribuicoes.user','modalidade','area'])
+        $this->trabalho = SubmissaoTrabalho::with(['autor','coautors.user','revisores.user','modalidade','area'])
                            ->findOrFail($trabalhoId);
         $this->evento   = Evento::findOrFail($eventoId);
     }
@@ -54,7 +54,7 @@ class Trabalho extends Component
             $trabalho = SubmissaoTrabalho::lockForUpdate()->findOrFail($data['trabalhoId']);
             $revisor  = Revisor::findOrFail($data['revisorId']);
 
-            if($trabalho->atribuicoes()->whereKey($revisor->id)->exists()){
+            if($trabalho->revisores()->whereKey($revisor->id)->exists()){
                 session()->flash('error', 'Revisor já atribuído ao trabalho.');
                 return;
             }
@@ -89,7 +89,7 @@ class Trabalho extends Component
             );
         });
 
-        $this->trabalho->load('atribuicoes.user','coautors.user');
+        $this->trabalho->load('revisores.user','coautors.user');
         session()->flash('success', 'Atribuição realizada com sucesso!');
 
         $this->reset('revisorId');
@@ -118,7 +118,7 @@ class Trabalho extends Component
             return;
         }
 
-        $atribuicao = $trabalho->atribuicoes()->whereKey($revisor->id)->first();
+        $atribuicao = $trabalho->revisores()->whereKey($revisor->id)->first();
 
         if ($atribuicao && $atribuicao->pivot->parecer != 'processando') {
             session()->flash('error', 'Não é possível remover avaliador/a que possua um parecer já emitido. Para isso, é necessário apagar o parecer, e daí, realizar a exclusão.');
@@ -128,11 +128,11 @@ class Trabalho extends Component
         DB::transaction(function () use ($trabalho, $revisor, $revisorId) {
             $revisor->decrement('correcoesEmAndamento');
 
-            $trabalho->atribuicoes()->detach($revisorId);
+            $trabalho->revisores()->detach($revisorId);
 
         });
 
-        $this->trabalho = $trabalho->fresh('atribuicoes.user');
+        $this->trabalho = $trabalho->fresh('revisores.user');
 
         $mensagem = $trabalho->titulo.' foi retirado de '.$revisor->user->name.' com sucesso!';
         session()->flash('success', $mensagem);
@@ -157,7 +157,7 @@ class Trabalho extends Component
         $opcoes = $this->evento->revisors()
             ->where([['modalidadeId',$this->trabalho->modalidade->id],['areaId',$this->trabalho->area->id]])
             ->get()
-            ->filter(fn($r)=> !$this->trabalho->atribuicoes->contains($r)
+            ->filter(fn($r)=> !$this->trabalho->revisores->contains($r)
                             && is_null($this->trabalho->coautors->where('autorId',$r->user_id)->first())
                             && $this->trabalho->autorId != $r->user_id)
             ->sortBy(fn($r) => $r->user->name ?? '');

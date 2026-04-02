@@ -39,7 +39,7 @@ class TrabalhoPolicy
         } elseif ($trabalho->autorId == $user->id && ($trabalho->modalidade->estaEmPeriodoDeCorrecao() || $trabalho->modalidade->estaEmPeriodoExtraDeCorrecao())) {
             $resultado = true;
         } else {
-            $revisorAtribuido = $trabalho->atribuicoes->firstWhere('user_id', $user->id);
+            $revisorAtribuido = $trabalho->revisores->firstWhere('user_id', $user->id);
             if ($revisorAtribuido) {
                 $resultado = true;
             }

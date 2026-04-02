@@ -79,7 +79,7 @@ class Trabalho extends Model
         return $this->hasMany('App\Models\Submissao\Parecer', 'trabalhoId');
     }
 
-    public function atribuicoes()
+    public function revisores()
     {
         return $this->belongsToMany('App\Models\Users\Revisor', 'atribuicaos', 'trabalho_id', 'revisor_id')->withPivot('confirmacao', 'parecer','prazo_correcao', 'justificativa_recusa')->withTimestamps();
     }
@@ -97,7 +97,7 @@ class Trabalho extends Model
             return null;
         }
 
-        return $this->atribuicoes()
+        return $this->revisores()
                     ->where('user_id', $user->id)
                     ->first();
     }
@@ -139,13 +139,13 @@ class Trabalho extends Model
         $revisor = Revisor::where([['user_id', $user->id], ['areaId', $this->area->id],
             ['modalidadeId', $this->modalidade->id], ])->first();
                 // Armazena o resultado da consulta em uma variável.
-        $atribuicao = $this->atribuicoes()->where('revisor_id', $revisor->id)->first();
-        
+        $atribuicao = $this->revisores()->where('revisor_id', $revisor->id)->first();
+
         // Verifica se a atribuição foi encontrada.
         if ($atribuicao === null) {
             return null;
         }
-        
+
         if ($atribuicao->pivot === null) {
             return null;
         } else {
@@ -155,7 +155,7 @@ class Trabalho extends Model
 
     public function getQuantidadeAvaliacoes()
     {
-        return $this->atribuicoes->map(function ($revisor) {
+        return $this->revisores->map(function ($revisor) {
             return $this->avaliado($revisor->user);
         })->filter()->count();
     }

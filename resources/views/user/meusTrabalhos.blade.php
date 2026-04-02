@@ -159,13 +159,13 @@
                                             <img src="{{ asset('img/icons/eye-regular.svg') }}" style="width:20px">
                                         </a>
                                     </td>
-                                    
+
                                     <td style="text-align:center">
                                         <a href="#" data-bs-toggle="modal" data-bs-target="#modalDownloadTrabalho_{{ $trabalho->id }}" style="font-size: 20px; color: #114048ff;">
                                             <img class="" src="{{ asset('img/icons/file-download-solid.svg') }}" style="width:20px" title="Arquivos para Download">
                                         </a>
                                     </td>
-                                    
+
                                     <td style="text-align:center">
                                         @if ($trabalho->modalidade->estaEmPeriodoDeSubmissao())
                                             <a href="#" onclick="return false;" data-bs-toggle="modal" data-bs-target="#modalEditarTrabalho_{{ $trabalho->id }}" style="color:#114048ff">
@@ -184,10 +184,10 @@
                                     </td>
 
                                     <td style="text-align:center">
-                                        @foreach ($trabalho->atribuicoes as $revisor)
+                                        @foreach ($trabalho->revisores as $revisor)
                                             @if (
-                                                ($trabalho->atribuicoes->count() == 1 && ($trabalho->status == 'avaliado' || $trabalho->getParecerAtribuicao($revisor->user) == 'encaminhado'))
-                                                || ($trabalho->atribuicoes->count() > 1 && $trabalho->getParecerAtribuicao($revisor->user) == 'encaminhado')
+                                                ($trabalho->revisores->count() == 1 && ($trabalho->status == 'avaliado' || $trabalho->getParecerAtribuicao($revisor->user) == 'encaminhado'))
+                                                || ($trabalho->revisores->count() > 1 && $trabalho->getParecerAtribuicao($revisor->user) == 'encaminhado')
                                             )
                                                 <a href="{{ route('user.visualizarParecer', ['eventoId' => $trabalho->evento->id, 'modalidadeId' => $trabalho->modalidadeId, 'trabalhoId' => $trabalho->id, 'revisorId' => $revisor->id, 'id' => $trabalho->id]) }}">
                                                     <img src="{{ asset('img/icons/eye-regular.svg') }}"
@@ -328,7 +328,7 @@
                     </div>
                     <div class="modal-body">
                         <p class="mb-3">Selecione o arquivo que deseja baixar:</p>
-                        
+
                         @php
                             $arquivoOriginal = $trabalho->arquivo()->where('versaoFinal', true)->first();
                             $temArquivoOriginal = $arquivoOriginal != null && Storage::disk()->exists($arquivoOriginal->nome);
@@ -357,7 +357,7 @@
                                 <span class="text-warning">Correção ainda não submetida.</span>
                             @endif
                         </div>
-                        
+
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
@@ -365,7 +365,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="modal fade" id="modalCoautoresTrabalho_{{ $trabalho->id }}" tabindex="-1"
             aria-labelledby="modalCoautoresTrabalho_{{ $trabalho->id }}Label" aria-hidden="true">
             <div class="modal-dialog" role="document">
@@ -389,7 +389,7 @@
             </div>
         </div>
         @if ($trabalho->modalidade->estaEmPeriodoDeSubmissao())
-            
+
             <div class="modal fade" id="modalEditarTrabalho_{{ $trabalho->id }}" tabindex="-1"
                 aria-labelledby="modalEditarTrabalho_{{ $trabalho->id }}Label" aria-hidden="true">
                 <div class="modal-dialog modal-lg" role="document">

@@ -119,17 +119,17 @@
                                                     <td>{{ $trabalho->autor->name }}</td>
                                                     {{-- <td>{{$trabalho->area->nome}}</td> --}}
                                                     <td>
-                                                        @foreach ($trabalho->atribuicoes as $revisor)
+                                                        @foreach ($trabalho->revisores as $revisor)
                                                             {{ $revisor->user->name }}<br>
                                                         @endforeach
                                                     </td>
                                                     <td class="text-center">
-                                                        @foreach ($trabalho->atribuicoes as $revisor)
+                                                        @foreach ($trabalho->revisores as $revisor)
                                                             {{ optional($revisor->pivot->created_at)->format('d/m/Y H:i') }}<br>
                                                         @endforeach
                                                     </td>
                                                     <td>
-                                                        @forelse ($trabalho->atribuicoes as $revisor)
+                                                        @forelse ($trabalho->revisores as $revisor)
                                                             @if($trabalho->avaliado($revisor->user))
                                                                 Avaliado
                                                             @else
@@ -141,7 +141,7 @@
                                                         @endforelse
                                                     </td>
                                                     <td style="text-align:center">
-                                                        @foreach ($trabalho->atribuicoes as $revisor)
+                                                        @foreach ($trabalho->revisores as $revisor)
                                                             @if($trabalho->avaliado($revisor->user))
                                                                 <a href="{{ route('coord.visualizarRespostaFormulario', ['eventoId' => $evento->id, 'modalidadeId' => $trabalho->modalidadeId, 'trabalhoId' => $trabalho->id, 'revisorId' => $revisor->id]) }}">
                                                                     <img src="{{ asset('img/icons/eye-regular.svg') }}" style="width:20px">
@@ -152,7 +152,7 @@
                                                         @endforeach
                                                     </td>
                                                     <td class="text-center">
-                                                        @foreach($trabalho->atribuicoes as $revisor)
+                                                        @foreach($trabalho->revisores as $revisor)
                                                             @if($trabalho->avaliado($revisor->user))
                                                                 @if ($trabalho->getParecerAtribuicao($revisor->user) != "encaminhado")
                                                                     Não

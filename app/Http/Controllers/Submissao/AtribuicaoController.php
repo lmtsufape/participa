@@ -221,7 +221,7 @@ class AtribuicaoController extends Controller
 
         $revisor = Revisor::find($request->revisorId);
 
-        if ($trabalho->atribuicoes->contains($revisor)) {
+        if ($trabalho->revisores->contains($revisor)) {
             return redirect()->back()->with(['error' => 'Revisor já atribuído ao trabalho.'])->withInput($validatedData);
         }
 
@@ -285,7 +285,7 @@ class AtribuicaoController extends Controller
         $revisor->correcoesEmAndamento -= 1;
         $revisor->update();
 
-        $trabalho->atribuicoes()->detach($id);
+        $trabalho->revisores()->detach($id);
 
         $mensagem = $trabalho->titulo.' foi retirado de '.$revisor->user->name.' com sucesso!';
 

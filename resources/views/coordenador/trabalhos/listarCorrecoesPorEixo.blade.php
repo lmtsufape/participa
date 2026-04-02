@@ -156,7 +156,7 @@
                                                                 @endif
                                                             </td>
                                                             <td style="text-align:center">
-                                                                @foreach ($trabalho->atribuicoes as $revisor)
+                                                                @foreach ($trabalho->revisores as $revisor)
                                                                     @if($trabalho->avaliado($revisor->user))
                                                                         <a href="{{ route('coord.visualizarRespostaFormulario', ['eventoId' => $evento->id, 'modalidadeId' => $trabalho->modalidadeId, 'trabalhoId' => $trabalho->id, 'revisorId' => $revisor->id]) }}">
                                                                             <img src="{{ asset('img/icons/eye-regular.svg') }}" style="width:20px">

@@ -58,7 +58,7 @@ class RevisorController extends Controller
                 $trabalhosAtribuidos = $revisor->trabalhosAtribuidos()->orderBy('titulo')->get();
                 // // Filtrar para só mostrar trabalhos cuja justificativa_recusa é null
                 foreach ($trabalhosAtribuidos as $trabalho) {
-                    $pivot = $trabalho->atribuicoes()->where('revisor_id', $revisor->id)->first()->pivot;
+                    $pivot = $trabalho->revisores()->where('revisor_id', $revisor->id)->first()->pivot;
                     if ($pivot->justificativa_recusa != null) {
                         $trabalhosAtribuidos = $trabalhosAtribuidos->reject(function ($item) use ($pivot) {
                             return $item->id === $pivot->trabalho_id;
@@ -535,7 +535,7 @@ class RevisorController extends Controller
             }
         }
         $trabalho->avaliado = 'Avaliado';
-        $trabalho->atribuicoes()->where('revisor_id', $data['revisor_id'])->first()->pivot->update(['parecer' => 'avaliado']);
+        $trabalho->revisores()->where('revisor_id', $data['revisor_id'])->first()->pivot->update(['parecer' => 'avaliado']);
         $trabalho->save();
         $evento = Evento::find($evento_id);
         $revisor = Revisor::where([['user_id', auth()->user()->id], ['evento_id', $evento_id]])->first();
@@ -591,7 +591,7 @@ class RevisorController extends Controller
                Gate::allows('isAdmin', Administrador::class))) {
             abort(403, 'Acesso negado');
         }
-        
+
         if ($request->arquivoAvaliacao != null) {
             if ($this->validarTipoDoArquivo($request->arquivoAvaliacao, $trabalho->modalidade)) {
                 return redirect()->back()->withErrors(['message' => 'Extensão de arquivo enviado é diferente do permitido.']);
@@ -684,7 +684,7 @@ class RevisorController extends Controller
     public function verificarCorrecao(Request $request, $trabalho_id){
         $trabalho = Trabalho::find($trabalho_id);
         $user = auth()->user();
-        $revisorDaAtribuicao = $trabalho->atribuicoes()->where('user_id', $user->id)->exists();
+        $revisorDaAtribuicao = $trabalho->revisores()->where('user_id', $user->id)->exists();
 
         if (!($revisorDaAtribuicao || Gate::any(['isCoordenadorOrCoordenadorDasComissoes', 'isCoordenadorEixo'], $trabalho->evento))) {
             abort(403, 'Acesso não autorizado');

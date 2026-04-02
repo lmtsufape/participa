@@ -26,7 +26,7 @@ class RelatorioGeralExport implements FromQuery, WithHeadings, WithMapping, Shou
                 'area',
                 'autor',
                 'coautors.user',
-                'atribuicoes.user',
+                'revisores.user',
                 'arquivoCorrecao'
             ]);
     }
@@ -89,7 +89,7 @@ class RelatorioGeralExport implements FromQuery, WithHeadings, WithMapping, Shou
 
         $avaliacaoLiberada = "Não";
 
-        foreach ($trabalho->atribuicoes as $revisor) {
+        foreach ($trabalho->revisores as $revisor) {
             if ($revisor && $revisor->user) {
                 $nomesAvaliadores[] = $revisor->user->name;
                 $emailsAvaliadores[] = $revisor->user->email;

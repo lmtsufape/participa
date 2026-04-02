@@ -157,17 +157,17 @@
                   </td>--}}
                   <td>{{$trabalho->autor->name}}</td>
                   {{--<td>
-                    {{count($trabalho->atribuicoes)}}
+                    {{count($trabalho->revisores)}}
                   </td>--}}
                   <td>
-                    @foreach ($trabalho->atribuicoes as $revisor)
+                    @foreach ($trabalho->revisores as $revisor)
                         {{$revisor->user->name}}
                         <br>
                     @endforeach
                   </td>
 
                   <td>
-                    @forelse ($trabalho->atribuicoes as $revisor)
+                    @forelse ($trabalho->revisores as $revisor)
                         @if($trabalho->avaliado($revisor->user))
                           Avaliado
                         @else
@@ -180,7 +180,7 @@
                   </td>
 
                   <td style="text-align:center">
-                    @foreach ($trabalho->atribuicoes as $revisor)
+                    @foreach ($trabalho->revisores as $revisor)
                         <a href="{{route('coord.visualizarRespostaFormulario', ['eventoId' => $evento->id, 'modalidadeId' => $trabalho->modalidadeId, 'trabalhoId' => $trabalho->id, 'revisorId' => $revisor->id])}}">
                             <img src="{{asset('img/icons/eye-regular.svg')}}" style="width:20px">
                         </a>
@@ -189,7 +189,7 @@
                   </td>
 
                   <td class="text-center">
-                    @foreach($trabalho->atribuicoes as $revisor)
+                    @foreach($trabalho->revisores as $revisor)
                         @if($trabalho->avaliado($revisor->user))
                             @if ($trabalho->getParecerAtribuicao($revisor->user) != "encaminhado")
                                 Não
@@ -285,7 +285,7 @@
               </div>
             </div>
           @endif
-          @if (count($trabalho->atribuicoes) > 0)
+          @if (count($trabalho->revisores) > 0)
             <div class="row justify-content-center">
               <div class="col-sm-12">
                 <h5>Avaliadores atribuídos ao trabalho</h5>
@@ -296,7 +296,7 @@
                 <h5>0</h5>
               </div>
           @endif
-          @foreach ($trabalho->atribuicoes as $i => $revisor)
+          @foreach ($trabalho->revisores as $i => $revisor)
             @if ($i % 3 == 0) </div><div class="row"> @endif
               <div class="col-sm-4">
                 <div class="card" style="width: 13.5rem; text-align: center;">

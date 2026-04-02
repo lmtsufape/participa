@@ -36,11 +36,11 @@ class EnviarLembretesRevisoresJob implements ShouldQueue
     {
         Log::info('Job EnviarLembretesRevisoresJob iniciado.');
 
-        $trabalhosPendentes = Trabalho::whereHas('atribuicoes', function ($q) {
+        $trabalhosPendentes = Trabalho::whereHas('revisores', function ($q) {
             $q->where('parecer', 'processando')
               ->whereNotNull('prazo_correcao')
               ->where('prazo_correcao', '>', now());
-        })->with(['atribuicoes.user', 'evento'])->get();
+        })->with(['revisores.user', 'evento'])->get();
 
         Log::info('Trabalhos pendentes recuperados.', ['total' => $trabalhosPendentes->count()]);
 
@@ -49,7 +49,7 @@ class EnviarLembretesRevisoresJob implements ShouldQueue
 
         foreach ($trabalhosPendentes as $trabalho) {
 
-            foreach ($trabalho->atribuicoes as $atribuicao) {
+            foreach ($trabalho->revisores as $atribuicao) {
                 if ($atribuicao->pivot->parecer !== 'processando') {
                     continue;
                 }
@@ -71,7 +71,7 @@ class EnviarLembretesRevisoresJob implements ShouldQueue
                     $dataLimite = '';
 
                     $trabalhosPendentesRevisor = $trabalho->evento->trabalhos()
-                        ->whereHas('atribuicoes', function ($query) use ($revisor) {
+                        ->whereHas('revisores', function ($query) use ($revisor) {
                             $query->where('revisor_id', $revisor->id)
                                   ->where('parecer', 'processando')
                                   ->whereNotNull('prazo_correcao')
@@ -80,7 +80,7 @@ class EnviarLembretesRevisoresJob implements ShouldQueue
 
 
                     foreach ($trabalhosPendentesRevisor as $trabPendente) {
-                        $atribuicaoPendente = $trabPendente->atribuicoes()
+                        $atribuicaoPendente = $trabPendente->revisores()
                             ->where('revisor_id', $revisor->id)
                             ->first();
 

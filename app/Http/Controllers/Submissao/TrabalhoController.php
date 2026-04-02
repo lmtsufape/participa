@@ -477,12 +477,12 @@ class TrabalhoController extends Controller
             abort(403, 'Acesso negado');
         }
         if ($trabalho->getParecerAtribuicao($revisor->user) == 'encaminhado') {
-            $trabalho->atribuicoes()->where('revisor_id', $revisor->id)->first()->pivot->update(['parecer' => 'avaliado']);
+            $trabalho->revisores()->where('revisor_id', $revisor->id)->first()->pivot->update(['parecer' => 'avaliado']);
 
             return redirect()->back()->with(['success' => 'Encaminhamento desfeito com sucesso!']);
         } else {
             if ($trabalho->avaliado($revisor->user)) {
-                $trabalho->atribuicoes()->where('revisor_id', $revisor->id)->first()->pivot->update(['parecer' => 'encaminhado']);
+                $trabalho->revisores()->where('revisor_id', $revisor->id)->first()->pivot->update(['parecer' => 'encaminhado']);
                 Mail::to($trabalho->autor->email)->send(new EmailParecerDisponivel($trabalho->evento, $trabalho));
 
                 return redirect()->back()->with(['success' => 'Trabalho encaminhado ao autor com sucesso!']);
@@ -544,11 +544,11 @@ class TrabalhoController extends Controller
         $trabalho->resumo = $request->input('resumo' . $id);
         $trabalho->modalidadeId = $request->input('modalidade' . $id);
 
-        if ($request->input('area'.$id) != $trabalho->area->id && $trabalho->atribuicoes()->exists())
+        if ($request->input('area'.$id) != $trabalho->area->id && $trabalho->revisores()->exists())
         {
             $novaAreaId = $request->input('area' . $id);
 
-            $revisoresAtribuidos = $trabalho->atribuicoes;
+            $revisoresAtribuidos = $trabalho->revisores;
             $revisoresIncompatíveis = collect();
 
             foreach ($revisoresAtribuidos as $revisor) {
@@ -826,9 +826,9 @@ class TrabalhoController extends Controller
                     $trabalho->arquivo()->delete();
                 }
 
-                if ($trabalho->atribuicoes != null && $trabalho->atribuicoes->count() > 0) {
-                    foreach ($trabalho->atribuicoes as $atrib) {
-                        $trabalho->atribuicoes()->detach($atrib->revisor_id);
+                if ($trabalho->revisores != null && $trabalho->revisores->count() > 0) {
+                    foreach ($trabalho->revisores as $atrib) {
+                        $trabalho->revisores()->detach($atrib->revisor_id);
                     }
                 }
                 $trabalho->forceDelete();
@@ -895,7 +895,7 @@ class TrabalhoController extends Controller
         ]);
 
         $trabalho = Trabalho::find($request->trabalhoId);
-        $revisores = $trabalho->atribuicoes;
+        $revisores = $trabalho->revisores;
         $revisoresAux = [];
         foreach ($revisores as $key) {
             if ($key->user->name != null) {
@@ -1236,7 +1236,7 @@ class TrabalhoController extends Controller
             ]);
         }
 
-        $revisores = $trabalho->atribuicoes;
+        $revisores = $trabalho->revisores;
         foreach ($revisores as $revisor) {
             Mail::to($revisor->user->email)->send(new EmailCorrecaoTrabalho($evento, $trabalho, $revisor));
         }
@@ -1432,12 +1432,12 @@ class TrabalhoController extends Controller
         }
 
         // Atualizando tabelas
-        $atribuicao = $trabalho->atribuicoes()->updateExistingPivot($revisor->id, ['confirmacao' => true, 'parecer' => 'dado']);
+        $atribuicao = $trabalho->revisores()->updateExistingPivot($revisor->id, ['confirmacao' => true, 'parecer' => 'dado']);
         $trabalho->avaliado = 'Avaliado';
         $trabalho->update();
 
         //Atualizando os status do revisor
-        $revisor = $trabalho->atribuicoes()->where('revisor_id', $revisor->id)->first();
+        $revisor = $trabalho->revisores()->where('revisor_id', $revisor->id)->first();
         $revisor->trabalhosCorrigidos++;
         $revisor->correcoesEmAndamento--;
         $revisor->update();
@@ -1516,7 +1516,7 @@ class TrabalhoController extends Controller
                 ->where('revisor_id', $request->revisor_id)
                 ->update(['parecer' => 'processando']);
 
-            if ($trabalho->atribuicoes()->where('parecer', '!=', 'processando')->count() == 0) {
+            if ($trabalho->revisores()->where('parecer', '!=', 'processando')->count() == 0) {
                 $trabalho->avaliado = 'nao';
             }
 

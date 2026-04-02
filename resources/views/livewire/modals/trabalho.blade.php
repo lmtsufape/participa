@@ -47,7 +47,7 @@
             <div class="mt-3">
                 <h5 class="mb-2">Avaliadores atribuídos</h5>
 
-                @if ($trabalho->atribuicoes->count())
+                @if ($trabalho->revisores->count())
                     <section class="card rounded shadow">
                         <div class="table-responsive p-1 px-3">
                             <table class="table table-hover">
@@ -60,9 +60,9 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($trabalho->atribuicoes as $rev)
+                                    @foreach ($trabalho->revisores as $rev)
                                         @php
-                                            $pivot = $trabalho->atribuicoes->where('id', $rev->id)->first()->pivot;
+                                            $pivot = $trabalho->revisores->where('id', $rev->id)->first()->pivot;
                                             $status = $pivot->confirmacao
                                                 ? 'Convite aceito'
                                                 : ($pivot->justificativa_recusa

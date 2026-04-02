@@ -85,7 +85,7 @@ class EventoController extends Controller
                     'trabalho as trabalhos_count',
                     'trabalho as enviados_count' => fn ($query) => $query->where('status', 'rascunho'),
                     'trabalho as arquivados_count' => fn ($query) => $query->where('status', 'arquivado'),
-                    'trabalho as avaliados_count' => fn ($query) => $query->whereHas('atribuicoes', fn ($query) => $query->where('parecer', '!=', 'processando')),
+                    'trabalho as avaliados_count' => fn ($query) => $query->whereHas('revisores', fn ($query) => $query->where('parecer', '!=', 'processando')),
                     'trabalho as pendentes_count' => fn ($query) => $query->where('avaliado', 'processando')->where('status', '!=', 'arquivado'),
                     'trabalho as corrigidos_count' => fn ($query) => $query->whereHas('arquivoCorrecao'),
                     'trabalho as validados_count' => fn ($query) => $query->whereIn('avaliado', ['corrigido', 'corrigido_parcialmente', 'nao_corrigido']),
@@ -108,7 +108,7 @@ class EventoController extends Controller
             'trabalhos',
             'trabalhos as enviados_count' => fn ($query) => $query->where('status', 'rascunho'),
             'trabalhos as arquivados_count' => fn ($query) => $query->where('status', 'arquivado'),
-            'trabalhos as avaliados_count' => fn ($query) => $query->whereHas('atribuicoes', fn ($query) => $query->where('parecer', '!=', 'processando')),
+            'trabalhos as avaliados_count' => fn ($query) => $query->whereHas('revisores', fn ($query) => $query->where('parecer', '!=', 'processando')),
             'trabalhos as pendentes_count' => fn ($query) => $query->where('avaliado', 'processando')->where('status', '!=', 'arquivado'),
             'trabalhos as corrigidos_count' => fn ($query) => $query->whereHas('arquivoCorrecao'),
             'trabalhos as validados_count' => fn ($query) => $query->whereIn('avaliado', ['corrigido', 'corrigido_parcialmente', 'nao_corrigido']),
@@ -177,9 +177,9 @@ class EventoController extends Controller
             if ($status == 'rascunho') {
                 $query->where('status', '!=', 'arquivado');
             } elseif ($status == 'with_revisor') {
-                $query->has('atribuicoes')->where('status', '!=', 'arquivado');
+                $query->has('revisores')->where('status', '!=', 'arquivado');
             } elseif ($status == 'no_revisor') {
-                $query->doesntHave('atribuicoes')->where('status', '!=', 'arquivado');
+                $query->doesntHave('revisores')->where('status', '!=', 'arquivado');
             } else {
                 $query->where('status', $status);
             }
@@ -200,7 +200,7 @@ class EventoController extends Controller
                 'midiasExtra:id,nome,modalidade_id',
                 'midiasExtra.modalidade:id,nome'
             ])
-            ->withCount(['atribuicoes', 'respostas as quantidade_avaliacoes' => function ($q) {
+            ->withCount(['revisores', 'respostas as quantidade_avaliacoes' => function ($q) {
                 $q->select(DB::raw('count(distinct revisor_id)'));
             }])
             ->withExists('arquivo as tem_arquivo');
@@ -288,9 +288,9 @@ class EventoController extends Controller
             if ($status == 'rascunho') {
                 $query->where('status', '!=', 'arquivado');
             } elseif ($status == 'with_revisor') {
-                $query->has('atribuicoes')->where('status', '!=', 'arquivado');
+                $query->has('revisores')->where('status', '!=', 'arquivado');
             } elseif ($status == 'no_revisor') {
-                $query->doesntHave('atribuicoes')->where('status', '!=', 'arquivado');
+                $query->doesntHave('revisores')->where('status', '!=', 'arquivado');
             } else {
                 $query->where('status', $status);
             }
@@ -306,7 +306,7 @@ class EventoController extends Controller
                 'midiasExtra:id,nome,modalidade_id',
                 'midiasExtra.modalidade:id,nome'
             ])
-            ->withCount(['atribuicoes', 'respostas as quantidade_avaliacoes' => function ($q) {
+            ->withCount(['revisores', 'respostas as quantidade_avaliacoes' => function ($q) {
                 $q->select(DB::raw('count(distinct revisor_id)'));
             }])
             ->withExists('arquivo as tem_arquivo');
@@ -410,9 +410,9 @@ class EventoController extends Controller
             if ($status == 'rascunho') {
                 $query->where('status', '!=', 'arquivado');
             } elseif ($status == 'with_revisor') {
-                $query->has('atribuicoes')->where('status', '!=', 'arquivado');
+                $query->has('revisores')->where('status', '!=', 'arquivado');
             } elseif ($status == 'no_revisor') {
-                $query->doesntHave('atribuicoes')->where('status', '!=', 'arquivado');
+                $query->doesntHave('revisores')->where('status', '!=', 'arquivado');
             } else {
                 $query->where('status', $status);
             }
@@ -701,7 +701,7 @@ class EventoController extends Controller
             $query->orderBy($column, $direction);
         }
 
-        $trabalhosPaginados = $query->with(['modalidade', 'autor', 'area', 'atribuicoes.user'])
+        $trabalhosPaginados = $query->with(['modalidade', 'autor', 'area', 'revisores.user'])
                                     ->paginate($perPage)
                                     ->appends(request()->query());
 
@@ -754,7 +754,7 @@ class EventoController extends Controller
                 'midiasExtra',
                 'midiasExtra.modalidade:id,nome'
             ])
-            ->withCount(['atribuicoes', 'respostas as quantidade_avaliacoes' => function ($q) {
+            ->withCount(['revisores', 'respostas as quantidade_avaliacoes' => function ($q) {
                 $q->select(DB::raw('count(distinct revisor_id)'));
             }])
             ->withExists('arquivo as tem_arquivo');
@@ -1320,8 +1320,8 @@ class EventoController extends Controller
         Trabalho::where([['eventoId', $evento->id], ['modalidadeId', $modalidade->id]])
             ->get()
             ->map(function ($trabalho) use ($form, $trabalhosCollect) {
-                if ($trabalho->atribuicoes->first() != null) {
-                    $trabalho->atribuicoes->map(function ($avaliacao) use ($trabalho, $form, $trabalhosCollect) {
+                if ($trabalho->revisores->first() != null) {
+                    $trabalho->revisores->map(function ($avaliacao) use ($trabalho, $form, $trabalhosCollect) {
                         $trabalhosCollect->push($this->makeRepostasExportAvaliacoes($trabalho, $form, $avaliacao));
                     });
                 } else {
@@ -1446,7 +1446,7 @@ class EventoController extends Controller
 
         $query = Trabalho::where('eventoId', $evento->id)
                         ->where('status', '!=', 'arquivado')
-                        ->with(['modalidade', 'area', 'autor', 'arquivoCorrecao', 'atribuicoes.user']);
+                        ->with(['modalidade', 'area', 'autor', 'arquivoCorrecao', 'revisores.user']);
 
         if ($request->filled('titulo')) {
             $query->where('titulo', 'ilike', '%' . $request->titulo . '%');
@@ -1521,7 +1521,7 @@ class EventoController extends Controller
 
         $query = Trabalho::where('modalidadeId', $request->modalidadeId)
                         ->where('status', '!=', 'arquivado')
-                        ->with(['autor', 'arquivoCorrecao', 'atribuicoes.user']);
+                        ->with(['autor', 'arquivoCorrecao', 'revisores.user']);
 
         if ($request->filled('id')) {
             $query->where('id', $request->id);
@@ -1573,7 +1573,7 @@ class EventoController extends Controller
             $query = Trabalho::where('eventoId', $evento->id)
                 ->where('areaId', $eixoSelecionado)
                 ->where('status', '!=', 'arquivado')
-                ->with(['modalidade', 'autor', 'arquivoCorrecao', 'atribuicoes.user']);
+                ->with(['modalidade', 'autor', 'arquivoCorrecao', 'revisores.user']);
 
             if ($request->filled('id')) {
                 $query->where('id', $request->id);
@@ -1638,7 +1638,7 @@ class EventoController extends Controller
 
         $query = Trabalho::where('eventoId', $evento->id)
                         ->where('status', '!=', 'arquivado')
-                        ->with(['modalidade', 'area', 'autor', 'arquivoCorrecao', 'atribuicoes.user']);
+                        ->with(['modalidade', 'area', 'autor', 'arquivoCorrecao', 'revisores.user']);
 
         if ($request->filled('titulo')) {
             $query->where('titulo', 'ilike', '%' . $request->titulo . '%');
@@ -1728,7 +1728,7 @@ class EventoController extends Controller
         $query = Trabalho::where('eventoId', $evento->id)
             ->where('areaId', $eixoSelecionado)
             ->where('status', '!=', 'arquivado')
-            ->with(['modalidade', 'autor', 'arquivoCorrecao', 'atribuicoes.user']);
+            ->with(['modalidade', 'autor', 'arquivoCorrecao', 'revisores.user']);
 
         if ($request->filled('id')) {
             $query->where('id', $request->id);
@@ -1802,7 +1802,7 @@ class EventoController extends Controller
 
         $query = Trabalho::where('modalidadeId', $request->modalidadeId)
             ->where('status', '!=', 'arquivado')
-            ->with(['modalidade', 'area', 'autor', 'arquivoCorrecao', 'atribuicoes.user']);
+            ->with(['modalidade', 'area', 'autor', 'arquivoCorrecao', 'revisores.user']);
 
         if ($request->filled('id')) {
             $query->where('id', $request->id);
@@ -2753,7 +2753,7 @@ class EventoController extends Controller
         $trabalhosPendentes = Trabalho::whereIn('areaId', $areasId)->where('avaliado', 'processando')->count();
         $trabalhosAvaliados = 0;
         foreach ($trabalhosId as $trabalho) {
-            $trabalhosAvaliados += $trabalho->atribuicoes()->where('parecer', '!=', 'processando')->count();
+            $trabalhosAvaliados += $trabalho->revisores()->where('parecer', '!=', 'processando')->count();
         }
 
         $numeroRevisores = Revisor::where('evento_id', $evento->id)->count();
@@ -2963,7 +2963,7 @@ class EventoController extends Controller
 
         foreach ($trabalhos as $trabalho) {
             $temcorrecao = $trabalho->arquivoCorrecao()->exists();
-            $temEncaminhado = $trabalho->atribuicoes()
+            $temEncaminhado = $trabalho->revisores()
             ->wherePivot('parecer', 'encaminhado')
             ->exists();
             if (! $temEncaminhado || $temcorrecao) {

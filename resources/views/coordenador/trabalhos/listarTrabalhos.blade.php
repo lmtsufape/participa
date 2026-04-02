@@ -146,7 +146,7 @@
                                                     @if ($modalidade->apresentacao)
                                                         <td>{{ $trabalho->tipo_apresentacao }}</td>
                                                     @endif
-                                                    <td>{{ $trabalho->atribuicoes_count }}</td>
+                                                    <td>{{ $trabalho->revisores_count }}</td>
                                                     <td>{{ $trabalho->quantidade_avaliacoes }}</td>
                                                     <td>
                                                         @if($trabalho->apresentado)
