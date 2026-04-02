@@ -133,14 +133,14 @@
                     <ul class="nav flex-column">
                         <li class="nav-item">
                             <a class="nav-link d-flex align-items-center gap-2" id="cadastrarModalidade"
-                                href="{{ route('coord.cadastrarModalidade', ['eventoId' => $evento->id]) }}">
+                                href="{{ route('coord.modalidade.create', ['eventoId' => $evento->id]) }}">
                                 <img src="{{ asset('img/icons/plus-square-solid.svg') }}" alt="" width="20px">
                                 <span>{{ __('Cadastrar modalidade') }}</span>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link d-flex align-items-center gap-2" id="listarModalidade"
-                                href="{{ route('coord.listarModalidade', ['eventoId' => $evento->id]) }}">
+                                href="{{ route('coord.modalidade.index', ['eventoId' => $evento->id]) }}">
                                 <img src="{{ asset('img/icons/list.svg') }}" alt="" width="20px">
                                 <span>{{ __('Listar modalidades') }}</span>
                             </a>
