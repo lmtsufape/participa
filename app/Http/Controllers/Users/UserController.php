@@ -377,7 +377,7 @@ class UserController extends Controller
 
     public function destroy($user_id)
     {
-        $user = User::doesntHave('administradors')->findOrFail($user_id);
+        $user = User::doesntHave('administrador')->findOrFail($user_id);
         $this->authorize('delete', $user);
         if($user->trabalho()->exists()){
             return redirect()->back()->with('fail', 'Usuário possui trabalhos vinculados!');

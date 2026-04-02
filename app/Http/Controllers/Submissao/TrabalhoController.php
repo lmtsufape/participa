@@ -980,7 +980,7 @@ class TrabalhoController extends Controller
             || $evento->userIsCoordComissaoOrganizadora($usuarioLogado)
             || $trabalho->autorId == $usuarioLogado->id
             || $trabalhosCoautor->contains($trabalho->id)
-            || $usuarioLogado->administradors()->exists()
+            || $usuarioLogado->administrador()->exists()
         ) {
             // dd($arquivo);
             if ($midia != null && Storage::disk()->exists($midia->caminho)) {
@@ -1038,7 +1038,7 @@ class TrabalhoController extends Controller
             Gate::any(['isUsuarioDaComissao'], $evento)
             || $trabalho->autorId == $usuarioLogado->id
             || $ehCoautor
-            || $usuarioLogado->administradors()->exists()
+            || $usuarioLogado->administrador()->exists()
             || $ehRevisor
         ) {
             if ($arquivo != null && Storage::disk()->exists($arquivo->nome)) {
@@ -1078,7 +1078,7 @@ class TrabalhoController extends Controller
             Gate::any(['isUsuarioDaComissao'], $evento)
             || $trabalho->autorId == $usuarioLogado->id
             || $ehCoautor
-            || $usuarioLogado->administradors()->exists()
+            || $usuarioLogado->administrador()->exists()
             || $ehRevisor
         ) {
             if (Storage::disk()->exists($arquivoExtra->nome)) {
@@ -1555,7 +1555,7 @@ class TrabalhoController extends Controller
             if (!Gate::any([
                 'isCoordenadorOrCoordenadorDaComissaoCientifica',
                 'isCoordenadorEixo'
-            ], $evento) || !auth()->user()->administradors()->exists()) {
+            ], $evento) || !auth()->user()->administrador()->exists()) {
                 abort(403, 'Acesso negado');
             }
 

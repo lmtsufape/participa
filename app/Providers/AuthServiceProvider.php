@@ -39,7 +39,7 @@ class AuthServiceProvider extends ServiceProvider
         // Gate para cadastro de usuários
         Gate::define('cadastrarUsuario', function ($user) {
             // Administradores sempre podem
-            if (isset($user->administradors)) {
+            if (isset($user->administrador)) {
                 return true;
             }
 

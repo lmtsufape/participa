@@ -16,7 +16,7 @@ class AdministradorSeed extends Seeder
     {
         $user_id = DB::table('users')->where('name', 'Administrador')->pluck('id');
 
-        DB::table('administradors')->insert([
+        DB::table('administrador')->insert([
             'user_id' => $user_id[0],
         ]);
     }

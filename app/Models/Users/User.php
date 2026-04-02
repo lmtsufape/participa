@@ -95,7 +95,7 @@ class User extends Authenticatable
         return $this->hasOne(Participante::class);
     }
 
-    public function administradors()
+    public function administrador()
     {
         return $this->hasOne(Administrador::class);
     }

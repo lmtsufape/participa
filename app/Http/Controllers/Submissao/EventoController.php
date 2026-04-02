@@ -226,7 +226,7 @@ class EventoController extends Controller
         $user_logado = auth()->user();
         if (
             $user_logado->eventosComoCoordEixo()->pluck('eventos.id')->contains($evento->id) &&
-            !$user_logado->administradors &&
+            !$user_logado->administrador &&
             !$user_logado->coordComissaoCientifica()->where('eventos_id', $evento->id)->exists()
         ) {
             $areasCoordEixo = auth()->user()->areasComoCoordEixoNoEvento($evento->id)->pluck('areas.id');
@@ -330,7 +330,7 @@ class EventoController extends Controller
         $user_logado = auth()->user();
         if (
             $user_logado->eventosComoCoordEixo()->pluck('eventos.id')->contains($evento->id) &&
-            !$user_logado->administradors &&
+            !$user_logado->administrador &&
             !$user_logado->coordComissaoCientifica()->where('eventos_id', $evento->id)->exists()
         ) {
             $areasCoordEixo = auth()->user()->areasComoCoordEixoNoEvento($evento->id)->pluck('areas.id');
@@ -381,10 +381,10 @@ class EventoController extends Controller
     {
         $evento = Evento::find($request->eventoId);
         $this->authorize('isCoordenadorOrCoordCientificaOrCoordEixo', $evento);
-        
+
         $eixoSelecionado = $request->get('eixo_id');
         $status = $request->input('status', 'rascunho');
-        
+
         if (!$eixoSelecionado) {
             return redirect()->back()->with('error', 'Nenhum eixo foi selecionado.');
         }
@@ -397,7 +397,7 @@ class EventoController extends Controller
         $user_logado = auth()->user();
         if (
             $user_logado->eventosComoCoordEixo()->pluck('eventos.id')->contains($evento->id) &&
-            !$user_logado->administradors &&
+            !$user_logado->administrador &&
             !$user_logado->coordComissaoCientifica()->where('eventos_id', $evento->id)->exists()
         ) {
             $areasCoordEixo = auth()->user()->areasComoCoordEixoNoEvento($evento->id)->pluck('areas.id');
@@ -428,7 +428,7 @@ class EventoController extends Controller
             return redirect()->back()->with('error', 'Nenhum trabalho encontrado para este eixo.');
         }
 
-        set_time_limit(600); 
+        set_time_limit(600);
         ini_set('memory_limit', '512M');
 
         $nomeZip = 'trabalhos_' . \Illuminate\Support\Str::slug($area->nome) . '_' . date('Y-m-d_His') . '.zip';
@@ -439,7 +439,7 @@ class EventoController extends Controller
         }
 
         $zip = new \ZipArchive();
-        
+
         if ($zip->open($caminhoZip, \ZipArchive::CREATE | \ZipArchive::OVERWRITE) !== true) {
             return redirect()->back()->with('error', 'Não foi possível criar o arquivo ZIP.');
         }
@@ -449,15 +449,15 @@ class EventoController extends Controller
 
         foreach ($trabalhos as $trabalho) {
             $arquivo = $trabalho->arquivo()->where('versaoFinal', true)->first();
-            
+
             if ($arquivo && \Storage::disk()->exists($arquivo->nome)) {
                 $caminhoArquivo = storage_path('app/' . $arquivo->nome);
-                
+
                 $modalidadeNome = $trabalho->modalidade ? \Illuminate\Support\Str::slug($trabalho->modalidade->nome) : 'sem-modalidade';
                 $tituloSlug = \Illuminate\Support\Str::slug(substr($trabalho->titulo, 0, 50));
-                
+
                 $extensao = pathinfo($arquivo->nome, PATHINFO_EXTENSION);
-                
+
                 $nomeArquivoZip = sprintf(
                     '%s/%04d_%s.%s',
                     $modalidadeNome,
@@ -465,7 +465,7 @@ class EventoController extends Controller
                     $tituloSlug,
                     $extensao
                 );
-                
+
                 if ($zip->addFile($caminhoArquivo, $nomeArquivoZip)) {
                     $arquivosAdicionados++;
                 } else {
@@ -493,9 +493,9 @@ class EventoController extends Controller
     {
         $evento = Evento::find($request->eventoId);
         $this->authorize('isCoordenadorOrCoordCientificaOrCoordEixo', $evento);
-        
+
         $eixoSelecionado = $request->get('eixo_id');
-        
+
         if (!$eixoSelecionado) {
             return redirect()->back()->with('error', 'Nenhum eixo foi selecionado.');
         }
@@ -513,7 +513,7 @@ class EventoController extends Controller
             return redirect()->back()->with('error', 'Nenhum trabalho APROVADO encontrado para este eixo.');
         }
 
-        set_time_limit(1200); 
+        set_time_limit(1200);
         ini_set('memory_limit', '512M');
 
         $nomeZip = 'trabalhos_APROVADOS_' . \Illuminate\Support\Str::slug($area->nome) . '_' . date('Y-m-d_His') . '.zip';
@@ -539,7 +539,7 @@ class EventoController extends Controller
                 $nomeFinalZip = "_REVISADO";
             } else {
                 $arquivoInicial = $trabalho->arquivo()->where('versaoFinal', true)->first() ?? $trabalho->arquivo()->first();
-                
+
                 if ($arquivoInicial && \Storage::disk()->exists($arquivoInicial->nome)) {
                     $caminhoNoDisco = storage_path('app/' . $arquivoInicial->nome);
                     $nomeFinalZip = "_INICIAL";
@@ -549,11 +549,11 @@ class EventoController extends Controller
             if ($caminhoNoDisco) {
                 $modalidadeNome = $trabalho->modalidade ? \Illuminate\Support\Str::slug($trabalho->modalidade->nome) : 'sem-modalidade';
                 $tituloSlug = \Illuminate\Support\Str::slug(substr($trabalho->titulo, 0, 50));
-                
+
                 $extensao = pathinfo($caminhoNoDisco, PATHINFO_EXTENSION);
-                
+
                 $nomeArquivoZip = "{$modalidadeNome}/{$trabalho->id}_{$tituloSlug}{$nomeFinalZip}.{$extensao}";
-                
+
                 if ($zip->addFile($caminhoNoDisco, $nomeArquivoZip)) {
                     $arquivosAdicionados++;
                 }
@@ -597,7 +597,7 @@ class EventoController extends Controller
 
         //Se o user for um coordenador de eixo e não for admin e coordenador cientifico do evento
         if($user_logado->eventosComoCoordEixo()->pluck('eventos.id')->contains($evento->id) &&
-            !$user_logado->administradors &&
+            !$user_logado->administrador &&
             !$user_logado->coordComissaoCientifica()->where('eventos_id', $evento->id)->exists()
         ){
             $areasCoordEixo = $user_logado->areasComoCoordEixoNoEvento($evento->id)->pluck('areas.id');
@@ -684,7 +684,7 @@ class EventoController extends Controller
         }
 
         if ($user_logado->eventosComoCoordEixo()->pluck('eventos.id')->contains($evento->id) &&
-            !$user_logado->administradors &&
+            !$user_logado->administrador &&
             !$user_logado->coordComissaoCientifica()->where('eventos_id', $evento->id)->exists()
         ) {
             $areasCoordEixo = $user_logado->areasComoCoordEixoNoEvento($evento->id)->pluck('areas.id');
@@ -784,7 +784,7 @@ class EventoController extends Controller
         $user_logado = auth()->user();
         if (
             $user_logado->eventosComoCoordEixo()->pluck('eventos.id')->contains($evento->id) &&
-            !$user_logado->administradors &&
+            !$user_logado->administrador &&
             !$user_logado->coordComissaoCientifica()->where('eventos_id', $evento->id)->exists()
         ) {
             $areasCoordEixo = auth()->user()->areasComoCoordEixoNoEvento($evento->id)->pluck('areas.id');
@@ -858,7 +858,7 @@ class EventoController extends Controller
     {
         $evento = Evento::find($request->eventoId);
 
-        if (! (Gate::any(['isCoordenadorOrCoordenadorDaComissaoCientifica', 'isCoordenadorEixo'], $evento) || auth()->user()->administradors()->exists()) ) {
+        if (! (Gate::any(['isCoordenadorOrCoordenadorDaComissaoCientifica', 'isCoordenadorEixo'], $evento) || auth()->user()->administrador()->exists()) ) {
             abort(403, 'Acesso negado');
         }
 
@@ -904,7 +904,7 @@ class EventoController extends Controller
     {
         $evento = Evento::find($request->evento_id);
         $this->authorize('isCoordenador', $evento);
-        $usuarios = User::doesntHave('administradors')->get();
+        $usuarios = User::doesntHave('administrador')->get();
 
         return view('coordenador.revisores.listarUsuarios', compact('usuarios', 'evento'));
     }
@@ -1153,7 +1153,7 @@ class EventoController extends Controller
     public function exportarAvaliadoresXLSX(Evento $evento, $eixo)
     {
 
-        if (! (Gate::any(['isCoordenadorOrCoordenadorDaComissaoCientifica', 'isCoordenadorEixo'], $evento) || auth()->user()->administradors()->exists()) ) {
+        if (! (Gate::any(['isCoordenadorOrCoordenadorDaComissaoCientifica', 'isCoordenadorEixo'], $evento) || auth()->user()->administrador()->exists()) ) {
             abort(403, 'Acesso negado');
         }
 
@@ -1469,7 +1469,7 @@ class EventoController extends Controller
         $user_logado = auth()->user();
 
         if($user_logado->eventosComoCoordEixo()->pluck('eventos.id')->contains($evento->id) &&
-        !$user_logado->administradors &&
+        !$user_logado->administrador &&
         !$user_logado->coordComissaoCientifica()->where('eventos_id', $evento->id)->exists()
         ){
             $areasCoordEixo = $user_logado->areasComoCoordEixoNoEvento($evento->id)->pluck('areas.id');
@@ -1485,7 +1485,7 @@ class EventoController extends Controller
                     $q->where('titulo', 'ilike', '%' . $request->titulo . '%');
                 }
                 if($user_logado->eventosComoCoordEixo()->pluck('eventos.id')->contains($evento->id) &&
-                !$user_logado->administradors &&
+                !$user_logado->administrador &&
                 !$user_logado->coordComissaoCientifica()->where('eventos_id', $evento->id)->exists()
                 ){
                     $areasCoordEixo = $user_logado->areasComoCoordEixoNoEvento($evento->id)->pluck('areas.id');
@@ -1532,7 +1532,7 @@ class EventoController extends Controller
 
         $user_logado = auth()->user();
         if($user_logado->eventosComoCoordEixo()->pluck('eventos.id')->contains($evento->id) &&
-           !$user_logado->administradors &&
+           !$user_logado->administrador &&
            !$user_logado->coordComissaoCientifica()->where('eventos_id', $evento->id)->exists()
         ){
             $areasCoordEixo = $user_logado->areasComoCoordEixoNoEvento($evento->id)->pluck('areas.id');
@@ -1583,7 +1583,7 @@ class EventoController extends Controller
             }
 
             if ($user_logado->eventosComoCoordEixo()->pluck('eventos.id')->contains($evento->id) &&
-                !$user_logado->administradors &&
+                !$user_logado->administrador &&
                 !$user_logado->coordComissaoCientifica()->where('eventos_id', $evento->id)->exists()
             ) {
                 $areasCoordEixo = $user_logado->areasComoCoordEixoNoEvento($evento->id)->pluck('areas.id');
@@ -1661,7 +1661,7 @@ class EventoController extends Controller
         $user_logado = auth()->user();
 
         if($user_logado->eventosComoCoordEixo()->pluck('eventos.id')->contains($evento->id) &&
-        !$user_logado->administradors &&
+        !$user_logado->administrador &&
         !$user_logado->coordComissaoCientifica()->where('eventos_id', $evento->id)->exists()
         ){
             $areasCoordEixo = $user_logado->areasComoCoordEixoNoEvento($evento->id)->pluck('areas.id');
@@ -1677,7 +1677,7 @@ class EventoController extends Controller
                     $q->where('titulo', 'ilike', '%' . $request->titulo . '%');
                 }
                 if($user_logado->eventosComoCoordEixo()->pluck('eventos.id')->contains($evento->id) &&
-                !$user_logado->administradors &&
+                !$user_logado->administrador &&
                 !$user_logado->coordComissaoCientifica()->where('eventos_id', $evento->id)->exists()
                 ){
                     $areasCoordEixo = $user_logado->areasComoCoordEixoNoEvento($evento->id)->pluck('areas.id');
@@ -1738,7 +1738,7 @@ class EventoController extends Controller
         }
 
         if ($user_logado->eventosComoCoordEixo()->pluck('eventos.id')->contains($evento->id) &&
-            !$user_logado->administradors &&
+            !$user_logado->administrador &&
             !$user_logado->coordComissaoCientifica()->where('eventos_id', $evento->id)->exists()
         ) {
             $areasCoordEixo = $user_logado->areasComoCoordEixoNoEvento($evento->id)->pluck('areas.id');
@@ -1813,7 +1813,7 @@ class EventoController extends Controller
 
         $user_logado = auth()->user();
         if($user_logado->eventosComoCoordEixo()->pluck('eventos.id')->contains($evento->id) &&
-            !$user_logado->administradors &&
+            !$user_logado->administrador &&
             !$user_logado->coordComissaoCientifica()->where('eventos_id', $evento->id)->exists()
         ){
             $areasCoordEixo = $user_logado->areasComoCoordEixoNoEvento($evento->id)->pluck('areas.id');
@@ -2237,7 +2237,7 @@ class EventoController extends Controller
 
         //Se o user for um coordenador de eixo e não for admin e coordenador cientifico do evento
         if($user_logado->eventosComoCoordEixo()->pluck('eventos.id')->contains($evento->id) &&
-            !$user_logado->administradors &&
+            !$user_logado->administrador &&
             !$user_logado->coordComissaoCientifica()->where('eventos_id', $evento->id)->exists()
             ){
 
@@ -3073,7 +3073,7 @@ class EventoController extends Controller
 
     public function exportarComissaoCientificaXLSX(Evento $evento)
     {
-        if (! (Gate::any(['isCoordenadorOrCoordenadorDaComissaoCientifica', 'isCoordenadorDasComissoes'], $evento) || auth()->user()->administradors()->exists()) ) {
+        if (! (Gate::any(['isCoordenadorOrCoordenadorDaComissaoCientifica', 'isCoordenadorDasComissoes'], $evento) || auth()->user()->administrador()->exists()) ) {
             abort(403, 'Acesso negado');
         }
 
@@ -3083,7 +3083,7 @@ class EventoController extends Controller
 
     public function exportarRevisoresXLSX(Evento $evento)
     {
-        if (! (Gate::any(['isCoordenadorOrCoordenadorDaComissaoCientifica', 'isCoordenadorDasComissoes'], $evento) || auth()->user()->administradors()->exists()) ) {
+        if (! (Gate::any(['isCoordenadorOrCoordenadorDaComissaoCientifica', 'isCoordenadorDasComissoes'], $evento) || auth()->user()->administrador()->exists()) ) {
             abort(403, 'Acesso negado');
         }
 
