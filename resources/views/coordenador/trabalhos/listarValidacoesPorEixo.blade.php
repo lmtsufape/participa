@@ -148,19 +148,20 @@
                                                         </td>
                                                         <td>{{$trabalho->autor->name}}</td>
                                                         <td class="text-center">
-                                                            @switch($trabalho->avaliado)
-                                                                @case('corrigido')
-                                                                    <span class="badge text-success border border-success bg-transparent">Completamente</span>
-                                                                    @break
-                                                                @case('corrigido_parcialmente')
-                                                                    <span class="badge text-warning border border-warning bg-transparent">Parcialmente</span>
-                                                                    @break
-                                                                @case('nao_corrigido')
-                                                                    <span class="badge text-danger border border-danger bg-transparent">Não aprovado</span>
-                                                                    @break
-                                                                @default
-                                                                    <span class="badge text-info border border-info bg-transparent">Pendente</span>
-                                                            @endswitch
+                                                            @if($trabalho->aprovado == 1 || $trabalho->avaliado == 'corrigido')
+                                                                <span class="badge text-success border border-success bg-transparent">Completamente</span>
+                                                            @else
+                                                                @switch($trabalho->avaliado)
+                                                                    @case('corrigido_parcialmente')
+                                                                        <span class="badge text-warning border border-warning bg-transparent">Parcialmente</span>
+                                                                        @break
+                                                                    @case('nao_corrigido')
+                                                                        <span class="badge text-danger border border-danger bg-transparent">Não aprovado</span>
+                                                                        @break
+                                                                    @default
+                                                                        <span class="badge text-info border border-info bg-transparent">Pendente</span>
+                                                                @endswitch
+                                                            @endif
 
                                                             @if(in_array($trabalho->avaliado, ['corrigido', 'corrigido_parcialmente', 'nao_corrigido']))
                                                                 <div>
