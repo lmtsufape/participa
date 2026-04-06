@@ -222,6 +222,7 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
             Route::get('trabalhos/listarAvaliacoes/{column?}/{direction?}/{status?}', [EventoController::class, 'listarAvaliacoes'])->name('listarAvaliacoes');
             Route::delete('avaliacao/trabalho/{trabalho_id}', [TrabalhoController::class, 'destroyAvaliacao'])->name('avaliacao.destroy');
             Route::get('trabalhos/form/listarRepostasTrabalhos/{column?}/{direction?}/{status?}', [EventoController::class, 'listarRespostasTrabalhos'])->name('respostasTrabalhos');
+            Route::get('trabalhos/listarAvaliacoesPorEixo/{column?}/{direction?}/{status?}', [EventoController::class, 'listarAvaliacoesPorEixo'])->name('listarAvaliacoesPorEixo');
             Route::get('trabalhos/form/visualizarRespostaFormulario', [EventoController::class, 'visualizarRespostaFormulario'])->name('visualizarRespostaFormulario');
             Route::get('trabalhos/listarCorrecoes/{eventoId}/{column?}/{direction?}', [EventoController::class, 'listarCorrecoes'])->name('listarCorrecoes');
             Route::get('trabalhos/listarCorrecoesPorEixo', [EventoController::class, 'listarCorrecoesPorEixo'])->name('listarCorrecoesPorEixo');
@@ -418,7 +419,8 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
         Route::get('/evento/{evento}/downloadTrabalhosAprovadosPDF', [EventoController::class, 'downloadTrabalhosAprovadosPDF'])->name('evento.downloadTrabalhosAprovadosPDF');
         Route::post('/evento/{evento}/downloadTrabalhosCertifica', [EventoController::class, 'exportTrabalhosCertifica'])->name('evento.downloadTrabalhosCertifica');
         Route::get('/evento/{evento}/downloadAvaliacoes/{modalidade}/form/{form}', [EventoController::class, 'exportAvaliacoes'])->name('evento.downloadAvaliacoes');
-
+        Route::get('/evento/{evento}/exportar-avaliadores-eixos/{eixo}', [EventoController::class, 'exportarAvaliadoresXLSX'])->name('evento.exportarAvaliadoresEixos');
+        
         // Encontrar resumo especifico para trabalhos
         Route::get('/encontrarResumo', [TrabalhoController::class, 'findResumo'])->name('trabalhoResumo');
         // Critérios

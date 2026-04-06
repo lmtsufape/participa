@@ -448,12 +448,18 @@
                                             <span>{{ __('Todas as Avaliações') }}</span>
                                         </a>
                                     </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link d-flex align-items-center gap-2"
+                                            href="{{ route('coord.listarAvaliacoesPorEixo', ['eventoId' => $evento->id, 'titulo', 'asc', 'rascunho']) }}">
+                                            <span>{{ __('Filtrar Avaliações por Eixo') }}</span>
+                                        </a>
+                                    </li>
                                     @foreach ($evento->modalidades()->get() as $modalidade)
                                         <li class="nav-item">
                                             <a class="nav-link d-flex align-items-center gap-2"
                                                 id="listarAvaliacoesModalidade{{ $modalidade->id }}"
                                                 href="{{ route('coord.respostasTrabalhos', ['eventoId' => $evento->id, 'modalidadeId' => $modalidade->id]) }}">
-                                                <span>{{ $modalidade->nome }}</span>
+                                                <span>{{ __('Modalidade') }}: {{ $modalidade->nome }}</span>
                                             </a>
                                         </li>
                                     @endforeach
