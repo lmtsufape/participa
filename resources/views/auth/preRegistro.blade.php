@@ -2,10 +2,9 @@
 
 @section('content')
     <div class="container content mb-5 position-relative">
-        {{-- CSS de bandeiras, Select2 e intl-tel-input --}}
+        {{-- CSS de bandeiras e intl-tel-input --}}
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/6.6.6/css/flag-icons.min.css"
             crossorigin="anonymous" referrerpolicy="no-referrer" />
-        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css"
             crossorigin="anonymous" referrerpolicy="no-referrer" />
 
@@ -41,13 +40,6 @@
         </style>
 
         <br><br>
-
-        @if (session('sucesso'))
-            <div class="alert alert-success">{{ session('sucesso') }}</div>
-        @endif
-        @if (session('erro'))
-            <div class="alert alert-danger">{{ session('erro') }}</div>
-        @endif
 
         <div class="row titulo text-center" style="color: #034652;">
             <h2 style="font-weight: bold;">{{ __('Cadastro') }}</h2>
@@ -191,13 +183,11 @@
 @endsection
 
 @section('javascript')
-    {{-- jQuery --}}
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js" crossorigin="anonymous"></script>
+
     {{-- jquery.mask --}}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js" crossorigin="anonymous">
     </script>
-    {{-- Select2 JS --}}
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js" defer></script>
+
     {{-- intl-tel-input --}}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"
         crossorigin="anonymous" defer></script>

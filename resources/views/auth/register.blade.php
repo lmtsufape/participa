@@ -33,18 +33,6 @@
         }
     </style>
 
-    @if(session('sucesso'))
-        <div class="alert alert-success">
-            {{ session('sucesso') }}
-        </div>
-    @endif
-
-    @if(session('erro'))
-        <div class="alert alert-danger">
-            {{ session('erro') }}
-        </div>
-    @endif
-
     <div class="row titulo text-center mt-3" style="color: #034652;">
         <h2 style="font-weight: bold;">{{__('Cadastro')}}</h2>
     </div>
@@ -467,8 +455,8 @@
                             @foreach($racas as $key => $label)
                                 <div class="form-check">
                                     <input class="form-check-input"
-                                        type="checkbox" 
-                                        name="raca[]" 
+                                        type="checkbox"
+                                        name="raca[]"
                                         id="raca_{{ $key }}"
                                         value="{{ $key }}">
                                     <label class="form-check-label" for="raca_{{ $key }}">{{ $label }}</label>

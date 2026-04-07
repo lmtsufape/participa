@@ -10,7 +10,7 @@
             margin-bottom: 20px;
             font-family: sans-serif;
         }
-        
+
         .etapa {
             flex: 1;
             text-align: left;
@@ -19,7 +19,7 @@
             font-weight: normal;
             border-bottom: 2px solid transparent;
         }
-        
+
         .etapa.ativa {
             color: #004d51;
             font-weight: bold;
@@ -33,18 +33,6 @@
         }
     </style>
 
-    @if(session('sucesso'))
-        <div class="alert alert-success">
-            {{ session('sucesso') }}
-        </div>
-    @endif
-
-    @if(session('erro'))
-        <div class="alert alert-danger">
-            {{ session('erro') }}
-        </div>
-    @endif
-    
     <br><br>
 
     <div class="row titulo text-center" style="color: #034652;">

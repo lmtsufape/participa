@@ -10,25 +10,13 @@
         }
     </style>
 
-    @if(session('sucesso'))
-        <div class="alert alert-success">
-            {{ session('sucesso') }}
-        </div>
-    @endif
-
-    @if(session('erro'))
-        <div class="alert alert-danger">
-            {{ session('erro') }}
-        </div>
-    @endif
-
     <div class="row titulo text-center mt-3" style="color: #034652;">
         <h2 style="font-weight: bold;">{{__('Cadastrar Usuário')}}</h2>
     </div>
 
     <form method="POST" action="{{ route('administrador.criarUsuario', app()->getLocale()) }}">
         @csrf
-        
+
         {{-- Dados Pessoais --}}
         <div class="container card my-3">
             <div class="row mt-3">
@@ -365,8 +353,8 @@
                             @foreach($racas as $key => $label)
                                 <div class="form-check">
                                     <input class="form-check-input"
-                                        type="checkbox" 
-                                        name="raca[]" 
+                                        type="checkbox"
+                                        name="raca[]"
                                         id="raca_{{ $key }}"
                                         value="{{ $key }}">
                                     <label class="form-check-label" for="raca_{{ $key }}">{{ $label }}</label>
@@ -547,7 +535,7 @@
     $(document).ready(function($){
         $('#cpf').mask('000.000.000-00');
         $('#cnpj').mask('00.000.000/0000-00');
-        
+
         if($('html').attr('lang') == 'pt-BR') {
             $('#cep').blur(function () {
                 pesquisacep(this.value);
@@ -562,7 +550,7 @@
             };
             $('#cep').mask('00000-000');
         }
-        
+
         $(".apenasLetras").mask("#", {
             maxlength: false,
             translation: {

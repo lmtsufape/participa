@@ -15,15 +15,9 @@
                         </div>
                     @endif
 
-                    @if(session('success'))
-                        <div class="alert alert-success">
-                            {{ session('success') }}
-                        </div>
-                    @endif
-
                     <form action="{{ route('inscricao-automatica.processar') }}" method="POST" enctype="multipart/form-data">
                         @csrf
-                        
+
                         <input type="hidden" name="evento_id" value="{{ $evento->id }}">
 
                         <div class="mb-3">

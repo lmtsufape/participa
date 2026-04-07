@@ -15,24 +15,6 @@
             </div>
         </div>
     </div>
-    @if(session('success'))
-        <div class="row">
-            <div class="col-md-12" style="margin-top: 5px;">
-                <div class="alert alert-success">
-                    <p>{{session('success')}}</p>
-                </div>
-            </div>
-        </div>
-    @endif
-    @if(session('error'))
-        <div class="row">
-            <div class="col-md-12" style="margin-top: 5px;">
-                <div class="alert alert-danger">
-                    <p>{{session('error')}}</p>
-                </div>
-            </div>
-        </div>
-    @endif
     <div class="row cards-eventos-index">
         @foreach ($certificados as $certificado)
             @can('isCoordenadorOrCoordenadorDasComissoes', $evento)
