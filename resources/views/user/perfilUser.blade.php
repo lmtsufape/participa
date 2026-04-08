@@ -28,12 +28,6 @@
                 font-weight: bold;
                 border-bottom: 2px solid #004d51;
             }
-
-            .required-field::after {
-                content: "*";
-                color: #D44100;
-                margin-left: 2px;
-            }
         </style>
 
         <div class="row titulo text-center mt-3" style="color: #034652;">
@@ -351,7 +345,7 @@
                                     <div class="col-md-6" id="groupformuf">
                                         <label for="uf" class="col-form-label"><strong>{{ __('Estado') }}</strong></label>
                                         {{-- <input id="uf" type="text" class="form-control @error('uf') is-invalid @enderror" name="uf" value="{{ old('uf') }}"  autocomplete="uf" autofocus> --}}
-                                        <select class="form-control @error('uf') is-invalid @enderror required-field" id="uf" name="uf">
+                                        <select class="form-control @error('uf') is-invalid @enderror" id="uf" name="uf">
                                             <option value="" disabled selected hidden>{{ __() }}</option>
                                             <option @if(old('uf', $end?->uf) == 'AC') selected @endif value="AC">Acre</option>
                                             <option @if(old('uf', $end?->uf) == 'AL') selected @endif value="AL">Alagoas</option>
@@ -390,7 +384,7 @@
                                     </div>
                                 @else
                                     <div class="col-md-6" id="">
-                                        <label for="uf" class="col-form-label required-field"><strong>{{ __('Estado/Província/Região') }}</strong></label>
+                                        <label for="uf" class="col-form-label"><strong>{{ __('Estado/Província/Região') }}</strong></label>
                                         <input type="text" value="{{old('uf')}}" id="uf" class="form-control  @error('uf') is-invalid @enderror" name="uf" >
 
                                         @error('uf')

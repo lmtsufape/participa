@@ -31,12 +31,6 @@
                 font-weight: bold;
                 border-bottom: 2px solid #004d51;
             }
-
-            .required-field::after {
-                content: "*";
-                color: #D44100;
-                margin-left: 2px;
-            }
         </style>
 
         <br><br>
@@ -60,7 +54,7 @@
         {{-- País --}}
         <div class="form-group row my-3">
             <div class="col-md-12">
-                <label for="pais" class="col-form-label required-field">{{ __('País') }}</label>
+                <label for="pais" class="col-form-label">{{ __('País') }}</label>
                 <select id="pais" name="pais" class="form-control @error('pais') is-invalid @enderror">
                     @foreach ($paises as $slug => $pais)
                         <option value="{{ $slug }}" data-iso="{{ $pais['iso'] }}"
@@ -91,7 +85,7 @@
             {{-- Nome --}}
             <div class="form-group row">
                 <div class="col-md-12">
-                    <label for="nome" class="col-form-label required-field">{{ __('Nome completo') }}</label>
+                    <label for="nome" class="col-form-label">{{ __('Nome completo') }}</label>
                     <input id="nome" type="text"
                         class="form-control apenasLetras @error('nome') is-invalid @enderror" name="nome"
                         value="{{ old('nome') }}" autocomplete="nome" autofocus required>
@@ -152,7 +146,7 @@
 
                 {{-- E-mail --}}
                 <div class="col-md-6">
-                    <label for="email" class="col-form-label required-field">{{ __('E-mail') }}</label>
+                    <label for="email" class="col-form-label">{{ __('E-mail') }}</label>
                     <input id="email" type="email" class="form-control @error('email') is-invalid @enderror"
                         name="email" value="{{ old('email') }}" required>
                     @error('email')

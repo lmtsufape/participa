@@ -2,13 +2,6 @@
 
 @section('content')
 <div class="container content mb-5 position-relative">
-    <style>
-        .required-field::after {
-            content: "*";
-            color: #D44100;
-            margin-left: 2px;
-        }
-    </style>
 
     <div class="row titulo text-center mt-3" style="color: #034652;">
         <h2 style="font-weight: bold;">{{__('Cadastrar Usuário')}}</h2>
@@ -31,7 +24,7 @@
 
             <div class="form-group row">
                 <div class="col-md-6">
-                    <label for="name" class="col-form-label required-field"><strong>{{ __('Nome completo') }}</strong></label>
+                    <label for="name" class="col-form-label"><strong>{{ __('Nome completo') }}</strong></label>
                     <input id="name" type="text" class="form-control apenasLetras @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" autocomplete="name" autofocus required>
 
                     @error('name')
@@ -135,7 +128,7 @@
                 </div>
 
                 <div class="col-md-4">
-                    <label for="email" class="col-form-label required-field"><strong>{{ __('E-mail') }}</strong></label>
+                    <label for="email" class="col-form-label"><strong>{{ __('E-mail') }}</strong></label>
                     <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email')}}" autocomplete="email" required>
 
                     @error('email')

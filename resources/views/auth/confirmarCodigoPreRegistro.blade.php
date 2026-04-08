@@ -26,11 +26,6 @@
             border-bottom: 2px solid #004d51;
         }
 
-        .required-field::after {
-            content: "*";
-            color: #D44100;
-            margin-left: 2px;
-        }
     </style>
 
     <br><br>
@@ -61,7 +56,7 @@
 
                 <div class="form-group row mt-3">
                     <div class="col-md-12">
-                        <label for="codigo" class="col-form-label required-field">{{ __('Código') }}</label>
+                        <label for="codigo" class="col-form-label">{{ __('Código') }}</label>
                         <input id="codigo" type="text" class="form-control @error('codigo') is-invalid @enderror" name="codigo" value="{{ old('codigo') }}"  autocomplete="codigo" placeholder="Insira o código de validação que foi enviado para o seu e-mail">
                     </div>
                 </div>

@@ -45,6 +45,14 @@
             border-color:rgb(3, 70, 82) !important;       /* padrão azul Bootstrap */
             box-shadow: 0 0 0 .2rem rgba(3, 70, 82, 0.25) !important;
         }
+        /* Marca automaticamente o label que está dentro de um elemento com form-group e o campo está como required */
+        .form-group:has(> input[required]) label::after,
+        .form-group:has(> select[required]) label::after,
+        .form-group:has(> textarea[required]) label::after {
+            content: " *";
+            color: #dc2626;
+            font-weight: 700;
+        }
     </style>
 
 
