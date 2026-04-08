@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Users;
 
+use App\Enums\EstadoBrasileiro;
 use App\Http\Controllers\Controller;
 use App\Models\PerfilIdentitario;
 use App\Models\Submissao\Endereco;
@@ -126,8 +127,9 @@ class AdministradorController extends Controller
         $this->authorize('isAdmin', Administrador::class);
         $user = User::with('perfilIdentitario')->find($id);
         $end = $user->endereco;
+        $estados = EstadoBrasileiro::options();
 
-        return view('administrador.editUser', ['user' => $user, 'end' => $end]);
+        return view('administrador.editUser', ['user' => $user, 'estados' => $estados, 'end' => $end]);
     }
 
     public function updateUser(Request $request, $id)

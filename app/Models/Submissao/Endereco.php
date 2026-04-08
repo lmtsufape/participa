@@ -2,20 +2,24 @@
 
 namespace App\Models\Submissao;
 
+use App\Enums\EstadoBrasileiro;
+use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+#[Fillable([
+    'rua', 'numero', 'bairro', 'cidade', 'uf', 'cep', 'complemento', 'pais',
+])]
 class Endereco extends Model
 {
     use HasFactory;
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [
-        'rua', 'numero', 'bairro', 'cidade', 'uf', 'cep', 'complemento', 'pais',
-    ];
+
+    protected function casts(): array
+    {
+        return [
+            'uf' => EstadoBrasileiro::class,
+        ];
+    }
 
     public function user()
     {
