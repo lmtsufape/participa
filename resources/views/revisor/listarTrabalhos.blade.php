@@ -72,7 +72,7 @@
                                 @endif
                               </td>
                               @if ($trabalho->avaliado != "Avaliado")
-                                @if (now() >= $trabalho->modalidade->inicioRevisao && now() <= $trabalho->modalidade->fimRevisao)
+                                @if (now() >= $trabalho->modalidade->inicioRevisao)
                                   {{-- <td>
                                     <a href="#"><img src="{{asset('img/icons/check-solid.svg')}}" style="width:20px" data-bs-toggle="modal" data-bs-target="#modalAvaliarTrabalho{{$trabalho->id}}"></a>
                                   </td> --}}

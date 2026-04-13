@@ -167,7 +167,7 @@
                                     </td>
 
                                     @if (!$trabalho->avaliado(auth()->user())){{--avaliacao do revisor aqui--}}
-                                        @if (now() >= $trabalho->modalidade->inicioRevisao && now() <= $trabalho->modalidade->fimRevisao && ($trabalho->atribuicoes->first()->pivot->prazo_correcao == null || now() <= $trabalho->atribuicoes->first()->pivot->prazo_correcao))
+                                        @if (now() >= $trabalho->modalidade->inicioRevisao)
                                             {{-- <td>
                                             <a href="#"><img src="{{asset('img/icons/check-solid.svg')}}" style="width:20px" data-bs-toggle="modal" data-bs-target="#modalAvaliarTrabalho{{$trabalho->id}}"></a>
                                             </td> --}}
