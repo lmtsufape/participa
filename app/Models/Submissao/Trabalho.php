@@ -23,7 +23,7 @@ class Trabalho extends Model
         'campoextra1simples', 'campoextra2simples', 'campoextra3simples', 'campoextra4simples',
         'campoextra5simples', 'campoextra1grande', 'campoextra2grande', 'campoextra3grande',
         'campoextra4grande', 'campoextra5grande', 'status', 'aprovado', 'permite_correcao', 'hash_codigo_aprovacao',
-        'aprovacao_emitida_em'
+        'aprovacao_emitida_em', 'justificativa_correcao'
     ];
 
     public function recurso()
