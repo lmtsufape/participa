@@ -1478,15 +1478,7 @@ class TrabalhoController extends Controller
         $statusCorrecao = $request->input('status_correcao_' . $trabalho->id) ?? $request->input('status_correcao');
 
         $trabalho->avaliado = $statusCorrecao;
-
-        if ($statusCorrecao == 'corrigido_parcialmente' || $statusCorrecao == 'nao_corrigido') {
-            $request->validate([
-                'justificativa_correcao' => 'nullable|string|max:2000',
-            ]);
-            $trabalho->justificativa_correcao = $request->justificativa_correcao;
-        } else {
-            $trabalho->justificativa_correcao = null;
-        }
+        $trabalho->justificativa_correcao = $request->justificativa_correcao;
 
         $trabalho->update();
 
