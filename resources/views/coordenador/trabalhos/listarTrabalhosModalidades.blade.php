@@ -21,6 +21,32 @@
         </div> --}}
       </div>
 
+      <div class="card mb-3">
+            <div class="card-body">
+                <form method="GET" action="{{ route('coord.listarTrabalhosModalidades') }}">
+                    <input type="hidden" name="eventoId" value="{{ $evento->id }}">
+                    <input type="hidden" name="modalidadeId" value="{{ $modalidade->id }}">
+                    <input type="hidden" name="column" value="{{ request('column', 'titulo') }}">
+                    <input type="hidden" name="direction" value="{{ request('direction', 'asc') }}">
+                    <input type="hidden" name="status" value="{{ request('status', 'rascunho') }}">
+
+                    <div class="row">
+                        <div class="col-md-2">
+                            <label for="id" class="form-label">Buscar por ID</label>
+                            <input type="number" class="form-control" name="id" value="{{ request('id') }}" placeholder="Digite o ID...">
+                        </div>
+                        <div class="col-md-8">
+                            <label for="titulo" class="form-label">Buscar por Título</label>
+                            <input type="text" class="form-control" name="titulo" value="{{ request('titulo') }}" placeholder="Digite o título do trabalho...">
+                        </div>
+                        <div class="col-md-2 d-flex align-items-end">
+                            <button type="submit" class="btn btn-primary w-100">Buscar</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
     {{-- Tabela Trabalhos --}}
     <div class="row table-trabalhos">
       <div class="col-sm-12">
