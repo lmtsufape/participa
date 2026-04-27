@@ -18,11 +18,6 @@
                         </div>
 
                         <div class="form-check ml-3">
-                            <input class="form-check-input" type="radio" id="coord-parcialmente-{{$trabalho->id}}" name="status_correcao_{{$trabalho->id}}" value="corrigido_parcialmente" @checked($trabalho->avaliado == 'corrigido_parcialmente')>
-                            <label class="form-check-label" for="coord-parcialmente-{{$trabalho->id}}">Sim, parcialmente.</label>
-                        </div>
-
-                        <div class="form-check ml-3">
                             <input class="form-check-input" type="radio" id="coord-nao_corrigido-{{$trabalho->id}}" name="status_correcao_{{$trabalho->id}}" value="nao_corrigido" @checked($trabalho->avaliado == 'nao_corrigido')>
                             <label class="form-check-label" for="coord-nao_corrigido-{{$trabalho->id}}">Não.</label>
                         </div>
