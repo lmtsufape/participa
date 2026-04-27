@@ -125,6 +125,7 @@
             <th style="text-align:center">Editar</th>
             <th style="text-align:center">Excluir</th>
             <th style="text-align:center">Pareceres</th>
+            <th style="text-align:center">Validação</th>
             <th style="text-align:center">Correção</th>
             {{-- <th style="text-align:center">Arquivar</th> --}}
           </tr>
@@ -223,6 +224,40 @@
               </div>
               @endif
             </td>
+
+            <td style="text-align:center">
+              @if(in_array($trabalho->avaliado, ['corrigido', 'nao_corrigido']))
+                  <a href="#" data-bs-toggle="modal" data-bs-target="#modalStatusValidacao_{{$trabalho->id}}">
+                      <img src="{{asset('img/icons/eye-regular.svg')}}" style="width:20px" title="Ver Detalhes da Validação">
+                  </a>
+
+                  <div class="modal fade" id="modalStatusValidacao_{{$trabalho->id}}" tabindex="-1" aria-hidden="true">
+                      <div class="modal-dialog">
+                          <div class="modal-content">
+                              <div class="modal-header" style="background-color: #114048ff; color: white;">
+                                  <h5 class="modal-title">Resultado da Validação</h5>
+                                  <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close" style="color: white;"><span aria-hidden="true">&times;</span></button>
+                              </div>
+                              <div class="modal-body text-left">
+                                  <p><strong>Status:</strong> 
+                                      @if($trabalho->avaliado == 'corrigido') 
+                                          <span class="text-success">Correções Aceitas</span>
+                                      @else 
+                                          <span class="text-danger">Correções Rejeitadas</span>
+                                      @endif
+                                  </p>
+                                  <p><strong>Observações:</strong></p>
+                                  <div class="p-2 border rounded bg-light">
+                                      {{ $trabalho->justificativa_correcao ?? 'Nenhuma observação informada.' }}
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              @else
+                  <span class="text-muted" style="font-size: 0.8em;">Aguardando validação</span>
+              @endif
+          </td>
 
             <td style="text-align:center">
                 @if(($trabalho->modalidade->inicioCorrecao <= $agora && $trabalho->modalidade->fimCorrecao >= $agora || $trabalho->modalidade->estaEmPeriodoExtraDeCorrecao()) && $trabalho->aprovado === null)
