@@ -545,6 +545,9 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
     Route::post('/pag-boleto', [CheckoutController::class, 'pagBoleto'])->name('boleto');
     Route::post('/nova-tentativa/{evento}', [CheckoutController::class, 'novaTentativa'])->name('novaTentativa');
 
+    // PayPal routes
+        Route::get('/paypal/success/{evento}', [CheckoutController::class, 'paypalSuccess'])->name('paypal.success');
+        Route::get('/paypal/cancel/{evento}', [CheckoutController::class, 'paypalCancel'])->name('paypal.cancel');
     });
     //Pagamentos
 

@@ -8,6 +8,7 @@ class Pagamento extends Model
 {
     protected $fillable = [
         'valor', 'taxa', 'descricao', 'reference', 'codigo', 'status', 'tipo_pagamento_id',
+        'gateway', 'paypal_order_id', 'paypal_payer_id',
     ];
 
     public function inscricao()
