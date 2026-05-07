@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers\Users;
 
+use App\Enums\EstadoBrasileiro;
 use App\Models\PerfilIdentitario;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UpdatePasswordRequest;
+use App\Http\Requests\UpdateUserRequest;
 use App\Models\Submissao\Area;
 use App\Models\Submissao\Certificado;
 use App\Models\Submissao\Endereco;
@@ -28,175 +31,50 @@ class UserController extends Controller
     {
         $user = User::find(Auth::user()->id);
         $end = $user->endereco;
-        if ($pais) {
-            if ($pais != 'brasil') {
-                app()->setLocale('en');
-            } else {
-                app()->setLocale('pt-BR');
-            }
-        } elseif ($end && $end->pais != 'brasil') {
-            app()->setLocale('en');
-        } else {
-            app()->setLocale('pt-BR');
-        }
+        $estados = EstadoBrasileiro::options();
         $areas = Area::orderBy('nome')->get();
         $perfilIdentitario = PerfilIdentitario::query()
-            ->where('userId', $user->id)
+            ->where('user_id', $user->id)
             ->first();
 
-        if ($user->usuarioTemp) {
-            app()->setLocale('pt-BR');
-        }
-
-        return view('user.perfilUser', compact('user', 'end', 'areas', 'pais', 'perfilIdentitario'));
+        return view('user.perfilUser', compact('user', 'end', 'areas', 'pais', 'perfilIdentitario', 'estados'));
     }
 
-    public function editarPerfil(Request $request)
+    public function editarPerfil(UpdateUserRequest $request)
     {
-
-
-        if ($request->passaporte != null && $request->cpf != null ||
-            $request->passaporte != null && $request->cnpj != null ) {
-
-            $request->merge(['passaporte' => null]);
-        }
-
-        if ($request->cpf != null && $request->cnpj != null ) {
-
-            $request->merge(['cpf' => null]);
-        }
-
-        $user = User::find($request->id);
-
-        $temp = $user->usuarioTemp;
-
-
-        $validations = [
-            'name' => 'required|string|max:255',
-            'documentos' => ['required', 'in:cpf,cnpj,passaporte'],
-            'cpf' =>  ['exclude_unless:documentos,cpf', 'bail', 'required', 'cpf'],
-            'cnpj' =>  ['exclude_unless:documentos,cnpj', 'bail', 'required', 'cnpj'],
-            'passaporte' => ['exclude_unless:documentos,passaporte', 'bail', 'required'],
-            'celular' => '|string|max:20',
-            'instituicao' => 'required|string| max:255',
-            'rua' => 'required|string|max:255',
-            'numero' => 'required|string',
-            'bairro' => 'required|string|max:255',
-            'complemento' => 'nullable|string|max:255',
-            'cidade' => 'required|string|max:255',
-            'uf' => 'required|string',
-            'cep' => 'required|string',
-            'pais' => 'required',
-            'email' => 'required|string|email|max:255',
-            'senha_atual' => 'nullable|string|min:8',
-            'password' => 'nullable|string|min:8',
-            'password-confirm' => 'nullable|string|min:8',
-        ];
-        $data = $request->all();
-        if ($data['pais'] == 'outro'){
-            $validations['uf'] = ['nullable', 'string'];
-            $validations['numero'] = ['nullable', 'string'];
-            $validations['bairro'] = ['nullable', 'string'];
-            $validations['cep'] = ['nullable', 'string'];
-        }
         try {
-            $validator = $request->validate($validations);
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            return redirect()->back()
-                ->withErrors($e->validator)
-                ->withInput()
-                ->with('error', 'Por favor, corrija os erros no formulário antes de continuar.');
-        }
-
-        if ($request->senha_atual != null) {
-            if (! (Hash::check($request->senha_atual, $user->password))) {
-                return redirect()->back()
-                    ->withErrors(['senha_atual' => 'A senha atual informada está incorreta. Verifique e tente novamente.'])
-                    ->withInput($validator)
-                    ->with('error', 'Erro na alteração de senha. Verifique os dados informados.');
+            $user = Auth::user();
+            $payload = $request->payload();
+            if (!empty($payload['endereco'])) {
+                if ($user->endereco()->exists()) {
+                    $endereco = Endereco::findOrFail($user->enderecoId);
+                    $endereco->update($payload['endereco']);
+                }else{
+                    $endereco_id = Endereco::create($payload['endereco'])->id;
+                }
             }
 
-            if (! ($request->password != null)) {
-                return redirect()->back()
-                    ->withErrors(['password' => 'Digite a nova senha desejada.'])
-                    ->withInput($validator)
-                    ->with('error', 'Campo de nova senha é obrigatório.');
+            if (!empty($payload['perfilIdentitario'])) {
+                if ($user->perfilIdentitario()->exists()) {
+                    $user->perfilIdentitario->update($payload['perfilIdentitario']);
+                } else {
+
+                    $perfilIdentitario = PerfilIdentitario::create([...$payload['perfilIdentitario'], 'user_id' => $user->id]);
+                }
+            }
+            $data = [
+                ...$payload['user'],
+                'usuarioTemp' => null,
+            ];
+
+            if (isset($endereco_id)) {
+                $payload['enderecoId'] = $endereco_id;
+            }
+            if ($request->filled('especialidade')) {
+                $data['especProfissional'] = $request->input('especialidade');
             }
 
-            if (! ($request->input('password-confirm') != null)) {
-                return redirect()->back()
-                    ->withErrors(['password-confirm' => 'Digite a confirmação da nova senha.'])
-                    ->withInput($validator)
-                    ->with('error', 'Confirmação de senha é obrigatória.');
-            }
-
-            if (! ($request->password == $request->input('password-confirm'))) {
-                return redirect()->back()
-                    ->withErrors(['password' => 'A confirmação da senha não confere com a nova senha digitada.'])
-                    ->withInput($validator)
-                    ->with('error', 'As senhas não coincidem. Verifique e tente novamente.');
-            }
-
-            $password = Hash::make($request->password);
-            $user->password = $password;
-        }
-
-
-        if ($user->email != $request->email && !$user->usuarioTemp) {
-            $check_user_email = User::where('email', $request->email)->first();
-            if ($check_user_email == null) {
-                $user->email = $request->email;
-                $user->email_verified_at = null;
-            } else {
-                return redirect()->back()
-                    ->withErrors(['email' => 'Este e-mail já está sendo usado por outra conta. Use um e-mail diferente.'])
-                    ->withInput($validator)
-                    ->with('error', 'E-mail já cadastrado. Escolha outro endereço de e-mail.');
-            }
-        }
-
-        $user->name = $request->input('name');
-        $user->cpf = $request->input('cpf');
-        $user->cnpj = $request->input('cnpj');
-        $user->passaporte = $request->input('passaporte');
-        $user->celular = $request->input('full_number');
-        $user->instituicao = $request->input('instituicao');
-        if ($request->input('especialidade') != null) {
-            $user->especProfissional = $request->input('especialidade');
-        }
-        try {
-            $user->usuarioTemp = null;
-            $user->update();
-
-            if ($user->enderecoId == null) {
-                $end = new Endereco($request->all());
-                $end->save();
-                $user->enderecoId = $end->id;
-                $user->update();
-            } else {
-                $end = Endereco::find($user->enderecoId);
-                $end->fill($validator);
-                $end->update();
-            }
-
-            $perfilIdentitario = PerfilIdentitario::query()
-                ->where('userId', $user->id)
-                ->first();
-
-            if ($perfilIdentitario == null) {
-                $perfilIdentitario = new PerfilIdentitario();
-                $perfilIdentitario->userId = $user->id;
-                $perfilIdentitario->setAttributes($data);
-                $perfilIdentitario->save();
-            }
-            else{
-                $perfilIdentitario->editAttributes($data);
-                $perfilIdentitario->save();
-            }
-
-            if($temp){
-                return redirect()->route('index')->with('success', 'Perfil atualizado com sucesso! Seus dados foram salvos e você já pode participar dos eventos.');
-            }
+            $user->update($data);
 
             return back()->with('success', 'Perfil atualizado com sucesso! Todas as suas informações foram salvas corretamente.');
 
@@ -205,6 +83,15 @@ class UserController extends Controller
                 ->withInput()
                 ->with('error', 'Ocorreu um erro ao atualizar o perfil. Por favor, tente novamente. Se o problema persistir, entre em contato com o suporte.');
         }
+    }
+
+    public function updatePassword(UpdatePasswordRequest $request)
+    {
+        $request->user()->update([
+            'password' => Hash::make($request->validated('password')),
+        ]);
+
+        return back()->with('success', 'Senha alterada com sucesso.');
     }
 
     public function meusCertificados()

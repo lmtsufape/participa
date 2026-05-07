@@ -11,27 +11,25 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('table_perfil_indentitarios', function (Blueprint $table) {
+        Schema::create('perfil_identitarios', function (Blueprint $table) {
 
             $table->id();
             $table->string('nomeSocial')->nullable();
-            $table->date('dataNascimento');
-            $table->string('genero');
+            $table->string('genero')->nullable();
             $table->string('outroGenero')->nullable();
-            $table->string('raca');
+            $table->string('raca')->nullable();
             $table->string('outraRaca')->nullable();
-            $table->boolean('comunidadeTradicional');
+            $table->boolean('comunidadeTradicional')->nullable();
             $table->string('nomeComunidadeTradicional')->nullable();
-            $table->boolean('lgbtqia');
-            $table->boolean('deficienciaIdoso');
+            $table->boolean('lgbtqia')->nullable();
+            $table->boolean('deficienciaIdoso')->nullable();
             $table->json('necessidadesEspeciais')->nullable();
             $table->string('outraNecessidadeEspecial')->nullable();
-            $table->boolean('associadoAba');
-            $table->boolean('receberInfoAba');
             $table->string('vinculoInstitucional')->nullable();
-            $table->boolean('participacaoOrganizacao');
+            $table->boolean('participacaoOrganizacao')->nullable();
             $table->string('nomeOrganizacao')->nullable();
-            $table->foreignId('userId')->constrained('users');
+            $table->text('vinculoInstitucional')->nullable()->change();
+            $table->foreignId('user_id')->constrained('users');
             $table->timestamps();
         });
     }
@@ -41,6 +39,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('table_perfil_indentarios');
+        Schema::dropIfExists('perfil_identitarios');
     }
 };

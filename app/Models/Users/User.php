@@ -31,7 +31,7 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name', 'email', 'password', 'cpf','cnpj', 'passaporte', 'instituicao', 'celular',
-        'especProfissional', 'enderecoId',
+        'especProfissional', 'enderecoId', 'data_nascimento',
         'usuarioTemp', 'user_id', 'incompleto',
     ];
 
@@ -53,6 +53,7 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'deleted_at' => 'datetime',
         'incompleto' => 'boolean',
+        'data_nascimento' => 'date:Y-m-d',
     ];
 
     protected static function boot()
@@ -255,6 +256,6 @@ class User extends Authenticatable
 
     public function perfilIdentitario()
     {
-        return $this->hasOne(PerfilIdentitario::class, 'userId', 'id');
+        return $this->hasOne(PerfilIdentitario::class, 'user_id', 'id');
     }
 }

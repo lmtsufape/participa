@@ -84,7 +84,7 @@ class CadastroUsuarioAutomaticaController extends Controller
 
                 $data = $this->extrairDadosDaLinha($linha);
                 $data['linha_planilha'] = $numLinha;
-                
+
                 // Verifica se o email já foi processado nesta planilha
                 $emailDuplicado = false;
                 $emailOriginal = $data['email']; // Armazena o email original
@@ -98,14 +98,14 @@ class CadastroUsuarioAutomaticaController extends Controller
                         $emailsProcessados[] = $data['email'];
                     }
                 }
-                
+
                 $senhaGerada = $this->gerarSenhaAleatoria(8);
 
                 // Pula linhas completamente vazias
                 if (empty($data['nome']) && empty($data['cpf']) && empty($data['email'])) {
                     continue;
                 }
-                
+
                 // Se não tem nome, pula a linha (nome é obrigatório)
                 if (empty($data['nome'])) {
                     $resultados[] = [
@@ -192,7 +192,7 @@ class CadastroUsuarioAutomaticaController extends Controller
                 if ($emailDuplicado && !empty($emailOriginal)) {
                     $emailParaExibir = $emailOriginal . ' (duplicado - removido)';
                 }
-                
+
                 $resultados[] = [
                     'nome' => $data['nome'] ?? 'N/A',
                     'cpf' => $data['cpf'] ?? 'N/A',

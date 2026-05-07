@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Users;
 
 use App\Enums\EstadoBrasileiro;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreUserRequest;
+use App\Http\Requests\UpdateUserRequest;
 use App\Models\PerfilIdentitario;
 use App\Models\Submissao\Endereco;
 use App\Models\Submissao\Evento;
@@ -132,198 +134,43 @@ class AdministradorController extends Controller
         return view('administrador.editUser', ['user' => $user, 'estados' => $estados, 'end' => $end]);
     }
 
-    public function updateUser(Request $request, $id)
+    public function updateUser(UpdateUserRequest $request, $id)
     {
-        // dd($request->all());
         $this->authorize('isAdmin', Administrador::class);
         $user = User::find($id);
-
-        if ($request->passaporte != null && $request->cpf != null) {
-            $request->merge(['passaporte' => null]);
-        }
-        if ($user->usuarioTemp == true) {
-            $validator = $request->validate([
-                'name' => 'bail|required|string|max:255',
-                'nomeSocial' => 'nullable|string|max:255',
-                'cpf' => ($request->passaporte == null && $request->cnpj == null ? ['bail', 'required', 'cpf', 'unique:users,cpf,' . $user->id] : 'nullable'),
-                'cnpj' => ($request->passaporte == null && $request->cpf == null ? ['required', 'string', 'min:14', 'max:18', 'unique:users,cnpj,' . $user->id] : 'nullable'),
-                'passaporte' => ($request->cpf == null && $request->cnpj == null ? 'bail|required|max:10|unique:users,passaporte,' . $user->id : 'nullable'),
-                'celular' => 'nullable|string|max:16',
-                'instituicao' => ['nullable','string','max:255','regex:~^[\p{L}\p{M}0-9 .\-(){}\[\],;&@%*+=/\\\\|<>!?`\'"]*$~u'],
-                'especialidade' => 'nullable|string',
-                'rua' => 'nullable|string|max:255',
-                'numero' => 'nullable|string',
-                'bairro' => 'nullable|string|max:255',
-                'cidade' => 'nullable|string|max:255',
-                'complemento' => 'nullable|string|max:255',
-                'uf' => 'nullable|string',
-                'cep' => 'nullable|string',
-                'password' => 'nullable|string|min:8|confirmed',
-                // 'primeiraArea' => 'required|string',
-            ]);
-
-            // criar endereço apenas se houver dados suficientes
-            $enderecoId = null;
-            if (!empty($request->input('rua')) && !empty($request->input('cidade')) && !empty($request->input('uf'))) {
-                $end = new Endereco();
-                $end->rua = $request->input('rua');
-                $end->numero = $request->input('numero');
-                $end->bairro = $request->input('bairro');
-                $end->cidade = $request->input('cidade');
-                $end->complemento = $request->input('complemento');
-                $end->uf = $request->input('uf');
-                $end->cep = $request->input('cep');
-
-                $end->save();
-                $enderecoId = $end->id;
+        $payload = $request->payload();
+        if (!empty($payload['endereco'])) {
+            if ($user->endereco()->exists()) {
+                $endereco = Endereco::findOrFail($user->enderecoId);
+                $endereco->update($payload['endereco']);
+            }else{
+                $endereco_id = Endereco::create($payload['endereco'])->id;
             }
-
-            // Atualizar dados não preenchidos de User
-
-            $user->name = $request->input('name');
-            $user->cpf = $request->input('cpf');
-            $user->cnpj = $request->input('cnpj');
-            $user->passaporte = $request->input('passaporte');
-            $user->celular = $request->input('celular');
-            $user->instituicao = $request->input('instituicao');
-
-            $password = $request->input('password');
-            if (empty($password)) {
-                $password = $this->gerarSenhaAleatoria(8);
-            }
-            $user->password = bcrypt($password);
-            if ($request->input('especialidade') != null) {
-                $user->especProfissional = $request->input('especialidade');
-            }
-            $user->usuarioTemp = null;
-            $user->enderecoId = $enderecoId;
-            $user->email_verified_at = now();
-            $user->save();
-
-            if ($user->perfilIdentitario) {
-                $user->perfilIdentitario->nomeSocial = $request->input('nomeSocial');
-                $user->perfilIdentitario->save();
-            } else {
-                $perfilData = [
-                    'nomeSocial' => $request->input('nomeSocial'),
-                    'dataNascimento' => '2000-01-01',
-                    'genero' => 'prefiro_nao_responder',
-                    'outroGenero' => '',
-                    'raca' => ['prefiro_nao_responder_raca'],
-                    'outraRaca' => '',
-                    'comunidadeTradicional' => 'false',
-                    'nomeComunidadeTradicional' => null,
-                    'lgbtqia' => 'false',
-                    'deficienciaIdoso' => 'false',
-                    'associadoAba' => 'false',
-                    'receberInfoAba' => 'false',
-                    'participacaoOrganizacao' => 'false',
-                    'nomeOrganizacao' => null,
-                    'necessidadesEspeciais' => ['nenhuma'],
-                    'outraNecessidadeEspecial' => '',
-                    'vinculoInstitucional' => '',
-                ];
-
-                $perfilIdentitario = new PerfilIdentitario();
-                $perfilIdentitario->setAttributes($perfilData);
-                $perfilIdentitario->userId = $user->id;
-                $perfilIdentitario->save();
-            }
-
-            return redirect()->route('admin.users')->with(['message' => 'Cadastro completado com sucesso!']);
-        } else {
-            if ($request->passaporte != null && $request->cpf != null) {
-                $request->merge(['passaporte' => null]);
-            }
-            $validator = $request->validate([
-                'name' => 'required|string|max:255',
-                'nomeSocial' => 'nullable|string|max:255',
-                'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
-                'cpf' => ($request->passaporte == null && $request->cnpj == null ? ['bail', 'required', 'cpf', 'unique:users,cpf,' . $user->id] : 'nullable'),
-                'cnpj' => ($request->passaporte == null && $request->cpf == null ? ['required', 'string', 'min:14', 'max:18', 'unique:users,cnpj,' . $user->id] : 'nullable'),
-                'passaporte' => ($request->cpf == null && $request->cnpj == null ? ['bail', 'required', 'max:10', 'unique:users,passaporte,' . $user->id] : ['nullable']),
-                'celular' => 'nullable|string|max:16',
-                'instituicao' => 'nullable|string| max:255',
-                // 'especProfissional' => 'nullable|string',
-                'rua' => 'nullable|string|max:255',
-                'numero' => 'nullable|string',
-                'bairro' => 'nullable|string|max:255',
-                'complemento' => 'nullable|string|max:255',
-                'cidade' => 'nullable|string|max:255',
-                'uf' => 'nullable|string',
-                'cep' => 'nullable|string',
-            ]);
-
-            // User
-
-            $user->name = $request->input('name');
-            $user->email = $request->input('email');
-            $user->cpf = $request->input('cpf');
-            $user->cnpj = $request->input('cnpj');
-            $user->passaporte = $request->input('passaporte');
-            $user->celular = $request->input('celular');
-            $user->instituicao = $request->input('instituicao');
-            $password = $request->input('password');
-            if (empty($password)) {
-                $password = $this->gerarSenhaAleatoria(8);
-            } else {
-                $request->validate(['password' => 'string|min:8|confirmed']);
-            }
-            $user->password = bcrypt($password);
-            // $user->especProfissional = $request->input('especProfissional');
-            $user->usuarioTemp = null;
-            $user->update();
-
-            // endereço
-            if ($user->enderecoId) {
-                $end = Endereco::find($user->enderecoId);
-                if ($end) {
-                    $end->rua = $request->input('rua');
-                    $end->numero = $request->input('numero');
-                    $end->bairro = $request->input('bairro');
-                    $end->cidade = $request->input('cidade');
-                    $end->complemento = $request->input('complemento');
-                    $end->uf = $request->input('uf');
-                    $end->cep = $request->input('cep');
-
-                    $end->update();
-                }
-            }
-            if ($user->perfilIdentitario) {
-                $user->perfilIdentitario->nomeSocial = $request->input('nomeSocial');
-                $user->perfilIdentitario->save();
-            } else {
-                $perfilData = [
-                    'nomeSocial' => $request->input('nomeSocial'),
-                    'dataNascimento' => '2000-01-01',
-                    'genero' => 'prefiro_nao_responder',
-                    'outroGenero' => '',
-                    'raca' => ['prefiro_nao_responder_raca'],
-                    'outraRaca' => '',
-                    'comunidadeTradicional' => 'false',
-                    'nomeComunidadeTradicional' => null,
-                    'lgbtqia' => 'false',
-                    'deficienciaIdoso' => 'false',
-                    'associadoAba' => 'false',
-                    'receberInfoAba' => 'false',
-                    'participacaoOrganizacao' => 'false',
-                    'nomeOrganizacao' => null,
-                    'necessidadesEspeciais' => ['nenhuma'],
-                    'outraNecessidadeEspecial' => '',
-                    'vinculoInstitucional' => '',
-                ];
-
-                $perfilIdentitario = new PerfilIdentitario();
-                $perfilIdentitario->setAttributes($perfilData);
-                $perfilIdentitario->userId = $user->id;
-                $perfilIdentitario->save();
-            }
-
-            // dd([$user,$end]);
-            return redirect()->route('admin.users')->with(['message' => 'Usuário atualizado com sucesso!']);
         }
 
-        return redirect()->route('admin.users')->with(['message' => 'Atualizado com sucesso!']);
+        if (!empty($payload['perfilIdentitario'])) {
+            if ($user->perfilIdentitario()->exists()) {
+                $user->perfilIdentitario->update($payload['perfilIdentitario']);
+            } else {
+
+                $perfilIdentitario = PerfilIdentitario::create([...$payload['perfilIdentitario'], 'user_id' => $user->id]);
+            }
+        }
+        $data = [
+            ...$payload['user'],
+            'usuarioTemp' => null,
+        ];
+
+        if (isset($endereco_id)) {
+            $payload['enderecoId'] = $endereco_id;
+        }
+        if ($request->filled('especialidade')) {
+            $data['especProfissional'] = $request->input('especialidade');
+        }
+
+        $user->update($data);
+
+        return redirect()->route('admin.users')->with(['success' => 'Usuário atualizado com sucesso!']);
     }
 
     public function search(Request $request)
@@ -351,150 +198,43 @@ class AdministradorController extends Controller
         return view('administrador.users', compact('users'));
     }
 
-    public function criarUsuario(Request $request)
+    public function createUser()
+    {
+        $estados = EstadoBrasileiro::options();
+
+        return view('administrador.cadastrarUsuario', ['estados' => $estados]);
+    }
+
+    public function criarUsuario(StoreUserRequest $request)
     {
 
-        $request->merge([
-            'email' => strtolower($request->email),
-        ]);
+        $payload = $request->payload();
 
-        // $this->authorize('cadastrarUsuario'); remoção temporaria
-
-        $users = User::orderBy('updated_at', 'ASC')->paginate(100);
-
-        $validator = $this->validator($request);
-
-        if ($validator->fails())
-        {
-            return redirect()->back()->withErrors($validator)->withInput();
+        if (empty($payload['endereco'])) {
+            $endereco_id = Endereco::create($payload['endereco'])->id;
         }
 
-        $user = new User();
+        $data = [
+            ...$payload['user'],
+            'usuarioTemp' => null,
+        ];
 
-        $user->name = $request->input('name');
-        $user->email = $request->input('email');
-        $password = $request->input('password');
-        if (empty($password)) {
-            $password = $this->gerarSenhaAleatoria(8);
+        if (isset($endereco_id)) {
+            $payload['enderecoId'] = $endereco_id;
         }
-        $user->password = bcrypt($password);
-
-        $user->cpf = $request->input('cpf');
-        $user->cnpj = $request->input('cnpj');
-        $user->passaporte = $request->input('passaporte');
-        $user->celular = $request->input('full_number');
-        $user->instituicao = $request->input('instituicao');
-        $user->email_verified_at = now();
-
-        if ($request->input('rua') && $request->input('cep'))
-        {
-            $endereco = new Endereco($request->all());
-            $endereco->save();
-
-            $user->enderecoId = $endereco->id;
-        }
-        else
-        {
-            $user->enderecoId = null;
+        if ($request->filled('especialidade')) {
+            $data['especProfissional'] = $request->input('especialidade');
         }
 
-        $user->save();
+        $user = User::create($data);
 
-        // Criar perfil identitário
-        if ($this->temDadosPerfilIdentitario($request->all())) {
-            $perfilData = $this->formatarDadosPerfilIdentitario($request->all());
+        if (empty($payload['perfilIdentitario'])) {
+            PerfilIdentitario::create([...$payload['perfilIdentitario'], 'user_id' => $user->id]);
 
-            $perfilIdentitario = new PerfilIdentitario();
-            $perfilIdentitario->setAttributes($perfilData);
-            $perfilIdentitario->userId = $user->id;
-            $perfilIdentitario->save();
         }
 
         app()->setLocale('pt-BR');
+        return redirect()->route('admin.users')->with(['success' => 'Usuário atualizado com sucesso!']);
 
-        return redirect(route('inscricao.inscritos', ['evento' => 2]))->with(['message' => 'Usuário cadastrado com sucesso!']);
-    }
-
-    protected function validator(Request $request)
-    {
-        return Validator::make($request->all(), [
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['nullable', 'string', 'min:8', 'confirmed'],
-            'cpf' => ($request->input('passaporte') == null && $request->input('cnpj') == null ? ['required', 'cpf', 'unique:users'] : 'nullable'),
-            'cnpj' => ($request->input('passaporte') == null && $request->input('cpf') == null ? ['required', 'string', 'min:14', 'max:18', 'unique:users'] : 'nullable'),
-            'passaporte' => ($request->input('cpf') == null && $request->input('cnpj') == null ? 'required|max:10|unique:users' : 'nullable'),
-            'celular' => ['nullable', 'string', 'max:20'],
-            'instituicao' => ['nullable', 'string', 'max:255', 'regex:/^[A-Za-zÀ-ÿ0-9\s\-\.\(\)\[\]\{\}\/\\,;&@#$%*+=|<>!?~`\'"]*$/'],
-            'dataNascimento' => ['nullable', 'date'],
-            'rua' => ['nullable', 'string', 'max:255'],
-            'numero' => ['nullable', 'string'],
-            'bairro' => ['nullable', 'string', 'max:255'],
-            'cidade' => ['nullable', 'string', 'max:255'],
-            'uf' => ['nullable', 'string'],
-            'cep' => ['nullable', 'string'],
-            'complemento' => ['nullable', 'string'],
-            // Campos do perfil identitário
-            'genero' => ['nullable', 'string'],
-            'raca' => ['nullable', 'array'],
-            'comunidadeTradicional' => ['nullable', 'in:true,false'],
-            'lgbtqia' => ['nullable', 'in:true,false'],
-            'necessidadesEspeciais' => ['nullable', 'array'],
-            'deficienciaIdoso' => ['nullable', 'in:true,false'],
-            'associadoAba' => ['nullable', 'in:true,false'],
-            'receberInfoAba' => ['nullable', 'in:true,false'],
-            'participacaoOrganizacao' => ['nullable', 'in:true,false'],
-            'vinculoInstitucional' => ['nullable', 'string', 'max:1000'],
-        ]);
-    }
-    private function gerarSenhaAleatoria(int $length = 8): string
-    {
-        $chars = '0123456789';
-        $result = '';
-        for ($i = 0; $i < $length; $i++) {
-            $result .= $chars[random_int(0, strlen($chars) - 1)];
-        }
-        return $result;
-    }
-
-    private function temDadosPerfilIdentitario(array $data): bool
-    {
-        $camposMinimos = ['dataNascimento', 'genero', 'raca'];
-
-        foreach ($camposMinimos as $campo) {
-            if (empty($data[$campo])) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-    private function formatarDadosPerfilIdentitario(array $data): array
-    {
-        $perfilData = [
-            'nomeSocial' => $data['nomeSocial'] ?? '',
-            'dataNascimento' => $data['dataNascimento'],
-            'genero' => $data['genero'] ?? 'não informado',
-            'outroGenero' => $data['outroGenero'] ?? '',
-            'raca' => is_array($data['raca']) ? $data['raca'] : [$data['raca']],
-            'outraRaca' => $data['outraRaca'] ?? '',
-
-            'comunidadeTradicional' => $data['comunidadeTradicional'] ? 'true' : 'false',
-            'nomeComunidadeTradicional' => $data['nomeComunidadeTradicional'] ?? null,
-
-            'lgbtqia' => $data['lgbtqia'] ? 'true' : 'false',
-            'deficienciaIdoso' => $data['deficienciaIdoso'] ? 'true' : 'false',
-            'associadoAba' => $data['associadoAba'] ? 'true' : 'false',
-            'receberInfoAba' => $data['receberInfoAba'] ? 'true' : 'false',
-
-            'participacaoOrganizacao' => $data['participacaoOrganizacao'] ? 'true' : 'false',
-            'nomeOrganizacao' => $data['nomeOrganizacao'] ?? null,
-
-            'necessidadesEspeciais' => $data['necessidadesEspeciais'] ?? ['nenhuma'],
-            'outraNecessidadeEspecial' => $data['outraNecessidadeEspecial'] ?? '',
-            'vinculoInstitucional' => $data['vinculoInstitucional'] ?? '',
-        ];
-
-        return $perfilData;
     }
 }
