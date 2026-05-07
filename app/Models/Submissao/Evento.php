@@ -30,6 +30,12 @@ class Evento extends Model
         'is_multilingual', 'instagram', 'contato_suporte'
     ];
 
+    protected $casts = [
+        'exibir_calendario_programacao' => 'boolean',
+        'exibir_pdf' => 'boolean',
+        'modarquivo' => 'boolean',
+    ];
+
     public function endereco()
     {
         return $this->belongsTo('App\Models\Submissao\Endereco', 'enderecoId');

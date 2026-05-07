@@ -18,6 +18,16 @@ class FormEvento extends Model
         'etiquetaarquivo', 'etiquetabaixarinstrucoes',
     ];
 
+    protected $casts = [
+        'modinscricao' => 'boolean',
+        'modvalidarinscricao' => 'boolean',
+        'modprogramacao' => 'boolean',
+        'modorganizacao' => 'boolean',
+        'modsubmissao' => 'boolean',
+        'modinscritonoevento' => 'boolean',
+        'modinscritonaplataforma' => 'boolean',
+    ];
+
     public function evento()
     {
         return $this->belongsTo('App\Models\Submissao\Evento', 'eventoId');
