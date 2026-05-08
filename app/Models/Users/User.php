@@ -246,4 +246,32 @@ class User extends Authenticatable
             'area_id'
         )->where('coordenadores_eixos_tematicos.evento_id', $evento_id);
     }
+
+    public function anuidades()
+    {
+        return $this->hasMany(\App\Models\Anuidade::class, 'user_id');
+    }
+
+    /**
+     * Retorna true se o usuário tiver uma anuidade aprovada e válida hoje.
+     */
+    public function ehAssociado()
+    {
+        return $this->anuidades()
+                    ->where('status', 'approved')
+                    ->where('validade', '>=', now())
+                    ->exists();
+    }
+
+    /**
+     * Retorna o registro da anuidade ativa, se existir.
+     */
+    public function anuidadeAtual()
+    {
+        return $this->anuidades()
+                    ->where('status', 'approved')
+                    ->where('validade', '>=', now())
+                    ->latest()
+                    ->first();
+    }
 }
