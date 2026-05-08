@@ -48,6 +48,17 @@
                         </form>
                     @else
                         <li class="nav-item">
+                            @if(Auth::user()->ehAssociado())
+                                <span class="nav-link fw-bold" style="color: white; margin-right: 10px;">
+                                    <i class="bi bi-check-circle-fill"></i> Associado Ativo
+                                </span>
+                            @else
+                                <a class="nav-link fw-bold" href="{{ route('associar.index') }}" style="color: white; margin-right: 10px;">
+                                    Seja Associado
+                                </a>
+                            @endif
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link fw-semibold" href="{{ route('home') }}" style="margin-right: 5px; margin-left: 5px; color: white;">
                                 @lang('public.meusEventos')
                             </a>

@@ -507,6 +507,10 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
         Route::get('/paypal/cancel/{evento}', [CheckoutController::class, 'paypalCancel'])->name('paypal.cancel');
 
     });
+    //Associação
+    Route::get('/associar', [\App\Http\Controllers\Users\AssociadoController::class, 'index'])->name('associar.index');
+    Route::get('/associar/pagar/{tipo}', [\App\Http\Controllers\Users\AssociadoController::class, 'pagar'])->name('associar.pagar');
+    Route::post('/associar/processar', [\App\Http\Controllers\Users\AssociadoController::class, 'processarPagamentoAssociado'])->name('associar.processar');
     //Pagamentos
 
     Route::get('inscricoes/evento-{id}/index', [InscricaoController::class, 'index'])->name('inscricoes');
