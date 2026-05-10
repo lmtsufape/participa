@@ -145,7 +145,7 @@ class CheckoutController extends Controller
         $pagamento = $inscricao?->pagamento;
         
         if ($pagamento == null) {
-            return redirect()->route('evento.visualizar', ['id' => $evento->id])->with('message', 'Não existe um pagamento para esse evento.');
+            return redirect()->route('evento.visualizar', ['id' => $evento->id])->with('message', 'O pagamento não foi encontrado.');
         }
 
         // Se for PayPal, mostrar status diferente

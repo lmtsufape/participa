@@ -3,7 +3,7 @@
 @section('content')
     <div class="alert alert-success text-center">
         <span class="fw-bold text-center" style="font-size: 20px;">
-            Conclua o pagamento para garantir a sua inscrição no CBEE!
+            Conclua o pagamento para garantir a sua inscrição!
         </span>
 
     </div>
@@ -63,7 +63,8 @@
                 paymentMethods: {
                     atm: "all",
                     creditCard: "all",
-                    bankTransfer: "all"
+                    bankTransfer: "all",
+                    ticket: "all"
                 },
                 installments: 1,
             },
