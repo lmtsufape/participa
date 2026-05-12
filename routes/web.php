@@ -570,7 +570,7 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
 });
 
 Route::prefix('checkout')->name('checkout.')->group(function () {
-    Route::post('/notifications', [App\Http\Controllers\Inscricao\CheckoutController::class, 'notifications'])->name('notifications');
+    Route::post('/notifications', [CheckoutController::class, 'notifications'])->name('notifications');
 });
 
 //Localization Route
