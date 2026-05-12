@@ -535,16 +535,17 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
 
     // Checkout
     Route::prefix('checkout')->name('checkout.')->group(function () {
+        Route::post('/notifications', [CheckoutController::class, 'notifications'])->name('notifications');
         Route::get('/tela-pagamento/{evento}', [CheckoutController::class, 'telaPagamento'])->name('telaPagamento');
         Route::get('/status-pagamento/{evento}', [CheckoutController::class, 'statusPagamento'])->name('statusPagamento');
         Route::post('/process_payment', [CheckoutController::class, 'processPayment'])->name('processPayment');
         Route::post('/confirmar-inscricao/{id}', [CheckoutController::class, 'index'])->name('index');
         Route::post('/proccess', [CheckoutController::class, 'proccess'])->name('proccess');
         Route::get('/obrigado', [CheckoutController::class, 'obrigado'])->name('obrigado');
-            Route::get('/{id}/pagamentos', [CheckoutController::class, 'listarPagamentos'])->name('pagamentos');
-    Route::post('/pag-boleto', [CheckoutController::class, 'pagBoleto'])->name('boleto');
-    Route::post('/nova-tentativa/{evento}', [CheckoutController::class, 'novaTentativa'])->name('novaTentativa');
-
+        Route::get('/{id}/pagamentos', [CheckoutController::class, 'listarPagamentos'])->name('pagamentos');
+        Route::post('/pag-boleto', [CheckoutController::class, 'pagBoleto'])->name('boleto');
+        Route::post('/nova-tentativa/{evento}', [CheckoutController::class, 'novaTentativa'])->name('novaTentativa');
+    
     // PayPal routes
         Route::get('/paypal/success/{evento}', [CheckoutController::class, 'paypalSuccess'])->name('paypal.success');
         Route::get('/paypal/cancel/{evento}', [CheckoutController::class, 'paypalCancel'])->name('paypal.cancel');
