@@ -298,10 +298,6 @@ class CheckoutController extends Controller
                             "number" => $contents['payer']['identification']['number'],
                         ],
                     ],
-                    "identification" => [
-                        "type" => $contents['payer']['identification']['type'],
-                        "number" => preg_replace('/[^0-9]/', '', $contents['payer']['identification']['number']), // Adicione isso aqui
-                    ],
                 ];
                 break;
             default:
