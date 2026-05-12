@@ -535,7 +535,6 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
 
     // Checkout
     Route::prefix('checkout')->name('checkout.')->group(function () {
-        Route::post('/notifications', [CheckoutController::class, 'notifications'])->name('notifications');
         Route::get('/tela-pagamento/{evento}', [CheckoutController::class, 'telaPagamento'])->name('telaPagamento');
         Route::get('/status-pagamento/{evento}', [CheckoutController::class, 'statusPagamento'])->name('statusPagamento');
         Route::post('/process_payment', [CheckoutController::class, 'processPayment'])->name('processPayment');
@@ -568,6 +567,10 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
     Route::get('valor/categoria', [CategoriaController::class, 'valorAjax'])->name('ajax.valor.categoria');
     Route::get('confirmar-inscricao', [InscricaoController::class, 'store'])->name('inscricao.confirmar');
 
+});
+
+Route::prefix('checkout')->name('checkout.')->group(function () {
+    Route::post('/notifications', [App\Http\Controllers\Inscricao\CheckoutController::class, 'notifications'])->name('notifications');
 });
 
 //Localization Route
