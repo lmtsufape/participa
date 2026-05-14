@@ -746,6 +746,23 @@
                                         </template>
                                     </div>
 
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <label for="numMaxTrabalhos" class="col-form-label fw-bold">Limite de submissões por modalidade (Autor)</label>
+                                            <input id="numMaxTrabalhos" type="number" class="form-control" name="numMaxTrabalhos" value="{{ old('numMaxTrabalhos') }}" placeholder="Ex: 1">
+                                            <small class="text-muted">Se definido, este limite prevalece sobre o limite do evento para esta modalidade específica.</small>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group mt-3">
+                                        <div class="form-check">
+                                            <input class="form-check-input" id="exclusividade_autoria" type="checkbox" name="exclusividade_autoria" value="1">
+                                            <label class="form-check-label fw-bold" for="exclusividade_autoria">
+                                                Restrição de Exclusividade: Autor não pode ser coautor (e vice-versa) nesta modalidade
+                                            </label>
+                                        </div>
+                                    </div>
+
                                     <br>
 
                                     </>

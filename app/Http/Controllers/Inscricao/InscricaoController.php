@@ -450,6 +450,7 @@ class InscricaoController extends Controller
                 ->first();
             if ($inscricao != null) {
                 $inscricao->categoria_participante_id = $request->categoria;
+                $inscricao->apoio_infantil = $request->has('apoio_infantil');
                 $inscricao->save();
             }
         } else {
@@ -458,6 +459,7 @@ class InscricaoController extends Controller
             $inscricao->user_id = auth()->user()->id;
             $inscricao->evento_id = $request->evento_id;
             $inscricao->finalizada = false;
+            $inscricao->apoio_infantil = $request->has('apoio_infantil');
             $inscricao->save();
         }
 

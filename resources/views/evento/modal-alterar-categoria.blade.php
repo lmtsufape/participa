@@ -39,6 +39,16 @@
                                 </template>
                             @endforeach
 
+                            <div class="form-group mt-3 p-2 border rounded" style="background-color: #f8f9fa;">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="apoio_infantil" id="apoio_infantil_alterar" value="1" 
+                                        @if($inscricao->apoio_infantil) checked @endif>
+                                    <label class="form-check-label fw-bold" for="apoio_infantil_alterar" style="color: #114048ff;">
+                                        {{ __('Necessito de apoio infantil (Espaço Kids)') }}
+                                    </label>
+                                </div>
+                            </div>
+
                             <button 
                                 type="button" 
                                 x-on:click="mostrarOpcoes = true"

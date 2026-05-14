@@ -170,6 +170,25 @@ class TrabalhoController extends Controller
             $evento = Evento::find($request->eventoId);
             $modalidade = Modalidade::find($request->modalidadeId);
 
+            $user = auth()->user();
+
+            $orientador = User::where('email', $request->emailOrientador)->first();
+            if ($orientador == null) {
+                $passwordTemporario = Str::random(8);
+                $coord = User::find($evento->coordenadorId);
+                
+                Mail::to($request->emailOrientador)->send(new EmailParaUsuarioNaoCadastrado(
+                    auth()->user()->name, ' ', 'Orientador', $evento->nome, $passwordTemporario, $request->emailOrientador, $coord
+                ));
+
+                $orientador = User::create([
+                    'email' => $request->emailOrientador,
+                    'password' => bcrypt($passwordTemporario),
+                    'usuarioTemp' => true,
+                    'name' => $request->nomeOrientador,
+                ]);
+            }
+
             // Cria uma pré-inscrição se o usuário não estiver inscrito
             if (!Inscricao::where('user_id', Auth::user()->id)->where('evento_id', $evento->id)->exists()) {
                 if ($evento->eventoInscricoesEncerradas()) {
@@ -214,6 +233,47 @@ class TrabalhoController extends Controller
                 return redirect()->back()->withErrors(['numeroMax' => 'Número máximo de trabalhos permitidos atingido.'])->withInput($validatedData);
             }
 
+            if ($modalidade->numMaxTrabalhos != null) {
+                $trabalhosNaModalidade = Trabalho::where('modalidadeId', $modalidade->id)
+                    ->where('autorId', $user->id)
+                    ->where('status', '!=', 'arquivado')
+                    ->count();
+
+                if ($trabalhosNaModalidade >= $modalidade->numMaxTrabalhos) {
+                    return redirect()->back()->withErrors(['numeroMax' => "Você já atingiu o limite de submissões ($modalidade->numMaxTrabalhos) para a modalidade $modalidade->nome."]);
+                }
+            }
+
+            // 2. Validação de Exclusividade (Autor não pode ser coautor na mesma modalidade)
+            if ($modalidade->exclusividade_autoria) {
+                // Verifica se o usuário que está tentando submeter (Autor) já é coautor em algum trabalho DESTA modalidade
+                $jaEhCoautor = DB::table('coautor_trabalho')
+                    ->join('trabalhos', 'coautor_trabalho.trabalho_id', '=', 'trabalhos.id')
+                    ->join('coautors', 'coautor_trabalho.coautor_id', '=', 'coautors.id')
+                    ->where('trabalhos.modalidadeId', $modalidade->id)
+                    ->where('coautors.autorId', $user->id)
+                    ->exists();
+
+                if ($jaEhCoautor) {
+                    return redirect()->back()->withErrors(['exclusividade' => "Nesta modalidade, um coautor não pode ser autor de outro trabalho."]);
+                }
+
+                // Verifica se algum dos e-mails de coautores enviados já é AUTOR de um trabalho nesta modalidade
+                if ($request->emailCoautor != null) {
+                    foreach ($request->emailCoautor as $email) {
+                        $coautorUser = User::where('email', $email)->first();
+                        if ($coautorUser) {
+                            $jaEhAutor = Trabalho::where('modalidadeId', $modalidade->id)
+                                ->where('autorId', $coautorUser->id)
+                                ->exists();
+                            if ($jaEhAutor) {
+                                return redirect()->back()->withErrors(['exclusividade' => "O usuário com e-mail $email já é autor de um trabalho nesta modalidade e não pode ser coautor."]);
+                            }
+                        }
+                    }
+                }
+            }
+
             if ($request->emailCoautor != null) {
                 foreach ($request->emailCoautor as $key => $value) {
                     if ($value == $autor->email) {
@@ -241,6 +301,7 @@ class TrabalhoController extends Controller
                 'areaId' => $request->areaId,
                 'autorId' => $autor->id,
                 'eventoId' => $evento->id,
+                'orientador_id' => $orientador->id,
                 'avaliado' => 'nao',
             ]);
 
@@ -509,6 +570,30 @@ class TrabalhoController extends Controller
         $evento = $trabalho->evento;
 
         $arquivo = $request->file('arquivo' . $id);
+
+        if ($request->emailOrientador) {
+            $orientador = User::where('email', $request->emailOrientador)->first();
+            
+            if ($orientador == null) {
+                $passwordTemporario = Str::random(8);
+                $coord = User::find($evento->coordenadorId);
+                
+                // Envia e-mail informando o cadastro temporário
+                Mail::to($request->emailOrientador)->send(new EmailParaUsuarioNaoCadastrado(
+                    auth()->user()->name, ' ', 'Orientador', $evento->nome, $passwordTemporario, $request->emailOrientador, $coord
+                ));
+
+                $orientador = User::create([
+                    'email' => $request->emailOrientador,
+                    'password' => bcrypt($passwordTemporario),
+                    'usuarioTemp' => true,
+                    'name' => $request->nomeOrientador,
+                ]);
+            }
+            
+            // Atualiza o ID do orientador no objeto do trabalho
+            $trabalho->orientador_id = $orientador->id;
+        }
 
         if ($arquivo != null && $this->validarTipoDoArquivo($arquivo, $trabalho->modalidade)) {
             return redirect()->back()->withErrors(['arquivo' . $id => 'Extensão de arquivo enviado é diferente do permitido.

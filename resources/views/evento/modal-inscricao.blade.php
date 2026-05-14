@@ -39,6 +39,7 @@
                         <h6>Atenção!</h6>
                         <ul>
                             <li>Para participar do {{$evento->nome}}, é necessário concluir a inscrição e, caso a modalidade escolhida seja paga, efetuar o pagamento.</li>
+                            <li>Antes de prosseguir, leia atentamente o edital do evento.</li>
                         </ul>
                         <div id="formulario" class="carousel-categorias container">
                             <div>
@@ -120,6 +121,16 @@
                                                         <button type="button" x-on:click="categoria = ''"
                                                             class="btn btn-md btn-block btn-primary mt-2 col-sm-12 col-md-6 col-lg-4" style="background-color: #114048ff; border-color: #114048ff;">
                                                             {{ __('Alterar categoria') }}</button>
+                                                    </div>
+
+                                                    <div class="form-group mt-3 p-2 border rounded" style="background-color: #f8f9fa;">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="apoio_infantil" id="apoio_infantil" value="1">
+                                                            <label class="form-check-label fw-bold" for="apoio_infantil">
+                                                                {{ __('Necessito de apoio infantil (Espaço Kids)') }}
+                                                            </label>
+                                                        </div>
+                                                        <small class="text-muted">Marque esta opção caso pretenda levar crianças e necessite do serviço de apoio do evento.</small>
                                                     </div>
 
                                                     <!-- <div class="form-group">

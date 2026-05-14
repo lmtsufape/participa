@@ -385,6 +385,24 @@
           </div>
           @endif
           @if ($indice == "etiquetacoautortrabalho")
+          <div class="card card-body mt-3 mb-3 border-info">
+              <div class="row">
+                  <div class="col-sm-12">
+                      <label class="fw-bold" style="color: #114048ff;">Orientador(a)</label>
+                  </div>
+                  <div class="col-md-6">
+                      <label for="emailOrientador_{{$trabalho->id}}">E-mail</label>
+                      <input type="email" name="emailOrientador" id="emailOrientador_{{$trabalho->id}}" class="form-control" 
+                              value="{{ old('emailOrientador', $trabalho->orientador->email ?? '') }}" 
+                              oninput="buscarEmailOrientador(this, {{$trabalho->id}})" required>
+                  </div>
+                  <div class="col-md-6">
+                      <label for="nomeOrientador_{{$trabalho->id}}">Nome Completo</label>
+                      <input type="text" name="nomeOrientador" id="nomeOrientador_{{$trabalho->id}}" class="form-control" 
+                              value="{{ old('nomeOrientador', $trabalho->orientador->name ?? '') }}" required>
+                  </div>
+              </div>
+          </div>
           <div class="flexContainer" style="margin-top:20px">
             <div class="row">
               <div class="col">
@@ -922,6 +940,12 @@
       <div class="modal-body">
         <label for="autor" style="font-weight: bold">{{__('Autor')}}:</label>
         <p>{{$trabalho->autor->name}}</p>
+          <label for="orientador" style="font-weight: bold">{{__('Orientador(a)')}}:</label>
+          @if($trabalho->orientador)
+              <p>{{$trabalho->orientador->name}}</p>
+          @else
+              <p class="text-muted">Nenhum orientador cadastrado.</p>
+          @endif
         <label for="autor" style="font-weight: bold">{{__('Coautores')}}:</label>
         @foreach ($trabalho->coautors as $coautor)
         <p>{{$coautor->user->name}}</p>
@@ -1165,6 +1189,25 @@
         $('#' + name).text(words);
       });
     });
+
+    function buscarEmailOrientador(input, trabalhoId) {
+      var emailBuscado = input.value;
+      var inputName = document.getElementById('nomeOrientador_' + trabalhoId);
+
+      if (emailBuscado !== "" && emailBuscado.indexOf('@') !== -1 && emailBuscado.indexOf('.') !== -1) {
+          $.ajax({
+              type: 'GET',
+              url: '{{ route("search.user") }}',
+              data: { email: emailBuscado },
+              dataType: 'json',
+              success: function(res) {
+                  if (res.user[0] != null) {
+                      inputName.value = res.user[0]['name'];
+                  }
+              }
+          });
+      }
+  }
 
 
     function mover(div, direcao, id, event) {
