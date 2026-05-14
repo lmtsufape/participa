@@ -14,12 +14,13 @@ class FormEvento extends Model
     protected $fillable = [
         'etiquetanomeevento', 'etiquetatipoevento', 'etiquetadescricaoevento', 'etiquetadatas',
         'etiquetasubmissoes', 'etiquetabaixarregra', 'etiquetabaixartemplate', 'etiquetaenderecoevento', 'etiquetamoduloinscricao', 'etiquetamoduloprogramacao', 'etiquetamoduloorganizacao',
-        'modinscricao', 'modprogramacao', 'modorganizacao', 'modsubmissao', 'eventoId',
+        'modinscricao', 'modinscricaopcd', 'modprogramacao', 'modorganizacao', 'modsubmissao', 'eventoId',
         'etiquetaarquivo', 'etiquetabaixarinstrucoes',
     ];
 
     protected $casts = [
         'modinscricao' => 'boolean',
+        'modinscricaopcd' => 'boolean',
         'modvalidarinscricao' => 'boolean',
         'modprogramacao' => 'boolean',
         'modorganizacao' => 'boolean',

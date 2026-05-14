@@ -23,6 +23,12 @@ class EventoModules
                         'label' => 'Validar inscrição',
                         'help' => 'Ative quando as inscrições precisam de aprovação ou integração de pagamento antes da confirmação.',
                     ],
+                    [
+                        'field' => 'modinscricaopcd',
+                        'storage' => 'form_evento',
+                        'label' => 'Permitir solicitação de inscrição PCD',
+                        'help' => 'Exibe o botão público de solicitação PCD e libera a área de análise para a coordenação.',
+                    ],
                 ],
             ],
             [
