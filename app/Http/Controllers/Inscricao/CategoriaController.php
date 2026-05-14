@@ -55,6 +55,7 @@ class CategoriaController extends Controller
         $categoria->permite_submissao = $request->boolean('permite_submissao');
         $categoria->permite_inscricao = $request->boolean('permite_inscricao');
         $categoria->limite_inscricao = $request->input('limite_inscricao');
+        $categoria->porcentagem_desconto_associado = $request->has('confirma_desconto') ? $request->porcentagem_desconto_associado : null;
         $categoria->save();
         $categoria->camposNecessarios()->attach($evento->camposFormulario);
 
@@ -155,6 +156,13 @@ class CategoriaController extends Controller
         $categoria->limite_inscricao = $request->input("limite_inscricao_{$categoria->id}");
         $categoria->permite_submissao = $request->boolean('permite_submissao_' . $categoria->id);
         $categoria->permite_inscricao = $request->boolean('permite_inscricao_' . $categoria->id);
+        $categoria->porcentagem_desconto_associado = $request->has("confirma_desconto_{$categoria->id}") ? $request->input("porcentagem_desconto_associado_{$categoria->id}") : null;
+        if ($request->has('confirma_desconto_' . $categoria->id)) {
+            $categoria->porcentagem_desconto_associado = $request->input('porcentagem_desconto_associado_' . $categoria->id);
+        } else {
+            $categoria->porcentagem_desconto_associado = null;
+        }
+        
         $categoria->update();
 
         if ($request->input('tipo_valor_' . $categoria->id) != null) {
