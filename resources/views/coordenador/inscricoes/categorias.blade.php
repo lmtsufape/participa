@@ -116,6 +116,19 @@
                                                                 @enderror
                                                             </div>
                                                         </div>
+                                                        <div class="form-group mt-3" x-data="{ temDesconto: false }">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="confirma_desconto" id="confirma_desconto" x-model="temDesconto">
+                                                                <label class="form-check-label fw-bold" for="confirma_desconto">
+                                                                    Oferecer desconto para Associados?
+                                                                </label>
+                                                            </div>
+                                                            <div x-show="temDesconto" class="mt-2" style="margin-left: 1.5rem;">
+                                                                <label for="porcentagem_desconto_associado">Porcentagem do Desconto (%)</label>
+                                                                {{-- Nome simples, sem ID --}}
+                                                                <input type="number" step="0.1" name="porcentagem_desconto_associado" class="form-control col-md-4" placeholder="Ex: 50">
+                                                            </div>
+                                                        </div>
                                                         </p>
                                                     </form>
                                                 </div>
@@ -337,6 +350,28 @@
                                    name="permite_inscricao_{{ $categoria->id }}"
                                 @checked(old('permite_inscricao_'.$categoria->id, $categoria->permite_inscricao))>
                             <label class="form-check-label">Permitir inscrição</label>
+                        </div>
+                        <div class="form-group mt-3" x-data="{ temDesconto: {{ $categoria->porcentagem_desconto_associado > 0 ? 'true' : 'false' }} }">
+                            <div class="form-check">
+                                <input class="form-check-input" 
+                                    type="checkbox" 
+                                    name="confirma_desconto_{{ $categoria->id }}" 
+                                    id="confirma_desconto_{{ $categoria->id }}" 
+                                    x-model="temDesconto"
+                                    {{ $categoria->porcentagem_desconto_associado > 0 ? 'checked' : '' }}>
+                                
+                                <label class="form-check-label fw-bold" for="confirma_desconto_{{ $categoria->id }}">
+                                    Oferecer desconto para Associados?
+                                </label>
+                            </div>
+
+                            <div x-show="temDesconto" class="mt-2" style="margin-left: 1.5rem;">
+                                <label>Porcentagem do Desconto (%)</label>
+                                <input type="number" step="0.1" 
+                                    name="porcentagem_desconto_associado_{{ $categoria->id }}" 
+                                    class="form-control col-md-4" 
+                                    value="{{ $categoria->porcentagem_desconto_associado }}">
+                            </div>
                         </div>
                     </form>
                 </div>

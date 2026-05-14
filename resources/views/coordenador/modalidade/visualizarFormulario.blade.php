@@ -43,7 +43,7 @@
                         <a href="#" data-bs-toggle="modal" data-focus="false" data-bs-target="#modalEditarForm{{$form->id}}"><img src="{{asset('img/icons/edit-regular.svg')}}" style="width:20px"></a>
                     </td>
                     <td style="text-align:center">
-                        <a href="" data-bs-toggle="modal" data-bs-target="#modalExcluirForm{{$form->id}}"><img src="{{asset('img/icons/trash-alt-regular.svg')}}" class="icon-card" alt=""></a>
+                        <a href="" data-bs-toggle="modal" data-bs-target="#modalExcluirForm{{$form->id}}"><img src="{{asset('img/icons/trash-alt-regular.svg')}}" style="width:20px" class="icon-card" alt=""></a>
                     </td>
                 </tr>
             </tbody>

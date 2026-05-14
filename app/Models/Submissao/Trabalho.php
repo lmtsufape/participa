@@ -23,7 +23,7 @@ class Trabalho extends Model
         'campoextra1simples', 'campoextra2simples', 'campoextra3simples', 'campoextra4simples',
         'campoextra5simples', 'campoextra1grande', 'campoextra2grande', 'campoextra3grande',
         'campoextra4grande', 'campoextra5grande', 'status', 'aprovado', 'permite_correcao', 'hash_codigo_aprovacao',
-        'aprovacao_emitida_em', 'justificativa_correcao'
+        'aprovacao_emitida_em', 'justificativa_correcao', 'orientador_id'
     ];
 
     public function recurso()
@@ -143,5 +143,10 @@ class Trabalho extends Model
         return $this->atribuicoes->map(function ($revisor) {
             return $this->avaliado($revisor->user);
         })->filter()->count();
+    }
+
+    public function orientador()
+    {
+        return $this->belongsTo('App\Models\Users\User', 'orientador_id');
     }
 }

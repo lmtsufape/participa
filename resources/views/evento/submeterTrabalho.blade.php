@@ -1033,6 +1033,25 @@
                                                             </div>
                                                         </template>
                                                     </div>
+                                                    <!-- Área do Orientador -->
+                                                    <div class="card card-body mt-3">
+                                                        <div class="row">
+                                                            <div class="col-sm-12">
+                                                                <label class="fw-bold">Orientador(a) do Trabalho</label>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <label for="emailOrientador">E-mail</label>
+                                                                <input type="email" name="emailOrientador" id="emailOrientador" class="form-control" 
+                                                                    placeholder="E-mail do orientador" 
+                                                                    x-on:focusout="checarOrientador()" required>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <label for="nomeOrientador">Nome Completo</label>
+                                                                <input type="text" name="nomeOrientador" id="nomeOrientador" class="form-control" 
+                                                                    placeholder="Nome do orientador" required>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             @endif
                                         @endforeach
@@ -1187,6 +1206,22 @@
                         }
                     },
                     error: function (err) {
+                    }
+                });
+            }
+        }
+
+        function checarOrientador() {
+            let email = $('#emailOrientador').val();
+            if (email !== "" && email.includes('@') && email.includes('.')) {
+                $.ajax({
+                    type: 'GET',
+                    url: '{{ route("search.user") }}',
+                    data: { email: email },
+                    success: function (res) {
+                        if (res.user[0] != null) {
+                            $('#nomeOrientador').val(res.user[0]['name']);
+                        }
                     }
                 });
             }

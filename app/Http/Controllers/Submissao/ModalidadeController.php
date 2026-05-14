@@ -60,6 +60,8 @@ class ModalidadeController extends Controller
         $modalidade->evento_id = $request->eventoId;
         $modalidade->apresentacao = $request->apresentacao ? true : false;
         $modalidade->numMaxCoautores = $request->numMaxCoautores;
+        $modalidade->exclusividade_autoria = $request->has('exclusividade_autoria');
+        $modalidade->numMaxTrabalhos = $request->numMaxTrabalhos;
         $modalidade->save();
 
         if ($request->has('nomeDataExtra')) {
@@ -382,6 +384,9 @@ class ModalidadeController extends Controller
         $modalidadeEdit->caracteres = $caracteres;
         $modalidadeEdit->palavras = $palavras;
         $modalidadeEdit->apresentacao = $request->apresentacao ? true : false;
+
+        $modalidadeEdit->exclusividade_autoria = $request->has('exclusividade_autoria' . $request->modalidadeEditId);
+        $modalidadeEdit->numMaxTrabalhos = $request->input('numMaxTrabalhos' . $request->modalidadeEditId);
 
         $modalidadeEdit->avaliacaoDuranteSubmissao = $request->has('avaliacaoDuranteSubmissao');
         $modalidadeEdit->submissaoUnica = $request->has('submissaoUnica');

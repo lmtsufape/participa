@@ -316,11 +316,18 @@ class InscricaoController extends Controller
             return $this->cadastrarInscricaoRetornarProEvento($evento, $request, $categoria);
         }
 
-        $valorDaInscricao = $request->valorTotal;
+        $valorDaInscricao = $categoria->valor_total;
         $promocao = null;
         $atividades = null;
         $valorComDesconto = null;
         $cupom = null;
+
+        if (auth()->user()->ehAssociado() && $categoria->porcentagem_desconto_associado > 0) {
+            $desconto = ($valorDaInscricao * $categoria->porcentagem_desconto_associado) / 100;
+            $valorDaInscricao = $valorDaInscricao - $desconto;
+            
+            $request->merge(['valorTotal' => $valorDaInscricao]);
+        }
 
         if ($request->revisandoInscricao != null) {
             $inscricao = Inscricao::find($request->revisandoInscricao);
@@ -450,6 +457,7 @@ class InscricaoController extends Controller
                 ->first();
             if ($inscricao != null) {
                 $inscricao->categoria_participante_id = $request->categoria;
+                $inscricao->apoio_infantil = $request->has('apoio_infantil');
                 $inscricao->save();
             }
         } else {
@@ -458,6 +466,7 @@ class InscricaoController extends Controller
             $inscricao->user_id = auth()->user()->id;
             $inscricao->evento_id = $request->evento_id;
             $inscricao->finalizada = false;
+            $inscricao->apoio_infantil = $request->has('apoio_infantil');
             $inscricao->save();
         }
 

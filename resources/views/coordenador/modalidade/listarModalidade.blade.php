@@ -1072,6 +1072,23 @@
                                         @endif
 
                                     </div>
+
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <label for="numMaxTrabalhos{{$modalidade->id}}" class="col-form-label fw-bold">Limite de submissões por modalidade (Autor)</label>
+                                            <input id="numMaxTrabalhos{{$modalidade->id}}" type="number" class="form-control" name="numMaxTrabalhos{{$modalidade->id}}" value="{{ old('numMaxTrabalhos'.$modalidade->id, $modalidade->numMaxTrabalhos) }}">
+                                        </div>
+                                    </div>
+
+                                    <!-- Campo Exclusividade -->
+                                    <div class="form-group mt-2">
+                                        <div class="form-check">
+                                            <input class="form-check-input" id="exclusividade_autoria{{$modalidade->id}}" type="checkbox" name="exclusividade_autoria{{$modalidade->id}}" value="1" @if($modalidade->exclusividade_autoria) checked @endif>
+                                            <label class="form-check-label fw-bold" for="exclusividade_autoria{{$modalidade->id}}">
+                                                Restrição de Exclusividade (Autor não pode ser coautor e vice-versa)
+                                            </label>
+                                        </div>
+                                    </div>
                                     <div class="row justify-content-center">
                                         <div class="col-md-12">
                                             <button type="submit" class="btn btn-primary" style="width:100%">
