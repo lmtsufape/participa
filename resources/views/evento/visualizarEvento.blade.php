@@ -150,22 +150,52 @@
                             @endif
                         </button>
                         <button class="btn btn-my-success w-60 rounded btn-lg"
-                                @if (!$encerrada && !($isInscrito && isset($inscricao) && $inscricao->finalizada))
-                                    data-bs-toggle="modal" data-bs-target="#modalInscricaoEstudante"
+                            {{-- Abre o modal de escolha apenas se nenhuma das solicitações estiver aprovada ou pendente --}}
+                            @if (!$encerrada && !($isInscrito && isset($inscricao) && $inscricao->finalizada))
+                                @if (
+                                    (isset($solicitacaoEstudante) && ($solicitacaoEstudante->status == 'aprovado' || $solicitacaoEstudante->status == 'pendente')) ||
+                                    (isset($solicitacaoMovimentoSocial) && ($solicitacaoMovimentoSocial->status == 'aprovado' || $solicitacaoMovimentoSocial->status == 'pendente'))
+                                )
+                                    {{-- Não abre o modal se já tiver processo ativo/concluído --}}
+                                @else
+                                    data-bs-toggle="modal" data-bs-target="#modalEscolhaComprovante"
                                 @endif
-                                @if ($encerrada || ($isInscrito && isset($inscricao) && $inscricao->finalizada))
-                                    style="display: none;"
-                                @endif
-                                @if (isset($solicitacaoEstudante) && $solicitacaoEstudante->status == 'rejeitado' || isset($solicitacaoEstudante) && $solicitacaoEstudante->status == 'aprovado')
-                                    disabled
+                            @endif
+
+                            {{-- Esconde o botão se as inscrições gerais fecharam ou se a inscrição definitiva já foi paga --}}
+                            @if ($encerrada || ($isInscrito && isset($inscricao) && $inscricao->finalizada))
+                                style="display: none;"
+                            @endif
+
+                            {{-- Desabilita o botão se qualquer uma das solicitações foi aprovada, rejeitada ou está pendente --}}
+                            @if (
+                                (isset($solicitacaoEstudante) && ($solicitacaoEstudante->status == 'rejeitado' || $solicitacaoEstudante->status == 'aprovado' || $solicitacaoEstudante->status == 'pendente')) ||
+                                (isset($solicitacaoMovimentoSocial) && ($solicitacaoMovimentoSocial->status == 'rejeitado' || $solicitacaoMovimentoSocial->status == 'aprovado' || $solicitacaoMovimentoSocial->status == 'pendente'))
+                            )
+                                disabled
                             @endif
                         >
-                            @if (isset($solicitacaoEstudante) && $solicitacaoEstudante->status == 'rejeitado')
-                                {{ __('Inscrição de estudante rejeitada') }}
+                            {{-- PRIORIDADE 1: Se qualquer um estiver APROVADO --}}
+                            @if (isset($solicitacaoEstudante) && $solicitacaoEstudante->status == 'aprovado')
+                                {{ __('Comprovação de estudante aprovada') }}
+                            @elseif (isset($solicitacaoMovimentoSocial) && $solicitacaoMovimentoSocial->status == 'aprovado')
+                                {{ __('Comprovação de movimento social aprovada') }}
+
+                            {{-- PRIORIDADE 2: Se algum estiver PENDENTE --}}
                             @elseif (isset($solicitacaoEstudante) && $solicitacaoEstudante->status == 'pendente')
                                 {{ __('Inscrição de estudante em análise') }}
+                            @elseif (isset($solicitacaoMovimentoSocial) && $solicitacaoMovimentoSocial->status == 'pendente')
+                                {{ __('Inscrição de movimento social em análise') }}
+
+                            {{-- PRIORIDADE 3: Se algum foi REJEITADO --}}
+                            @elseif (isset($solicitacaoEstudante) && $solicitacaoEstudante->status == 'rejeitado')
+                                {{ __('Inscrição de estudante rejeitada') }}
+                            @elseif (isset($solicitacaoMovimentoSocial) && $solicitacaoMovimentoSocial->status == 'rejeitado')
+                                {{ __('Inscrição de movimento social rejeitada') }}
+
+                            {{-- ESTADO PADRÃO --}}
                             @else
-                                {{ __('Inscrição de estudante') }}
+                                {{ __('Inscrição com Comprovação Especial') }}
                             @endif
                         </button>
                     </div>
@@ -866,7 +896,7 @@
         </div>
 
         {{-- Modais --}}
-        @include('evento.modal-inscricao-estudante')
+        @include('evento.modal-escolha-comprovante')
         @include('evento.modal-alterar-categoria')
         @include('evento.modal-submeter-trabalho')
         @include('evento.modal-confirm-inscricao')

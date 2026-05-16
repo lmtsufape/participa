@@ -54,6 +54,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\PreRegistroController;
+use App\Http\Controllers\Inscricao\InscricaoMovimentoSocialController;
 
 
 
@@ -179,12 +180,18 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
         Route::get('/home/coord', [CoordEventoController::class, 'index'])->name('coord.index');
         Route::get('/home/coord/eventos', [CoordEventoController::class, 'listaEventos'])->name('coord.eventos');
         Route::post('/evento/{evento}/inscricao-estudante', [InscricaoEstudanteController::class, 'store'])->name('inscricao.estudante.store');
+        Route::post('/evento/{evento}/inscricao-movimento-social', [InscricaoMovimentoSocialController::class, 'store'])->name('inscricao.movimentosocial.store');
         // Rotas para o coordenador gerir as solicitações
         Route::prefix('/coord/evento/')->name('coord.')->group(function () {
             Route::get('inscricoes-estudantes', [InscricaoEstudanteController::class, 'listar'])->name('inscricoes.estudantes.listar');
             Route::post('/inscricao-estudante/{solicitacao}/aprovar', [InscricaoEstudanteController::class, 'aprovar'])->name('inscricao.estudantes.aprovar');
             Route::post('/inscricao-estudante/{solicitacao}/rejeitar', [InscricaoEstudanteController::class, 'rejeitar'])->name('inscricao.estudantes.rejeitar');
             Route::get('/inscricao-estudante/{solicitacao}/download', [InscricaoEstudanteController::class, 'downloadComprovante'])->name('inscricao.estudantes.download');
+            
+            Route::get('inscricoes-movimentos-sociais', [InscricaoMovimentoSocialController::class, 'listar'])->name('inscricao.movimentosocial.listar');
+            Route::post('/inscricao-movimento-social/{solicitacao}/aprovar', [InscricaoMovimentoSocialController::class, 'aprovar'])->name('inscricao.movimentosocial.aprovar');
+            Route::post('/inscricao-movimento-social/{solicitacao}/rejeitar', [InscricaoMovimentoSocialController::class, 'rejeitar'])->name('inscricao.movimentosocial.rejeitar');
+            Route::get('/inscricao-movimento-social/{solicitacao}/download', [InscricaoMovimentoSocialController::class, 'downloadComprovante'])->name('inscricao.movimentosocial.download');
         });
         //Coautor
         Route::get('coautor/index', [CoautorController::class, 'index'])->name('coautor.index');

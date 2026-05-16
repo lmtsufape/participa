@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
 
@@ -37,7 +36,7 @@
                         style="padding: 40px 20px 20px 20px; border-radius: 4px 4px 0px 0px; color: #ffffff; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 48px; font-weight: 400; letter-spacing: 4px; line-height: 48px;">
                         <img src="{{ $message->embed(public_path('img/LOGO-RODAPE.png')) }}" width="125"
                              height="120" style="display: block; border: 0px;" />
-                        <h5 class="small" style="font-weight: 400; margin: 2;">Solicitação como Estudante Rejeitada</h1>
+                        <h5 class="small" style="font-weight: 400; margin: 2;">Solicitação como Movimento Social Aprovada</h1>
                     </td>
                 </tr>
             </table>
@@ -54,11 +53,18 @@
 
                             <br> <br>
 
-                            Infelizmente, sua solicitação foi rejeitada pela coordenação do evento.
-                            <br> <br>
-                            Caso acredite que isso seja um erro ou queira mais informações, por favor, entre em contato com a organização do evento.
-                            <br> <br>
-                            Atenciosamente,<br>
+                            Informamos que a sua solicitação como movimento social foi <strong>aprovada</strong> pela coordenação do evento.
+
+                            <br><br>
+
+                            <strong>Próximos Passos:</strong><br>
+                            Recomendamos que você:<br>
+                            1. Realize sua inscrição clicando no botão do evento "Realize aqui Sua inscrição!", e escolha a categoria Movimento Social.<br>
+                            2. Ou entre em contato com a equipe de suporte para tirar dúvidas.<br>
+
+                            <br><br>
+
+                            Abraços,<br>
                             Plataforma de inscrições e submissões de trabalhos<br>
                             Participa (UFAPE/LMTS)<br>
                             Pré-colóquio Centro Paulo Freire
