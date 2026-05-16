@@ -346,6 +346,13 @@
                                 <span>{{ __('Inscritos Estudantes') }}</span>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link d-flex align-items-center gap-2"
+                            href="{{ route('coord.inscricao.movimentosocial.listar', ['eventoId' => $evento->id]) }}">
+                                <img src="{{ asset('img/icons/list.svg') }}" alt="" width="20px">
+                                <span>{{ __('Inscritos Movimento Social') }}</span>
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </li>

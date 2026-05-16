@@ -15,6 +15,7 @@ use App\Mail\EventoCriado;
 use App\Models\CandidatoAvaliador;
 use App\Models\Inscricao\Inscricao;
 use App\Models\Inscricao\InscricaoEstudante;
+use App\Models\Inscricao\InscricaoMovimentoSocial;
 use App\Models\Submissao\Area;
 use App\Models\Submissao\AreaModalidade;
 use App\Models\Submissao\Atividade;
@@ -2065,6 +2066,7 @@ class EventoController extends Controller
             return $agora->between($inicio, $fim);
         });
         $solicitacaoEstudante = InscricaoEstudante::where('user_id', auth()->id())->where('evento_id', $evento->id)->first();
+        $solicitacaoMovimentoSocial = InscricaoMovimentoSocial::where('user_id', auth()->id())->where('evento_id', $evento->id)->first();
         $enderecoMap  = urlencode($evento->endereco->getEnderecoFormatado());
         $encerrada = $evento->eventoInscricoesEncerradas();
         $datas = DB::table('atividades')
@@ -2137,7 +2139,7 @@ class EventoController extends Controller
             // dd($evento->categoriasParticipantes()->where('permite_inscricao', true)->get());
             // dd($etiquetas);
 
-            return view('evento.visualizarEvento', compact('evento', 'hasFile', 'mytime', 'etiquetas', 'modalidades', 'formSubTraba', 'atividades', 'atividadesAgrupadas', 'dataInicial', 'datas', 'isInscrito', 'inscricao', 'subeventos', 'encerrada', 'links', 'areas', 'dataInicio','dataFim', 'jaCandidatou', 'InscritoSemCategoria', 'enderecoMap', 'periodoSubmissao', 'solicitacaoEstudante'));
+            return view('evento.visualizarEvento', compact('evento', 'hasFile', 'mytime', 'etiquetas', 'modalidades', 'formSubTraba', 'atividades', 'atividadesAgrupadas', 'dataInicial', 'datas', 'isInscrito', 'inscricao', 'subeventos', 'encerrada', 'links', 'areas', 'dataInicio','dataFim', 'jaCandidatou', 'InscritoSemCategoria', 'enderecoMap', 'periodoSubmissao', 'solicitacaoEstudante', 'solicitacaoMovimentoSocial'));
         } else {
             $subeventos = Evento::where('deletado', false)->where('publicado', true)->where('evento_pai_id', $id)->get();
             $hasTrabalho = false;
@@ -2160,7 +2162,7 @@ class EventoController extends Controller
             }
 
 
-            return view('evento.visualizarEvento', compact('evento', 'trabalhos', 'trabalhosCoautor', 'hasTrabalho', 'hasTrabalhoCoautor', 'hasFile', 'datas', 'mytime', 'etiquetas', 'formSubTraba', 'atividadesAgrupadas', 'atividades', 'dataInicial', 'modalidades', 'isInscrito', 'subeventos', 'encerrada', 'areas', 'dataInicio', 'dataFim', 'enderecoMap', 'periodoSubmissao', 'solicitacaoEstudante'));
+            return view('evento.visualizarEvento', compact('evento', 'trabalhos', 'trabalhosCoautor', 'hasTrabalho', 'hasTrabalhoCoautor', 'hasFile', 'datas', 'mytime', 'etiquetas', 'formSubTraba', 'atividadesAgrupadas', 'atividades', 'dataInicial', 'modalidades', 'isInscrito', 'subeventos', 'encerrada', 'areas', 'dataInicio', 'dataFim', 'enderecoMap', 'periodoSubmissao', 'solicitacaoEstudante', 'solicitacaoMovimentoSocial'));
         }
     }
 

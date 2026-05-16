@@ -1,5 +1,6 @@
 <?php
 
+
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
@@ -9,7 +10,7 @@ use Illuminate\Queue\SerializesModels;
 use App\Models\Users\User;
 use App\Models\Submissao\Evento;
 
-class SolicitacaoEstudanteAprovada extends Mailable
+class SolicitacaoMovimentoRejeitada extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -24,7 +25,7 @@ class SolicitacaoEstudanteAprovada extends Mailable
 
     public function build()
     {
-        return $this->subject('Atualização sobre sua solicitação de inscrição de estudante')
-            ->markdown('emails.emailEstudantesAprovada');
+        return $this->subject('Atualização sobre sua solicitação de inscrição de movimento social')
+            ->markdown('emails.email.movimentos.rejeitada');
     }
 }
