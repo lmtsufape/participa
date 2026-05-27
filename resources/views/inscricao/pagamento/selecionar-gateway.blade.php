@@ -11,7 +11,10 @@
                 <div class="card-body">
                     <div class="alert alert-info">
                         <strong>Evento:</strong> {{ $evento->nome }}<br>
-                        <strong>Valor:</strong> R$ {{ number_format($categoria->valor_total, 2, ',', '.') }}
+                        <strong>Valor:</strong> R$ {{ number_format($valorComDesconto, 2, ',', '.') }}
+                        @if($valorComDesconto < $categoria->valor_total)
+                            <span class="badge bg-success">Desconto Associado Ativo Aplicado</span>
+                        @endif
                     </div>
 
                     @if($isEstrangeiro)

@@ -25,13 +25,14 @@
     const user = @json($user);
     const inscricao = @json($inscricao);
     const evento = @json($evento);
+    const valorFinal = @json($valorFinal);
     const renderPaymentBrick = async (bricksBuilder) => {
         const settings = {
             initialization: {
                 /*
                     "amount" é a quantia total a pagar por todos os meios de pagamento com exceção da Conta Mercado Pago e Parcelas sem cartão de crédito, que têm seus valores de processamento determinados no backend através do "preferenceId"
                 */
-                amount: categoria.valor_total,
+                amount: valorFinal,
                 payer: {
                     firstName: user.name.split(' ').slice(0, -1).join(" "),
                     lastName: user.name.split(' ').pop(),

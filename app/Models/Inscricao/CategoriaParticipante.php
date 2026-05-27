@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class CategoriaParticipante extends Model
 {
     protected $fillable = [
-        'nome', 'valor_total', 'evento_id', 'descricao',
+        'nome', 'valor_total', 'evento_id', 'descricao','porcentagem_desconto_associado',
     ];
 
     protected $casts = [
@@ -37,5 +37,16 @@ class CategoriaParticipante extends Model
     public function inscricoes()
     {
         return $this->hasMany('App\Models\Inscricao\Inscricao', 'categoria_participante_id');
+    }
+
+    public function valorComDescontoDeAssociado()
+    {
+        $valorOriginal = $this->valor_total;
+        if (auth()->check() && auth()->user()->ehAssociado() && $this->porcentagem_desconto_associado > 0) {
+            $desconto = ($valorOriginal * $this->porcentagem_desconto_associado) / 100;
+            return $valorOriginal - $desconto;
+        }
+
+        return $valorOriginal;
     }
 }

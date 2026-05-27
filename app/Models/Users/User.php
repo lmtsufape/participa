@@ -257,4 +257,32 @@ class User extends Authenticatable
     {
         return $this->hasOne(PerfilIdentitario::class, 'userId', 'id');
     }
+
+    public function anuidades()
+    {
+        return $this->hasMany(\App\Models\Anuidade::class, 'user_id');
+    }
+
+    /**
+     * Retorna true se o usuário tiver uma anuidade aprovada e válida hoje.
+     */
+    public function ehAssociado()
+    {
+        return $this->anuidades()
+                    ->where('status', 'approved')
+                    ->where('validade', '>=', now())
+                    ->exists();
+    }
+
+    /**
+     * Retorna o registro da anuidade ativa, se existir.
+     */
+    public function anuidadeAtual()
+    {
+        return $this->anuidades()
+                    ->where('status', 'approved')
+                    ->where('validade', '>=', now())
+                    ->latest()
+                    ->first();
+    }
 }
