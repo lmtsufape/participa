@@ -97,25 +97,6 @@
 @endsection
 
 @section('content')
-    <div class="modal fade" id="infoModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="infoModalLabel">Aviso Importante</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
-                </div>
-                <div class="modal-body">
-                    Caro/a participante! <br><br>
-                    Os certificados de participação foram emitidos e estão sendo enviados. <br>
-                    Esclarecemos que não é necessário qualquer validação do certificado, bastando utilizá-lo como ele foi recebido. A validação serve para que terceiros, em bancas de concursos, processos seletivos, e similares, atestem que de fato esse certificado foi emitido pelo evento. <br>
-                    Quaisquer dúvidas, favor entrar em contato pelo e-mail: secretaria13cba@gmail.com 
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-                </div>
-            </div>
-        </div>
-    </div>
     @if($eventos_destaques->isNotEmpty())
         <div class="container d-flex flex-column pb-5">
             <div class="container d-flex align-items-center mb-3 position-relative">
@@ -215,16 +196,7 @@
         </div>
     @endif
 
-
-
-
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            var infoModal = new bootstrap.Modal(document.getElementById('infoModal'));
-            infoModal.show();
-        });
-    </script>
     <script>
         const slideCount = {{ $eventos_destaques->count() }};
         new Swiper('.mySwiper', {
