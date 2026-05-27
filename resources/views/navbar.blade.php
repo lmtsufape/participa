@@ -91,7 +91,13 @@
 
             <div class="collapse navbar-collapse justify-content-center" id="navCbee">
                 <ul class="navbar-nav align-items-center">
-                    
+                    <li class="nav-item">
+                        @if(Auth::user()->ehAssociado())
+                            <span class="nav-link fw-bold" style="color: white; margin-right: 10px;">
+                                <i class="bi bi-check-circle-fill"></i> Associado Ativo
+                            </span>
+                        @endif
+                    </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Sobre</a>
                         <ul class="dropdown-menu">

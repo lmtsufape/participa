@@ -75,8 +75,19 @@
                                                                             @endif
                                                                             <p>
                                                                             <strong>{{ __('Valor da Inscrição:') }}</strong>
-                                                                            @if($categoria->valor_total > 0)
-                                                                                R$ {{ number_format($categoria->valor_total, 2, ',', '.') }}
+                                                                            @php
+                                                                                $valorFinal = $categoria->valor_total;
+                                                                                if (auth()->check() && auth()->user()->ehAssociado() && $categoria->porcentagem_desconto_associado > 0) {
+                                                                                    $valorFinal = $valorFinal - ($valorFinal * ($categoria->porcentagem_desconto_associado / 100));
+                                                                                }
+                                                                            @endphp
+
+                                                                            @if($valorFinal > 0)
+                                                                                R$ {{ number_format($valorFinal, 2, ',', '.') }}
+                                                                                {{-- Adiciona um aviso visual do desconto --}}
+                                                                                @if($valorFinal < $categoria->valor_total)
+                                                                                    <br><span class="badge bg-success">Desconto de Associado Ativo aplicado!</span>
+                                                                                @endif
                                                                             @else
                                                                                 {{ __('Gratuita') }}
                                                                             @endif

@@ -37,6 +37,8 @@ class CheckoutController extends Controller
         $inscricao = $evento->inscricaos()->where('user_id', $user->id)->first();
         $categoria = $inscricao?->categoria;
 
+        $valorComDesconto = $categoria->valorComDescontoDeAssociado();
+
         if ($inscricao->pagamento != null) {
             return redirect()->route('checkout.statusPagamento', ['evento' => $evento->id]);
         }
@@ -49,7 +51,7 @@ class CheckoutController extends Controller
             return $this->processarGateway($evento, $request->gateway);
         }
 
-        return view('inscricao.pagamento.selecionar-gateway', compact('evento', 'inscricao', 'user', 'categoria', 'isEstrangeiro'));
+        return view('inscricao.pagamento.selecionar-gateway', compact('evento', 'inscricao', 'user', 'categoria', 'isEstrangeiro', 'valorComDesconto'));
     }
 
     private function processarGateway(Evento $evento, $gateway)
@@ -76,7 +78,9 @@ class CheckoutController extends Controller
             return redirect()->route('checkout.statusPagamento', ['evento' => $evento->id]);
         }
 
-        return view('inscricao.pagamento.brick', compact('evento', 'inscricao', 'user', 'categoria', 'key'));
+        $valorFinal = $categoria->valorComDescontoDeAssociado();
+
+        return view('inscricao.pagamento.brick', compact('evento', 'inscricao', 'user', 'categoria', 'key', 'valorFinal'));
     }
 
     public function telaPagamentoPayPal(Evento $evento)
@@ -95,7 +99,7 @@ class CheckoutController extends Controller
             // O PayPal aceita BRL, então vamos usar BRL diretamente
             // Se você quiser converter para USD, pode usar uma API de conversão aqui
             $currency = 'BRL'; // Usar BRL diretamente, já que o valor está em reais
-            $amount = (float) str_replace(',', '.', $categoria->valor_total);
+            $amount = (float) str_replace(',', '.', $categoria->valorComDescontoDeAssociado());
             
             Log::info('PayPal: Criando ordem de pagamento', [
                 'evento_id' => $evento->id,
@@ -200,13 +204,14 @@ class CheckoutController extends Controller
 
         $request_options = new RequestOptions();
         $request_options->setCustomHeaders(["X-Idempotency-Key: ".Str::uuid()]);
+        $valorEfetivo = $categoria->valorComDescontoDeAssociado();
 
         try {
             $payment = $client->create($request, $request_options);
             // $tipo_pagamento = TipoPagamento::where('descricao', $contents['payment_method_id'])->first();
             $descricao = 'Inscrição no evento '.$evento->nome.' com valor de '.$categoria->valor_total;
             $pagamento = Pagamento::create([
-                'valor' => (float) $categoria->valor_total,
+                'valor' => (float) $valorEfetivo,
                 // 'tipo_pagamento_id' => $tipo_pagamento->id,
                 'descricao' => $descricao,
                 'codigo' => $payment->id,

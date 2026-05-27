@@ -8,6 +8,7 @@ use App\Models\Submissao\Endereco;
 use App\Models\Submissao\Evento;
 use App\Models\Users\Administrador;
 use App\Models\Users\User;
+use App\Models\Anuidade;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
@@ -494,5 +495,91 @@ class AdministradorController extends Controller
         ];
 
         return $perfilData;
+    }
+
+    public function importarAssociadosForm()
+    {
+        $this->authorize('isAdmin', Administrador::class);
+        return view('administrador.importar_associados');
+    }
+
+    public function importarAssociados(Request $request)
+    {
+        $this->authorize('isAdmin', Administrador::class);
+
+        $request->validate([
+            'planilha' => 'required|file|mimes:csv,txt'
+        ]);
+
+        $file = $request->file('planilha');
+        $path = $file->getRealPath();
+        
+        $sucesso = [];
+        $naoEncontrados = [];
+
+        if (($handle = fopen($path, "r")) !== FALSE) {
+            // 1ª Linha: Título descritivo geral
+            fgetcsv($handle, 1000, ",");
+            
+            // 2ª Linha: Cabeçalhos (,NOME,CPF,,Valor,Anuidades,Recibo)
+            fgetcsv($handle, 1000, ",");
+
+            // Processa as linhas de dados dos sócios
+            while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
+                // Se a linha não tiver nome ou CPF preenchidos, pula
+                if (!isset($data[1]) || !isset($data[2]) || empty(trim($data[1]))) {
+                    continue;
+                }
+
+                $nomePlanilha = trim($data[1]);
+                
+                // Remove qualquer caractere que não seja número do valor da planilha
+                $cpfPlanilhaLimpo = preg_replace('/[^0-9]/', '', $data[2]); 
+
+                if (empty($cpfPlanilhaLimpo)) {
+                    continue;
+                }
+
+                // Garante que o CPF vindo da planilha tenha 11 dígitos preenchendo com zeros à esquerda
+                $cpfPlanilhaFormatado = str_pad($cpfPlanilhaLimpo, 11, '0', STR_PAD_LEFT);
+
+                // BUSCA AVANÇADA: Compara o CPF limpo da planilha com o CPF do banco removendo pontos e traços na query
+                $user = User::where(function($query) use ($cpfPlanilhaFormatado, $data) {
+                    $query->whereRaw("REGEXP_REPLACE(cpf, '[^0-9]', '', 'g') = ?", [$cpfPlanilhaFormatado])
+                          ->orWhere('cpf', trim($data[2])); // Mantém por segurança caso a string seja idêntica
+                })->first();
+
+                if ($user) {
+                    // Garante que não vai duplicar se o usuário já possuir anuidade ativa
+                    if (!$user->ehAssociado()) {
+                        Anuidade::create([
+                            'user_id' => $user->id,
+                            'pagamento_id' => 'IMPORT_ADMIN_' . uniqid(),
+                            'tipo' => 'profissional',
+                            'ano_referencia' => date('Y'),
+                            'validade' => now()->addYear(),
+                            'status' => 'approved',
+                        ]);
+                    }
+                    $sucesso[] = [
+                        'name' => $user->name,
+                        'cpf' => $user->cpf
+                    ];
+                } else {
+                    // Se mesmo limpando os dois lados não achar, vai para a lista de não cadastrados
+                    $naoEncontrados[] = [
+                        'name' => $nomePlanilha,
+                        'cpf' => $data[2]
+                    ];
+                }
+            }
+            fclose($handle);
+        }
+
+        return redirect()->back()->with([
+            'success_import' => 'Processamento da planilha concluído com sucesso!',
+            'associados_adicionados' => $sucesso,
+            'associados_nao_encontrados' => $naoEncontrados
+        ]);
     }
 }

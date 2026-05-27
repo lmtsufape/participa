@@ -173,6 +173,9 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
             Route::view('/relatorio-inscricoes', 'administrador.confirmar_status_inscricao')->name('relatorio.form');
 
             Route::post('/relatorio-inscricoes', [InscricaoController::class, 'processarRelatorioInscricoesJSON'])->name('relatorio.processar');
+
+            Route::get('/importar-associados', [AdministradorController::class, 'importarAssociadosForm'])->name('associados.form');
+            Route::post('/importar-associados', [AdministradorController::class, 'importarAssociados'])->name('associados.importar');
         });
         // rotas da Comissao Cientifica
         Route::get('comissao', [MembroComissaoController::class, 'index'])->name('home.membro');
