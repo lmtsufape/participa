@@ -99,14 +99,17 @@
 @section('content')
     @if($eventos_destaques->isNotEmpty())
         <div class="container d-flex flex-column pb-5">
-            <div class="container d-flex align-items-center mb-3 position-relative">
-                <h2 class="text-my-primary position-absolute start-50 translate-middle-x" style="white-space: nowrap;">
-                    {{ __('Eventos com inscrições abertas ou em realização') }}
-                </h2>
-                <a href="{{ route('eventos.proximos') }}"
-                class="btn btn-my-outline-primary rounded-5 ms-auto">
-                    {{ __('Ver todos') }}
-                </a>
+            <div class="container mb-3">
+                <div class="d-flex flex-column flex-md-row align-items-center justify-content-between gap-3 position-relative">
+                    <h2 class="text-my-primary text-center m-0 flex-fill">
+                        {{ __('Eventos com inscrições abertas ou em realização') }}
+                    </h2>
+
+                    <a href="{{ route('eventos.proximos') }}"
+                        class="btn btn-my-outline-primary rounded-5">
+                        {{ __('Ver todos') }}
+                    </a>
+                </div>
             </div>
 
             <!-- Swiper -->
