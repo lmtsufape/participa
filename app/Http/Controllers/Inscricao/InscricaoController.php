@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Users\User;
 use App\Models\Users\Administrador;
+use App\Support\RegistrationFormFields;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Jobs\ProcessarInscricaoAutomaticaJob;
 use Illuminate\Support\Facades\Cache;
@@ -101,8 +102,11 @@ class InscricaoController extends Controller
     public function formulario(Evento $evento)
     {
         $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
-        $campos = $evento->camposFormulario;
-        return view('coordenador.inscricoes.formulario', compact('evento', 'campos'));
+        $campos = $evento->camposFormulario()->with(['categorias', 'opcoes'])->withCount('inscricoesFeitas')->get();
+        $categorias = $evento->categoriasParticipantes()->orderBy('created_at')->get();
+        $fieldTypes = RegistrationFormFields::types();
+
+        return view('coordenador.inscricoes.formulario', compact('evento', 'campos', 'categorias', 'fieldTypes'));
     }
 
     public function categorias(Evento $evento)

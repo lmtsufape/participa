@@ -11,6 +11,10 @@ class CampoFormulario extends Model
         'titulo', 'tipo', 'obrigatorio', 'evento_id',
     ];
 
+    protected $casts = [
+        'obrigatorio' => 'boolean',
+    ];
+
     public function evento()
     {
         return $this->belongsTo('App\Models\Submissao\Evento', 'evento_id');

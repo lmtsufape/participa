@@ -52,6 +52,7 @@
                     </div>
                 </div>
             </div>
+            @if ($evento->inscricaoPCDHabilitada())
             <div class="row justify-content-center">
               <div class="col-sm-12">
                   <div class="card">
@@ -84,6 +85,7 @@
                   </div>
               </div>
             </div>
+            @endif
             @endcan
             <div class="row justify-content-center">
               <div class="col-sm-12">
