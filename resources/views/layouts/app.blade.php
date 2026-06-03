@@ -91,7 +91,7 @@
                     @include('components.sidebar', ['evento' => $evento])
 
                 </div>
-                <div class="col-md-9 my-5">
+                <div class="col-md-9 mt-3 mb-5">
                     @include('componentes.mensagens')
 
                     @yield('content')

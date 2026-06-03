@@ -116,69 +116,73 @@
             <div class="swiper mySwiper">
                 <div class="swiper-wrapper">
                     @foreach ($eventos_destaques->take(5) as $evento)
-                    <a href="{{ route('evento.visualizar', ['id' => $evento->id]) }}">
-                        <div class="swiper-slide">
-                            <img src="{{ Storage::url($evento->fotoEvento) }}" alt="Foto do evento">
-                            <div class="carousel-caption">
-                                <a href="{{ route('evento.visualizar', ['id' => $evento->id]) }}">
-                                    <h1 class="text-start mb-4">{{ __('13º Congresso Brasileiro de Agroecologia: inscrições e submissões de trabalhos') }}</h1>
-                                </a>
-                                <div class="caption-row">
-                                    <p class="info mb-2">
+                        <a href="{{ route('evento.visualizar', ['id' => $evento->id]) }}">
+                            <div class="swiper-slide">
+                                <img
+                                    src="{{ $evento->fotoEvento ? Storage::url($evento->fotoEvento) : asset('img/evento-placeholder.jpg') }}"
+                                    alt="Foto do evento"
+                                    onerror="this.onerror=null; this.src='{{ asset('img/banner.png') }}';"
+                                >
+                                <div class="carousel-caption">
+                                    <a href="{{ route('evento.visualizar', ['id' => $evento->id]) }}">
+                                        <h1 class="text-start mb-4">{{ __($evento->nome) }}</h1>
+                                    </a>
+                                    <div class="caption-row">
+                                        <p class="info mb-2">
 
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                            fill="currentColor" class="bi bi-calendar-event"
-                                            viewBox="0 0 16 16">
-                                            <path d="M11 6.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5z"/>
-                                            <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0
-                                                    1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0
-                                                    1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5
-                                                    0 0 1 .5-.5M1 4v10a1 1 0 0
-                                                    0 1 1h12a1 1 0 0 0 1-1V4z"/>
-                                        </svg>
-                                         <?php
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                fill="currentColor" class="bi bi-calendar-event"
+                                                viewBox="0 0 16 16">
+                                                <path d="M11 6.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5z"/>
+                                                <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0
+                                                        1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0
+                                                        1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5
+                                                        0 0 1 .5-.5M1 4v10a1 1 0 0
+                                                        0 1 1h12a1 1 0 0 0 1-1V4z"/>
+                                            </svg>
+                                            <?php
 
 
-                                            $dataInicio = \Carbon\Carbon::parse($evento->dataInicio);
-                                            $dataFim = \Carbon\Carbon::parse($evento->dataFim);
+                                                $dataInicio = \Carbon\Carbon::parse($evento->dataInicio);
+                                                $dataFim = \Carbon\Carbon::parse($evento->dataFim);
 
-                                            $idioma = Session::get('idiomaAtual', 'pt');
-                                            $mesIgual = $dataInicio->isSameMonth($dataFim);
-                                            switch ($idioma) {
-                                                case 'en':
-                                                    $suffixo      = 'to';
-                                                    $startFormat = 'd F';
-                                                    $endFormat   = 'd F Y';
-                                                    break;
-                                                case 'es':
-                                                    $suffixo     = 'hasta';
-                                                    $startFormat = 'd \\d\\e F';
-                                                    $endFormat   = 'd \\d\\e F \\d\\e Y';
-                                                    break;
-                                                default:
-                                                    $suffixo = 'a';
-                                                    if ($mesIgual) {
-                                                        $startFormat = 'd';
-                                                        $endFormat   = 'd \\d\\e F \\d\\e Y';
-                                                    } else {
+                                                $idioma = Session::get('idiomaAtual', 'pt');
+                                                $mesIgual = $dataInicio->isSameMonth($dataFim);
+                                                switch ($idioma) {
+                                                    case 'en':
+                                                        $suffixo      = 'to';
+                                                        $startFormat = 'd F';
+                                                        $endFormat   = 'd F Y';
+                                                        break;
+                                                    case 'es':
+                                                        $suffixo     = 'hasta';
                                                         $startFormat = 'd \\d\\e F';
                                                         $endFormat   = 'd \\d\\e F \\d\\e Y';
-                                                    }
-                                                    break;
-                                            }
-                                        ?>
-                                        {{ $dataInicio->translatedFormat($startFormat) }}
-                                        {{ $suffixo }}
-                                        {{ $dataFim->translatedFormat($endFormat) }}
-                                    </p>
-                                    <a href="{{ route('evento.visualizar', ['id' => $evento->id]) }}"
-                                    class="btn btn-outline-light rounded-3">
-                                        {{ __('Saiba mais') }}
-                                    </a>
+                                                        break;
+                                                    default:
+                                                        $suffixo = 'a';
+                                                        if ($mesIgual) {
+                                                            $startFormat = 'd';
+                                                            $endFormat   = 'd \\d\\e F \\d\\e Y';
+                                                        } else {
+                                                            $startFormat = 'd \\d\\e F';
+                                                            $endFormat   = 'd \\d\\e F \\d\\e Y';
+                                                        }
+                                                        break;
+                                                }
+                                            ?>
+                                            {{ $dataInicio->translatedFormat($startFormat) }}
+                                            {{ $suffixo }}
+                                            {{ $dataFim->translatedFormat($endFormat) }}
+                                        </p>
+                                        <a href="{{ route('evento.visualizar', ['id' => $evento->id]) }}"
+                                        class="btn btn-outline-light rounded-3">
+                                            {{ __('Saiba mais') }}
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </a>
+                        </a>
                     @endforeach
                 </div>
                 <!-- Navegação do Swiper -->
