@@ -102,7 +102,8 @@
                         @else
                             @php
                                 $solicitacaoPCD = null;
-                                if (auth()->check()) {
+                                $inscricaoPCDHabilitada = $evento->inscricaoPCDHabilitada();
+                                if ($inscricaoPCDHabilitada && auth()->check()) {
                                     $solicitacaoPCD = \App\Models\Inscricao\InscricaoPCD::where('user_id', auth()->id())->where('evento_id', $evento->id)->first();
                                 }
                             @endphp
@@ -126,6 +127,7 @@
                                     {{ __('Realize sua inscrição aqui!') }}
                                 @endif
                             </button>
+                            @if ($inscricaoPCDHabilitada)
                             <button class="btn btn-my-success w-60 rounded btn-lg"
                                 @if (!$encerrada && !($isInscrito && isset($inscricao) && $inscricao->finalizada))
                                     data-bs-toggle="modal" data-bs-target="#modalInscricaoPCD"
@@ -148,6 +150,7 @@
                                     {{ __('Solicitação como PCD') }}
                                 @endif
                             </button>
+                            @endif
                         @endif
                     </div>
                     <br>
@@ -919,7 +922,9 @@
         @include('evento.modal-submeter-trabalho')
         @include('evento.modal-confirm-inscricao')
         @include('evento.modal-inscricao-avaliador')
-        @include('evento.modal-inscricao-pcd')
+        @if ($evento->inscricaoPCDHabilitada())
+            @include('evento.modal-inscricao-pcd')
+        @endif
 
     </div>
 

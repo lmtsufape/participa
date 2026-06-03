@@ -30,6 +30,12 @@ class Evento extends Model
         'is_multilingual', 'instagram', 'contato_suporte'
     ];
 
+    protected $casts = [
+        'exibir_calendario_programacao' => 'boolean',
+        'exibir_pdf' => 'boolean',
+        'modarquivo' => 'boolean',
+    ];
+
     public function endereco()
     {
         return $this->belongsTo('App\Models\Submissao\Endereco', 'enderecoId');
@@ -174,10 +180,13 @@ class Evento extends Model
     }
     public function categoriasPermitidasParaUsuario()
     {
-        $solicitacaoPCD = InscricaoPCD::where('user_id', auth()->id())
-                                      ->where('evento_id', $this->id)
-                                      ->where('status', 'aprovado')
-                                      ->first();
+        $pcdHabilitado = $this->inscricaoPCDHabilitada();
+        $solicitacaoPCD = $pcdHabilitado
+            ? InscricaoPCD::where('user_id', auth()->id())
+                          ->where('evento_id', $this->id)
+                          ->where('status', 'aprovado')
+                          ->first()
+            : null;
         $isPCDAprovado = $solicitacaoPCD !== null;
         $svc = new AssociadoService();
         $userCpf = auth()->user()->cpf ?? '';
@@ -265,6 +274,15 @@ class Evento extends Model
     public function possuiFormularioDeInscricao()
     {
         return $this->camposFormulario()->count() > 0 && $this->categoriasParticipantes()->count() > 0;
+    }
+
+    public function inscricaoPCDHabilitada(): bool
+    {
+        if (!$this->relationLoaded('formEvento')) {
+            $this->load('formEvento');
+        }
+
+        return (bool) ($this->formEvento?->modinscricaopcd ?? true);
     }
 
     public function inscricaos()

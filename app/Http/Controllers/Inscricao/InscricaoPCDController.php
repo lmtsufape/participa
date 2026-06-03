@@ -16,6 +16,10 @@ class InscricaoPCDController extends Controller
 {
     public function store(Request $request, Evento $evento)
     {
+        if (!$evento->inscricaoPCDHabilitada()) {
+            return redirect()->back()->with(['message' => 'A solicitação de inscrição PCD não está habilitada para este evento.', 'class' => 'danger']);
+        }
+
         $request->validate([
             'comprovante' => 'required|file|mimes:pdf,jpeg,jpg,png|max:5120', // 5MB
         ]);
@@ -39,8 +43,14 @@ class InscricaoPCDController extends Controller
 
     public function listar(Request $request)
     {
-        $evento = Evento::find($request->eventoId);
+        $evento = Evento::findOrFail($request->eventoId);
         $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
+
+        if (!$evento->inscricaoPCDHabilitada()) {
+            return redirect()
+                ->route('coord.detalhesEvento', ['eventoId' => $evento->id])
+                ->with(['message' => 'O módulo de inscrição PCD está desativado para este evento.', 'class' => 'warning']);
+        }
 
         $solicitacoes = InscricaoPCD::where('evento_id', $evento->id)->with('user')->orderBy('created_at', 'desc')->get();
 
@@ -51,6 +61,8 @@ class InscricaoPCDController extends Controller
     {
         $evento = $solicitacao->evento;
         $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
+
+        abort_unless($evento->inscricaoPCDHabilitada(), 404);
         
         $solicitacao->update(['status' => 'aprovado']);
 
@@ -63,6 +75,8 @@ class InscricaoPCDController extends Controller
     public function rejeitar(InscricaoPCD $solicitacao)
     {
         $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $solicitacao->evento);
+        abort_unless($solicitacao->evento->inscricaoPCDHabilitada(), 404);
+
         $solicitacao->update(['status' => 'rejeitado']);
         
         Mail::to($solicitacao->user->email)->send(new SolicitacaoPCDRejeitada($solicitacao->user, $solicitacao->evento));
@@ -73,6 +87,8 @@ class InscricaoPCDController extends Controller
     public function downloadComprovante(InscricaoPCD $solicitacao)
     {
         $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $solicitacao->evento);
+        abort_unless($solicitacao->evento->inscricaoPCDHabilitada(), 404);
+
         return Storage::download($solicitacao->comprovante_path);
     }
 }
