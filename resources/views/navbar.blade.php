@@ -119,6 +119,7 @@
                             <li><a class="dropdown-item" href="{{ route('associe-se', ['locale' => app()->getLocale()]) }}">Associe-se</a></li>
                             <li><a class="dropdown-item" href="{{ route('normas', ['locale' => app()->getLocale()]) }}">Normas</a></li>
                             <li><a class="dropdown-item" href="{{ route('premiacoes', ['locale' => app()->getLocale()]) }}">Premiações</a></li>
+                            <li><a class="dropdown-item" href="{{ route('programacao.mostra', ['locale' => app()->getLocale()]) }}">Mostra Audiovisual</a></li>
                         </ul>
                     </li>
 
@@ -127,7 +128,6 @@
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="{{ route('programacao.geral', ['locale' => app()->getLocale()]) }}">Programação Geral</a></li>
                             <li><a class="dropdown-item" href="{{ route('programacao.feira', ['locale' => app()->getLocale()]) }}">Feira da Agrobiodiversidade</a></li>
-                            <li><a class="dropdown-item" href="{{ route('programacao.mostra', ['locale' => app()->getLocale()]) }}">Mostra Audiovisual</a></li>
                         </ul>
                     </li>
 
