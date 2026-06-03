@@ -21,7 +21,7 @@ p{
     <div class="row">
         <section class="col-md-6 d-flex flex-column justify-content-center">
             <a class="navbar-brand" href="{{route('index')}}">
-                <img src="{{ asset('/img/logoatualizada.png') }}" alt="logo" width="60%">
+                <img src="{{ asset('/img/logo_sistema.png') }}" alt="logo" width="60%">
             </a>
         </section>
 
@@ -35,13 +35,6 @@ p{
                 </div>
                 <hr class="border-secondary">
 
-                {{-- Se houver mensagem de sucesso, mostra aqui (usado para redirecionamento) --}}
-                @if (session('success'))
-                    <div class="alert alert-success" role="alert">
-                        {{ session('success') }}
-                    </div>
-                @endif
-                
                 <div class="form-group">
                     <fieldset class="mb-3">
                         <div class="row">
@@ -82,17 +75,17 @@ p{
                     <div id="campos_hash" @if(old('tipo') == 'cpf_evento' || old('tipo') == 'nome') style="display:none;" @endif>
                         <label for="hash" class="form-label">{{ __('Hash de validação') }}</label>
                         <input id="hash" type="text" name="hash" class="form-control @error('hash') is-invalid @enderror" value="{{ old('hash') }}" @if(old('tipo') != 'cpf_evento' && old('tipo') != 'nome') required @else disabled @endif autofocus>
-                        
+
                         @error('hash')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
                             </span>
                         @enderror
                     </div>
-                    
+
                     {{-- NOVO: Campos de Busca por CPF e Evento --}}
                     <div id="campos_cpf_evento" @if(old('tipo', 'certificado') != 'cpf_evento') style="display:none;" @endif>
-                        
+
                         <div class="mb-3">
                             <label for="evento_id" class="form-label">{{ __('Selecione o Evento') }}</label>
                             <select id="evento_id" name="evento_id" class="form-control @error('evento_id') is-invalid @enderror @error('cpf_evento') is-invalid @enderror" @if(old('tipo') == 'cpf_evento') required @else disabled @endif>
@@ -101,7 +94,7 @@ p{
                                     <option value="{{ $evento->id }}" @if(old('evento_id') == $evento->id) selected @endif>{{ $evento->nome }}</option>
                                 @endforeach
                             </select>
-                            
+
                             @error('evento_id')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -112,7 +105,7 @@ p{
                         <div>
                             <label for="cpf" class="form-label">{{ __('Seu CPF') }}</label>
                             <input id="cpf" type="text" name="cpf" class="form-control @error('cpf') is-invalid @enderror @error('cpf_evento') is-invalid @enderror" value="{{ old('cpf') }}" @if(old('tipo') == 'cpf_evento') required @else disabled @endif placeholder="Ex: 000.000.000-00" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 11)">
-                            
+
                             @error('cpf')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -134,7 +127,7 @@ p{
                             <label for="nome" class="form-label">{{ __('Nome completo ou parte do nome') }}</label>
                             <input id="nome" type="text" name="nome" class="form-control @error('nome') is-invalid @enderror @error('nome_busca') is-invalid @enderror" value="{{ old('nome') }}" @if(old('tipo') == 'nome') required @else disabled @endif placeholder="Ex: João Silva">
                             <small class="form-text text-muted">Digite o nome ou parte do nome para buscar</small>
-                            
+
                             @error('nome')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -166,7 +159,7 @@ p{
         const aceiteRadio = document.getElementById('tipo_aceite');
         const cpfEventoRadio = document.getElementById('tipo_cpf_evento');
         const nomeRadio = document.getElementById('tipo_nome');
-        
+
         const camposHash = document.getElementById('campos_hash');
         const campoHashInput = document.getElementById('hash');
 
@@ -214,7 +207,7 @@ p{
                 camposHash.style.display = 'block';
                 campoHashInput.required = true;
                 campoHashInput.disabled = false;
-                
+
                 camposCpfEvento.style.display = 'none';
                 campoCpfInput.required = false;
                 campoCpfInput.disabled = true;
@@ -232,7 +225,7 @@ p{
         aceiteRadio.addEventListener('change', toggleFields);
         cpfEventoRadio.addEventListener('change', toggleFields);
         nomeRadio.addEventListener('change', toggleFields);
-        
+
         // Estado inicial
         toggleFields();
     });

@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\Users\Administrador;
+use App\Models\Users\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -14,7 +16,7 @@ class AdministradorSeed extends Seeder
      */
     public function run()
     {
-        $user_id = DB::table('users')->where('name', 'Administrador')->pluck('id');
+        $user_id = User::where('name', 'Administrador')->first()->id;
 
         DB::table('administradors')->insert([
             'user_id' => $user_id[0],

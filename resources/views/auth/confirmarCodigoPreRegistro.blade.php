@@ -10,7 +10,7 @@
             margin-bottom: 20px;
             font-family: sans-serif;
         }
-        
+
         .etapa {
             flex: 1;
             text-align: left;
@@ -19,32 +19,15 @@
             font-weight: normal;
             border-bottom: 2px solid transparent;
         }
-        
+
         .etapa.ativa {
             color: #004d51;
             font-weight: bold;
             border-bottom: 2px solid #004d51;
         }
 
-        .required-field::after {
-            content: "*";
-            color: #D44100;
-            margin-left: 2px;
-        }
     </style>
 
-    @if(session('sucesso'))
-        <div class="alert alert-success">
-            {{ session('sucesso') }}
-        </div>
-    @endif
-
-    @if(session('erro'))
-        <div class="alert alert-danger">
-            {{ session('erro') }}
-        </div>
-    @endif
-    
     <br><br>
 
     <div class="row titulo text-center" style="color: #034652;">
@@ -73,7 +56,7 @@
 
                 <div class="form-group row mt-3">
                     <div class="col-md-12">
-                        <label for="codigo" class="col-form-label required-field">{{ __('Código') }}</label>
+                        <label for="codigo" class="col-form-label">{{ __('Código') }}</label>
                         <input id="codigo" type="text" class="form-control @error('codigo') is-invalid @enderror" name="codigo" value="{{ old('codigo') }}"  autocomplete="codigo" placeholder="Insira o código de validação que foi enviado para o seu e-mail">
                     </div>
                 </div>

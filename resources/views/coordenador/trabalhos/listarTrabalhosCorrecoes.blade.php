@@ -9,39 +9,7 @@
             </div>
         </div>
 
-        @if(session('message'))
-        <div class="row">
-            <div class="col-md-12" style="margin-top: 5px;">
-                <div class="alert alert-success">
-                    <p>{{session('message')}}</p>
-                </div>
-            </div>
-        </div>
-        @endif
-        <div class="row">
-            <div class="col-sm-12">
-            @if ($errors->any())
-                <div class="alert alert-danger">
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
-            </div>
-        </div>
-
-        @if(session('success'))
-        <div class="alert alert-success" role="alert" align="center">
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-            </button>
-            {{session('success')}}
-        </div>
-        @endif
-
-        <div class="card mb-3">
+            <div class="card mb-3">
             <div class="card-body">
                 <form method="GET" action="{{ route('coord.listarCorrecoes', $evento->id) }}">
                     <div class="row">

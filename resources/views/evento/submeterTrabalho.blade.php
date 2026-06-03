@@ -25,11 +25,6 @@
             border-bottom: 2px solid #004d51;
         }
 
-        .required-field::after {
-            content: "*";
-            color: #D44100;
-            margin-left: 2px;
-        }
         .custom-select {
             -webkit-appearance: none;
             -moz-appearance: none;
@@ -137,7 +132,7 @@
                                                 <!-- Areas -->
                                                 <div class="row">
                                                     <div class="col-sm-6">
-                                                        <label for="area" class="col-form-label required-field"><strong>Área temática</strong></label>
+                                                        <label for="area" class="col-form-label"><strong>Área temática</strong></label>
                                                         <select class="form-control custom-select @error('areaId') is-invalid @enderror" id="area"
                                                                 name="areaId"
                                                                 required>
@@ -159,7 +154,7 @@
                                                     </div>
 
                                                     <div class="col-sm-6">
-                                                        <label for="modalidade" class="col-form-label required-field"><strong>Modalidade</strong></label>
+                                                        <label for="modalidade" class="col-form-label"><strong>Modalidade</strong></label>
 
                                                         {{-- campo escondido para enviar o valor mesmo com o select disabled --}}
                                                         <input type="hidden" name="modalidadeId" value="{{ $modalidade->id }}">
@@ -206,7 +201,7 @@
                                                         {{-- Nome Trabalho Ingles  --}}
                                                         <div class="col-sm-12">
                                                             <label for="nomeTrabalho_en"
-                                                                class="col-form-label required-field"><strong>{{ $formSubTraba->etiquetatitulotrabalho_en }}</strong>
+                                                                class="col-form-label"><strong>{{ $formSubTraba->etiquetatitulotrabalho_en }}</strong>
                                                             </label>
                                                             <input id="nomeTrabalho_en" type="text" required
                                                                 class="form-control @error('nomeTrabalho_en') is-invalid @enderror"
@@ -223,7 +218,7 @@
                                                     <div class="row justify-content-center">
                                                         {{-- Nome Trabalho  --}}
                                                         <div class="col-sm-12">
-                                                            <label for="nomeTrabalho" class="col-form-label required-field"><strong>{{ $formSubTraba->etiquetatitulotrabalho }}</strong></label>
+                                                            <label for="nomeTrabalho" class="col-form-label"><strong>{{ $formSubTraba->etiquetatitulotrabalho }}</strong></label>
                                                             <input id="nomeTrabalho" type="text" required
                                                                 class="form-control @error('nomeTrabalho') is-invalid @enderror"
                                                                 name="nomeTrabalho" value="{{ old('nomeTrabalho') }}"

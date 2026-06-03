@@ -11,6 +11,7 @@
 |
 */
 
+use App\Enums\EstadoBrasileiro;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Inscricao\CampoFormularioController;
@@ -96,23 +97,12 @@ Route::get('certificados/{certificadoId}/ver-destinatario/{destinatarioId}/traba
 Auth::routes(['verify' => true, 'register' => false]);
 
 
-
-        // Route::get('/register/{pais?}', function ($locale, $pais = null) {
-        //     return view('auth.register', compact('pais'));
-        // });
-        // Route::post('/register', [RegisterController::class, 'register'])->name('register');
-        // Route::post('/criarUsuario', [AdministradorController::class, 'criarUsuario'])->name('administrador.criarUsuario');
-
-
         Route::group(['prefix' => '{locale}', 'middleware' => 'setLocale'], function () {
             Route::get('/register/{pais?}', function ($locale, $pais = null) {
-                return view('auth.register', compact('pais'));
+                $estados = EstadoBrasileiro::options();
+                return view('auth.register', compact('pais', 'estados'));
             });
             Route::post('/register', [RegisterController::class, 'register'])->name('register');
-            Route::get('/admin/cadastrar-usuario', function ($locale) {
-                return view('administrador.cadastrarUsuario');
-            })->name('admin.cadastrarUsuario');
-            Route::post('/criarUsuario', [AdministradorController::class, 'criarUsuario'])->name('administrador.criarUsuario');
         });
 
 
@@ -135,6 +125,7 @@ Route::get('/{id}/atividades', [AtividadeController::class, 'atividadesJson'])->
 
 Route::get('/perfil/{pais?}', [UserController::class, 'perfil'])->name('perfil')->middleware('auth');
 Route::post('/perfil/editar', [UserController::class, 'editarPerfil'])->name('perfil.update')->middleware('auth');
+Route::put('/perfil/password/update', [UserController::class, 'updatePassword'])->name('perfil.password.update');
 
 Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
     Route::get('meusCertificados', [CertificadoController::class, 'listarCertificados'])->name('meusCertificados');
@@ -175,9 +166,7 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
         // Rotas de cadastro de usuários para coordenadores e comissão científica
         Route::get('/cadastro-automatica', [CadastroUsuarioAutomaticaController::class, 'index'])->name('cadastro-automatica.index');
         Route::post('/cadastro-automatica/processar', [CadastroUsuarioAutomaticaController::class, 'processar'])->name('cadastro-automatica.processar');
-        Route::get('/admin/cadastrar-usuario', function () {
-            return view('administrador.cadastrarUsuario');
-        })->name('admin.cadastrarUsuario');
+        Route::get('/admin/cadastrar-usuario', [AdministradorController::class, 'createUser'])->name('admin.cadastrarUsuario');
         Route::post('/criarUsuario', [AdministradorController::class, 'criarUsuario'])->name('administrador.criarUsuario');
         // rotas do Comissao Organizadora
         Route::get('/home/comissaoOrganizadora', [CoordComissaoOrganizadoraController::class, 'index'])->name('home.organizadora');
@@ -556,10 +545,6 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
 
 
 // Auth::routes();
-
-Route::get('/demo', function () {
-    return new App\Mail\UserWelcome();
-});
 
 Route::get('/home', [HomeController::class, 'home'])->name('home')->middleware('verified', 'isTemp');
 

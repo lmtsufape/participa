@@ -9,25 +9,6 @@
             </div>
         </div>
 
-        @if ($errors->any())
-            <div class="alert alert-danger">
-                <ul>
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
-
-        @if (session('success'))
-            <div class="alert alert-success" role="alert" align="center">
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-                {{ session('success') }}
-            </div>
-        @endif
-
         <div class="card mb-3">
             <div class="card-body">
                 <form method="GET" action="{{ route('coord.listarCorrecoesPorModalidade', ['eventoId' => $evento->id, 'modalidadeId' => $modalidade->id]) }}">

@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('perfil_identitarios', function (Blueprint $table) {
-            DB::statement('ALTER TABLE perfil_identitarios ALTER COLUMN raca TYPE JSON USING to_jsonb(raca)');
+        Schema::table('users', function (Blueprint $table) {
+            $table->date('data_nascimento')->nullable();
         });
     }
 
@@ -21,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('perfil_identitarios', function (Blueprint $table) {
-            DB::statement('ALTER TABLE perfil_identitarios ALTER COLUMN raca TYPE VARCHAR(255)');
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn('data_nascimento');
         });
     }
 };

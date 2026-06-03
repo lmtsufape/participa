@@ -45,6 +45,14 @@
             border-color:rgb(3, 70, 82) !important;       /* padrão azul Bootstrap */
             box-shadow: 0 0 0 .2rem rgba(3, 70, 82, 0.25) !important;
         }
+        /* Marca automaticamente o label que está dentro de um elemento com form-group e o campo está como required */
+        .form-group:has(> input[required]) label::after,
+        .form-group:has(> select[required]) label::after,
+        .form-group:has(> textarea[required]) label::after {
+            content: " *";
+            color: #dc2626;
+            font-weight: 700;
+        }
     </style>
 
 
@@ -57,8 +65,9 @@
     @yield('css')
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js" defer></script>
 
     <!-- icon eye -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">

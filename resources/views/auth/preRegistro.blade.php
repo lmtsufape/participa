@@ -2,10 +2,9 @@
 
 @section('content')
     <div class="container content mb-5 position-relative">
-        {{-- CSS de bandeiras, Select2 e intl-tel-input --}}
+        {{-- CSS de bandeiras e intl-tel-input --}}
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/6.6.6/css/flag-icons.min.css"
             crossorigin="anonymous" referrerpolicy="no-referrer" />
-        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css"
             crossorigin="anonymous" referrerpolicy="no-referrer" />
 
@@ -32,22 +31,9 @@
                 font-weight: bold;
                 border-bottom: 2px solid #004d51;
             }
-
-            .required-field::after {
-                content: "*";
-                color: #D44100;
-                margin-left: 2px;
-            }
         </style>
 
         <br><br>
-
-        @if (session('sucesso'))
-            <div class="alert alert-success">{{ session('sucesso') }}</div>
-        @endif
-        @if (session('erro'))
-            <div class="alert alert-danger">{{ session('erro') }}</div>
-        @endif
 
         <div class="row titulo text-center" style="color: #034652;">
             <h2 style="font-weight: bold;">{{ __('Cadastro') }}</h2>
@@ -58,17 +44,17 @@
             $paises = config('paises');
         @endphp
 
-        @if (Auth::check())
+        @auth
             <form method="POST" action="{{ route('administrador.criarUsuario', app()->getLocale()) }}">
-            @else
-                <form method="POST" action="{{ route('enviarCodigo') }}">
+        @else
+            <form method="POST" action="{{ route('enviarCodigo') }}">
         @endif
         @csrf
 
         {{-- País --}}
         <div class="form-group row my-3">
             <div class="col-md-12">
-                <label for="pais" class="col-form-label required-field">{{ __('País') }}</label>
+                <label for="pais" class="col-form-label">{{ __('País') }}</label>
                 <select id="pais" name="pais" class="form-control @error('pais') is-invalid @enderror">
                     @foreach ($paises as $slug => $pais)
                         <option value="{{ $slug }}" data-iso="{{ $pais['iso'] }}"
@@ -99,7 +85,7 @@
             {{-- Nome --}}
             <div class="form-group row">
                 <div class="col-md-12">
-                    <label for="nome" class="col-form-label required-field">{{ __('Nome completo') }}</label>
+                    <label for="nome" class="col-form-label">{{ __('Nome completo') }}</label>
                     <input id="nome" type="text"
                         class="form-control apenasLetras @error('nome') is-invalid @enderror" name="nome"
                         value="{{ old('nome') }}" autocomplete="nome" autofocus required>
@@ -112,18 +98,22 @@
             {{-- CPF | CNPJ | Passaporte --}}
             <div class="form-group row mb-3">
                 <div class="col-md-6">
-                    <div class="custom-control custom-radio custom-control-inline">
-                        <input type="radio" id="customRadioInline1" name="documento_tipo" class="custom-control-input"
-                            value="cpf" checked>
-                        <label class="custom-control-label me-2" for="customRadioInline1">CPF</label>
-
-                        <input type="radio" id="customRadioInline2" name="documento_tipo" class="custom-control-input"
-                            value="cnpj" @error('cnpj') checked @enderror>
-                        <label class="custom-control-label me-2" for="customRadioInline2">{{ __('CNPJ') }}</label>
-
-                        <input type="radio" id="customRadioInline3" name="documento_tipo" class="custom-control-input"
-                            value="passaporte" @error('passaporte') checked @enderror>
-                        <label class="custom-control-label" for="customRadioInline3">{{ __('Passaporte') }}</label>
+                    <div class="pt-1">
+                        <div class="form-check form-check-inline">
+                            <input type="radio" name="documento_tipo" class="form-check-input"
+                                value="cpf" @checked(old('documento_tipo', 'cpf') === 'cpf')>
+                            <label class="form-check-label me-2" for="cpf">CPF</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input type="radio" name="documento_tipo" class="form-check-input"
+                                value="cnpj" @checked(old('documento_tipo', 'cpf') === 'cnpj')>
+                            <label class="form-check-label me-2" for="cnpj">{{ __('CNPJ') }}</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input type="radio" name="documento_tipo" class="form-check-input"
+                                value="passaporte" @checked(old('documento_tipo', 'cpf') === 'passaporte')>
+                            <label class="form-check-label" for="passaporte">{{ __('Passaporte') }}</label>
+                        </div>
                     </div>
 
                     {{-- Campo CPF --}}
@@ -156,7 +146,7 @@
 
                 {{-- E-mail --}}
                 <div class="col-md-6">
-                    <label for="email" class="col-form-label required-field">{{ __('E-mail') }}</label>
+                    <label for="email" class="col-form-label">{{ __('E-mail') }}</label>
                     <input id="email" type="email" class="form-control @error('email') is-invalid @enderror"
                         name="email" value="{{ old('email') }}" required>
                     @error('email')
@@ -166,7 +156,7 @@
             </div>
 
             {{-- Alert info --}}
-            <div class="alert alert-info alert-dismissible fade show" role="alert">
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
                 {{ __('Enviaremos um código de validação do seu cadastro para este e-mail.') }}
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
@@ -187,13 +177,11 @@
 @endsection
 
 @section('javascript')
-    {{-- jQuery --}}
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js" crossorigin="anonymous"></script>
+
     {{-- jquery.mask --}}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js" crossorigin="anonymous">
     </script>
-    {{-- Select2 JS --}}
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js" defer></script>
+
     {{-- intl-tel-input --}}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"
         crossorigin="anonymous" defer></script>
@@ -211,13 +199,27 @@
             });
 
             // Alternar campos CPF/CNPJ/Passaporte
-            $('input[name="documento_tipo"]').on('change', function() {
-                var tipo = $(this).val();
+            function toggleDocumentoFields(clear = false) {
+                const tipo = $('input[name="documento_tipo"]:checked').val();
+
                 $('#fieldCPF, #fieldCNPJ, #fieldPassaporte').hide();
+
+                if (clear) {
+                    if (tipo !== 'cpf') $('#fieldCPF input').val('');
+                    if (tipo !== 'cnpj') $('#fieldCNPJ input').val('');
+                    if (tipo !== 'passaporte') $('#fieldPassaporte input').val('');
+                }
+
                 if (tipo === 'cpf') $('#fieldCPF').show();
                 if (tipo === 'cnpj') $('#fieldCNPJ').show();
                 if (tipo === 'passaporte') $('#fieldPassaporte').show();
-            }).filter(':checked').trigger('change');
+            }
+
+            $('input[name="documento_tipo"]').on('change', function () {
+                toggleDocumentoFields(true);
+            });
+
+            toggleDocumentoFields(false);
 
             // Select2 com bandeirinhas
             function formatCountry(option) {

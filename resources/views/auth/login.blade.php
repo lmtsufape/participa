@@ -22,10 +22,10 @@ p{
     <div class="row">
         <section class="col-md-6 d-flex flex-column justify-content-center">
             <a class="navbar-brand" href="{{route('index')}}">
-                <img src="{{ asset('/img/logoatualizada.png') }}" alt="logo" width="50%">
+                <img src="{{ asset('/img/logo_sistema.png') }}" alt="logo" width="50%">
             </a>
 
-            <p class="mt-3 fs-4 text-justify">{{ __('Plataforma de inscrições e submissão de trabalhos da Associação Brasileira de Agroecologia (ABA), desenvolvida e mantida pelo Laboratório Multidisciplinar de Tecnologias Sociais da Universidade Federal do Agreste de Pernambuco') }}.</p>
+            <p class="mt-3 fs-4 text-justify">{{ __('É um sistema de Gestão de Eventos Científicos que busca contribuir com instituições acadêmicas públicas ou privadas que necessitem de uma ferramenta para gerenciar eventos científicos') }}.</p>
         </section>
 
         <div class="col-md-6 d-flex align-items-center justify-content-end">
@@ -65,7 +65,7 @@ p{
                         <label class="form-check-label" for="remember">{{ __('Lembre-se de mim') }}</label>
                     </div>
                     @if (Route::has('password.request'))
-                        <a class="btn btn-link link-secondary" href="{{ route('password.request') }}">
+                        <a class="link-my-gray" href="{{ route('password.request') }}">
                             {{ __('Esqueceu a senha?') }}
                         </a>
                     @endif
@@ -79,7 +79,7 @@ p{
 
                 <div class="text-md-center pt-4">
                     <span>{{ __('Não possui conta?') }}</span>
-                    <a class="text-my-secondary fw-bold" href="{{ route('preRegistro') }}">
+                    <a class="link-my-secondary fw-bold" href="{{ route('preRegistro') }}">
                         {{ __('Crie agora') }}
                     </a>
                 </div>

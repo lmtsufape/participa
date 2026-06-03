@@ -24,12 +24,6 @@
             font-weight: bold;
             border-bottom: 2px solid #004d51;
         }
-
-        .required-field::after {
-            content: "*";
-            color: #D44100;
-            margin-left: 2px;
-        }
     </style>
 
     <div class="container">
@@ -84,7 +78,7 @@
 
                     <div class="form-group row">
                         <div class="col-md-6">
-                            <label for="nome" class="col-form-label text-start d-block fw-bold mb-3 required-field">{{ __('Nome do evento') }}</label>
+                            <label for="nome" class="col-form-label text-start d-block fw-bold mb-3">{{ __('Nome do evento') }}</label>
                             <input id="nome" type="text" class="form-control @error('nome') is-invalid @enderror"
                                 name="nome" value="{{ old('nome') }}" required autocomplete="nome" autofocus>
 
@@ -96,7 +90,7 @@
                         </div>
 
                         <div class="col-md-6">
-                            <label for="email" class="col-form-label text-start d-block fw-bold mb-3 required-field">{{ __('E-mail de contato') }}</label>
+                            <label for="email" class="col-form-label text-start d-block fw-bold mb-3">{{ __('E-mail de contato') }}</label>
                             <input class="form-control @error('email') is-invalid @enderror" type="email"
                                 value="{{ old('email') }}" name="email" id="email" required autofocus
                                 autocomplete="email">
@@ -111,7 +105,7 @@
 
                     <div class="form-group row">
                         <div class="col-md-6 multilingual_fields" style="display: none;">
-                            <label for="nome_en" class="col-form-label text-start d-block fw-bold mb-3 required-field">{{ __('Nome em inglês') }}</label>
+                            <label for="nome_en" class="col-form-label text-start d-block fw-bold mb-3">{{ __('Nome em inglês') }}</label>
                             <input id="nome_en" type="text" class="form-control @error('nome_en') is-invalid @enderror"
                                 name="nome_en" value="{{ old('nome_en') }}" autocomplete="nome_en" autofocus>
 
@@ -123,7 +117,7 @@
                         </div>
 
                         <div class="col-md-6 multilingual_fields" style="display: none;">
-                            <label for="nome_es" class="col-form-label text-start d-block fw-bold mb-3 required-field">{{ __('Nome em espanhol') }}</label>
+                            <label for="nome_es" class="col-form-label text-start d-block fw-bold mb-3">{{ __('Nome em espanhol') }}</label>
                             <input id="nome_es" type="text" class="form-control @error('nome_es') is-invalid @enderror"
                                 name="nome_es" value="{{ old('nome_es') }}" autocomplete="nome_es" autofocus>
                             @error('nome_es')
@@ -134,7 +128,7 @@
 
                     <div class="form-group row">
                         <div class="@if ($eventoPai ?? '') col-md-3 @else col-md-4 @endif">
-                            <label for="tipo" class="col-form-label text-start d-block fw-bold mb-3 required-field">{{ __('Tipo') }}</label>
+                            <label for="tipo" class="col-form-label text-start d-block fw-bold mb-3">{{ __('Tipo') }}</label>
                             <select id="tipo" type="text" class="form-control @error('tipo') is-invalid @enderror"
                                 name="tipo" required>
                                 <option disabled selected hidden value="">-- {{ __('Tipo') }} --</option>
@@ -162,7 +156,7 @@
                         </div>
 
                         <div class="@if ($eventoPai ?? '') col-md-3 @else col-md-4 @endif">
-                            <label for="recolhimento" class="col-form-label text-start d-block fw-bold mb-3 required-field">{{ __('Recolhimento') }}</label>
+                            <label for="recolhimento" class="col-form-label text-start d-block fw-bold mb-3">{{ __('Recolhimento') }}</label>
                             <select name="recolhimento" id="recolhimento"
                                 class="form-control @error('recolhimento') is-invalid @enderror">
                                 @if (old('recolhimento') != null)
@@ -251,7 +245,7 @@
 
                     <div class="form-group row">
                         <div class="col-md-12">
-                            <label for="descricao" class="fw-bold mb-3  required-field">{{ __('Descrição:') }}</label>
+                            <label for="descricao" class="fw-bold mb-3 ">{{ __('Descrição:') }}</label>
                             <textarea class="form-control mb-3 @error('descricao') is-invalid @enderror" required
                                 autocomplete="descricao" autofocus id="descricao" name="descricao" rows="8">{{ old('descricao') }}</textarea>
                             @error('descricao')
@@ -264,7 +258,7 @@
 
                     <div class="form-group row multilingual_fields" style="display: none;">
                         <div class="col-md-12">
-                            <label for="descricao_en" class="fw-bold mb-3 required-field">{{ __('Descrição em inglês') }}</label>
+                            <label for="descricao_en" class="fw-bold mb-3">{{ __('Descrição em inglês') }}</label>
                             <textarea class="form-control @error('descricao_en') is-invalid @enderror" autocomplete="descricao_en" autofocus
                                 id="descricao_en" name="descricao_en" rows="8">{{ old('descricao_en') }}</textarea>
                             @error('descricao_en')
@@ -277,7 +271,7 @@
 
                     <div class="form-group row multilingual_fields" style="display: none;">
                         <div class="col-md-12">
-                            <label for="exampleFormControlTextarea1" class="fw-bold mb-3 required-field">{{__('Descrição em espanhol')}}</label>
+                            <label for="exampleFormControlTextarea1" class="fw-bold mb-3">{{__('Descrição em espanhol')}}</label>
                             <textarea class="form-control @error('descricao_es') is-invalid @enderror" autocomplete="descricao_es" autofocus
                                 id="descricao_es" name="descricao_es" rows="8">{{ old('descricao_es') }}</textarea>
                             @error('descricao_es')
@@ -290,7 +284,7 @@
 
                     <div class="form-group row">
                         <div class="col-md-6">
-                            <label for="fotoEvento" class="fw-bold mb-3 required-field" >{{ __('Banner (tamanho: 1024 x 425, formato: JPEG, JPG e PNG):') }}</label>
+                            <label for="fotoEvento" class="fw-bold mb-3" >{{ __('Banner (tamanho: 1024 x 425, formato: JPEG, JPG e PNG):') }}</label>
                             <div id="imagem-loader" class="imagem-loader">
                                 <img id="logo-preview" class="img-fluid" src="{{ asset('/img/nova_imagem.PNG') }}" alt="">
                             </div>
@@ -307,7 +301,7 @@
                         </div>
 
                         <div class="col-md-6">
-                            <label for="icone" class="fw-bold mb-3 required-field">{{ __('Ícone (tamanho: 600 x 600, formato: JPEG, JPG e PNG):') }}</label>
+                            <label for="icone" class="fw-bold mb-3">{{ __('Ícone (tamanho: 600 x 600, formato: JPEG, JPG e PNG):') }}</label>
                             <div id="imagem-loader-icone" class="imagem-loader">
                                 <img id="icone-preview" class="img-fluid" src="{{ asset('/img/nova_imagem.PNG') }}" alt="">
                             </div>

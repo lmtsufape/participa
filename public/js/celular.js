@@ -1,5 +1,5 @@
 
-const phoneInputField = document.querySelector("#phone");
+const phoneInputField = document.querySelector("#celular");
 const phoneInput = window.intlTelInput(phoneInputField, {
     formatOnDisplay: true,
     hiddenInput: "full_number",
@@ -40,7 +40,7 @@ $(phoneInputField).on("countrychange", function(event) {
     mask = newPlaceholder.replace(/[1-9]/g, "0");
 
     $(this).mask(mask);
-        
+
     if(phoneInputField.value == ""){
         phoneInput.setNumber("");
     }else{
