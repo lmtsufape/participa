@@ -211,29 +211,8 @@
                         {!! $evento->descricao !!}
                     @endif
                 </div>
-                <br>
-                <strong>Para mais informações, <a href="https://cba.aba-agroecologia.org.br/">clique aqui</a> e acesse o site oficial do 13º CBA.</strong>
             </div>
 
-        </div>
-        <hr class="border-dark">
-
-        <div class="row">
-            <h4 class="text-my-primary">{{ __('Valores das inscrições para o 13º CBA') }}</h4>
-            <div class="col-md-12 overflow-auto text-break" style="word-wrap: break-word; white-space: normal;">
-                <div>
-                    <img src="{{asset('img/tabela_de_valores.jpg')}}" style="width: 700px;">
-                </div>
-                <br>
-                <div class="container-associar btn" style="cursor: default;">
-                    <h5>{{ __('Associe-se à ABA-Agroecologia e garanta seu desconto na inscrição!') }}</h5>
-                    <div class="btn-associacao">
-                        <a href="https://associados.aba-agroecologia.org.br/register/solicitation" target="_blank" style="width: 210px;" class="btn-associar">QUERO ME ASSOCIAR <img src="{{asset('img/icons/fora.png')}}" style="width: 30px;"></a>
-                        <a href="https://associados.aba-agroecologia.org.br/login" class="btn-associar" target="_blank">REGULARIZE A SUA ASSOCIAÇÃO <img src="{{asset('img/icons/fora.png')}}" style="width: 30px; margin-left:10px;"></a>
-                    </div>
-                    <br>
-                </div>
-            </div>
         </div>
         <hr class="border-dark">
 
@@ -860,26 +839,6 @@
         @endif
 
         <div id="contato" class="row py-4 d-flex">{{-- Contatos --}}
-            <h4 class="text-my-primary mb-4">{{ __('Evento organizado por:') }}</h4>
-            <!-- <div class="col-md-2">
-                <img src="" class="" alt="">
-            </div> -->
-            <div class="col-md-12 overflow-auto text-break" style="word-wrap: break-word; white-space: normal;">
-                <div style="text-align: justify; color: #034652;">
-                    <h5 class="text-my-primary mb-0">{{ __('Associação Brasileira de Agroecologia (ABA-Agroecologia)') }}</h5>
-                    Reunimos pessoas físicas das mais diversas áreas do conhecimento e de atuação, que desde 2004 realizam e apoiam ações dedicadas ao fortalecimento das práticas agroecológicas. <a href="https://aba-agroecologia.org.br/sobre-a-aba-agroecologia/sobre-a-aba/" target="_blank">Saiba mais.</a>
-                </div>
-                <br>
-            </div>
-            <hr class="border-dark">
-            <h4 class="text-my-primary mb-4">{{ __('Dúvidas sobre o CBA?') }}</h4>
-            <div class="col-md-12 overflow-auto text-break" style="word-wrap: break-word; white-space: normal;">
-                <div style="text-align: justify; color: #034652;">
-                    Quer saber mais sobre hospedagens, alimentação, caravanas, isenções? Tem vontade de propor alguma atividade ou deseja participar de alguma comissão da organização? <a href="https://cba.aba-agroecologia.org.br/perguntas-frequentes/" target="_blank">Acesse a página de perguntas frequentes aqui!</a>
-                </div>
-                <br>
-            </div>
-
              <div class="col-12 d-flex justify-content-center align-items-center gap-2">
                 <a href="mailto:@if($evento->email){{ $evento->email }}@else{{ $evento->coordenador->email }}@endif" class="btn btn-my-secondary rounded-3">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-envelope me-1" viewBox="0 0 16 16">
