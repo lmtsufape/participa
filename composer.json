@@ -11,6 +11,7 @@
         "php": "^8.3.0",
         "barryvdh/laravel-dompdf": "^3.1",
         "geekcom/validator-docs": "^3.9",
+        "laravellegends/pt-br-validator": "^13",
         "guzzlehttp/guzzle": "^7.4",
         "intervention/image": "^3.0",
         "laravel/framework": "^13.0",
