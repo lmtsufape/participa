@@ -55,6 +55,7 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\PreRegistroController;
 use App\Http\Controllers\Inscricao\InscricaoMovimentoSocialController;
+use App\Http\Controllers\Users\AssociadoController;
 
 
 
@@ -515,9 +516,11 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
 
     });
     //Associação
-    Route::get('/associar', [\App\Http\Controllers\Users\AssociadoController::class, 'index'])->name('associar.index');
-    Route::get('/associar/pagar/{tipo}', [\App\Http\Controllers\Users\AssociadoController::class, 'pagar'])->name('associar.pagar');
+    Route::get('/associar', [AssociadoController::class, 'index'])->name('associar.index');
+    Route::get('/associar/pagar/{tipo}', [AssociadoController::class, 'pagar'])->name('associar.pagar');
     Route::post('/associar/processar', [\App\Http\Controllers\Users\AssociadoController::class, 'processarPagamentoAssociado'])->name('associar.processar');
+    Route::get('/associar/paypal/success/{tipo}', [AssociadoController::class, 'paypalSuccess'])->name('associar.paypal.success');
+    Route::get('/associar/paypal/cancel/{tipo}', [AssociadoController::class, 'paypalCancel'])->name('associar.paypal.cancel');
     //Pagamentos
 
     Route::get('inscricoes/evento-{id}/index', [InscricaoController::class, 'index'])->name('inscricoes');
