@@ -25,36 +25,7 @@
             font-weight: bold;
             border-bottom: 2px solid #004d51;
         }
-
-        .required-field::after {
-            content: "*";
-            color: #D44100;
-            margin-left: 2px;
-        }
-
-        .checkbox-termos {
-            transform: scale(1.3);
-            margin-right: 10px;
-            accent-color: #034652;
-        }
-
-        .label-termos {
-            font-weight: 500;
-            color: #333;
-        }
     </style>
-
-    @if(session('sucesso'))
-        <div class="alert alert-success">
-            {{ session('sucesso') }}
-        </div>
-    @endif
-
-    @if(session('erro'))
-        <div class="alert alert-danger">
-            {{ session('erro') }}
-        </div>
-    @endif
 
     <div class="row titulo text-center mt-3" style="color: #034652;">
         <h2 style="font-weight: bold;">{{__('Cadastro')}}</h2>
@@ -97,7 +68,7 @@
 
                 <div class="form-group row">
                     <div class="col-md-6">
-                        <label for="name" class="col-form-label required-field"><strong>{{ __('Nome completo') }}</strong></label>
+                        <label for="name" class="col-form-label"><strong>{{ __('Nome completo') }}</strong></label>
                         <input id="name" type="text" class="form-control apenasLetras @error('name') is-invalid @enderror" name="name" value="{{ session('nome') ?? old('name') }}"  autocomplete="name" autofocus disabled>
 
                         @error('name')
@@ -188,7 +159,7 @@
                     </div>
 
                     <div class="col-md-6">
-                        <label for="instituicao" class="col-form-label required-field"><strong>{{ __('Instituição') }}</strong></label>
+                        <label for="instituicao" class="col-form-label"><strong>{{ __('Instituição') }}</strong></label>
                         <input id="instituicao" type="text" class="form-control apenasLetras @error('instituicao') is-invalid @enderror" name="instituicao" value="{{ old('instituicao') }}"  autocomplete="instituicao" autofocus>
 
                         @error('instituicao')
@@ -202,8 +173,8 @@
                 {{-- Instituição de Ensino e Celular --}}
                 <div class="form-group row">
                     <div class="col-md-4">
-                        <label for="celular" class="col-form-label required-field"><strong>{{ __('Celular') }}</strong></label><br>
-                        <input id="phone" class="form-control celular @error('celular') is-invalid @enderror" type="tel" name="celular" value="{{old('celular')}}" style="width: 100% !important;" required autocomplete="celular" onkeyup="process(event)">
+                        <label for="celular" class="col-form-label"><strong>{{ __('Celular') }}</strong></label><br>
+                        <input id="celular" class="form-control celular @error('celular') is-invalid @enderror" type="tel" name="celular" value="{{old('celular')}}" style="width: 100% !important;" required autocomplete="celular" onkeyup="process(event)">
                         <div class="alert alert-info mt-1" style="display: none"></div>
                         <div id="celular-invalido" class="alert alert-danger mt-1" role="alert"   style="display: none"></div>
 
@@ -215,10 +186,10 @@
                     </div>
 
                     <div class="col-md-4">
-                        <label for="dataNascimento" class="col-form-label required-field"><strong>{{ __('Data de nascimento') }}</strong></label>
-                        <input id="dataNascimento" type="date" class="form-control @error('dataNascimento') is-invalid @enderror" name="dataNascimento" value="{{ old('dataNascimento')}}"  autocomplete="dataNascimento" required>
+                        <label for="data_nascimento" class="col-form-label"><strong>{{ __('Data de nascimento') }}</strong></label>
+                        <input id="data_nascimento" type="date" class="form-control @error('data_nascimento') is-invalid @enderror" name="data_nascimento" value="{{ old('data_nascimento')}}"  autocomplete="data_nascimento" required>
 
-                        @error('dataNascimento')
+                        @error('data_nascimento')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ __($message) }}</strong>
                             </span>
@@ -226,7 +197,7 @@
                     </div>
 
                     <div class="col-md-4">
-                        <label for="email" class="col-form-label required-field"><strong>{{ __('E-mail') }}</strong></label>
+                        <label for="email" class="col-form-label"><strong>{{ __('E-mail') }}</strong></label>
                         <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ session('email') ?? old('email')}}"  autocomplete="email" disabled>
 
                         @error('email')
@@ -240,9 +211,8 @@
                 {{-- Email | Senha | Confirmar Senha --}}
                 <div class="form-group row mb-3">
                     <div class="col-md-6">
-                        <label for="password" class="col-form-label required-field"><strong>{{ __('Senha') }}</strong></label>
+                        <label for="password" class="col-form-label"><strong>{{ __('Senha') }}</strong></label>
                         <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password"  autocomplete="new-password">
-                        <small>{{__('OBS: A senha deve ter no mínimo 8 caracteres (letras ou números)')}}.</small>
                         @error('password')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ __($message) }}</strong>
@@ -251,8 +221,13 @@
                     </div>
 
                     <div class="col-md-6">
-                        <label for="password-confirm" class="col-form-label required-field"><strong>{{ __('Confirmar senha') }}</strong></label>
+                        <label for="password-confirm" class="col-form-label"><strong>{{ __('Confirmar senha') }}</strong></label>
                         <input id="password-confirm" type="password" class="form-control" name="password_confirmation"  autocomplete="new-password">
+                    </div>
+                    <div class="col-md-12">
+                        <small class="text-muted">
+                            A senha deve ter no mínimo 8 caracteres. Digite a mesma senha nos dois campos.
+                        </small>
                     </div>
                 </div>
             </div>
@@ -273,7 +248,7 @@
             @if(session('pais') == 'brasil' || session('pais') == null)
                 <div class="form-group row mt-3">
                     <div class="col-md-12">
-                        <label for="cep" class="col-form-label required-field"><strong>{{ __('CEP') }}@if($pais != 'outro') @endif</strong></label>
+                        <label for="cep" class="col-form-label"><strong>{{ __('CEP') }}@if($pais != 'outro') @endif</strong></label>
                         <input value="{{old('cep')}}" id="cep" type="text"  autocomplete="cep" name="cep" autofocus class="form-control field__input a-field__input" placeholder="{{__('CEP')}}" size="10" maxlength="9" @if($pais != 'outro') required @endif >
                         @error('cep')
                             <span class="invalid-feedback" role="alert">
@@ -285,14 +260,14 @@
             @else
                 <div class="form-group row mt-3">
                     <div class="col-md-12">
-                        <label for="cep" class="col-form-label required-field"><strong>{{ __('CEP/Código Postal') }}</strong></label>
+                        <label for="cep" class="col-form-label"><strong>{{ __('CEP/Código Postal') }}</strong></label>
                         <input value="{{old('cep')}}" id="cepOutroPais" type="text"  oninput="this.value = this.value.replace(/[^a-zA-Z0-9\- ]/g, '')" autocomplete="cep" name="cep" autofocus class="form-control field__input a-field__input" placeholder="{{__('CEP')}}" size="10" maxlength="10">
                     </div>
                 </div>
             @endif
             <div class="form-group row">
                 <div class="col-md-6">
-                    <label for="rua" class="col-form-label required-field"><strong>{{ __('Rua') }}</strong></label>
+                    <label for="rua" class="col-form-label"><strong>{{ __('Rua') }}</strong></label>
                     <input value="{{old('rua')}}" id="rua" type="text" class="form-control @error('rua') is-invalid @enderror" name="rua"  autocomplete="new-password" required>
 
                     @error('rua')
@@ -303,7 +278,7 @@
                 </div>
 
                 <div class="col-md-6">
-                    <label for="numero" class="col-form-label required-field"><strong>{{ __('Número') }}@if($pais != 'outro') @endif</strong></label>
+                    <label for="numero" class="col-form-label"><strong>{{ __('Número') }}@if($pais != 'outro') @endif</strong></label>
                     <input value="{{old('numero')}}" id="numero" type="text" class="form-control @error('numero') is-invalid @enderror" name="numero" autocomplete="numero" maxlength="10" @if($pais != 'outro') required @endif>
 
                     @error('numero')
@@ -316,7 +291,7 @@
 
             <div class="form-group row">
                 <div class="col-md-6">
-                    <label for="bairro" class="col-form-label required-field"><strong>{{ __('Bairro') }}</strong></label>
+                    <label for="bairro" class="col-form-label"><strong>{{ __('Bairro') }}</strong></label>
                     <input value="{{old('bairro')}}" id="bairro" type="text" class="form-control @error('bairro') is-invalid @enderror" name="bairro"  autocomplete="bairro" required>
 
                     @error('bairro')
@@ -340,7 +315,7 @@
 
             <div class="form-group row mb-3">
                 <div class="col-md-6">
-                    <label for="cidade" class="col-form-label required-field"><strong>{{ __('Cidade') }}</strong></label>
+                    <label for="cidade" class="col-form-label"><strong>{{ __('Cidade') }}</strong></label>
                     <input value="{{old('cidade')}}" id="cidade" type="text" class="form-control apenasLetras @error('cidade') is-invalid @enderror" name="cidade"  autocomplete="cidade" required>
 
                     @error('cidade')
@@ -362,49 +337,24 @@
                         @enderror
                     </div> --}}
 
-                    <div class="col-md-6" id="groupformuf">
-                        <label for="uf" class="col-form-label required-field"><strong>{{ __('Estado') }}</strong></label>
-                        {{-- <input id="uf" type="text" class="form-control @error('uf') is-invalid @enderror" name="uf" value="{{ old('uf') }}"  autocomplete="uf" autofocus> --}}
-                        <select class="form-control @error('uf') is-invalid @enderror required-field" id="uf" name="uf" required>
-                            <option value="" disabled selected hidden>{{__()}}</option>
-                            <option @if(old('uf') == 'AC') selected @endif value="AC">Acre</option>
-                            <option @if(old('uf') == 'AL') selected @endif value="AL">Alagoas</option>
-                            <option @if(old('uf') == 'AP') selected @endif value="AP">Amapá</option>
-                            <option @if(old('uf') == 'AM') selected @endif value="AM">Amazonas</option>
-                            <option @if(old('uf') == 'BA') selected @endif value="BA">Bahia</option>
-                            <option @if(old('uf') == 'CE') selected @endif value="CE">Ceará</option>
-                            <option @if(old('uf') == 'DF') selected @endif value="DF">Distrito Federal</option>
-                            <option @if(old('uf') == 'ES') selected @endif value="ES">Espírito Santo</option>
-                            <option @if(old('uf') == 'GO') selected @endif value="GO">Goiás</option>
-                            <option @if(old('uf') == 'MA') selected @endif value="MA">Maranhão</option>
-                            <option @if(old('uf') == 'MT') selected @endif value="MT">Mato Grosso</option>
-                            <option @if(old('uf') == 'MS') selected @endif value="MS">Mato Grosso do Sul</option>
-                            <option @if(old('uf') == 'MG') selected @endif value="MG">Minas Gerais</option>
-                            <option @if(old('uf') == 'PA') selected @endif value="PA">Pará</option>
-                            <option @if(old('uf') == 'PB') selected @endif value="PB">Paraíba</option>
-                            <option @if(old('uf') == 'PR') selected @endif value="PR">Paraná</option>
-                            <option @if(old('uf') == 'PE') selected @endif value="PE">Pernambuco</option>
-                            <option @if(old('uf') == 'PI') selected @endif value="PI">Piauí</option>
-                            <option @if(old('uf') == 'RJ') selected @endif value="RJ">Rio de Janeiro</option>
-                            <option @if(old('uf') == 'RN') selected @endif value="RN">Rio Grande do Norte</option>
-                            <option @if(old('uf') == 'RS') selected @endif value="RS">Rio Grande do Sul</option>
-                            <option @if(old('uf') == 'RO') selected @endif value="RO">Rondônia</option>
-                            <option @if(old('uf') == 'RR') selected @endif value="RR">Roraima</option>
-                            <option @if(old('uf') == 'SC') selected @endif value="SC">Santa Catarina</option>
-                            <option @if(old('uf') == 'SP') selected @endif value="SP">São Paulo</option>
-                            <option @if(old('uf') == 'SE') selected @endif value="SE">Sergipe</option>
-                            <option @if(old('uf') == 'TO') selected @endif value="TO">Tocantins</option>
+                     <div class="col-md-6" id="groupformuf">
+                        <label for="uf" class="col-form-label"><strong>{{ __('Estado') }}</strong></label>
+                        <select class="form-control @error('uf') is-invalid @enderror" id="uf" name="uf">
+                            <option value="" disabled selected hidden>{{__('Selecione o estado')}}</option>
+                            @foreach ($estados as $sigla => $nome)
+                                <option @selected(old('uf') == $sigla) value="{{ $sigla }}">{{ $nome }}</option>
+                            @endforeach
                         </select>
 
                         @error('uf')
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ __($message) }}</strong>
-                        </span>
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ __($message) }}</strong>
+                            </span>
                         @enderror
                     </div>
                 @else
                     <div class="col-md-6" id="">
-                        <label for="uf" class="col-form-label required-field"><strong>{{ __('Estado/Província/Região') }}</strong></label>
+                        <label for="uf" class="col-form-label"><strong>{{ __('Estado/Província/Região') }}</strong></label>
                         <input type="text" value="{{old('uf')}}" id="uf" class="form-control  @error('uf') is-invalid @enderror" name="uf" >
 
                         @error('uf')
@@ -428,6 +378,186 @@
         </div>
 
 
+            <hr style="border-top: 1px solid #034652">
+
+            <div class="card-body">
+                {{-- Gênero --}}
+                <div class="row">
+                    <div class="col-md-6 form-group">
+                        <label class="col-form-label"><strong>Gênero</strong></label>
+                        <div>
+                            @php
+                                $generos = [
+                                    'feminino' => 'Feminino',
+                                    'masculino' => 'Masculino',
+                                    'agênero' => 'Agênero',
+                                    'nao_binario' => 'Não-Binário',
+                                    'nao_conforme_ao_genero' => 'Não-conforme ao Gênero',
+                                    'outro' => 'Outro',
+                                    'prefiro_nao_responder' => 'Prefiro não responder',
+                                ];
+                            @endphp
+                            @foreach($generos as $key => $label)
+                                <div class="form-check">
+                                    <input class="form-check-input"
+                                        type="radio"
+                                        name="genero"
+                                        id="genero_{{ $key }}"
+                                        value="{{ $key }}"
+                                        @if ($loop->first) required @endif>
+                                    <label class="form-check-label" for="genero_{{ $key }}">{{ $label }}</label>
+                                </div>
+                            @endforeach
+                            <input type="text" name="outroGenero" value="{{ old('outroGenero') }}" id="outroGenero" class="form-control mt-2" placeholder="Se marcou 'Outro', especifique" style="max-width: 300px;" maxlength="200">
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 form-group">
+                        <label class="col-form-label"><strong>Raça (auto-declaração)</strong></label>
+                        <div>
+                            @php
+                                $racas = [
+                                    'preta' => 'Preta',
+                                    'parda' => 'Parda',
+                                    'indigena' => 'Indígena',
+                                    'amarela' => 'Amarela',
+                                    'branca' => 'Branca',
+                                    'outra_raca' => 'Outra (especificar)',
+                                    'prefiro_nao_responder_raca' => 'Prefiro não responder',
+                                ];
+                            @endphp
+                            @foreach($racas as $key => $label)
+                                <div class="form-check">
+                                    <input class="form-check-input"
+                                        type="radio"
+                                        name="raca"
+                                        id="raca_{{ $key }}"
+                                        @checked(old('raca') == $key)>
+                                    <label class="form-check-label" for="raca_{{ $key }}">{{ $label }}</label>
+                                </div>
+                            @endforeach
+                            <input type="text" name="outraRaca" value="{{ old('outraRaca') }}" id="outraRaca" class="form-control mt-4" placeholder="Se marcou 'Outra', especifique" style="max-width: 300px;" maxlength="200">
+                        </div>
+                    </div>
+                </div>
+
+                  {{-- Pessoa LGBTQIA+ --}}
+                <div class="row">
+                    <div class="col-md-6 form-group mt-3">
+                        <label class="col-form-label"><strong>Você se identifica como Pessoa LGBTQIA+?</strong></label>
+                        <div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="lgbtqia" @checked(old('lgbtqia') == 'true') id="lgbtqia_sim" value="true" required>
+                                <label class="form-check-label" for="lgbtqia_sim">Sim</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="lgbtqia" @checked(old('lgbtqia') == 'false') id="lgbtqia_nao" value="false">
+                                <label class="form-check-label" for="lgbtqia_nao">Não</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                 <div class="row">
+                    <div class="col-md-6 form-group mt-3">
+                        <label class="col-form-label"><strong>Informações sobre necessidades</strong></label>
+                        <div>
+                            @php
+                                $necessidades = [
+                                    'libras' => 'Libras',
+                                    'audiodescricao' => 'Audiodescrição',
+                                    'espaco_acessivel' => 'Espaço acessível',
+                                    'acompanhante' => 'Acompanhante',
+                                    'outra_necessidade' => 'Outra',
+                                    'nenhuma' => 'Nenhuma',
+                                ];
+                            @endphp
+                            @foreach($necessidades as $key => $label)
+                                <div class="form-check">
+                                    <input class="form-check-input"
+                                        type="checkbox"
+                                        name="necessidadesEspeciais[]"
+                                        @checked(in_array($key, old('necessidadesEspeciais', [])))
+                                        id="necessidade_{{ $key }}"
+                                        value="{{ $key }}">
+                                    <label class="form-check-label" for="necessidade_{{ $key }}">{{ $label }}</label>
+                                </div>
+                            @endforeach
+                            <input type="text" name="outraNecessidadeEspecial" id="outraNecessidadeEspecial" class="form-control mt-2" placeholder="Se marcou 'Outra', especifique" style="max-width: 300px;" maxlength="200">
+                        </div>
+                    </div>
+                    {{-- Pessoa com deficiência ou idosos --}}
+                    <div class="col-md-6 form-group mt-3">
+                        <label class="col-form-label"><strong>Você é uma pessoa idosa ou com deficiência?</strong></label>
+                        <div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" @checked(old('deficienciaIdoso') == 'true') name="deficienciaIdoso" id="deficiencia_sim" value="true" required>
+                                <label class="form-check-label" for="deficiencia_sim">Sim</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" @checked(old('deficienciaIdoso') == 'false') name="deficienciaIdoso" id="deficiencia_nao" value="false">
+                                <label class="form-check-label" for="deficiencia_nao">Não</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 form-group mt-3">
+                        <label class="col-form-label"><strong>Você participa de alguma organização, rede ou movimento?</strong></label>
+                        <div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="participacaoOrganizacao" id="participa_sim" value="true" required>
+                                <label class="form-check-label" for="participa_sim">Sim</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="participacaoOrganizacao" id="participa_nao" value="false">
+                                <label class="form-check-label" for="participa_nao">Não</label>
+                            </div>
+                            <input type="text" name="nomeOrganizacao" id="nomeOrganizacao" class="form-control mt-2" placeholder="Se sim, qual?" style="max-width: 400px;" maxlength="200">
+                        </div>
+                    </div>
+                    <div class="col-md-6 form-group mt-3">
+                        <label class="col-form-label"><strong>Você pertence ou atua em alguma comunidade ou povo tradicional?</strong></label>
+                        <div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="comunidadeTradicional" @checked(old('comunidadeTradicional') == 'true') id="comunidade_sim" value="true" required>
+                                <label class="form-check-label" for="comunidade_sim">Sim</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="comunidadeTradicional" @checked(old('comunidadeTradicional') == 'false') id="comunidade_nao" value="false">
+                                <label class="form-check-label" for="comunidade_nao">Não</label>
+                            </div>
+                            <input type="text" name="nomeComunidadeTradicional" value="{{ old('nomeComunidadeTradicional') }}" id="nomeComunidadeTradicional" class="form-control mt-2" placeholder="Se sim, qual?" style="max-width: 400px;" maxlength="200">
+                        </div>
+                    </div>
+                    {{-- Informações institucionais e de atuação --}}
+                    <div>
+                        <div class="form-group mt-3">
+                            <label for="vinculoInstitucional" class="col-form-label"><strong>Informações Institucionais e de Atuação (preenchimento opcional)</strong></label>
+                            <textarea name="vinculoInstitucional" id="vinculoInstitucional" class="form-control" placeholder="Vínculo institucional ou coletivo (se houver)" maxlength="1000" rows="5" style="height: 120px; resize: none; overflow: hidden;">{{ old('vinculoInstitucional') }}</textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-3 mt-3">
+                <input name="termos" class="form-check-input "
+                    type="checkbox" value="true" id="termos" required>
+                <label class="form-check-label" for="termos">
+                    {{ __('Concordo com o') }}
+                    <a  href="#modal-termo-de-cessao" data-bs-toggle="modal" data-bs-target="#modal-termo-de-cessao">Termo de autorização de imagem, voz e performance</a>.
+                </label>
+            </div>
+
+            <div class="mb-3">
+                <input name="termos" class="form-check-input "
+                    type="checkbox" value="true" id="termos" required>
+                <label class="form-check-label" for="termos">
+                    {{ __('Concordo e respeitarei os') }}
+                    <a  href="#modal-termo-de-uso" data-bs-toggle="modal" data-bs-target="#modal-termo-de-uso">Termos de uso da plataforma</a>.
+                </label>
+            </div>
 
             <div class="row form-group my-3">
                 <div class="col-md-10"></div>
@@ -597,7 +727,7 @@
       $(".apenasLetras").mask("#", {
         maxlength: false,
         translation: {
-            '#': {pattern: /[A-zÀ-ÿ ]/, recursive: true}
+            '#': {pattern: /[A-zÀ-ÿ0-9\s\-\.\(\)\[\]\{\}\/\\,;&@#$%*+=|<>!?~`'"]/, recursive: true}
         }
       });
       //$('#numero').mask('0000000000000');

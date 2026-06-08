@@ -264,7 +264,7 @@
                 <label for="metodo">Método de pagamento</label>
                 <select name="metodo" class="form-control" id="metodo" required>
                     <option value="" selected disabled>-- Selecione o método --</option>
-                    <option value="boleto">Boleto bancário</option>
+                    {{-- <option value="boleto">Boleto bancário</option> --}}
                     <option value="cartao">Cartão de Crédito</option>
                 </select>
             </div>

@@ -1,2 +1,3 @@
-@import 'variables';
-@import 'design-system';
+@use 'variables';
+@use "bootstrap/scss/bootstrap";
+@use 'design-system';

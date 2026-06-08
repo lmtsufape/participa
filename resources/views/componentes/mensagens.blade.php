@@ -23,7 +23,7 @@
     @endif
 </div>
 
-{{-- @if(session('success'))
+{{-- @if (session('success'))
   <div class="alert alert-success" role="alert" align="center">
     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
       <span aria-hidden="true">&times;</span>
@@ -32,7 +32,7 @@
   </div>
 @endif
 
-@if(session('error'))
+@if (session('error'))
   <div class="alert alert-danger"  role="alert" align="center">
     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
       <span aria-hidden="true">&times;</span>

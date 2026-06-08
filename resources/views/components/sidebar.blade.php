@@ -339,6 +339,15 @@
                                 <span>{{ __('Inscritos') }}</span>
                             </a>
                         </li>
+                        @if ($evento->inscricaoPCDHabilitada())
+                            <li class="nav-item">
+                                <a class="nav-link d-flex align-items-center gap-2"
+                                    href="{{ route('coord.inscricoes.pcd.listar', ['eventoId' => $evento->id]) }}">
+                                    <img src="{{ asset('img/icons/list.svg') }}" alt="" width="20px">
+                                    <span>{{ __('Inscritos PCD') }}</span>
+                                </a>
+                            </li>
+                        @endif
                     </ul>
                 </div>
             </li>
@@ -410,12 +419,18 @@
                                             <span>{{ __('Todos os trabalhos') }}</span>
                                         </a>
                                     </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link d-flex align-items-center gap-2"
+                                            href="{{ route('coord.listarTrabalhosPorEixo', ['eventoId' => $evento->id, 'titulo', 'asc', 'rascunho']) }}">
+                                            <span>{{ __('Filtrar trabalhos por eixo') }}</span>
+                                        </a>
+                                    </li>
                                     @foreach ($evento->modalidades()->get() as $modalidade)
                                         <li class="nav-item">
                                             <a class="nav-link d-flex align-items-center gap-2"
                                                 id="listarTrabalhos{{ $modalidade->id }}"
-                                                href="{{ route('coord.listarTrabalhos', ['eventoId' => $evento->id, 'modalidadeId' => $modalidade->id, 'titulo', 'asc', 'rascunho']) }}">
-                                                <span>{{ $modalidade->nome }}</span>
+                                                href="{{ route('coord.listarTrabalhosModalidades', ['eventoId' => $evento->id, 'modalidadeId' => $modalidade->id, 'titulo', 'asc', 'rascunho']) }}">
+                                                <span>{{ __('Modalidade') }}: {{ $modalidade->nome }}</span>
                                             </a>
                                         </li>
                                     @endforeach
@@ -435,23 +450,80 @@
                                             <span>{{ __('Todas as Avaliações') }}</span>
                                         </a>
                                     </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link d-flex align-items-center gap-2"
+                                            href="{{ route('coord.listarAvaliacoesPorEixo', ['eventoId' => $evento->id, 'titulo', 'asc', 'rascunho']) }}">
+                                            <span>{{ __('Filtrar Avaliações por Eixo') }}</span>
+                                        </a>
+                                    </li>
                                     @foreach ($evento->modalidades()->get() as $modalidade)
                                         <li class="nav-item">
                                             <a class="nav-link d-flex align-items-center gap-2"
                                                 id="listarAvaliacoesModalidade{{ $modalidade->id }}"
                                                 href="{{ route('coord.respostasTrabalhos', ['eventoId' => $evento->id, 'modalidadeId' => $modalidade->id]) }}">
-                                                <span>{{ $modalidade->nome }}</span>
+                                                <span>{{ __('Modalidade') }}: {{ $modalidade->nome }}</span>
                                             </a>
                                         </li>
                                     @endforeach
                                 </ul>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link d-flex align-items-center gap-2" id="correcoesTrabalhos"
-                                    href="{{ route('coord.listarCorrecoes', ['eventoId' => $evento->id, 'titulo', 'asc']) }}">
+                                <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" id="correcoesTrabalhosDropdown"
+                                    href="#collapseCorrecoes" role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="collapseCorrecoes">
                                     <img src="{{ asset('img/icons/list.svg') }}" alt="" width="20px">
                                     <span>{{ __('Listar correções') }}</span>
                                 </a>
+                                <ul class="collapse" id="collapseCorrecoes">
+                                    <li class="nav-item">
+                                        <a class="nav-link d-flex align-items-center gap-2"
+                                            href="{{ route('coord.listarCorrecoes', [$evento->id, 'titulo', 'asc']) }}">
+                                            <span>{{ __('Todas as correções') }}</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link d-flex align-items-center gap-2" id="correcoesPorEixo"
+                                            href="{{ route('coord.listarCorrecoesPorEixo', ['eventoId' => $evento->id]) }}">
+                                            <span>{{ __('Filtrar correções por eixo') }}</span>
+                                        </a>
+                                    </li>
+                                    @foreach ($evento->modalidades()->get() as $modalidade)
+                                        <li class="nav-item">
+                                            <a class="nav-link d-flex align-items-center gap-2"
+                                                href="{{ route('coord.listarCorrecoesPorModalidade', ['eventoId' => $evento->id, 'modalidadeId' => $modalidade->id, 'titulo', 'asc']) }}">
+                                                <span>{{ __('Modalidade') }}: {{ $modalidade->nome }}</span>
+                                            </a>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" id="validacoesTrabalhosDropdown"
+                                    href="#collapseValidacoes" role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="collapseValidacoes">
+                                    <img src="{{ asset('img/icons/list.svg') }}" alt="" width="20px">
+                                    <span>{{ __('Listar validações') }}</span>
+                                </a>
+                                <ul class="collapse" id="collapseValidacoes">
+                                    <li class="nav-item">
+                                        <a class="nav-link d-flex align-items-center gap-2"
+                                            href="{{ route('coord.listarValidacoes', ['eventoId' => $evento->id, 'titulo', 'asc']) }}">
+                                            <span>{{ __('Todas as validações') }}</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link d-flex align-items-center gap-2"
+                                            href="{{ route('coord.listarValidacoesPorEixo', ['eventoId' => $evento->id, 'titulo', 'asc']) }}">
+                                            <span>{{ __('Filtrar validações por eixo') }}</span>
+                                        </a>
+                                    </li>
+                                    @foreach ($evento->modalidades()->get() as $modalidade)
+                                        <li class="nav-item">
+                                            <a class="nav-link d-flex align-items-center gap-2"
+                                                href="{{ route('coord.listarValidacoesPorModalidade', ['eventoId' => $evento->id, 'modalidadeId' => $modalidade->id, 'column' => 'titulo', 'direction' => 'asc']) }}">
+                                                <span>{{ __('Modalidade') }}: {{ $modalidade->nome }}</span>
+                                            </a>
+                                        </li>
+                                    @endforeach
+                                </ul>
                             </li>
                         @endcan
                     </ul>
@@ -587,17 +659,17 @@
                     <ul class="nav flex-column">
                         <li class="nav-item">
                             @if ($evento->publicado)
-                            <a class="nav-link d-flex align-items-center gap-2" id="desabilitarEventoPublicado"
-                                onclick="desabilitarEvento()">
-                                <img src="{{ asset('img/icons/alto-falante-nao.svg') }}" alt="" width="20px">
-                                <span>{{ __('Desfazer publicação') }}</span>
-                            </a>
+                                <a class="nav-link d-flex align-items-center gap-2" id="desabilitarEventoPublicado"
+                                    onclick="desabilitarEvento()">
+                                    <img src="{{ asset('img/icons/alto-falante-nao.svg') }}" alt="" width="20px">
+                                    <span>{{ __('Desfazer publicação') }}</span>
+                                </a>
                             @else
-                            <a class="nav-link d-flex align-items-center gap-2" id="publicarEvento"
-                                onclick="habilitarEvento()">
-                                <img src="{{ asset('img/icons/alto-falante.svg') }}" alt="" width="20px">
-                                <span>{{ __('Publicar evento') }}</span>
-                            </a>
+                                <a class="nav-link d-flex align-items-center gap-2" id="publicarEvento"
+                                    onclick="habilitarEvento()">
+                                    <img src="{{ asset('img/icons/alto-falante.svg') }}" alt="" width="20px">
+                                    <span>{{ __('Publicar evento') }}</span>
+                                </a>
                             @endif
                         </li>
                     </ul>

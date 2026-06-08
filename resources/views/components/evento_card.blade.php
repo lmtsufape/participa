@@ -21,6 +21,12 @@
 
         </div>
 
+        @if (!$slot->isEmpty())
+            <div class="mt-2">
+                {{ $slot }}
+            </div>
+        @endif
+
         {{-- Descrição --}}
         <p class="small text-muted mb-0">
             {!! $descricao !!}

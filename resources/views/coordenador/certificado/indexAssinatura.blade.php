@@ -15,24 +15,7 @@
             </div>
         </div>
     </div>
-    @if(session('success'))
-        <div class="row">
-            <div class="col-md-12" style="margin-top: 5px;">
-                <div class="alert alert-success">
-                    <p>{{session('success')}}</p>
-                </div>
-            </div>
-        </div>
-    @endif
-    @if(session('error'))
-        <div class="row">
-            <div class="col-md-12" style="margin-top: 5px;">
-                <div class="alert alert-danger">
-                    <p>{{session('error')}}</p>
-                </div>
-            </div>
-        </div>
-    @endif
+
     <div class="row cards-eventos-index">
         @foreach ($assinaturas as $assinatura)
             @can('isCoordenadorOrCoordenadorDasComissoes', $evento)
@@ -53,12 +36,12 @@
                         <div>
                             <div>
                                 <a href="{{route('coord.editarAssinatura', ['eventoId' => $assinatura->evento->id, 'id' => $assinatura->id])}}">
-                                    <i class="fas fa-cog" style="color: black"></i>&nbsp;&nbsp;Editar
+                                    <img src="{{asset('img/icons/edit-regular.svg')}}" alt="Editar" style="width: 16px; height: 16px; margin-right: 8px;">Editar
                                 </a>
                             </div>
                             <div>
                                 <a data-bs-toggle="modal" data-bs-target="#modalStaticDeletarAssinatura_{{$assinatura->id}}" style="color: red; cursor: pointer;">
-                                    <i class="far fa-trash-alt" style="color: black"></i>&nbsp;&nbsp;Deletar assinatura
+                                    <img src="{{asset('img/icons/trash-alt-regular.svg')}}" alt="Deletar assinatura" style="width: 16px; height: 16px; margin-right: 8px;">Deletar assinatura
                                 </a>
                             </div>
                         </div>

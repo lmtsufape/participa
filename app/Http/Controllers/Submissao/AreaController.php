@@ -14,7 +14,6 @@ class AreaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-
     public function index(Request $request)
     {
         $evento = Evento::find($request->eventoId);
@@ -27,6 +26,11 @@ class AreaController extends Controller
         ]);
     }
 
+        return view('coordenador.areas.listarAreas', [
+            'evento' => $evento,
+            'areas' => $areas,
+        ]);
+    }
     /**
      * Show the form for creating a new resource.
      *

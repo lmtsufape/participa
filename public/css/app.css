@@ -174,3 +174,62 @@
   color: #4BC76C !important;
 }
 
+/* Botão 'ver mais' das áreas */
+.btn-ver-mais-areas {
+  border: 1px solid #114048ff;
+  color: #114048ff;
+  border-radius: 999px;
+  background: transparent;
+  padding: 8px 36px;
+  min-width: 140px;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: background 0.2s, color 0.2s, border 0.2s;
+  text-align: center;
+  display: inline-block;
+  text-decoration: none;  
+}
+.btn-ver-mais-areas:hover, .btn-ver-mais-areas:focus {
+  background: #114048ff;
+  color: #fff;
+  border: 1px solid #114048ff;
+  text-decoration: none;
+}
+
+.btn-associacao {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.btn-associar {
+  color: #4BC76C;
+  background-color: white;
+  padding: 8px 36px;
+  border-radius: 0.25rem;
+  text-decoration: none;
+  font-weight: bold;
+  display: flex;
+  height: auto;
+  align-items: center;
+}
+
+.btn-associar:hover {
+  background-color: #EEE;
+}
+
+.container-associar {
+  background-color: #4BC76C;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+}
+
+.container-associar:hover {
+  background-color: #4BC76C;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+}

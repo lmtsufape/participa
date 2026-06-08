@@ -1,30 +1,28 @@
-<nav class="navbar navbar-expand-lg shadow-sm" style="background-color: #114048">
+<nav class="navbar navbar-expand-lg shadow-sm" style="background-color: #034652">
     @php
         $incompleto = optional(Auth::user())->usuarioTemp;
     @endphp
     <div class="container">
         @if($incompleto)
             <a class="navbar-brand" href="">
-                <img src="{{ asset('/img/logo-novo.png') }}" alt="" width="210vw">
+                <img src="{{ asset('/img/logo-sistema-letra-branca.png') }}" alt="" width="150vw">
             </a>
         @else
             <a class="navbar-brand" href="{{route('index')}}">
-                <img src="{{ asset('/img/logo-novo.png') }}" alt="" width="210vw">
+                <img src="{{ asset('/img/logo-sistema-letra-branca.png') }}" alt="" width="150vw">
             </a>
         @endif
 
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Alterna navegação">
+        <button class="navbar-toggler border-white" type="button" data-bs-toggle="collapse" data-bs-theme="dark" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Alterna navegação">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse flex-grow-0"  id="navbarNavAltMarkup">
             <div class="navbar-nav text-right">
-
-
                 @auth
                     @if($incompleto)
                         <li class="nav-item">
                             <a
-                                class="nav-link text-my-primary fw-semibold"
+                                class="nav-link text-white fw-semibold"
                                 href="{{ route('logout') }}"
                                 style="margin-right: 5px; margin-left: 5px"
                                 onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
@@ -48,19 +46,19 @@
                         </form>
                     @else
                         <li class="nav-item">
-                            <a class="nav-link fw-semibold" href="{{ route('home') }}" style="margin-right: 5px; margin-left: 5px; color: white;">
+                            <a class="nav-link text-white fw-semibold" href="{{ route('home') }}" style="margin-right: 5px; margin-left: 5px">
                                 @lang('public.meusEventos')
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link fw-semibold" href="{{ route('meusCertificados') }}" style="margin-right: 5px; margin-left: 5px; color: white;">
+                            <a class="nav-link text-white fw-semibold" href="{{ route('meusCertificados') }}" style="margin-right: 5px; margin-left: 5px">
                                 @lang('public.meusCertificados')
                             </a>
                         </li>
 
 
                         <li class="nav-item dropdown">
-                            <a id="menuDropdown" class="nav-link dropdown-toggle fw-semibold" href="#"  role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color: white;">
+                            <a id="menuDropdown" class="nav-link dropdown-toggle text-white fw-semibold" href="#"  role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 {{ Auth::user()->name }}
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="menuDropdown">
@@ -163,6 +161,19 @@
                                     </ul>
                                 </li>
 
+                                @php
+                                    $temComprovantes = Auth::user()->inscricaos()
+                                        ->where('finalizada', true)
+                                        ->exists();
+                                @endphp
+
+                                @if($temComprovantes)
+                                    <a class="dropdown-item" href="{{ route('comprovantes') }}">
+                                        <img src="{{asset('img/icons/cash-payment-solid.svg')}}"  width="22px"  alt="">
+                                        {{ __('Meus Comprovantes') }}
+                                    </a>
+                                @endif
+
                                 {{-- Link Trabalhos --}}
                                 @if (
                                     (Auth::user()->trabalho()->where('status', '!=', 'arquivado')->exists() ||
@@ -191,20 +202,11 @@
 
                 @else
                     <li class="nav-item dropdown">
-                        <a class="nav-link text-white fw-semibold" href="{{ route('login') }}" style="margin-right: 5px; margin-left: 5px">{{ __('Login') }}</a>
+                        <a class="nav-link text-white border-end border-1 px-4 py-0 my-2 fw-semibold" href="{{ route('login') }}">{{ __('Login') }}</a>
                     </li>
+
                     <li class="nav-item dropdown">
-                        <div class="nav-link text-my-primary fw-semibold">
-                            |
-                        </div>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link text-white fw-semibold" href="{{ route('preRegistro') }}">{{ __('Cadastre-se') }}</a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <div class="nav-link text-my-primary fw-semibold">
-                            |
-                        </div>
+                        <a class="nav-link text-white border-end border-1 px-4 py-0 my-2 fw-semibold" href="{{ route('preRegistro') }}">{{ __('Cadastre-se') }}</a>
                     </li>
                 @endauth
 
@@ -212,7 +214,7 @@
 
                 <li class="nav-item dropdown">
                     <a id="navbarDropdown"
-                    class="nav-link dropdown-toggle d-inline-flex align-items-center gap-2 text-white fw-semibold"
+                    class="nav-link dropdown-toggle d-inline-flex align-items-center ms-3 gap-2 text-white fw-semibold"
                     href="#" role="button"
                     data-bs-toggle="dropdown"
                     aria-haspopup="true"

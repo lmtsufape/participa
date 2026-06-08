@@ -10,20 +10,26 @@ use Maatwebsite\Excel\Concerns\WithMapping;
 class CandidatosAvaliadoresExport implements FromCollection, WithHeadings, WithMapping
 {
     protected $eventoId;
+    protected $eixos;
     private $lastUserId = null;    // guarda o último user_id processado
 
-    public function __construct($eventoId)
+    public function __construct($eventoId, $eixos = null)
     {
         $this->eventoId = $eventoId;
+        $this->eixos = $eixos; 
     }
 
     public function collection()
     {
-        return CandidatoAvaliador::with(['user', 'area'])
+        $query = CandidatoAvaliador::with(['user', 'area'])
             ->where('evento_id', $this->eventoId)
-            ->orderBy('area_id')      // agrupa por área antes de ordenar por usuário
-            ->orderBy('user_id')      // depois ordena por user_id dentro da área
-            ->get();
+            ->orderBy('user_id');
+
+        if ($this->eixos && is_array($this->eixos)) {
+            $query->whereIn('area_id', $this->eixos);
+        }
+
+        return $query->get();
     }
 
     public function headings(): array
@@ -69,9 +75,14 @@ class CandidatosAvaliadoresExport implements FromCollection, WithHeadings, WithM
 
         // linhas seguintes: só o eixo, demais colunas em branco
         return [
-            '', '', '', '', '',
+            $candidato->user->name ?? 'N/A',
+            $candidato->user->email ?? 'N/A',
+            $status,
+            $candidato->link_lattes,
+            $candidato->resumo_lattes,
             $candidato->area->nome,
-            '', '',
+            $candidato->ja_avaliou_cba ? 'Sim' : 'Não',
+            $candidato->disponibilidade_idiomas,
         ];
     }
 }

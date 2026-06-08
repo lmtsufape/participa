@@ -46,6 +46,9 @@ class EmailCertificado extends Mailable implements ShouldQueue
                 'user' => $this->user,
                 'cargo' => $this->cargo,
                 'evento' => $this->nomeEvento,
-            ])->attachData($this->pdf->output(), 'Certificado.pdf');
+            ])
+            ->attachData($this->pdf->output(), 'Certificado.pdf', [
+                'mime' => 'application/pdf',
+            ]);
     }
 }

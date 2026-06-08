@@ -89,7 +89,7 @@
                                                                 @enderror
                                                             </div>
                                                         </div>
-                                                        <div class="form-group" style="display: none">
+                                                        <div class="form-group" >
                                                             <div class="form-check">
                                                                 <label class="form-check-label">
                                                                     <input class="form-check-input @error('permite_inscricao') is-invalid @enderror" type="checkbox" name="permite_inscricao" checked value="1">

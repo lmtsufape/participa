@@ -31,8 +31,8 @@ class ArrumarDistribuicao extends Command
             ->with(['revisores.modalidade'])
             ->get();
         foreach ($trabalhos as $trabalho) {
-            $atribuicoes = $trabalho->revisores;
-            foreach ($atribuicoes as $revisor) {
+            $revisores = $trabalho->revisores;
+            foreach ($revisores as $revisor) {
                 if ($revisor->modalidadeId != $trabalho->modalidadeId) {
                     $revisorCerto = Revisor::where([['modalidadeId', $trabalho->modalidadeId], ['areaId', $trabalho->areaId], ['user_id', $revisor->user_id]])->first();
                     if ($revisorCerto) {

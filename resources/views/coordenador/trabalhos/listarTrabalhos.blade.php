@@ -1,232 +1,214 @@
 @extends('layouts.app')
 @section('sidebar')
 
+
 @endsection
 @section('content')
-    <!-- Trabalhos -->
+    <div id="divListarTrabalhos" style="display: block">
 
-    <div class="container">
         <div class="row ">
             <div class="col-sm-6">
                 <h1 class="">Trabalhos</h1>
             </div>
+
             <div class="col-sm-3"></div>
             <div class="col-sm-3">
                 <div class="row mt-1">
-                    <a class="btn btn-primary col-sm" href="{{route('evento.downloadResumos', $evento)}}">Baixar resumos</a>
+                    <a class="btn btn-primary col-sm" href="{{ route('evento.downloadResumos', $evento) }}">Baixar resumos</a>
                 </div>
                 <div class="row mt-1">
-                    <a class="btn btn-primary col-sm" href="{{route('evento.downloadTrabalhos', $evento)}}">Exportar Trabalhos .xlsx</a>
+                    <a class="btn btn-primary col-sm" href="{{ route('evento.downloadTrabalhos', $evento) }}">Exportar trabalhos .xlsx</a>
                 </div>
                 <div class="row mt-1">
-                    <a class="btn btn-primary col-sm" href="{{route('evento.downloadTrabalhosAprovadosPDF', $evento)}}">
+                    <a class="btn btn-primary col-sm" href="{{ route('evento.exportarRelatorioGeral', $evento) }}">Gerar Relatório (.xlsx)</a>
+                </div>
+                <div class="row mt-1">
+                    <a class="btn btn-primary col-sm" href="{{ route('evento.downloadTrabalhosAprovadosPDF', $evento) }}">
                         Lista de Trabalhos Aprovados (PDF)
                     </a>
                 </div>
-                <!-- <div class="row mt-1">
-                    <a class="btn btn-primary col-sm" data-bs-toggle="modal" data-bs-target="#exportCertificaModal">Exportar XLSX para o Certifica</a>
-                </div> -->
             </div>
         </div>
-        <div class="row mt-5">
-            <div class="col-md-1">
-                <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
-                    <div class="btn-group" role="group">
-                    <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Opções
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                        <a class="dropdown-item" href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'filter[status]' => 'rascunho'])}}">
-                            Todos
-                        </a>
-                        <a class="dropdown-item" href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'filter[status]' => 'arquivado'])}}">
-                            Arquivados
-                        </a>
-                        <a class="dropdown-item" href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'filter[has_revisor]' => 'false'])}}">
-                            Sem avaliador
-                        </a>
-                        <a class="dropdown-item" href="{{route('coord.listarTrabalhos',[ 'eventoId' => $evento->id, 'filter[has_revisor]' => 'true'])}}">
-                            Com avaliador
-                        </a>
-                        <a class="dropdown-item disabled" href="#" >
-                            Submetidos
-                        </a>
-                        <a class="dropdown-item disabled" href="#" >
-                            Aprovados
-                        </a>
-                        <a class="dropdown-item disabled" href="#" >
-                            Corrigidos
-                        </a>
-                        <a class="dropdown-item disabled" href="#" >
-                            Rascunhos
-                        </a>
-                    </div>
-                    </div>
+
+        {{-- Filtro de Status --}}
+        <div class="btn-group mb-2" role="group" aria-label="Button group with nested dropdown">
+            <div class="btn-group" role="group">
+                <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                    Opções de Filtro: {{ ucfirst(str_replace('_', ' ', $status)) }}
+                </button>
+                <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                    <a class="dropdown-item" href="{{ route('coord.listarTrabalhos', ['eventoId' => $evento->id, 'column' => 'titulo', 'direction' => 'asc', 'status' => 'rascunho']) }}">Todos</a>
+                    <a class="dropdown-item" href="{{ route('coord.listarTrabalhos', ['eventoId' => $evento->id, 'column' => 'titulo', 'direction' => 'asc', 'status' => 'arquivado']) }}">Arquivados</a>
+                    <a class="dropdown-item" href="{{ route('coord.listarTrabalhos', ['eventoId' => $evento->id, 'column' => 'titulo', 'direction' => 'asc', 'status' => 'no_revisor']) }}">Sem avaliador</a>
+                    <a class="dropdown-item" href="{{ route('coord.listarTrabalhos', ['eventoId' => $evento->id, 'column' => 'titulo', 'direction' => 'asc', 'status' => 'with_revisor']) }}">Com avaliador</a>
                 </div>
             </div>
+        </div>
 
-            <div class="col-md-11">
-                <x-ui.search-box placeholder="Buscar por ID, título ou autor..." aria_label_btn="Buscar trabalhos" txt_btn="Buscar"/>
-                <input type="hidden" form="search-box" name="eventoId" id="eventoId" value="{{ $evento->id }}">
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+        <div class="card mb-3">
+            <div class="card-body">
+                <form method="GET" action="{{ route('coord.listarTrabalhos') }}">
+                    <input type="hidden" name="eventoId" value="{{ $evento->id }}">
+                    <input type="hidden" name="status" value="{{ $status }}">
+                    <div class="row">
+                        <div class="col-md-2">
+                            <label for="id" class="form-label">Buscar por ID</label>
+                            <input type="number" class="form-control" name="id" value="{{ request('id') }}" placeholder="Digite o ID...">
+                        </div>
+                        <div class="col-md-8">
+                            <label for="titulo" class="form-label">Buscar por Título</label>
+                            <input type="text" class="form-control" name="titulo" value="{{ request('titulo') }}" placeholder="Digite o título do trabalho...">
+                        </div>
+                        <div class="col-md-2 d-flex align-items-end">
+                            <button type="submit" class="btn btn-primary w-100">Buscar</button>
+                        </div>
+                    </div>
+                    @if(request('titulo') || request('id'))
+                        <div class="row mt-2">
+                            <div class="col-12">
+                                <a href="{{ route('coord.listarTrabalhos', ['eventoId' => $evento->id, 'column' => request('column', 'titulo'), 'direction' => request('direction', 'asc'), 'status' => request('status', 'rascunho')]) }}" class="btn btn-outline-success btn-sm">Limpar filtros</a>
+                            </div>
+                        </div>
+                    @endif
+                </form>
             </div>
         </div>
 
-        <div class="card">
-            <div class="card-body">
-                <div class="row table-trabalhos">
-                    <div class="col-md-12">
-                        <form action="{{route('atribuicao.check')}}" method="post">
-                            @csrf
-                            <input type="hidden" name="eventoId" value="{{$evento->id}}">
-                            <div class="table-responsive">
-                                <table class="table table-md table-hover">
-                                    <thead>
-                                        <tr>
-                                            <th class="">
-                                                @sortlink('id', 'ID')
-                                            </th>
-                                            <th scope="col">
-                                                @sortlink('titulo', 'Título')
-                                            </th>
-                                            <th scope="col">
-                                                Modalidade
-                                            </th>
-                                            <th scope="col">
-                                                Área
-                                            </th>
-                                            <th scope="col">
-                                                Autor
-                                            </th>
-                                            <th scope="col">Mídias Extras</th>
-                                            <th scope="col">Apresentação</th>
-                                            <th scope="col">Avaliadores</th>
-                                            <th scope="col">Avaliações</th>
-                                            <th scope="col">
-                                                @sortlink('created_at', 'Data')
-                                            </th>
-                                            <th scope="col">Atribuir</th>
-                                            @can('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento)
-                                                <th scope="col">Ações</th>
-                                            @endcan
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($trabalhos as $trabalho)
-                                            <tr id="trab{{$trabalho->id}}">
-                                                <td>{{ $trabalho->id }}</td>
-                                                <td>
-                                                    @if ($trabalho->arquivo && count($trabalho->arquivo) > 0)
-                                                        <a href="{{route('downloadTrabalho', ['id' => $trabalho->id])}}">
-                                                            <span class="d-inline-block" class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" title="{{$trabalho->titulo}}">
-                                                                {{$trabalho->titulo}}
-                                                            </span>
-                                                        </a>
+        @foreach ($modalidades as $modalidade)
+            @if ($modalidade->trabalhos_count > 0)
+                <div class="row justify-content-center">
+                    <div class="col-sm-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Modalidade: <span class="card-subtitle mb-2 text-muted">{{ $modalidade->nome }} ({{ $modalidade->trabalhos_count }})</span></h5>
+                                <div class="table-responsive">
+                                    <table class="table table-sm table-hover table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Título</th>
+                                                <th>Área</th>
+                                                <th>Autor</th>
+                                                @foreach ($modalidade->midiasExtra as $midia)
+                                                    <th scope="col">{{$midia->nome}}</th>
+                                                @endforeach
+                                                @if ($modalidade->apresentacao)
+                                                    <th scope="col">Apresentação</th>
+                                                @endif
+                                                <th>Avaliadores</th>
+                                                <th>Avaliações</th>
+                                                <th>Apresentado</th>
+                                                <th>Data</th>
+                                                <th>Atribuir</th>
+                                                @can('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento)
+                                                    <th>Arquivar</th>
+                                                    @if ($status == 'rascunho')
+                                                        <th style="display: none;">Excluir</th>
                                                     @else
-                                                        <span class="d-inline-block" class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" title="{{$trabalho->titulo}}">
-                                                            {{$trabalho->titulo}}
-                                                        </span>
+                                                        <th>Excluir</th>
                                                     @endif
-                                                </td>
-                                                <td>
-                                                    {{$trabalho->modalidade->nome}}
-                                                </td>
-                                                <td>
-                                                    <span class="d-inline-block" class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" title="{{$trabalho->area->nome}}" style="max-width: 150px;">
-                                                        {{$trabalho->area->nome}}
-                                                    </span>
-                                                </td>
-                                                <td>{{$trabalho->autor->name}}</td>
-                                                <td>
-                                                    @foreach ($trabalho->modalidade->midiasExtra as $midia)
-                                                        @if($trabalho->midiasExtra()->where('midia_extra_id', $midia->id)->first() != null)
-                                                            <a href="{{route('downloadMidiaExtra', ['id' => $trabalho->id, 'id_midia' => $midia->id])}}">
-                                                                <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" title="{{$midia->nome}}" style="max-width: 150px;">
-                                                                    <img class="" src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px">
-                                                                </span>
-                                                            </a>
+                                                @endcan
+                                                <th>Editar</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($modalidade->trabalho as $trabalho)
+                                                <tr id="trab{{ $trabalho->id }}">
+                                                    <td>{{ $trabalho->id }}</td>
+                                                    <td>
+                                                        @if ($trabalho->tem_arquivo)
+                                                            <a href="{{ route('downloadTrabalho', ['id' => $trabalho->id]) }}">{{ $trabalho->titulo }}</a>
+                                                        @else
+                                                            {{ $trabalho->titulo }}
                                                         @endif
-                                                    @endforeach
-                                                </td>
-                                                <td>
-                                                    @if ($trabalho->modalidade->apresentacao)
-                                                        {{$trabalho->tipo_apresentacao}}
-                                                    @endif
-                                                </td>
-                                                <td>
-                                                    {{ $trabalho->revisores()->count() }}
-                                                </td>
-                                                <td>{{ $trabalho->getQuantidadeAvaliacoes() }}</td>
-                                                <td>{{ date("d/m/Y H:i", strtotime($trabalho->created_at)) }}</td>
-                                                <td class="text-center">
-                                                    <livewire:trabalhos.buttons.atribuir-trabalho
-                                                        :trabalho-id="$trabalho->id"
-                                                        :evento-id="$evento->id"
-                                                    />
-                                                </td>
-                                                <td class="text-center">
-                                                    <span class="d-flex gap-3">
-                                                        @can('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento)
-                                                            <a href="{{ route('coord.trabalho.edit', ['id' => $trabalho->id]) }}" >
-                                                                <i class="bi bi-pencil-square text-primary fs-5"></i>
-                                                            </a>
-                                                            @if ($trabalho->status == 'rascunho')
-                                                                <a href="{{ route('trabalho.status', [$trabalho->id, 'arquivado'] ) }}" >
-                                                                    <i class="bi bi-archive-fill text-secondary fs-5"></i>
-                                                                </a>
-                                                            @elseif ($trabalho->status == 'arquivado')
-                                                                <a href="#" data-bs-toggle="modal" data-bs-target="#modalExcluirTrabalho_{{$trabalho->id}}">
-                                                                    <i class="bi bi-trash text-danger fs-5"></i>
+                                                    </td>
+                                                    <td>{{ $trabalho->area->nome }}</td>
+                                                    <td>{{ $trabalho->autor->name }}</td>
+                                                    @foreach ($modalidade->midiasExtra as $midia)
+                                                        <td>
+                                                            @if($trabalho->midias_extra_verificadas->has($midia->id))
+                                                                <a href="{{route('downloadMidiaExtra', ['id' => $trabalho->id, 'id_midia' => $midia->id])}}">
+                                                                    <img src="{{asset('img/icons/file-download-solid.svg')}}" style="width:20px" alt="Baixar mídia extra">
                                                                 </a>
                                                             @endif
-                                                        @endcan
-                                                    </span>
-                                                </td>
-                                            </tr>
-                                            {{-- <x-modal-adicionar-revisor :trabalho="$trabalho" :evento="$evento" />
-                                            <x-modal-excluir-trabalho :trabalho="$trabalho" /> --}}
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                                <div class="mt-5 d-flex justify-content-center">
-                                    {{ $trabalhos->appends(request()->query())->links('pagination::bootstrap-5') }}
+                                                        </td>
+                                                    @endforeach
+                                                    @if ($modalidade->apresentacao)
+                                                        <td>{{ $trabalho->tipo_apresentacao }}</td>
+                                                    @endif
+                                                    <td>{{ $trabalho->revisores_count }}</td>
+                                                    <td>{{ $trabalho->quantidade_avaliacoes }}</td>
+                                                    <td>
+                                                        @if($trabalho->apresentado)
+                                                            <span class="badge bg-success">Sim</span>
+                                                        @else
+                                                            <span class="badge bg-secondary">Não</span>
+                                                        @endif
+                                                    </td>
+                                                    <td>{{ $trabalho->created_at?->format('d/m/Y H:i') }}</td>
+                                                    <td style="text-align:center">
+                                                        <livewire:buttons.ver-trabalho-btn
+                                                            :trabalho-id="$trabalho->id"
+                                                            :evento-id="$evento->id"
+                                                        />
+
+                                                    </td>
+                                                    @can('isCoordenadorOrCoordenadorDaComissaoCientifica', $trabalho->evento)
+                                                        <td style="text-align:center">
+                                                            @if ($trabalho->status == 'arquivado')
+                                                                <a href="{{ route('trabalho.status', [$trabalho->id, 'rascunho']) }}" title="Desarquivar"><img src="{{ asset('img/icons/archive.png') }}" width="20" alt="Desarquivar"></a>
+                                                            @else
+                                                                <a href="{{ route('trabalho.status', [$trabalho->id, 'arquivado']) }}" title="Arquivar"><img src="{{ asset('img/icons/archive.png') }}" width="20" alt="Arquivar"></a>
+                                                            @endif
+                                                        </td>
+                                                        @if ($trabalho->status == 'arquivado')
+                                                            <td style="text-align:center">
+                                                                    <a href="#" data-bs-toggle="modal" data-bs-target="#modalExcluirTrabalho_{{ $trabalho->id }}"><img src="{{ asset('img/icons/lixo.png') }}" width="20" alt="Excluir"></a>
+                                                            </td>
+                                                        @endif
+                                                    @endcan
+                                                        <td style="text-align:center">
+                                                            <a href="{{ route('coord.trabalho.edit', ['id' => $trabalho->id]) }}"><img src="{{ asset('img/icons/edit-regular.svg') }}" width="20" alt="Editar"></a>
+                                                        </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </form>
                     </div>
                 </div>
+            @endif
+        @endforeach
+
+        @foreach ($trabalhos as $trabalho)
+            <x-modal-excluir-trabalho :trabalho="$trabalho" />
+        @endforeach
+
+        @if($trabalhos->hasPages())
+            <div class="d-flex justify-content-center mt-4">
+                {{ $trabalhos->links() }}
             </div>
-        </div>
+        @endif
 
+        @include('coordenador.trabalhos.export_certifica_modal', compact('evento'))
     </div>
-
-    @include('coordenador.trabalhos.export_certifica_modal', compact('evento'))
 @endsection
 
 @section('javascript')
     @parent
     <script>
-
-        $(function(){
-            //your current click function
-            $('.scroll').on('click',function(e){
-                e.preventDefault();
-                $('html,body').animate({
-                    scrollTop:$($(this).attr('href')).offset().top + 'px'
-                },1000,'swing');
-            });
-
-            // if we have anchor on the url (calling from other page)
-            if(window.location.hash){
-                // smooth scroll to the anchor id
-                $('html,body').animate({
-                    scrollTop:$(window.location.hash).offset().top - $('.navbar').first().height() - 20 + 'px'
-                    },1000,'swing');
-            }
-        });
-
-        function marcarCheckboxes(id) {
-            $(".modalidade" + id).prop('checked', $('#selectAllCheckboxes'+id).is(":checked"));
-        }
         const id = {!! json_encode(old('trabalhoId')) !!};
         $(document).ready(function(){
             if(id != null){
