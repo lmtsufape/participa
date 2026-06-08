@@ -23,17 +23,17 @@ class TrabalhoPostRequest extends FormRequest
      */
     public function authorize()
     {
-        $modalidade = Modalidade::find($this->request->get('modalidadeId'));
+        $modalidade = Modalidade::find($this->request->get('modalidade_id'));
         $mytime = Carbon::now('America/Recife');
-        $evento = Evento::find(request()->eventoId);
-        if (! $modalidade->estaEmPeriodoDeSubmissao()) {
-            return $this->user()->can('isCoordenadorOrCoordenadorDasComissoes', $evento);
-        }
-        if (! $modalidade->estaEmPeriodoDeSubmissao()) {
-            return redirect()->route('home');
-        }
+        $evento = Evento::find($modalidade->eventoId);
+        // if (! $modalidade->estaEmPeriodoDeSubmissao()) {
+        //     return $this->user()->can('isCoordenadorOrCoordenadorDasComissoes', $evento);
+        // }
+        // if (! $modalidade->estaEmPeriodoDeSubmissao()) {
+        //     return redirect()->route('home');
+        // }
 
-        return 1;
+        return true;
     }
 
     /**
@@ -43,14 +43,13 @@ class TrabalhoPostRequest extends FormRequest
      */
     public function rules()
     {
-        $evento = Evento::find(request()->eventoId);
-        $modalidade = Modalidade::find(request()->modalidadeId);
+        $modalidade = Modalidade::find(request()->modalidade_id);
         $validate_array = [
             'nomeTrabalho' => ['required', 'string'],
             'nomeTrabalho_en' => ['nullable', 'string'],
-            'areaId' => ['required', 'integer'],
-            'modalidadeId' => ['required', 'integer'],
-            'eventoId' => ['required', 'integer'],
+            'area_id'       => ['required', 'exists:areas,id'],
+            'modalidade_id' => ['required', 'exists:modalidades,id'],
+            'evento_id'     => ['required', 'exists:eventos,id'],
             'resumo' => ['nullable', 'string'],
             'resumo_en' => ['nullable', 'string'],
             'nomeCoautor.*' => ['string'],
@@ -87,7 +86,7 @@ class TrabalhoPostRequest extends FormRequest
         ];
 
         foreach ($modalidade->midiasExtra as $midia) {
-            $validate_array[$midia->hyphenizeNome()] = ['required', 'file', new FileType($modalidade, $midia, request()[$midia->hyphenizeNome()], false)];
+            $validate_array[$midia->hyphenizeNome] = ['required', 'file', new FileType($modalidade, $midia, request()[$midia->hyphenizeNome], false)];
         }
 
         return $validate_array;

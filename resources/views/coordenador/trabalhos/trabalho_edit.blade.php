@@ -16,15 +16,7 @@
         </div>
 
     </div>
-    @if(session('mensagem'))
-        <div class="row">
-            <div class="col-md-12" style="margin-top: 5px;">
-                <div class="alert alert-success">
-                    <p>{{session('mensagem')}}</p>
-                </div>
-            </div>
-        </div>
-    @endif
+
     <div class="row">
         <div class="modal-body">
             <form id="formEditarTrab{{$trabalho->id}}" action="{{route('editar.trabalho', ['id' => $trabalho->id])}}" method="POST" enctype="multipart/form-data">
@@ -71,6 +63,7 @@
                             <label><b>{{$evento->formSubTrab->etiquetaautortrabalho}}</b></label>
                         </div>
                     </div>
+
                         <div id="coautores{{$trabalho->id}}" class="flexContainer " >
                           @if (old('nomeCoautor_'.$trabalho->id) != null)
                             @foreach (old('nomeCoautor_'.$trabalho->id) as $i => $nomeCoautor)
@@ -79,11 +72,11 @@
                                 @endif
                                 <div class="item card mt-0">
                                     <div class="row card-body">
-                                        <div class="col-sm-4">
+                                        <div class="col-md-4">
                                             <label>E-mail</label>
                                             <input type="email" style="margin-bottom:10px" value="{{old('emailCoautor_'.$trabalho->id)[$i]}}" class="form-control emailCoautor" name="emailCoautor_{{$trabalho->id}}[]" required placeholder="E-mail">
                                         </div>
-                                        <div class="col-sm-5">
+                                        <div class="col-md-5">
                                             <label>Nome Completo</label>
                                             <input type="text" style="margin-bottom:10px" value="{{$nomeCoautor}}" class="form-control emailCoautor" name="nomeCoautor_{{$trabalho->id}}[]" required placeholder="Nome">
                                         </div>
@@ -104,11 +97,11 @@
                           @else
                             <div class="item card mt-0">
                                 <div class="row card-body">
-                                    <div class="col-sm-4">
+                                    <div class="col-md-4">
                                         <label>E-mail</label>
                                         <input type="email" style="margin-bottom:10px" value="{{$trabalho->autor->email}}" oninput="buscarEmail(this)" class="form-control emailCoautor" name="emailCoautor_{{$trabalho->id}}[]" placeholder="E-mail" required>
                                     </div>
-                                    <div class="col-sm-5">
+                                    <div class="col-md-5">
                                         <label>Nome Completo</label>
                                         <input type="text" style="margin-bottom:10px" value="{{$trabalho->autor->name}}" class="form-control emailCoautor" name="nomeCoautor_{{$trabalho->id}}[]" placeholder="Nome" required>
                                     </div>
@@ -138,11 +131,11 @@
                             @foreach ($trabalho->coautors as $i => $coautor)
                                 <div class="item card mt-0">
                                     <div class="row card-body">
-                                        <div class="col-sm-4">
+                                        <div class="col-md-4">
                                             <label>E-mail</label>
                                             <input type="email" style="margin-bottom:10px" value="{{$coautor->user->email}}" oninput="buscarEmail(this)" class="form-control emailCoautor" name="emailCoautor_{{$trabalho->id}}[]" placeholder="E-mail" required>
                                         </div>
-                                        <div class="col-sm-5">
+                                        <div class="col-md-5">
                                             <label>Nome Completo</label>
                                             <input type="text" style="margin-bottom:10px" value="{{$coautor->user->name}}" class="form-control emailCoautor" name="nomeCoautor_{{$trabalho->id}}[]" placeholder="Nome" required>
                                         </div>
@@ -307,7 +300,7 @@
                     <div class="row justify-content-center">
                         @foreach ($modalidade->midiasExtra as $midia)
                             <div class="col-sm-12" style="margin-top: 20px;">
-                                <label for="{{$midia->hyphenizeNome()}}"
+                                <label for="{{$midia->hyphenizeNome}}"
                                     class="col-form-label"><strong>{{$midia->nome}}</strong>
                                 </label>
                                 <a href="{{route('downloadMidiaExtra', ['id' => $trabalho->id, 'id_midia' => $midia->id])}}">Arquivo atual</a>
@@ -315,7 +308,7 @@
                                 <div class="custom-file">
                                     <input type="file" class="filestyle"
                                         data-placeholder="Nenhum arquivo" data-text="Selecionar"
-                                        data-btnClass="btn-primary-lmts" name="{{$midia->hyphenizeNome()}}">
+                                        data-btnClass="btn-primary-lmts" name="{{$midia->hyphenizeNome}}">
                                 </div>
                                 <small><strong>Extensão de arquivos aceitas:</strong>
                                     @if($midia->pdf == true)

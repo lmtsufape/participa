@@ -17,6 +17,14 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Models\Submissao\Trabalho;
+use App\Models\Submissao\Parecer;
+use App\Models\Submissao\Pertence;
+use App\Models\Submissao\Recurso;
+use App\Models\Submissao\Mensagem;
+use App\Models\Submissao\Endereco;
+use App\Models\Inscricao\Inscricao;
+use App\Models\Submissao\TipoComissao;
 
 class User extends Authenticatable
 {
@@ -119,12 +127,12 @@ class User extends Authenticatable
 
     public function trabalho()
     {
-        return $this->hasMany('App\Models\Submissao\Trabalho', 'autorId');
+        return $this->hasMany(Trabalho::class, 'autorId');
     }
 
     public function parecer()
     {
-        return $this->hasMany('App\Models\Submissao\Parecer', 'revisorId');
+        return $this->hasMany(Parecer::class, 'revisorId');
     }
 
     // public function atribuicao(){
@@ -133,22 +141,22 @@ class User extends Authenticatable
 
     public function pertence()
     {
-        return $this->hasMany('App\Models\Submissao\Pertence', 'revisorId');
+        return $this->hasMany(Pertence::class, 'revisorId');
     }
 
     public function recurso()
     {
-        return $this->hasMany('App\Models\Submissao\Recurso', 'comissaoId');
+        return $this->hasMany(Recurso::class, 'comissaoId');
     }
 
     public function mensagem()
     {
-        return $this->hasMany('App\Models\Submissao\Mensagem', 'comissaoId');
+        return $this->hasMany(Mensagem::class, 'comissaoId');
     }
 
     public function endereco()
     {
-        return $this->belongsTo('App\Models\Submissao\Endereco', 'enderecoId');
+        return $this->belongsTo(Endereco::class, 'enderecoId');
     }
 
 
@@ -179,7 +187,7 @@ class User extends Authenticatable
      */
     public function eventos()
     {
-        return $this->hasMany('App\Models\Submissao\Evento', 'coordenadorId');
+        return $this->hasMany(Evento::class, 'coordenadorId');
     }
 
     /**
@@ -189,7 +197,7 @@ class User extends Authenticatable
      */
     public function eventosCoordenador()
     {
-        return $this->belongsToMany('App\Models\Submissao\Evento', 'coordenador_eventos', 'user_id', 'eventos_id')->using('App\Models\Users\CoordenadorEvento');
+        return $this->belongsToMany(Evento::class, 'coordenador_eventos', 'user_id', 'eventos_id')->using('App\Models\Users\CoordenadorEvento');
     }
 
     public function sendPasswordResetNotification($token)
@@ -199,17 +207,17 @@ class User extends Authenticatable
 
     public function membroComissaoOrgaEvento()
     {
-        return $this->belongsToMany('App\Models\Submissao\Evento', 'comissao_organizadora_eventos', 'user_id', 'evento_id');
+        return $this->belongsToMany(Evento::class, 'comissao_organizadora_eventos', 'user_id', 'evento_id');
     }
 
     public function inscricaos()
     {
-        return $this->hasMany('App\Models\Inscricao\Inscricao');
+        return $this->hasMany(Inscricao::class);
     }
 
     public function outrasComissoes()
     {
-        return $this->belongsToMany('App\Models\Submissao\TipoComissao');
+        return $this->belongsToMany(TipoComissao::class);
     }
 
     public function certificados()

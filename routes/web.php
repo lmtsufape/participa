@@ -250,6 +250,7 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
             Route::post('/{evento}/memoria', [MemoriaController::class, 'store'])->name('memoria.store');
             Route::put('/{evento}/memoria/{memoria}', [MemoriaController::class, 'update'])->name('memoria.update');
             Route::delete('/memoria', [MemoriaController::class, 'destroy'])->name('memoria.destroy');
+            Route::post('memoria/reorder', [MemoriaController::class, 'reorder'])->name('memoria.reorder');
 
             // Route::get('revisores/{id}/disponiveis', [RevisorController::class, 'listarRevisores'])->name('adicionarRevisores');
 
@@ -293,7 +294,7 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
             Route::get('certificados/{id}/modelo', [CertificadoController::class, 'modelo'])->name('modeloCertificado');
             Route::get('certificados/{id}/editarCertificado', [CertificadoController::class, 'edit'])->name('editarCertificado');
             Route::get('certificados/emitir', [CertificadoController::class, 'emitir'])->name('emitirCertificado');
-            Route::post('certificados/enviar-certificado', [CertificadoController::class, 'enviarCertificacao'])->name('enviarCertificado');
+            Route::post('certificados/enviar-certificado', [CertificadoController::class, 'enviarCertificacao'])->name('enviarCertificado')->middleware('throttle:1,1');;
             Route::get('certificados/listarCertificado', [CertificadoController::class, 'index'])->name('listarCertificados');
             Route::post('certificados/cadastrarCertificado', [CertificadoController::class, 'store'])->name('certificado.store');
             Route::post('certificados/{id}/deleteCertificado', [CertificadoController::class, 'destroy'])->name('certificado.destroy');
@@ -334,6 +335,7 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
             Route::post('{evento}/arquivos', [ArquivoInfoController::class, 'store'])->name('arquivos-adicionais.store');
             Route::delete('{arquivoInfo}/arquivos', [ArquivoInfoController::class, 'delete'])->name('arquivos-adicionais.delete');
             Route::put('{arquivoInfo}/arquivos', [ArquivoInfoController::class, 'update'])->name('arquivos-adicionais.update');
+            Route::post('arquivoInfo/reorder', [ArquivoInfoController::class, 'reorder'])->name('arquivos-adicionais.reorder');
 
         });
         //Evento
@@ -364,7 +366,7 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
         // Route::post(  '/areaModalidade/criar',  [AreaModalidadeController::class, 'store']             )->name('areaModalidade.store');
 
         //Trabalho
-        Route::get('/trabalho/submeter/{id}/{idModalidade}', [TrabalhoController::class, 'index'])->name('trabalho.index');
+        Route::get('/trabalho/submeter/{modalidade_id}', [TrabalhoController::class, 'create'])->name('trabalho.create');
         Route::post('/trabalho/novaVersao', [TrabalhoController::class, 'novaVersao'])->name('trabalho.novaVersao');
         Route::post('/trabalho/criar', [TrabalhoController::class, 'store'])->name('trabalho.store');
         Route::get('/trabalho/pesquisa', [TrabalhoController::class, 'pesquisaAjax'])->name('trabalho.pesquisa.ajax');

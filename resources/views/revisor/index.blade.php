@@ -153,7 +153,6 @@
                                 <th scope="col" style="text-align:center">Avaliação do trabalho</th>
                                 <th scope="col" style="text-align:center">Validação das correções</th>
                                 <th scope="col" style="text-align:center">Atribuído em</th>
-                                <th scope="col" style="text-align:center">Prazo</th>
                                 </tr>
                             </thead>
                             @foreach($trabalhosDoRevisor as $trabalho)

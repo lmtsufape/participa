@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class ArquivoInfo extends Model
 {
-    protected $fillable = ['nome', 'path'];
+    protected $fillable = ['nome', 'path', 'order'];
 
     public function evento()
     {

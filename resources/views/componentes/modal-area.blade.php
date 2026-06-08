@@ -1,3 +1,13 @@
+<style>
+
+.required-field::after {
+    content: "*";
+    color: #D44100;
+    margin-left: 2px;
+}
+
+</style>
+
 <!-- Button trigger modal -->
 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
     Cadastrar área
@@ -7,11 +17,8 @@
   <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
-        <div class="modal-header">
+        <div style="background-color: #114048ff; color: white;" class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">{{ __('Cadastrar Área') }}</h5>
-          <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
         </div>
         <div class="modal-body">
             <div class="row justify-content-center">
@@ -23,7 +30,7 @@
                     <p class="card-text">
                         <div class="row justify-content-center">
                             <div class="col-sm-12">
-                                <label for="nome" class="col-form-label">{{ __('Nome da Área') }}*</label>
+                                <label for="nome" class="col-form-label required-field fw-bold">{{ __('Nome da Área') }}</label>
                                 <input id="nome" type="text" class="form-control @error('nome') is-invalid @enderror" name="nome" value="{{ old('nome') }}" required autocomplete="nome" autofocus>
 
                                 @error('nome')
@@ -33,7 +40,7 @@
                                 @enderror
                             </div>
                             <div class="col-sm-12">
-                                <label for="resumo" class="col-form-label">{{__('Resumo')}}</label>
+                                <label for="resumo" class="col-form-label fw-bold">{{__('Resumo')}}</label>
                                 <textarea id="resumo" class="form-control @error('resumo') is-invalid @enderror" name="resumo" rows="3">{{ old('resumo') }}</textarea>                            </div>
                             </div>
                             @if ($evento->is_multilingual)

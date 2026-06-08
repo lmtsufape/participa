@@ -50,7 +50,7 @@
                                 </div>
                             @endforeach
                             <div class="text-center">
-                                <button type="submit" class="btn btn-my-primary w-75">
+                                <button id="submitButton" type="submit" class="btn btn-my-primary w-75" disabled>
                                     {{ __('Definir Coordenadores de Eixos') }}
                                 </button>
                             </div>
@@ -63,6 +63,24 @@
 @endsection
 @push('scripts')
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const checkboxes = document.querySelectorAll('.coord-checkbox');
+            const submitBtn  = document.getElementById('submitButton');
+
+            function toggleSubmit() {
+                const anyChecked = Array.from(checkboxes).some(cb => cb.checked);
+                submitBtn.disabled = !anyChecked;
+            }
+
+            checkboxes.forEach(cb => {
+                cb.addEventListener('change', toggleSubmit);
+                const container = cb.closest('.card').querySelector('.area-select-container');
+                cb.addEventListener('change', () => {
+                    container.classList.toggle('d-none', !cb.checked);
+                });
+            });
+            toggleSubmit();
+        });
         $(document).ready(function() {
             $('.coord-checkbox').on('change', function() {
                 const container = $(this).closest('.card').find('.area-select-container');

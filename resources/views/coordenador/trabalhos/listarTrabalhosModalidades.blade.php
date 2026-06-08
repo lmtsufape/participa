@@ -160,5 +160,4 @@
 
 @section('javascript')
     @parent
-
 @endsection

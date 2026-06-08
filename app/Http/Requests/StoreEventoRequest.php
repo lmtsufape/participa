@@ -34,12 +34,12 @@ class StoreEventoRequest extends FormRequest
             'tipo' => ['required', 'string'],
             'dataInicio' => ['required', 'date', 'after:yesterday'],
             'dataFim' => ['required', 'date'],
-            'fotoEvento' => ['required','file', 'mimes:png, jpg,jpeg'],
-            'fotoEvento_en' => ['file', 'mimes:png, jpg,jpeg'],
-            'fotoEvento_es' => ['file', 'mimes:png, jpg,jpeg'],
-            'icone' => ['required','file', 'mimes:png, jpg,jpeg'],
-            'icone_en' => ['file', 'mimes:png, jpg,jpeg'],
-            'icone_es' => ['file', 'mimes:png, jpg,jpeg'],
+            'fotoEvento'     => ['required','file','mimes:png,jpg,jpeg','dimensions:max_width=1024,max_height=425'],
+            'fotoEvento_en'  => ['nullable','file','mimes:png,jpg,jpeg','dimensions:max_width=1024,max_height=425'],
+            'fotoEvento_es'  => ['nullable','file','mimes:png,jpg,jpeg','dimensions:max_width=1024,max_height=425'],
+            'icone'          => ['required','file','mimes:png,jpg,jpeg','dimensions:max_width=600,max_height=600'],
+            'icone_en'       => ['nullable','file','mimes:png,jpg,jpeg','dimensions:max_width=600,max_height=600'],
+            'icone_es'       => ['nullable','file','mimes:png,jpg,jpeg','dimensions:max_width=600,max_height=600'],
             'rua' => ['required', 'string'],
             'numero' => ['required', 'string'],
             'bairro' => ['required', 'string'],
@@ -53,6 +53,7 @@ class StoreEventoRequest extends FormRequest
             'dataLimiteInscricao' => ['nullable', 'date'],
             'instagram' => ['nullable', 'string'],
             'contato_suporte' => ['nullable', 'string'],
+
         ];
     }
 

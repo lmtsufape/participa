@@ -7,6 +7,8 @@ use App\Models\Submissao\Evento;
 use Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class HomeController extends Controller
 {

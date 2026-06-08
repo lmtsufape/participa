@@ -50,7 +50,8 @@
                                 <th scope="col">Nome</th>
                                 <th scope="col">E-mail</th>
                                 <th scope="col" style="text-align:center">Em Andamento</th>
-                                <th scope="col" style="text-align:center">Finalizados</th>
+                                <th scope="col" style="text-align:center">Avaliados</th>
+                                <th scope="col" class="text-center">Validados</th>
                                 <th scope="col" style="text-align:center">Visualizar</th>
                                 <th scope="col" style="text-align:center">Remover</th>
                                 <th scope="col" style="text-align:center">Lembrar</th>
@@ -245,7 +246,7 @@
                               </tr>
                             </thead>
                             <tbody>
-                              @foreach ($revisorDosTrabalhos->trabalhosAtribuidos()->orderBy('titulo')->get() as $trabalho)
+                                @foreach ($revisorDosTrabalhos->trabalhosAtribuidos()->orderBy('titulo')->get() as $trabalho)
                                 <tr>
                                     <td>
                                         {{$trabalho->id}}
@@ -260,9 +261,9 @@
                                         @endif
                                     </td>
                                 </tr>
-                              @endforeach
+                                @endforeach
                             </tbody>
-                          </table>
+                            </table>
                         </div>
                       </div>
                     @endif
@@ -390,9 +391,6 @@
         <div class="modal-content">
           <div class="modal-header" style="background-color: #114048ff; color: white;">
             <h5 class="modal-title" id="modalCadastrarRevisorLabel">Cadastrar um novo avaliador</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
-              <span aria-hidden="true">&times;</span>
-            </button>
           </div>
           <div class="modal-body">
               <form id="cadastrarRevisorForm" method="POST" action="{{route('revisor.store')}}">
@@ -403,7 +401,7 @@
                         <input type="hidden" name="cadastrarRevisor" value="0">
                         <div class="row">
                             <div class="col-sm-6">
-                                <label for="emailRevisor" class="col-form-label">{{ __('Email do Avaliador') }}</label>
+                                <label for="emailRevisor" class="col-form-label fw-bold">{{ __('Email do Avaliador') }}</label>
                                 <input id="emailRevisor" type="email" class="form-control @error('emailRevisor') is-invalid @enderror" name="emailRevisor" value="{{old('emailRevisor')}}" required autocomplete="emailRevisor" autofocus>
 
                                 @error('emailRevisor')
@@ -415,7 +413,7 @@
                         </div>
                         <div  class="row">
                           <div class="col-sm-6">
-                            <h6 for="areaRevisor" class="col-form-label">{{ __('Selecione as áreas') }}</h6>
+                            <h6 for="areaRevisor" class="col-form-label fw-bold">{{ __('Selecione as áreas') }}</h6>
                             <input type="checkbox" id="btn_marcar_desmarcar_todas_areas" onclick="marcar_desmarcar_todos_checkbox_por_classe(this, 'checkbox_area')">
                             <label for="btn_marcar_desmarcar_todas_areas"><b>Selecionar todas</b></label>
                             @if (old('areas') != null)
@@ -445,7 +443,7 @@
                             @enderror
                           </div>
                           <div class="col-sm-6">
-                              <h6 for="modalidadeRevisor" class="col-form-label">{{ __('Selecione as modalidades') }}</h6>
+                              <h6 for="modalidadeRevisor" class="col-form-label fw-bold">{{ __('Selecione as modalidades') }}</h6>
                               <input type="checkbox" id="btn_marcar_desmarcar_todas_modalidades" onclick="marcar_desmarcar_todos_checkbox_por_classe(this, 'checkbox_modalidade')">
                               <label for="btn_marcar_desmarcar_todas_modalidades"><b>Selecionar todas</b></label>
                               @if (old('modalidades') != null)
@@ -480,7 +478,7 @@
               </form>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
             <button type="submit" class="btn btn-primary" form="cadastrarRevisorForm">{{ __('Finalizar') }}</button>
           </div>
         </div>

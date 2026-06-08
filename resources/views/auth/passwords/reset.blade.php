@@ -5,7 +5,7 @@
     <div class="row justify-content-center position-relative">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">{{ __('Redefinir senha') }}</div>
+               <div class="card-header"><strong>{{ __('Redefinir senha') }}</strong></div>
 
                 <div class="card-body">
                     <form method="POST" action="{{ route('password.update') }}">
@@ -14,7 +14,7 @@
                         <input type="hidden" name="token" value="{{ $token }}">
 
                         <div class="form-group row">
-                            <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('Endereço de E-mail') }}</label>
+                            <label for="email" class="font-weight-bold col-md-4 col-form-label text-md-right"><strong>{{ __('Enderço de E-mail') }}</strong></label>
 
                             <div class="col-md-6">
                                 <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ $email ?? old('email') }}" required autocomplete="email" autofocus>

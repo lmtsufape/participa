@@ -1,4 +1,39 @@
 @extends('layouts.app')
+@section('css')
+<style>
+        .link-pill {
+            display: flex;
+            align-items: center;
+            background-color: #ffffff;
+            border-radius: 8px;
+            padding: 12px 20px;
+            margin-bottom: 1rem;
+            text-decoration: none;
+            color: #212529; /* Cor de texto padrão (preto/cinza escuro) */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: box-shadow 0.2s ease-in-out, transform 0.2s ease-in-out;
+        }
+
+        .link-pill:hover {
+            text-decoration: none; /* Garante que não haverá sublinhado no hover */
+            color: #212529;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px); /* Efeito sutil de elevação */
+        }
+
+        .link-pill .icon-attachment {
+            width: 20px;
+            height: 20px;
+            margin-right: 15px; /* Espaço entre o ícone e o texto */
+        }
+
+        /* Ajuste o espaçamento do título */
+        #info_adicionais h4 {
+            margin-bottom: 1.5rem !important;
+        }
+    </style>
+
+    @endsection
 @section('content')
     @if(session('message'))
         <div class="alert alert-{{ session('class', 'info') }} alert-dismissible fade show text-center" role="alert">
@@ -13,7 +48,7 @@
             $bannerPath =
                 $evento->is_multilingual && Session::get('idiomaAtual') === 'en' && $evento->fotoEvento_en
                     ? $evento->fotoEvento_en
-                    : $evento->icone;
+                    : $evento->fotoEvento;
         @endphp
         <div class="row my-5">
             <div class="col-md-7">
@@ -93,7 +128,7 @@
                     </p>
                 </div>
 
-                @if ($etiquetas->modinscricao == true)
+                @if ($etiquetas->modinscricao)
                     <div class="d-flex flex-wrap gap-2">
                         @if ($isInscrito && isset($inscricao) && !$inscricao->finalizada && !$InscritoSemCategoria)
                             <a href="{{ route('checkout.telaPagamento', $evento) }}" id="btn-inscrevase" class="btn btn-my-success w-60 rounded btn-lg">
@@ -154,26 +189,29 @@
                         @endif
                     </div>
                     <br>
+                   @if($evento->recolhimento == "pago")
+                            @if(isset($inscricao) && $inscricao)
 
-                    @if(isset($inscricao) && $inscricao)
-                        @if(!$inscricao->finalizada)
-                            <span class="text mt-2" style="font-style: semi-bold;">
+                                @if(!$inscricao->finalizada)
+                                    <span class="text mt-2" style="font-style: semi-bold;">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-triangle" viewBox="0 0 16 16" style="color: red">
                                 <path d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.15.15 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.2.2 0 0 1-.054.06.1.1 0 0 1-.066.017H1.146a.1.1 0 0 1-.066-.017.2.2 0 0 1-.054-.06.18.18 0 0 1 .002-.183L7.884 2.073a.15.15 0 0 1 .054-.057m1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767z"/>
                                 <path d="M7.002 12a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 5.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z"/>
                                 </svg>
 
                                 {{__('Inscrição sujeita à confirmação do pagamento.')}}</span>
-                        @endif
-                    @else
-                        <span class="text mt-2" style="font-style: semi-bold;">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-triangle" viewBox="0 0 16 16" style="color: red">
-                        <path d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.15.15 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.2.2 0 0 1-.054.06.1.1 0 0 1-.066.017H1.146a.1.1 0 0 1-.066-.017.2.2 0 0 1-.054-.06.18.18 0 0 1 .002-.183L7.884 2.073a.15.15 0 0 1 .054-.057m1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767z"/>
-                        <path d="M7.002 12a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 5.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z"/>
-                        </svg>
+                                @endif
+{{--                            @else--}}
+{{--                                <span class="text mt-2" style="font-style: semi-bold;">--}}
+{{--                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-triangle" viewBox="0 0 16 16" style="color: red">--}}
+{{--                        <path d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.15.15 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.2.2 0 0 1-.054.06.1.1 0 0 1-.066.017H1.146a.1.1 0 0 1-.066-.017.2.2 0 0 1-.054-.06.18.18 0 0 1 .002-.183L7.884 2.073a.15.15 0 0 1 .054-.057m1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767z"/>--}}
+{{--                        <path d="M7.002 12a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 5.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z"/>--}}
+{{--                        </svg>--}}
 
-                        {{__('Inscrição sujeita à confirmação do pagamento.')}}</span>
-                    @endif
+{{--                        {{__('Inscrição sujeita à confirmação do pagamento.')}}</span>--}}
+                            @endif
+                   @endif
+
 
                     <br>
 
@@ -310,8 +348,9 @@
 
         @if($temSubmissao || $temAreas)
             <div id="submissao_trabalho" class="row py-4">
-                <h4 class="text-my-primary">{{ __('Submeta seu Trabalho') }}</h4>
-
+                @if($periodoSubmissao)
+                    <h4 class="text-my-primary">{{ __('Submeta seu trabalho') }}</h4>
+                @endif
                 {{-- coluna de Modalidades --}}
                 @if($temSubmissao)
                     <div class="col-md-6">
@@ -445,7 +484,7 @@
                                                             @endphp
                                                             {{-- Caso 2: O usuario está logado e pode submeter o trabalho --}}
                                                             @if($pode)
-                                                                <a href="{{ route('trabalho.index', ['id'=>$evento->id,'idModalidade'=>$modalidade->id]) }}"
+                                                                <a href="{{ route('trabalho.create', $modalidade->id) }}"
                                                                 class="btn btn-my-success w-100 mt-3">
                                                                     {{ __('SUBMETER TRABALHO') }}
                                                                 </a>
@@ -476,6 +515,7 @@
                                                 { __('Quero ser avaliador') }}
                                             </button>-->
                                     @endif
+
                                 </div>
                             </div>
                         </div>
@@ -487,7 +527,7 @@
                     <div class="col-md-6">
                         <div class="card">
                             <div class="card-heading bg-my-primary rounded pt-3 pb-1 ps-3">
-                                <h5 class="text-white">{{ __('Eixos temáticos') }}</h5>
+                                <h5 class="text-white">{{ __('Áreas temáticas') }}</h5>
                             </div>
                             <div class="card-body">
                                 <ul>
@@ -571,99 +611,46 @@
                     || ($evento->pdf_arquivo && $evento->modarquivo)
                     || $evento->arquivoInfos->isNotEmpty()
                 )
-                    <div class="col-md-6">
-                        <h4 class="text-my-primary">{{ __('Informações adicionais') }}</h4>
+                    <div class="col-md-6 mb-4 mb-md-0">
+                        <h4 class="text-my-primary mb-3">{{ __('Informações adicionais') }}</h4>
 
+                        {{-- Link para Programação em PDF --}}
                         @if ($evento->exibir_pdf && $etiquetas->modprogramacao && $evento->pdf_programacao)
-                            <div class="form-row mb-3 justify-content-center">
-                                <div class="col-sm-3 text-center">
-                                    <img class="icon-programacao"
-                                        src="{{ asset('img/icons/Icon awesome-file-pdf.svg') }}"
-                                        alt="PDF programação">
-                                </div>
-                                <div class="col-sm-8 d-flex align-items-center">
-                                    <a href="{{ asset('storage/' . $evento->pdf_programacao) }}"
-                                    target="_blank"
-                                    class="titulo">
-                                        {{ $etiquetas->etiquetamoduloprogramacao }}
-                                    </a>
-                                </div>
-                            </div>
+                            <a href="{{ asset('storage/' . $evento->pdf_programacao) }}" target="_blank" class="link-pill">
+                                <img src="{{ asset('img/icons/icon-paperclip-teal.svg') }}" alt="Anexo" class="icon-attachment">
+                                <span>{{ $etiquetas->etiquetamoduloprogramacao }}</span>
+                            </a>
                         @endif
 
+                        {{-- Link para Arquivo em PDF --}}
                         @if ($evento->pdf_arquivo && $evento->modarquivo)
-                            <div class="form-row mb-3 justify-content-center">
-                                <div class="col-sm-3 text-center">
-                                    <img class="icon-programacao"
-                                        src="{{ asset('img/icons/Icon awesome-file-pdf.svg') }}"
-                                        alt="PDF arquivo">
-                                </div>
-                                <div class="col-sm-8 d-flex align-items-center">
-                                    <a href="{{ asset('storage/' . $evento->pdf_arquivo) }}"
-                                    target="_blank"
-                                    class="titulo">
-                                        {{ $etiquetas->etiquetaarquivo }}
-                                    </a>
-                                </div>
-                            </div>
+                            <a href="{{ asset('storage/' . $evento->pdf_arquivo) }}" target="_blank" class="link-pill">
+                                <img src="{{ asset('img/icons/icon-paperclip-teal.svg') }}" alt="Anexo" class="icon-attachment">
+                                <span>{{ $etiquetas->etiquetaarquivo }}</span>
+                            </a>
                         @endif
 
+                        {{-- Links para Arquivos de Informações Adicionais --}}
                         @foreach ($evento->arquivoInfos as $arquivo)
-                            <div class="form-row mb-3 justify-content-center">
-                                <div class="col-sm-3 text-center">
-                                    <img class="icon-programacao"
-                                        src="{{ asset('img/icons/Icon awesome-file-pdf.svg') }}"
-                                        alt="Info extra">
-                                </div>
-                                <div class="col-sm-8 d-flex align-items-center">
-                                    <a href="{{ asset('storage/' . $arquivo->path) }}"
-                                    target="_blank"
-                                    class="titulo">
-                                        {{ $arquivo->nome }}
-                                    </a>
-                                </div>
-                            </div>
+                            <a href="{{ asset('storage/' . $arquivo->path) }}" target="_blank" class="link-pill">
+                                <img src="{{ asset('img/icons/icon-paperclip-teal.svg') }}" alt="Anexo" class="icon-attachment">
+                                <span>{{ $arquivo->nome }}</span>
+                            </a>
                         @endforeach
                     </div>
                 @endif
 
                 @if($evento->memorias->isNotEmpty())
                     <div class="col-md-6">
-                        <h4 class="text-my-primary">{{ __('Memórias') }}</h4>
+                        <h4 class="text-my-primary mb-3">{{ __('Memórias') }}</h4>
 
-                        <div class="row mb-3">
-                            <div class="col-12">
-                                <div class="card sombra-card w-100">
-                                    <div class="card-body">
-                                        @foreach ($evento->memorias as $memoria)
-                                            <div class="form-row mb-3 justify-content-center">
-                                                <div class="col-sm-3 d-flex justify-content-center align-items-center">
-                                                    <img class="icon-programacao"
-                                                        src="{{ asset('img/icons/' . ($memoria->arquivo ? 'Icon awesome-file-pdf.svg' : 'link-solid.svg')) }}"
-                                                        alt="">
-                                                </div>
-                                                <div class="col-sm-8 d-flex align-items-center">
-                                                    @if ($memoria->arquivo)
-                                                        <a href="{{ asset('storage/' . $memoria->arquivo) }}"
-                                                        target="_blank"
-                                                        class="titulo">
-                                                            {{ $memoria->titulo }}
-                                                        </a>
-                                                    @else
-                                                        <a href="{{ $memoria->link }}"
-                                                        target="_blank"
-                                                        class="titulo">
-                                                            {{ $memoria->titulo }}
-                                                        </a>
-                                                    @endif
-                                                </div>
-                                            </div>
-                                        @endforeach
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
+                        {{-- Links de Memórias --}}
+                        @foreach ($evento->memorias as $memoria)
+                            <a href="{{ $memoria->arquivo ? asset('storage/' . $memoria->arquivo) : $memoria->link }}" target="_blank" class="link-pill">
+                                <img src="{{ asset('img/icons/icon-paperclip-teal.svg') }}" alt="Anexo" class="icon-attachment">
+                                <span>{{ $memoria->titulo }}</span>
+                            </a>
+                        @endforeach
                     </div>
                 @endif
 
@@ -854,7 +841,7 @@
                     </a>
                 @endif
                 @if (!empty($evento->contato_suporte))
-                    <a href="https://chat.whatsapp.com/FerfgYKkDsLHnm23bD9gyT" target="_blank" rel="noopener" class="btn btn-my-secondary rounded-3">
+                    <a href="https://chat.whatsapp.com/KVg9E6PniXXACNlOHjJgWH" target="_blank" rel="noopener" class="btn btn-my-secondary rounded-3">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-whatsapp" viewBox="0 0 16 16">
                             <path d="M13.601 2.326A7.85 7.85 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.9 7.9 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.9 7.9 0 0 0 13.6 2.326zM7.994 14.521a6.6 6.6 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.56 6.56 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592m3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.73.73 0 0 0-.529.247c-.182.198-.691.677-.691 1.654s.71 1.916.81 2.049c.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232"/>
                         </svg>
@@ -871,8 +858,15 @@
 
             <div id="local" class="row py-4">
                 <h4 class="text-my-primary">{{ __('Local') }}</h4>
-                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3936.088668407275!2d-40.51881532409689!3d-9.413620090663885!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x7737101a3531eb9%3A0x36e94720fbc52c53!2sAv.%20Ant%C3%B4nio%20C.%20Magalh%C3%A3es%2C%20510%20-%20Country%20Club%2C%20Juazeiro%20-%20BA%2C%2048902-300!5e0!3m2!1spt-BR!2sbr!4v1749258428058!5m2!1spt-BR!2sbr" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-
+                <iframe
+                    width="600"
+                    height="450"
+                    style="border:0"
+                    loading="lazy"
+                    allowfullscreen
+                    referrerpolicy="no-referrer-when-downgrade"
+                    src="https://www.google.com/maps?q={{ $enderecoMap }}&output=embed">
+                </iframe>
             </div>
         </div>
 
@@ -1190,7 +1184,7 @@
                 return `
                 <div class="card shadow w-100">
                     <div class="card-body d-flex flex-column justify-content-between align-items-start">
-                <div class="w-100">
+                        <div class="w-100">
                             <div class="d-flex justify-content-between align-items-center">
                                 <strong>${inicio} - ${fim}</strong>
 

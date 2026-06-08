@@ -1,6 +1,8 @@
-@extends('coordenador.detalhesEvento')
+@extends('layouts.app')
+@section('sidebar')
 
-@section('menu')
+@endsection
+@section('content')
     <div class="row justify-content-center titulo-detalhes">
         <div class="col-sm-12">
             <div class="row">

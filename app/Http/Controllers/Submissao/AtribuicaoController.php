@@ -237,6 +237,7 @@ class AtribuicaoController extends Controller
             'prazo_correcao' => $prazo_correcao,
             'token' => $token
         ]);
+        $revisor->trabalhosAtribuidos()->attach($trabalho->id, ['confirmacao' => false, 'parecer' => 'processando']);
         $revisor->correcoesEmAndamento = $revisor->correcoesEmAndamento + 1;
         $revisor->save();
 

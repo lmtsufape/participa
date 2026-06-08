@@ -88,9 +88,8 @@
           <div class="modal-content">
             <div class="modal-header" style="background-color: #114048ff; color: white;">
               <h5 class="modal-title" id="#label">Editar área {{$area->nome}}</h5>
-              <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close" style="color: white;">
-                <span aria-hidden="true">&times;</span>
-              </button>
+
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form id="formEditarArea{{$area->id}}" action="{{route('area.update', ['id' => $area->id])}}" method="POST">
                 @csrf

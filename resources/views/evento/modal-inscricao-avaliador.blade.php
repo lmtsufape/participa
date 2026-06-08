@@ -24,8 +24,8 @@
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label"><strong>Em qual/quais eixo(s) temático(s) você gostaria de contribuir?</strong> <span class="text-danger">*</span></label>
-                        <small class="d-block text-muted mb-2">Selecione até 03 eixos de sua preferência. O primeiro é obrigatório.</small>
+                        <label class="form-label"><strong>Em qual/quais áreas você gostaria de contribuir?</strong> <span class="text-danger">*</span></label>
+                        <small class="d-block text-muted mb-2">Selecione até 03 áreas de sua preferência. O primeiro é obrigatório.</small>
 
                          @foreach($areas as $area)
                             <div class="form-check">
@@ -39,12 +39,12 @@
                             </div>
                         @endforeach
                         <span id="eixos_error" class="text-danger d-none mt-1">
-                            Você já atingiu o limite de 3 eixos.
+                            Você já atingiu o limite de áreas.
                         </span>
                         </div>
 
                     <div class="mb-3">
-                        <label class="form-label"><strong>Já avaliou resumos do CBA em outros anos? </strong><span class="text-danger">*</span></label>
+                        <label class="form-label"><strong>Já possui experiência avaliando resumos? </strong><span class="text-danger">*</span></label>
                         <div>
                             <div class="form-check form-check-inline">
                                 <input class="form-check-input" type="radio" name="avaliou_antes" id="avaliou_sim" value="sim" required>

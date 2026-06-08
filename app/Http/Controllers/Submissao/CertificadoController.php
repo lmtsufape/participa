@@ -666,6 +666,189 @@ class CertificadoController extends Controller
         if ($certificado->medidas->count() == 0) {
             return redirect()->back()->with('error', 'Atualize o modelo do certificado antes de realizar emissões');
         }
+        switch ($request->destinatario) {
+            case Certificado::TIPO_ENUM['apresentador']:
+                foreach ($request->destinatarios as $i => $destinarioId) {
+                    $user = User::find($destinarioId);
+                    $trabalho = Trabalho::find($request->trabalhos[$i]);
+
+                    if ($request->boolean('sem_anexo')) {
+                        Mail::to($user->email)->queue(new EmailCertificadoSemAnexo($user, 'apresentador de trabalho', $evento->nome, $request->destinatario, $certificado, $trabalho));
+                    } else {
+                        $hash = Hash::make($destinarioId);
+                        $qrcode = base64_encode(QrCode::generate($hash));
+                        $certificado->usuarios()->attach($destinarioId, ['validacao' => $hash, 'trabalho_id' => $request->trabalhos[$i]]);
+
+                        $coautores = $trabalho->coautors()->with('user')->get()->pluck('user.name')->join(', ', ' e ');
+                        $texto = $certificado->texto;
+                        if ($coautores != '') {
+                            $texto = preg_replace('/%MSG_COAUTORES=(.*?)%/', '$1', $texto);
+                        } else {
+                            $texto = preg_replace('/%MSG_COAUTORES=(.*?)%/', '', $texto);
+                        }
+
+                        $pdf = Pdf::loadView('coordenador.certificado.certificado_preenchivel', ['texto' => $texto, 'qrcode' => $qrcode, 'validacao' => $hash, 'certificado' => $certificado, 'user' => $user, 'trabalho' => $trabalho, 'coautores' => $coautores, 'cargo' => 'Apresentador', 'evento' => $evento, 'dataHoje' => $certificado->data->isoFormat('LL'), 'now' => now()->isoFormat('LL')])->setPaper('a4', 'landscape');
+                        Mail::to($user->email)->queue(new EmailCertificado($user, 'apresentador de trabalho', $evento->nome, $pdf));
+                    }
+                }
+                break;
+            case Certificado::TIPO_ENUM['comissao_cientifica']:
+                foreach ($request->destinatarios as $i => $destinarioId) {
+                    $user = User::find($destinarioId);
+
+                    if ($request->boolean('sem_anexo')) {
+                        Mail::to($user->email)->queue(new EmailCertificadoSemAnexo($user, 'membro da Comissão Científica', $evento->nome, $request->destinatario, $certificado));
+                    } else {
+                        $hash = Hash::make($destinarioId);
+                        $qrcode = base64_encode(QrCode::generate($hash));
+                        $certificado->usuarios()->attach($destinarioId, ['validacao' => $hash]);
+                        $texto = $certificado->texto;
+
+                        $pdf = Pdf::loadView('coordenador.certificado.certificado_preenchivel', ['texto' => $texto, 'qrcode' => $qrcode, 'validacao' => $hash, 'certificado' => $certificado, 'user' => $user, 'cargo' => 'Comissão Científica', 'evento' => $evento, 'dataHoje' => $certificado->data->isoFormat('LL'), 'now' => now()->isoFormat('LL')])->setPaper('a4', 'landscape');
+                        Mail::to($user->email)->queue(new EmailCertificado($user, 'membro da Comissão Científica', $evento->nome, $pdf));
+                    }
+                }
+                break;
+            case Certificado::TIPO_ENUM['comissao_organizadora']:
+                foreach ($request->destinatarios as $i => $destinarioId) {
+                    $user = User::find($destinarioId);
+
+                    if ($request->boolean('sem_anexo')) {
+                        Mail::to($user->email)->queue(new EmailCertificadoSemAnexo($user, 'membro da Comissão Organizadora', $evento->nome, $request->destinatario, $certificado));
+                    } else {
+                        $hash = Hash::make($destinarioId);
+                        $qrcode = base64_encode(QrCode::generate($hash));
+                        $certificado->usuarios()->attach($destinarioId, ['validacao' => $hash]);
+                        $texto = $certificado->texto;
+
+                        $pdf = Pdf::loadView('coordenador.certificado.certificado_preenchivel', ['texto' => $texto, 'qrcode' => $qrcode, 'validacao' => $hash, 'certificado' => $certificado, 'user' => $user, 'cargo' => 'Comissão Organizadora', 'evento' => $evento, 'dataHoje' => $certificado->data->isoFormat('LL'), 'now' => now()->isoFormat('LL')])->setPaper('a4', 'landscape');
+                        Mail::to($user->email)->queue(new EmailCertificado($user, 'membro da Comissão Organizadora', $evento->nome, $pdf));
+                    }
+                }
+                break;
+            case Certificado::TIPO_ENUM['revisor']:
+                foreach ($request->destinatarios as $i => $destinarioId) {
+                    $user = User::find($destinarioId);
+
+                    if ($request->boolean('sem_anexo')) {
+                        Mail::to($user->email)->queue(new EmailCertificadoSemAnexo($user, 'avaliador/a', $evento->nome, $request->destinatario, $certificado));
+                    } else {
+                        $hash = Hash::make($destinarioId);
+                        $qrcode = base64_encode(QrCode::generate($hash));
+                        $certificado->usuarios()->attach($destinarioId, ['validacao' => $hash]);
+                        $texto = $certificado->texto;
+
+                        $pdf = Pdf::loadView('coordenador.certificado.certificado_preenchivel', ['texto' => $texto, 'qrcode' => $qrcode, 'validacao' => $hash, 'certificado' => $certificado, 'user' => $user, 'cargo' => 'Revisor', 'evento' => $evento, 'dataHoje' => $certificado->data->isoFormat('LL'), 'now' => now()->isoFormat('LL')])->setPaper('a4', 'landscape');
+                        Mail::to($user->email)->queue(new EmailCertificado($user, 'avaliador/a', $evento->nome, $pdf));
+                    }
+                }
+                break;
+            case Certificado::TIPO_ENUM['participante']:
+                foreach ($request->destinatarios as $i => $destinarioId) {
+                    $user = User::find($destinarioId);
+
+                    if ($request->boolean('sem_anexo')) {
+                        Mail::to($user->email)->queue(new EmailCertificadoSemAnexo($user, 'participante', $evento->nome, $request->destinatario, $certificado));
+                    } else {
+                        $hash = Hash::make($destinarioId);
+                        $qrcode = base64_encode(QrCode::generate($hash));
+                        $certificado->usuarios()->attach($destinarioId, ['validacao' => $hash]);
+                        $texto = $certificado->texto;
+
+                        $pdf = Pdf::loadView('coordenador.certificado.certificado_preenchivel', ['texto' => $texto, 'qrcode' => $qrcode, 'validacao' => $hash, 'certificado' => $certificado, 'user' => $user, 'cargo' => 'Participante', 'evento' => $evento, 'dataHoje' => $certificado->data->isoFormat('LL'), 'now' => now()->isoFormat('LL')])->setPaper('a4', 'landscape');
+                        Mail::to($user->email)->queue(new EmailCertificado($user, 'participante', $evento->nome, $pdf));
+                    }
+                }
+                break;
+            case Certificado::TIPO_ENUM['inscrito']:
+                foreach ($request->destinatarios as $i => $destinarioId) {
+                    $user = User::find($destinarioId);
+
+                    if ($request->boolean('sem_anexo')) {
+                        Mail::to($user->email)->queue(new EmailCertificadoSemAnexo($user, 'inscrito', $evento->nome, $request->destinatario, $certificado));
+                    } else {
+                        $hash = Hash::make($destinarioId);
+                        $qrcode = base64_encode(QrCode::generate($hash));
+                        $certificado->usuarios()->attach($destinarioId, ['validacao' => $hash]);
+                        $texto = $certificado->texto;
+
+                        $pdf = Pdf::loadView('coordenador.certificado.certificado_preenchivel', ['texto' => $texto, 'qrcode' => $qrcode, 'validacao' => $hash, 'certificado' => $certificado, 'user' => $user, 'cargo' => 'inscrito', 'evento' => $evento, 'dataHoje' => $certificado->data->isoFormat('LL'), 'now' => now()->isoFormat('LL')])->setPaper('a4', 'landscape');
+                        Mail::to($user->email)->queue(new EmailCertificado($user, 'inscrito', $evento->nome, $pdf));
+                    }
+                }
+                break;
+            case Certificado::TIPO_ENUM['expositor']:
+                foreach ($request->destinatarios as $i => $destinarioId) {
+                    $user = Palestrante::find($destinarioId);
+                    $palestra = Palestra::find($request->palestras[$i]);
+
+                    if ($request->boolean('sem_anexo')) {
+                        Mail::to($user->email)->queue(new EmailCertificadoSemAnexo($user, 'palestrante', $evento->nome, $request->destinatario, $certificado, request_palestra_id: $request->palestras[$i]));
+                    } else {
+                        $hash = Hash::make($destinarioId);
+                        $qrcode = base64_encode(QrCode::generate($hash));
+                        $certificado->usuarios()->attach($destinarioId, ['validacao' => $hash, 'palestra_id' => $request->palestras[$i]]);
+                        $texto = $certificado->texto;
+
+                        $pdf = Pdf::loadView('coordenador.certificado.certificado_preenchivel', ['texto' => $texto, 'qrcode' => $qrcode, 'validacao' => $hash, 'certificado' => $certificado, 'user' => $user, 'palestra' => $palestra, 'cargo' => 'Expositor', 'evento' => $evento, 'dataHoje' => $certificado->data->isoFormat('LL'), 'now' => now()->isoFormat('LL')])->setPaper('a4', 'landscape');
+                        Mail::to($user->email)->queue(new EmailCertificado($user, 'palestrante', $evento->nome, $pdf));
+                    }
+                }
+                break;
+            case Certificado::TIPO_ENUM['coordenador_comissao_cientifica']:
+                foreach ($request->destinatarios as $i => $destinarioId) {
+                    $user = User::find($destinarioId);
+
+                    if ($request->boolean('sem_anexo')) {
+                        Mail::to($user->email)->queue(new EmailCertificadoSemAnexo($user, 'coordenador/a da comissão Científica', $evento->nome, $request->destinatario, $certificado));
+                    } else {
+                        $hash = Hash::make($destinarioId);
+                        $qrcode = base64_encode(QrCode::generate($hash));
+                        $certificado->usuarios()->attach($destinarioId, ['validacao' => $hash]);
+                        $texto = $certificado->texto;
+
+                        $pdf = Pdf::loadView('coordenador.certificado.certificado_preenchivel', ['texto' => $texto, 'qrcode' => $qrcode, 'validacao' => $hash, 'certificado' => $certificado, 'user' => $user, 'cargo' => 'Coordenador comissão científica', 'evento' => $evento, 'dataHoje' => $certificado->data->isoFormat('LL'), 'now' => now()->isoFormat('LL')])->setPaper('a4', 'landscape');
+                        Mail::to($user->email)->queue(new EmailCertificado($user, 'coordenador/a da comissão Científica', $evento->nome, $pdf));
+                    }
+                }
+                break;
+            case Certificado::TIPO_ENUM['outras_comissoes']:
+                foreach ($request->destinatarios as $i => $destinarioId) {
+                    $user = User::find($destinarioId);
+                    $comissao = TipoComissao::find($request->tipo_comissao_id);
+
+                    if ($request->boolean('sem_anexo')) {
+                        Mail::to($user->email)->queue(new EmailCertificadoSemAnexo($user, "membro da comissão {$comissao->nome}", $evento->nome, $request->destinatario, $certificado, request_tipo_comissao_id: $request->tipo_comissao_id));
+                    } else {
+                        $hash = Hash::make($destinarioId);
+                        $qrcode = base64_encode(QrCode::generate($hash));
+                        $certificado->usuarios()->attach($destinarioId, ['validacao' => $hash, 'comissao_id' => $request->tipo_comissao_id]);
+                        $texto = $certificado->texto;
+
+                        $pdf = Pdf::loadView('coordenador.certificado.certificado_preenchivel', ['texto' => $texto, 'qrcode' => $qrcode, 'validacao' => $hash, 'certificado' => $certificado, 'user' => $user, 'cargo' => "membro da comissão {$comissao->nome}", 'evento' => $evento, 'comissao' => $comissao, 'dataHoje' => $certificado->data->isoFormat('LL'), 'now' => now()->isoFormat('LL')])->setPaper('a4', 'landscape');
+                        Mail::to($user->email)->queue(new EmailCertificado($user, "membro da comissão {$comissao->nome}", $evento->nome, $pdf));
+                    }
+                }
+                break;
+            case Certificado::TIPO_ENUM['inscrito_atividade']:
+                foreach ($request->destinatarios as $i => $destinarioId) {
+                    $user = User::find($destinarioId);
+                    $atividade = Atividade::find($request->atividades[$i]);
+
+                    if ($request->boolean('sem_anexo')) {
+                        Mail::to($user->email)->queue(new EmailCertificadoSemAnexo($user, "inscrito na atividade {$atividade->titulo}", $evento->nome, $request->destinatario, $certificado, request_atividade_id: $request->atividades[$i]));
+                    } else {
+                        $hash = Hash::make($destinarioId);
+                        $qrcode = base64_encode(QrCode::generate($hash));
+                        $certificado->usuarios()->attach($destinarioId, ['validacao' => $hash, 'atividade_id' => $request->atividades[$i]]);
+                        $texto = $certificado->texto;
+
+                        $pdf = Pdf::loadView('coordenador.certificado.certificado_preenchivel', ['texto' => $texto, 'qrcode' => $qrcode, 'validacao' => $hash, 'certificado' => $certificado, 'user' => $user, 'cargo' => "inscrito na atividade {$atividade->titulo}", 'evento' => $evento, 'atividade' => $atividade, 'dataHoje' => $certificado->data->isoFormat('LL'), 'now' => now()->isoFormat('LL')])->setPaper('a4', 'landscape');
+                        Mail::to($user->email)->queue(new EmailCertificado($user, "inscrito na atividade {$atividade->titulo}", $evento->nome, $pdf));
+                    }
+                }
+                break;
+        }
 
         $destinatarioTipo = $request->destinatario;
         $semAnexo = $request->boolean('sem_anexo');

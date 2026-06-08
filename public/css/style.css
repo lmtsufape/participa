@@ -1073,3 +1073,9 @@ body { top: 0px !important; }
 .campos-extras label {
     font-weight: bold;
 }
+
+.required-field::after {
+            content: "*";
+            color: #D44100;
+            margin-left: 2px;
+}

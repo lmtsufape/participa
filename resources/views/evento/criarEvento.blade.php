@@ -67,14 +67,6 @@
                 <div class="container card shadow">
                     <br>
                     {{-- nome | Participantes | Tipo --}}
-                    <div class="row">
-                        <div class="form-check col-sm-12 form-group">
-                            <div class="form-check col-sm-12 form-group">
-                                <input class="form-check-input" type="checkbox" id="is_multilingual" name="is_multilingual">
-                                <label class="form-check-label text-start d-block" for="is_multilingual">{{ __('Evento Multilingue') }}</label>
-                            </div>
-                        </div>
-                    </div>
 
                     <div class="form-group row">
                         <div class="col-md-6">
@@ -103,6 +95,8 @@
                         </div>
                     </div>
 
+                    <br>
+
                     <div class="form-group row">
                         <div class="col-md-6 multilingual_fields" style="display: none;">
                             <label for="nome_en" class="col-form-label text-start d-block fw-bold mb-3">{{ __('Nome em inglês') }}</label>
@@ -123,6 +117,7 @@
                             @error('nome_es')
                                 <span class="invalid-feedback"><strong>{{ $message }}</strong></span>
                             @enderror
+                            <br>
                         </div>
                     </div>
 
@@ -179,7 +174,7 @@
                             @enderror
                         </div>
                         <div class="col-md-4">
-                            <label for="instagram" class="col-form-label text-start d-block fw-bold mb-3">{{ __('ID do Instagram') }}</label>
+                            <label for="instagram" class="col-form-label text-start d-block fw-bold">{{ __('ID do Instagram') }}</label>
                             <input class="form-control @error('instagram') is-invalid @enderror" type="text"
                                 value="{{ old('instagram') }}" name="instagram" id="instagram" autofocus
                                 autocomplete="instagram">
@@ -191,10 +186,11 @@
                             @enderror
                         </div>
                     </div>
+                    <br>
                     <div class="form-group row">
                         <div class="col-md-12">
                             <!-- link do contato de suporte -->
-                            <label for="contato_suporte" class="col-form-label text-start d-block fw-bold mb-3">{{ __('Link do contato de suporte') }}</label>
+                            <label for="contato_suporte" class="col-form-label text-start d-block fw-bold">{{ __('Link do contato de suporte') }}</label>
                             <input class="form-control @error('contato_suporte') is-invalid @enderror" type="text"
                                 value="{{ old('contato_suporte') }}" name="contato_suporte" id="contato_suporte"
                                 autocomplete="contato_suporte">
@@ -205,23 +201,35 @@
                             @enderror
                         </div>
                     </div>
+                    <br>
                     <div class="form-group row">
                         <div class="col-md-6">
-                            <div class="custom-control custom-radio custom-control-inline col-form-label">
-                                <span class="fw-bold mb-3">{{ __('O seu evento será:') }}</span> <br>
-                                <input type="radio" id="customRadioInline1" name="customRadioInline" class="custom-control-input" checked>
-                                <label class="custom-control-label me-2" for="customRadioInline1">{{ __('Online') }}</label>
-
-                                <input type="radio"  name="customRadioInline" class="custom-control-input">
-                                <label class="custom-control-label me-2" for="customRadioInline2">{{__('Remoto')}}</label>
-
-                                <input type="radio" name="customRadioInline" class="custom-control-input">
-                                <label class="custom-control-label " for="customRadioInline3">{{__('Hibrido')}}</label>
+                            <div class="col-form-label">
+                                <span class="fw-bold mb-3 d-block">{{ __('O seu evento será:') }}</span>
+                                <div class="d-flex gap-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="tipoEvento" id="online" value="online" checked>
+                                        <label class="form-check-label" for="online">{{ __('Online') }}</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="tipoEvento" id="presencial" value="presencial">
+                                        <label class="form-check-label" for="presencial">{{ __('Presencial') }}</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="tipoEvento" id="hibrido" value="hibrido">
+                                        <label class="form-check-label" for="hibrido">{{ __('Híbrido') }}</label>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-
-
+                        <div class="col-md-6 d-flex justify-content-end align-items-center">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="is_multilingual" name="is_multilingual">
+                                <label class="form-check-label fw-bold" for="is_multilingual">{{ __('Evento Multilingue') }}</label>
+                            </div>
+                        </div>
                     </div>
+                    <br>
 
                     <div class="form-group row">
 
@@ -256,6 +264,8 @@
                         </div>
                     </div>
 
+                    <br>
+
                     <div class="form-group row multilingual_fields" style="display: none;">
                         <div class="col-md-12">
                             <label for="descricao_en" class="fw-bold mb-3">{{ __('Descrição em inglês') }}</label>
@@ -268,6 +278,8 @@
                             @enderror
                         </div>
                     </div>
+
+                    <br>
 
                     <div class="form-group row multilingual_fields" style="display: none;">
                         <div class="col-md-12">
@@ -282,16 +294,23 @@
                         </div>
                     </div>
 
+                    <br>
+
                     <div class="form-group row">
+                        <!-- BANNER -->
                         <div class="col-md-6">
                             <label for="fotoEvento" class="fw-bold mb-3" >{{ __('Banner (tamanho: 1024 x 425, formato: JPEG, JPG e PNG):') }}</label>
                             <div id="imagem-loader" class="imagem-loader">
                                 <img id="logo-preview" class="img-fluid" src="{{ asset('/img/nova_imagem.PNG') }}" alt="">
                             </div>
+
+                            <!-- Input mantido exatamente como original -->
                             <div style="display: none;">
                                 <input type="file" id="logo-input" class="form-control @error('fotoEvento') is-invalid @enderror"
-                                    name="fotoEvento" value="{{ old('fotoEvento') }}" id="fotoEvento" required>
+                                    name="fotoEvento" value="{{ old('fotoEvento') }}" required
+                                    accept=".jpeg,.jpg,.png" onchange="previewImage(this, 'logo')">
                             </div>
+
                             @error('fotoEvento')
                                 <br>
                                 <span class="invalid-feedback" role="alert">
@@ -300,15 +319,20 @@
                             @enderror
                         </div>
 
+                        <!-- ÍCONE -->
                         <div class="col-md-6">
                             <label for="icone" class="fw-bold mb-3">{{ __('Ícone (tamanho: 600 x 600, formato: JPEG, JPG e PNG):') }}</label>
                             <div id="imagem-loader-icone" class="imagem-loader">
                                 <img id="icone-preview" class="img-fluid" src="{{ asset('/img/nova_imagem.PNG') }}" alt="">
                             </div>
+
+                            <!-- Input mantido exatamente como original -->
                             <div style="display: none;">
                                 <input type="file" id="icone-input" class="form-control @error('icone') is-invalid @enderror"
-                                    name="icone" value="{{ old('icone') }}" id="icone" required>
+                                    name="icone" value="{{ old('icone') }}" required
+                                    accept=".jpeg,.jpg,.png" onchange="previewImage(this, 'icone')">
                             </div>
+
                             @error('icone')
                                 <br>
                                 <span class="invalid-feedback" role="alert">
@@ -318,16 +342,53 @@
                         </div>
                     </div>
 
+                    <br>
+
                     <div class="form-group row multilingual_fields" style="display: none;">
+                        <!-- BANNER INGLÊS -->
                         <div class="col-md-6">
-                            <label for="fotoEvento_en" class="fw-bold mb-3">{{ __('Banner Inglês') }}</label>
-                            <div id="imagem-loader-en" class="imagem-loader">
-                                <img id="logo-preview-en" class="img-fluid" src="{{ asset('/img/nova_imagem.PNG') }}" alt="">
+                            <label for="fotoEvento_en" class="fw-bold mb-1 required-field">{{ __('Banner Inglês (tamanho: 1024 x 425, formato: JPEG, JPG e PNG):') }}</label>
+
+                            <!-- Área de upload drag & drop -->
+                            <div class="upload-area border border-2 border-dashed rounded-3 p-3 text-center position-relative"
+                                style="min-height: 200px; border-color: #dee2e6 !important; cursor: pointer; transition: all 0.3s ease;"
+                                onclick="document.getElementById('logo-input-en').click()"
+                                ondrop="handleDrop(event, 'logo-en')"
+                                ondragover="handleDragOver(event)"
+                                ondragenter="handleDragEnter(event)"
+                                ondragleave="handleDragLeave(event)">
+
+                                <!-- Estado inicial - placeholder -->
+                                <div id="logo-en-placeholder" class="upload-content d-flex flex-column align-items-center justify-content-center h-100">
+                                    <i class="bi bi-cloud-upload fs-1 text-primary mb-2"></i>
+                                    <h6 class="text-primary mb-2">Banner em Inglês</h6>
+                                    <p class="text-muted small mb-2">Arraste ou clique para selecionar</p>
+                                    <button type="button" class="btn btn-outline-primary btn-sm">
+                                        <i class="bi bi-upload me-1"></i>Escolher Banner EN
+                                    </button>
+                                    <small class="text-muted mt-2">1024 x 425px - JPEG, JPG, PNG</small>
+                                </div>
+
+                                <!-- Preview da imagem -->
+                                <div id="logo-en-preview-container" class="d-none">
+                                    <img id="logo-en-preview" class="img-fluid rounded" style="max-height: 180px;" src="" alt="Preview Banner EN">
+                                    <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 m-2"
+                                            onclick="removeImage('logo-en')" style="opacity: 0.8;">
+                                        <i class="bi bi-x"></i>
+                                    </button>
+                                    <div class="mt-2">
+                                        <small class="text-success"><i class="bi bi-check-circle me-1"></i>Banner EN carregado</small>
+                                    </div>
+                                </div>
                             </div>
+
+                            <!-- Input mantido exatamente como original -->
                             <div style="display: none;">
                                 <input type="file" id="logo-input-en" class="form-control @error('fotoEvento_en') is-invalid @enderror"
-                                    name="fotoEvento_en" value="{{ old('fotoEvento_en') }}" id="fotoEvento_en">
+                                    name="fotoEvento_en" value="{{ old('fotoEvento_en') }}"
+                                    accept=".jpeg,.jpg,.png" onchange="previewImageDragDrop(this, 'logo-en')">
                             </div>
+
                             @error('fotoEvento_en')
                                 <br>
                                 <span class="invalid-feedback" role="alert">
@@ -336,15 +397,50 @@
                             @enderror
                         </div>
 
+                        <!-- ÍCONE INGLÊS -->
                         <div class="col-md-6">
-                            <label for="icone_en" class="fw-bold mb-3">{{ __('Ícone inglês') }}</label>
-                            <div id="imagem-loader-icone-en" class="imagem-loader">
-                                <img id="icone-preview-en" class="img-fluid" src="{{ asset('/img/nova_imagem.PNG') }}" alt="">
+                            <label for="icone_en" class="fw-bold mb-1 required-field">{{ __('Ícone Inglês (tamanho: 600 x 600, formato: JPEG, JPG e PNG):') }}</label>
+
+                            <!-- Área de upload drag & drop -->
+                            <div class="upload-area border border-2 border-dashed rounded-3 p-3 text-center position-relative"
+                                style="min-height: 200px; border-color: #dee2e6 !important; cursor: pointer; transition: all 0.3s ease;"
+                                onclick="document.getElementById('icone-input-en').click()"
+                                ondrop="handleDrop(event, 'icone-en')"
+                                ondragover="handleDragOver(event)"
+                                ondragenter="handleDragEnter(event)"
+                                ondragleave="handleDragLeave(event)">
+
+                                <!-- Estado inicial - placeholder -->
+                                <div id="icone-en-placeholder" class="upload-content d-flex flex-column align-items-center justify-content-center h-100">
+                                    <i class="bi bi-cloud-upload fs-1 text-success mb-2"></i>
+                                    <h6 class="text-success mb-2">Ícone em Inglês</h6>
+                                    <p class="text-muted small mb-2">Arraste ou clique para selecionar</p>
+                                    <button type="button" class="btn btn-outline-success btn-sm">
+                                        <i class="bi bi-upload me-1"></i>Escolher Ícone EN
+                                    </button>
+                                    <small class="text-muted mt-2">600 x 600px - JPEG, JPG, PNG</small>
+                                </div>
+
+                                <!-- Preview da imagem -->
+                                <div id="icone-en-preview-container" class="d-none">
+                                    <img id="icone-en-preview" class="img-fluid rounded" style="max-height: 180px;" src="" alt="Preview Ícone EN">
+                                    <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 m-2"
+                                            onclick="removeImage('icone-en')" style="opacity: 0.8;">
+                                        <i class="bi bi-x"></i>
+                                    </button>
+                                    <div class="mt-2">
+                                        <small class="text-success"><i class="bi bi-check-circle me-1"></i>Ícone EN carregado</small>
+                                    </div>
+                                </div>
                             </div>
+
+                            <!-- Input mantido exatamente como original -->
                             <div style="display: none;">
                                 <input type="file" id="icone-input-en" class="form-control @error('icone_en') is-invalid @enderror"
-                                    name="icone_en" value="{{ old('icone_en') }}" id="icone_en">
+                                    name="icone_en" value="{{ old('icone_en') }}"
+                                    accept=".jpeg,.jpg,.png" onchange="previewImageDragDrop(this, 'icone-en')">
                             </div>
+
                             @error('icone_en')
                                 <br>
                                 <span class="invalid-feedback" role="alert">
@@ -354,16 +450,53 @@
                         </div>
                     </div>
 
+                    <br>
+
                     <div class="form-group row multilingual_fields" style="display: none;">
-                        <div class="col-md-6">
-                            <label for="fotoEvento_es" class="fw-bold mb-3">{{ __('Banner Espanhol') }}</label>
-                            <div id="imagem-loader-es" class="imagem-loader">
-                                <img id="logo-preview-es" class="img-fluid" src="{{ asset('/img/nova_imagem.PNG') }}" alt="">
+
+                    <div class="col-md-6">
+                            <label for="fotoEvento_es" class="fw-bold mb-1 required-field">{{ __('Banner Espanhol (tamanho: 1024 x 425, formato: JPEG, JPG e PNG):') }}</label>
+
+                            <!-- Área de upload drag & drop -->
+                            <div class="upload-area border border-2 border-dashed rounded-3 p-3 text-center position-relative"
+                                style="min-height: 200px; border-color: #dee2e6 !important; cursor: pointer; transition: all 0.3s ease;"
+                                onclick="document.getElementById('logo-input-es').click()"
+                                ondrop="handleDrop(event, 'logo-es')"
+                                ondragover="handleDragOver(event)"
+                                ondragenter="handleDragEnter(event)"
+                                ondragleave="handleDragLeave(event)">
+
+                                <!-- Estado inicial - placeholder -->
+                                <div id="logo-es-placeholder" class="upload-content d-flex flex-column align-items-center justify-content-center h-100">
+                                    <i class="bi bi-cloud-upload fs-1 text-primary mb-2"></i>
+                                    <h6 class="text-primary mb-2">Banner en Español</h6>
+                                    <p class="text-muted small mb-2">Arrastra o haz clic para seleccionar</p>
+                                    <button type="button" class="btn btn-outline-primary btn-sm">
+                                        <i class="bi bi-upload me-1"></i>Elegir Banner ES
+                                    </button>
+                                    <small class="text-muted mt-2">1024 x 425px - JPEG, JPG, PNG</small>
+                                </div>
+
+                                <!-- Preview da imagem -->
+                                <div id="logo-es-preview-container" class="d-none">
+                                    <img id="logo-es-preview" class="img-fluid rounded" style="max-height: 180px;" src="" alt="Preview Banner ES">
+                                    <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 m-2"
+                                            onclick="removeImage('logo-es')" style="opacity: 0.8;">
+                                        <i class="bi bi-x"></i>
+                                    </button>
+                                    <div class="mt-2">
+                                        <small class="text-success"><i class="bi bi-check-circle me-1"></i>Banner ES cargado</small>
+                                    </div>
+                                </div>
                             </div>
+
+                            <!-- Input mantido exatamente como original -->
                             <div style="display: none;">
                                 <input type="file" id="logo-input-es" class="form-control @error('fotoEvento_es') is-invalid @enderror"
-                                    name="fotoEvento_es" value="{{ old('fotoEvento_es') }}" id="fotoEvento_es">
+                                    name="fotoEvento_es" value="{{ old('fotoEvento_es') }}"
+                                    accept=".jpeg,.jpg,.png" onchange="previewImageDragDrop(this, 'logo-es')">
                             </div>
+
                             @error('fotoEvento_es')
                                 <br>
                                 <span class="invalid-feedback" role="alert">
@@ -372,16 +505,55 @@
                             @enderror
                         </div>
 
+                        <!-- ÍCONE ESPANHOL -->
                         <div class="col-md-6">
-                            <label for="icone_es" class="fw-bold mb-3">{{__('Ícone espanhol')}}</label>
-                            <div id="imagem-loader-icone-es" class="imagem-loader">
-                                <img id="icone-preview-es" class="img-fluid" src="{{ asset('/img/nova_imagem.PNG') }}" alt="">
+                            <label for="icone_es" class="fw-bold mb-1 required-field">{{ __('Ícone Espanhol (tamanho: 600 x 600, formato: JPEG, JPG e PNG):') }}</label>
+
+                            <!-- Área de upload drag & drop -->
+                            <div class="upload-area border border-2 border-dashed rounded-3 p-3 text-center position-relative"
+                                style="min-height: 200px; border-color: #dee2e6 !important; cursor: pointer; transition: all 0.3s ease;"
+                                onclick="document.getElementById('icone-input-es').click()"
+                                ondrop="handleDrop(event, 'icone-es')"
+                                ondragover="handleDragOver(event)"
+                                ondragenter="handleDragEnter(event)"
+                                ondragleave="handleDragLeave(event)">
+
+                                <!-- Estado inicial - placeholder -->
+                                <div id="icone-es-placeholder" class="upload-content d-flex flex-column align-items-center justify-content-center h-100">
+                                    <i class="bi bi-cloud-upload fs-1 text-success mb-2"></i>
+                                    <h6 class="text-success mb-2">Ícono en Español</h6>
+                                    <p class="text-muted small mb-2">Arrastra o haz clic para seleccionar</p>
+                                    <button type="button" class="btn btn-outline-success btn-sm">
+                                        <i class="bi bi-upload me-1"></i>Elegir Ícono ES
+                                    </button>
+                                    <small class="text-muted mt-2">600 x 600px - JPEG, JPG, PNG</small>
+                                </div>
+
+                                <!-- Preview da imagem -->
+                                <div id="icone-es-preview-container" class="d-none">
+                                    <img id="icone-es-preview" class="img-fluid rounded" style="max-height: 180px;" src="" alt="Preview Ícone ES">
+                                    <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 m-2"
+                                            onclick="removeImage('icone-es')" style="opacity: 0.8;">
+                                        <i class="bi bi-x"></i>
+                                    </button>
+                                    <div class="mt-2">
+                                        <small class="text-success"><i class="bi bi-check-circle me-1"></i>Ícono ES cargado</small>
+                                    </div>
+                                </div>
                             </div>
+
+                            <!-- Input mantido exatamente como original -->
                             <div style="display: none;">
                                 <input type="file" id="icone-input-es" class="form-control @error('icone_es') is-invalid @enderror"
-                                    name="icone_es" value="{{ old('icone_es') }}" id="icone_es">
+                                    name="icone_es" value="{{ old('icone_es') }}"
+                                    accept=".jpeg,.jpg,.png" onchange="previewImageDragDrop(this, 'icone-es')">
                             </div>
-                            <small style="position: relative; top: 5px;">{{ __('O arquivo será redimensionado para') }} 600 x 600;<br>{{ __('Formato') }}: JPEG, JPG, PNG</small>
+
+                            <small class="text-muted mt-2">
+                                {{ __('O arquivo será redimensionado para') }} 600 x 600<br>
+                                {{ __('Formato') }}: JPEG, JPG, PNG
+                            </small>
+
                             @error('icone_es')
                                 <br>
                                 <span class="invalid-feedback" role="alert">
@@ -422,7 +594,7 @@
                     {{-- Endereço --}}
                     <div class="form-group row">
                         <div class="col-md-6 form-group">
-                           <label for="cep" class="col-form-label">{{ __('CEP') }}</label>
+                           <label for="cep" class="col-form-label fw-bold required-field">{{ __('CEP') }}</label>
                            <input value="{{ old('cep') }}" onblur="pesquisacep(this.value);" id="cep"
                                name="cep" type="text" class="form-control @error('cep') is-invalid @enderror"
                                required autocomplete="cep">
@@ -435,7 +607,7 @@
                        </div>
 
                         <div class="col-md-6">
-                            <label for="rua" class="col-form-label text-start d-block fw-bold ">{{ __('Rua') }}</label>
+                            <label for="rua" class="col-form-label text-start d-block fw-bold required-field">{{ __('Rua') }}</label>
                             <input value="{{old('rua')}}" id="rua" type="text" class="form-control @error('rua') is-invalid @enderror"
                             name="rua" autocomplete="new-password" required>
 
@@ -445,52 +617,55 @@
                             </span>
                             @enderror
                         </div>
-
                     </div>
 
+                    <br>
 
+                    <div class="form-group row">
+                        <div class="col-md-6">
+                        <label for="numero" class="col-form-label text-start d-block fw-bold">{{ __('Número') }}</label>
+                            <input id="numero" type="text" class="form-control @error('numero') is-invalid @enderror"
+                                name="numero" value="{{ old('numero') }}" required autocomplete="numero" autofocus
+                                maxlength="10">
 
-                        <div class="form-group row">
-                            <div class="col-md-6">
-                            <label for="numero" class="col-form-label text-start d-block fw-bold mb-3">{{ __('Número') }}</label>
-                                <input id="numero" type="text" class="form-control @error('numero') is-invalid @enderror"
-                                    name="numero" value="{{ old('numero') }}" required autocomplete="numero" autofocus
-                                    maxlength="10">
-
-                                @error('numero')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                            <div class="col-md-6">
-                                <label for="bairro" class="col-form-label text-start d-block fw-bold mb-3">{{ __('Bairro') }}</label>
-                                <input value="{{old('bairro')}}" id="bairro" type="text" class="form-control @error('bairro') is-invalid @enderror"
-                                    name="bairro" autocomplete="bairro" required>
-
-                                @error('bairro')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ __($message) }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-
+                            @error('numero')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
                         </div>
-                        <div class="col-md-12">
-                            <label for="complemento" class="col-form-label text-start d-block fw-bold mb-3">{{ __('Complemento') }}</label>
-                            <input type="text" value="{{old('complemento')}}" id="complemento"
-                                class="form-control @error('complemento') is-invalid @enderror" name="complemento">
+                        <div class="col-md-6">
+                            <label for="bairro" class="col-form-label text-start d-block fw-bold required-field">{{ __('Bairro') }}</label>
+                            <input value="{{old('bairro')}}" id="bairro" type="text" class="form-control @error('bairro') is-invalid @enderror"
+                                name="bairro" autocomplete="bairro" required>
 
-                            @error('complemento')
+                            @error('bairro')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ __($message) }}</strong>
                                 </span>
                             @enderror
                         </div>
+                    </div>
+
+                    <br>
+
+                    <div class="col-md-12">
+                        <label for="complemento" class="col-form-label text-start d-block fw-bold">{{ __('Complemento') }}</label>
+                        <input type="text" value="{{old('complemento')}}" id="complemento"
+                            class="form-control @error('complemento') is-invalid @enderror" name="complemento">
+
+                        @error('complemento')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ __($message) }}</strong>
+                            </span>
+                        @enderror
+                    </div>
+
+                    <br>
 
                     <div class="form-group row">
                         <div class="col-md-6">
-                            <label for="cidade" class="col-form-label text-start d-block fw-bold mb-3">{{ __('Cidade') }}</label>
+                            <label for="cidade" class="col-form-label text-start d-block fw-bold required-field">{{ __('Cidade') }}</label>
                             <input value="{{old('cidade')}}" id="cidade" type="text"
                                 class="form-control apenasLetras @error('cidade') is-invalid @enderror"
                                 name="cidade" autocomplete="cidade" required>
@@ -503,7 +678,7 @@
                         </div>
 
                         <div class="col-md-6 form-group">
-                        <label for="uf" class="col-form-label text-start d-block fw-bold mb-3">{{ __('Estado') }}</label>
+                        <label for="uf" class="col-form-label text-start d-block fw-bold required-field">{{ __('Estado') }}</label>
                         {{-- <input id="uf" type="text" class="form-control @error('uf') is-invalid @enderror" name="uf" value="{{ old('uf') }}" required autocomplete="uf" autofocus> --}}
                         <select class="form-control @error('uf') is-invalid @enderror" id="uf" name="uf">
                             <option value="" disabled selected hidden>-- UF --</option>
@@ -571,10 +746,12 @@
                     </div>
                     </div>
 
+                    <br>
+
                     {{-- Datas do Evento --}}
                     <div class="form-group row">
                         <div class="col-md-6">
-                            <label for="dataInicio" class="col-form-label text-start d-block fw-bold mb-3">{{ __('Data de início') }}</label>
+                            <label for="dataInicio" class="col-form-label text-start d-block fw-bold required-field">{{ __('Data de início') }}</label>
                             <input id="dataInicio" type="date" class="form-control @error('dataInicio') is-invalid @enderror"
                                 name="dataInicio" value="{{ old('dataInicio') }}" required autocomplete="dataInicio" autofocus>
 
@@ -586,7 +763,7 @@
                         </div>
 
                         <div class="col-md-6">
-                            <label for="dataFim" class="col-form-label text-start d-block fw-bold mb-3 ">{{ __('Data de término') }}</label>
+                            <label for="dataFim" class="col-form-label text-start d-block fw-bold required-field">{{ __('Data de término') }}</label>
                             <input id="dataFim" type="date" class="form-control @error('dataFim') is-invalid @enderror"
                                 name="dataFim" value="{{ old('dataFim') }}" required autocomplete="dataFim" autofocus>
 
@@ -598,9 +775,11 @@
                         </div>
                     </div>
 
+                    <br>
+
                     <div class="form-group row align-items-center">
                         <div class="col-md-6">
-                            <label for="dataLimiteInscricao" class="col-form-label text-start d-block fw-bold mb-3">
+                            <label for="dataLimiteInscricao" class="col-form-label text-start d-block fw-bold required-field">
                                 {{ __('Data de encerramento de inscrições') }}
                             </label>
                             <input id="dataLimiteInscricao" type="datetime-local"
@@ -617,7 +796,7 @@
                         <div class="col-md-6 d-flex align-items-center">
                             <small class="mt-4">
                                 <span style="color: red">{{ __('Atenção:') }}</span>
-                                {{ __('Informe uma data para encerramento das inscrições no evento. Caso não informada, a data limite para inscrição no evento será um dia prévio a data de início do evento') }}.
+                                {{ __('Será no dia anterior a data do inicio do evento.') }}.
                             </small>
                         </div>
                     </div>
@@ -637,6 +816,8 @@
                             @enderror
                         </div>
                     </div>
+
+                    <br>
 
                     <div class="row form-group pb-4">
                         <div class="col-md-2">
@@ -666,6 +847,197 @@
     <script type="text/javascript">
         CKEDITOR.replaceAll('ckeditor-texto');
         $.fn.modal.Constructor.prototype._enforceFocus = function() {};
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // === FUNCIONALIDADE DRAG & DROP ===
+            // Funções para drag & drop
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+
+            function handleDragOver(e) {
+                preventDefaults(e);
+                e.dataTransfer.dropEffect = 'copy';
+            }
+
+            function handleDragEnter(e) {
+                preventDefaults(e);
+                e.currentTarget.classList.add('dragover');
+            }
+
+            function handleDragLeave(e) {
+                preventDefaults(e);
+                e.currentTarget.classList.remove('dragover');
+            }
+
+            function handleDrop(e, type) {
+                preventDefaults(e);
+                e.currentTarget.classList.remove('dragover');
+
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    const input = document.getElementById(type + '-input');
+                    if (input) {
+                        input.files = files;
+                        // Trigger o evento change para manter compatibilidade com validação existente
+                        const event = new Event('change', { bubbles: true });
+                        input.dispatchEvent(event);
+                    }
+                }
+            }
+
+            function previewImageDragDrop(input, type) {
+                if (input.files && input.files[0]) {
+                    const file = input.files[0];
+
+                    // Validar tipo de arquivo
+                    if (!file.type.match(/^image\/(jpeg|jpg|png)$/)) {
+                        alert('Por favor, selecione apenas arquivos JPEG, JPG ou PNG');
+                        input.value = '';
+                        return;
+                    }
+
+                    const reader = new FileReader();
+                    const preview = document.getElementById(type + '-preview');
+                    const placeholder = document.getElementById(type + '-placeholder');
+                    const previewContainer = document.getElementById(type + '-preview-container');
+
+                    if (preview && placeholder && previewContainer) {
+                        reader.onload = function(e) {
+                            preview.src = e.target.result;
+                            placeholder.classList.add('d-none');
+                            previewContainer.classList.remove('d-none');
+                        }
+                        reader.readAsDataURL(file);
+                    }
+                }
+            }
+
+            function removeImage(type) {
+                const input = document.getElementById(type + '-input');
+                const placeholder = document.getElementById(type + '-placeholder');
+                const previewContainer = document.getElementById(type + '-preview-container');
+
+                if (input) input.value = '';
+                if (placeholder) placeholder.classList.remove('d-none');
+                if (previewContainer) previewContainer.classList.add('d-none');
+            }
+
+            // Expor funções globalmente para uso no HTML
+            window.handleDragOver = handleDragOver;
+            window.handleDragEnter = handleDragEnter;
+            window.handleDragLeave = handleDragLeave;
+            window.handleDrop = handleDrop;
+            window.previewImageDragDrop = previewImageDragDrop;
+            window.removeImage = removeImage;
+
+            // === CONFIGURAÇÕES ORIGINAIS (MANTIDAS) ===
+            // configurações para cada campo: nome do input, id do preview, dimensões máximas
+            const fields = [
+                { name: 'fotoEvento',      previewId: 'logo-preview',      loaderId: 'imagem-loader',          maxW: 1024, maxH: 425, message: 'O banner deve ter o tamanho de 1024×425px.' },
+                { name: 'icone',           previewId: 'icone-preview',     loaderId: 'imagem-loader-icone',   maxW: 600,  maxH: 600, message: 'O ícone deve ter o tamanho de 600×600px.' },
+                { name: 'fotoEvento_en',   previewId: 'logo-preview-en',   loaderId: 'imagem-loader-en',      maxW: 1024, maxH: 425, message: 'O banner (en) deve ter o tamanho de 1024×425px.' },
+                { name: 'icone_en',        previewId: 'icone-preview-en',  loaderId: 'imagem-loader-icone-en', maxW: 600,  maxH: 600, message: 'O ícone (en) deve ter o tamanho de 600×600px.' },
+                { name: 'fotoEvento_es',   previewId: 'logo-preview-es',   loaderId: 'imagem-loader-es',      maxW: 1024, maxH: 425, message: 'O banner (es) deve ter o tamanho de 1024×425px.' },
+                { name: 'icone_es',        previewId: 'icone-preview-es',  loaderId: 'imagem-loader-icone-es', maxW: 600,  maxH: 600, message: 'O ícone (es) deve ter o tamanho de 600×600px.' },
+            ];
+
+            fields.forEach(field => {
+                const input  = document.querySelector(`input[name="${field.name}"]`);
+                const preview= document.getElementById(field.previewId);
+                const loader = document.getElementById(field.loaderId);
+
+                // Se não existir os elementos, skip (compatibilidade com diferentes páginas)
+                if (!input || !preview) return;
+
+                // guardar src padrão para restaurar em caso de erro
+                const defaultSrc = preview.src;
+
+                // clicar no loader abre o filepicker (MANTIDO)
+                if (loader) {
+                    loader.addEventListener('click', () => input.click());
+                }
+
+                // === INTEGRAÇÃO: Compatibilidade drag & drop com validação existente ===
+                input.addEventListener('change', function() {
+                    clearError();  // limpa mensagens antigas
+                    const file = this.files[0];
+                    if (!file) return;
+
+                    // checa tipo
+                    if (!['image/jpeg','image/png','image/jpg'].includes(file.type)) {
+                        showError('Formato inválido. Só JPEG, JPG ou PNG.');
+                        reset();
+                        return;
+                    }
+
+                    // lê como DataURL
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const img = new Image();
+                        img.onload = function() {
+                            // checa dimensões
+                            if (img.width > field.maxW || img.height > field.maxH) {
+                                showError(field.message);
+                                reset();
+                            } else {
+                                preview.src = e.target.result;  // mostra o preview
+
+                                // === NOVA FUNCIONALIDADE: Atualizar interface drag & drop ===
+                                const placeholder = document.getElementById(field.name.replace('fotoEvento', 'logo').replace('icone', 'icone') + '-placeholder');
+                                const previewContainer = document.getElementById(field.name.replace('fotoEvento', 'logo').replace('icone', 'icone') + '-preview-container');
+
+                                if (placeholder && previewContainer) {
+                                    placeholder.classList.add('d-none');
+                                    previewContainer.classList.remove('d-none');
+                                    const dragDropPreview = document.getElementById(field.name.replace('fotoEvento', 'logo').replace('icone', 'icone') + '-preview');
+                                    if (dragDropPreview) {
+                                        dragDropPreview.src = e.target.result;
+                                    }
+                                }
+                            }
+                        };
+                        img.src = e.target.result;
+                    };
+                    reader.readAsDataURL(file);
+
+                    function reset() {
+                        input.value = '';
+                        preview.src = defaultSrc;
+
+                        // === NOVA FUNCIONALIDADE: Reset interface drag & drop ===
+                        const placeholder = document.getElementById(field.name.replace('fotoEvento', 'logo').replace('icone', 'icone') + '-placeholder');
+                        const previewContainer = document.getElementById(field.name.replace('fotoEvento', 'logo').replace('icone', 'icone') + '-preview-container');
+
+                        if (placeholder && previewContainer) {
+                            placeholder.classList.remove('d-none');
+                            previewContainer.classList.add('d-none');
+                        }
+                    }
+
+                    function showError(msg) {
+                        input.classList.add('is-invalid');
+                        const parent = input.closest('.col-md-6');
+                        let err = parent.querySelector('.js-error');
+                        if (!err) {
+                            err = document.createElement('div');
+                            err.className = 'invalid-feedback d-block js-error';
+                            parent.appendChild(err);
+                        }
+                        err.textContent = msg;
+                    }
+
+                    function clearError() {
+                        input.classList.remove('is-invalid');
+                        const parent = input.closest('.col-md-6');
+                        const err = parent.querySelector('.js-error');
+                        if (err) err.remove();
+                    }
+                });
+            });
+        });
     </script>
 
     <script type="text/javascript">
@@ -722,8 +1094,8 @@
                 });
             }).trigger('change'); // Apply on page load
 
+            // === CÓDIGO ORIGINAL MANTIDO (compatibilidade com código legado) ===
             $('#imagem-loader').click(function() {
-                $('#logo-input').click();
                 $('#logo-input').change(function() {
                     if (this.files && this.files[0]) {
                         var file = new FileReader();
@@ -736,7 +1108,6 @@
             });
 
             $('#imagem-loader-icone').click(function() {
-                $('#icone-input').click();
                 $('#icone-input').change(function() {
                     if (this.files && this.files[0]) {
                         var file = new FileReader();
@@ -749,7 +1120,6 @@
             });
 
             $('#imagem-loader-en').click(function() {
-                $('#logo-input-en').click();
                 $('#logo-input-en').change(function() {
                     if (this.files && this.files[0]) {
                         var file = new FileReader();
@@ -762,7 +1132,6 @@
             });
 
             $('#imagem-loader-icone-en').click(function() {
-                $('#icone-input-en').click();
                 $('#icone-input-en').change(function() {
                     if (this.files && this.files[0]) {
                         var file = new FileReader();
@@ -775,7 +1144,6 @@
             });
 
             $('#imagem-loader-es').click(function() {
-                $('#logo-input-es').click();
                 $('#logo-input-es').change(function() {
                     if (this.files && this.files[0]) {
                         var file = new FileReader();
@@ -788,7 +1156,6 @@
             });
 
             $('#imagem-loader-icone-es').click(function() {
-                $('#icone-input-es').click();
                 $('#icone-input-es').change(function() {
                     if (this.files && this.files[0]) {
                         var file = new FileReader();
@@ -801,7 +1168,7 @@
             });
         });
 
-
+        // === FUNÇÕES ORIGINAIS MANTIDAS ===
         function limpa_formulário_cep() {
             //Limpa valores do formulário de cep.
             document.getElementById('rua').value = ("");

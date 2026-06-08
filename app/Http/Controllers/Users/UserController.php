@@ -92,6 +92,45 @@ class UserController extends Controller
         ]);
 
         return back()->with('success', 'Senha alterada com sucesso.');
+        if ($user->email != $request->email && !$user->usuarioTemp) {
+            $check_user_email = User::where('email', $request->email)->first();
+            if ($check_user_email == null) {
+                $user->email = $request->email;
+                $user->email_verified_at = null;
+            } else {
+                return redirect()->back()->withErrors(['email' => 'Já existe uma conta registrada com esse e-mail.'])->withInput($validator);
+            }
+        }
+
+        $user->name = $request->input('name');
+        $user->cpf = $request->input('cpf');
+        $user->cnpj = $request->input('cnpj');
+        $user->passaporte = $request->input('passaporte');
+        $user->celular = $request->input('full_number');
+        $user->instituicao = $request->input('instituicao');
+        if ($request->input('especialidade') != null) {
+            $user->especProfissional = $request->input('especialidade');
+        }
+        $user->usuarioTemp = null;
+        $user->update();
+
+        if ($user->enderecoId == null) {
+            $end = new Endereco($request->all());
+            $end->save();
+            $user->enderecoId = $end->id;
+            $user->update();
+        } else {
+            $end = Endereco::find($user->enderecoId);
+            $end->fill($validator);
+            $end->update();
+        }
+
+
+        if($temp){
+            return redirect()->route('index')->with(['message' => 'Perfil atualizado com sucesso!']);
+        }
+
+        return back()->with(['message' => 'Atualizado com sucesso!']);
     }
 
     public function meusCertificados()

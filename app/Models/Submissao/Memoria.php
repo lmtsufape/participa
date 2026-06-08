@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Memoria extends Model
 {
-    protected $fillable = ['titulo', 'arquivo', 'link', 'evento_id'];
+    protected $fillable = ['titulo', 'arquivo', 'link', 'evento_id', 'ordem'];
 
     public function evento()
     {

@@ -7,22 +7,22 @@
     <div class="bg-white p-4 shadow rounded" style="line-height: 1.6; font-size: 1rem;">
         <ul style="list-style-type: none; padding-left: 0;">
             <li>
-                <ul style="list-style-type: none;"> 
+                <ul style="list-style-type: none;">
                     <li><h5>1. Introdução</h5></li>
-                    <li>Bem-vindo aos termos de uso da Plataforma de inscrições e submissão de trabalhos da Associação Brasileira de Agroecologia (ABA). Estes termos regem o uso do nosso aplicativo web.</li>
+                    <li>Bem-vindo aos termos de uso da Plataforma de inscrições e submissão de trabalhos da Universidade Federal do Agreste de Pernambuco (UFAPE). Estes termos regem o uso do nosso aplicativo web.</li>
                 </ul>
             </li>
             <br/>
             <li>
-                <ul style="list-style-type: none;"> 
+                <ul style="list-style-type: none;">
                     <li><h5>2. Aceitação do Termo de Uso e Política de Privacidade</h5></li>
-                    <li>2.1 - Ao utilizar a Plataforma de inscrições e submissão de trabalhos da Associação Brasileira de Agroecologia (ABA), o usuário confirma que leu, compreendeu e que aceita os termos e políticas aplicáveis e fica a eles vinculado.</li>
+                    <li>2.1 - Ao utilizar a Plataforma de inscrições e submissão de trabalhos da Universidade Federal do Agreste de Pernambuco (UFAPE), o usuário confirma que leu, compreendeu e que aceita os termos e políticas aplicáveis e fica a eles vinculado.</li>
                     <li>2.2 - Caso não concorde com as regras presentes nestes Termos, o Usuário não poderá acessar e utilizar o sistema e dispor dos seus serviços. </li>
                 </ul style="list-style-type: none;">
             </li>
             <br/>
             <li>
-                <ul style="list-style-type: none;"> 
+                <ul style="list-style-type: none;">
                     <li><h5>3. Legislação Aplicada</h5></li>
                     <li>Elencamos abaixo leis e normativos que você pode consultar para esclarecer dúvidas relacionadas aos serviços que envolvam tratamento dos dados, transparência na administração pública, direito dos titulares, entre outros:</li>
                     <li>3.1 - <a href="https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2018/lei/L13709.htm" target="_blank">Lei nº 13.709, de 14 de agosto de 2018:</a> Lei Geral de Proteção de Dados Pessoais (LGPD);</li>
@@ -34,7 +34,7 @@
             </li>
             <br/>
             <li>
-                <ul style="list-style-type: none;"> 
+                <ul style="list-style-type: none;">
                     <li><h5>4. Uso do Aplicativo</h5></li>
                     <li>4.1 - Os dados que compõe o sistema são de uso da Universidade Federal do Agreste de Pernambuco e das pró-reitorias que a compõem.</li>
                     <li>4.2 - As informações e os dados do sistema podem ser modificados sem aviso prévio ao usuário.</li>
@@ -42,7 +42,7 @@
             </li>
             <br/>
             <li>
-                <ul style="list-style-type: none;"> 
+                <ul style="list-style-type: none;">
                     <li><h5>5. Direitos do Usuário</h5></li>
                     <li>5.1 - Confirmação e acesso: É o direito de obter a conﬁrmação de quais dados pessoais são ou não objeto de tratamento e, se for esse o caso, o direito de acessar os seus dados pessoais.</li>
                     <li>5.2 - Retificação: É o direito de solicitar a correção de dados incompletos, inexatos ou desatualizados. </li>
@@ -52,7 +52,7 @@
             </li>
             <br/>
             <li>
-                <ul style="list-style-type: none;"> 
+                <ul style="list-style-type: none;">
                     <li><h5>6. Deveres do Usuário</h5></li>
                     <li>6.1 - Veracidade das informações: Caso os dados informados não possuam veracidade e precisão, pode ser que não consiga utilizar o serviço. Você, como usuário do serviço, é responsável pela atualização das suas informações pessoais e pelas consequências na omissão ou erros nas informações pessoais cadastradas.</li>
                     <li>6.2 - Não compartilhamento de login e/ou senha: O login e senha só poderão ser utilizados pelo usuário cadastrado. Você deve manter sigilo da senha, que é pessoal e intransferível, não podendo alegar uso indevido, após seu compartilhamento.</li>
@@ -63,7 +63,7 @@
             </li>
             <br/>
             <li>
-                <ul style="list-style-type: none;"> 
+                <ul style="list-style-type: none;">
                     <li><h5>7. Responsabilidade da Administração Pública com os Dados Pessoais</h5></li>
                     <li>7.1 - A Administração Pública se compromete em cumprir todas as legislações relativas ao uso correto dos dados pessoais do cidadão, bem como a garantir todos os direitos e garantias legais dos usuários. Ela também se obriga a promover, independentemente de solicitações, a divulgação em local de fácil acesso, no âmbito de suas competências, de informações de interesse coletivo ou geral produzidas ou custodiadas. É de responsabilidade da Administração Pública implementar controles de segurança para proteção dos dados pessoais dos usuários.</li>
                     <li>7.2 - A Administração Pública poderá, quanto às ordens judiciais de pedido das informações, compartilhar informações necessárias para investigações ou tomar medidas relacionadas a atividades ilegais, suspeitas de fraude ou ameaças potenciais contra pessoas, bens ou sistemas que sustentam o Serviço ou de outra forma necessária para cumprir com nossas obrigações legais. Caso ocorra, a Administração Pública notificará os usuários, salvo quando o processo estiver em segredo de justiça.</li>
@@ -71,21 +71,21 @@
             </li>
             <br/>
             <li>
-                <ul style="list-style-type: none;"> 
+                <ul style="list-style-type: none;">
                     <li><h5>8. Links</h5></li>
                     <li>Este sistema pode conter links para outros sites que não são mantidos ou controlados pela Universidade Federal do Agreste de Pernambuco. A Universidade não possui controle sobre o conteúdo, políticas de privacidade ou práticas de sites de terceiros, não assumindo quaisquer responsabilidades sobre estes.</li>
                 </ul>
             </li>
             <br/>
             <li>
-                <ul style="list-style-type: none;"> 
+                <ul style="list-style-type: none;">
                     <li><h5>9. Alterações dos Termos de Uso</h5></li>
                     <li>A Universidade Federal do Agreste de Pernambuco poderá revisar e atualizar estes termos de uso e de privacidade a qualquer momento, ficando o usuário vinculado à versão atualizada desses termos.</li>
                 </ul>
             </li>
             <br/>
             <li>
-                <ul style="list-style-type: none;"> 
+                <ul style="list-style-type: none;">
                     <li><a href="{{ route('aviso.de.privacidade') }}">Leia também nosso Aviso de Privacidade</a></li>
                 </ul>
             </li>

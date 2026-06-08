@@ -19,7 +19,7 @@ class AdministradorSeed extends Seeder
         $user_id = User::where('name', 'Administrador')->first()->id;
 
         DB::table('administradors')->insert([
-            'user_id' => $user_id[0],
+            'user_id' => $user_id,
         ]);
     }
 }

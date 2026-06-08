@@ -22,7 +22,7 @@ class EmailCodigoPreRegistro extends Mailable
 
     public function build()
     {
-        return $this->subject('(ABA - Plataforma de eventos) - Código de validação')
+        return $this->subject('(Participa - Plataforma de eventos) - Código de validação')
             ->view('emails.emailCodigoPreRegistro')
             ->with(['preRegistro' => $this->preRegistro], );
     }

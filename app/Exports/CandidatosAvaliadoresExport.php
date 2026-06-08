@@ -40,8 +40,8 @@ class CandidatosAvaliadoresExport implements FromCollection, WithHeadings, WithM
             'Status',
             'Link Lattes',
             'Resumo Lattes',
-            'Eixo de Preferência',
-            'Já avaliou no CBA?',
+            'Área de Preferência',
+            'Já avaliou?',
             'Disponibilidade de Idiomas',
         ];
     }
@@ -57,6 +57,23 @@ class CandidatosAvaliadoresExport implements FromCollection, WithHeadings, WithM
             $status = 'Rejeitado';
         }
 
+        // se for o primeiro registro deste usuário, exibe todos os campos
+        if ($this->lastUserId !== $candidato->user_id) {
+            $this->lastUserId = $candidato->user_id;
+
+            return [
+                $candidato->user->name ?? 'N/A',
+                $candidato->user->email ?? 'N/A',
+                $status,
+                $candidato->link_lattes,
+                $candidato->resumo_lattes,
+                $candidato->area->nome,
+                $candidato->ja_avaliou ? 'Sim' : 'Não',
+                $candidato->disponibilidade_idiomas,
+            ];
+        }
+
+        // linhas seguintes: só o eixo, demais colunas em branco
         return [
             $candidato->user->name ?? 'N/A',
             $candidato->user->email ?? 'N/A',

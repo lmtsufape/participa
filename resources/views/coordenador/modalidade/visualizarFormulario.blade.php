@@ -271,23 +271,10 @@
                                                             <a href="#" class="delete2 pr-2 mr-2">
                                                                 <img src="{{ asset('img/icons/trash-alt-regular.svg') }}" style="width:20px" alt="Excluir">
                                                             </a>
-                                                            </div>
-                                                            <div class="col">
-                        <a class="move-up"><img src="{{asset('img/icons/sobe.png')}}"  style="width:20px; margin-left:10px"></a>
-                        <a class="move-down"><img src="{{asset('img/icons/desce.png')}}" style="width:20px"></a>
-                    </div>
-                                                            </div>
-                                                            <!--
-                                                                    Botões de Subir e Descer
-                                                                    <a href="#" onclick="moverElementoAF(event)">
-                                                                        <i class="fas fa-arrow-up fa-2x" id="arrow-up" style=""></i>
-                                                                    </a>
-                                                                    <a href="#" onclick="moverElementoAF(event)">
-                                                                        <i class="fas fa-arrow-down fa-2x" id="arrow-down" style="margin-top:35px"></i>
-                                                                    </a>
-                                                                    -->
-
+                                                            <a class="move-up text-success"><i class="bi bi-arrow-up-circle fs-4"></i></a>
+                                                            <a class="move-down text-success"><i class="bi bi-arrow-down-circle fs-4"></i></a>
                                                         </div>
+
                                                     </div>
                                                 </div>
                                             </div>
@@ -598,7 +585,7 @@
                         <div class="col-md-5"></div>
                         <div class="col-sm-7">
                             <a href="#" class=" 2 pr-2 mr-2">
-                                <i class="fas fa-trash-alt fa-2x delete2"></i>
+                                <i class="bi bi-trash3 fs-4 icon-card text-danger"></i>
                             </a>
 
                         </div>
