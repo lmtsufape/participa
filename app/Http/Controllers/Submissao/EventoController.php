@@ -188,7 +188,7 @@ class EventoController extends Controller
         }
 
         if ($request->has('titulo') && $request->titulo != '') {
-            $query->where('titulo', 'ilike', '%' . $request->titulo . '%');
+            $query->where('titulo', 'like', '%' . $request->titulo . '%');
         }
 
         if ($column == 'autor') {
@@ -291,7 +291,7 @@ class EventoController extends Controller
         }
 
         if ($request->has('titulo') && $request->titulo != '') {
-            $query->where('titulo', 'ilike', '%' . $request->titulo . '%');
+            $query->where('titulo', 'like', '%' . $request->titulo . '%');
         }
 
         $query->where($statusFilter);
@@ -368,7 +368,7 @@ class EventoController extends Controller
         }
 
         if ($request->has('search') && !empty($request->search)) {
-            $query->where('titulo', 'ILIKE', '%' . $request->search . '%');
+            $query->where('titulo', 'LIKE', '%' . $request->search . '%');
         }
 
         if ($status == 'rascunho') {
@@ -456,7 +456,7 @@ class EventoController extends Controller
             $query->where('id', $request->id);
         }
         if ($request->has('search') && !empty($request->search)) {
-            $query->where('titulo', 'ILIKE', '%' . $request->search . '%');
+            $query->where('titulo', 'LIKE', '%' . $request->search . '%');
         }
 
         if ($status == 'rascunho') {
@@ -546,7 +546,7 @@ class EventoController extends Controller
         }
 
         if ($request->has('titulo') && $request->titulo != '') {
-            $query->where('titulo', 'ilike', '%' . $request->titulo . '%');
+            $query->where('titulo', 'like', '%' . $request->titulo . '%');
         }
 
         if ($status == 'rascunho') {
@@ -1017,7 +1017,7 @@ class EventoController extends Controller
                          ->with(['modalidade', 'area', 'autor', 'arquivoCorrecao', 'atribuicoes.user']);
 
         if ($request->filled('titulo')) {
-            $query->where('titulo', 'ilike', '%' . $request->titulo . '%');
+            $query->where('titulo', 'like', '%' . $request->titulo . '%');
         }
 
         if ($request->has('id') && $request->id != '') {
@@ -1084,7 +1084,7 @@ class EventoController extends Controller
             $query->where('id', $request->id);
         }
         if ($request->filled('titulo')) {
-            $query->where('titulo', 'ilike', '%' . $request->titulo . '%');
+            $query->where('titulo', 'like', '%' . $request->titulo . '%');
         }
 
         $user_logado = auth()->user();
@@ -1136,7 +1136,7 @@ class EventoController extends Controller
                 $query->where('id', $request->id);
             }
             if ($request->filled('titulo')) {
-                $query->where('titulo', 'ilike', '%' . $request->titulo . '%');
+                $query->where('titulo', 'like', '%' . $request->titulo . '%');
             }
 
             if ($user_logado->eventosComoCoordEixo()->pluck('eventos.id')->contains($evento->id) &&
@@ -1199,7 +1199,7 @@ class EventoController extends Controller
                         ->with(['modalidade', 'area', 'autor', 'arquivoCorrecao', 'atribuicoes.user']);
 
         if ($request->filled('titulo')) {
-            $query->where('titulo', 'ilike', '%' . $request->titulo . '%');
+            $query->where('titulo', 'like', '%' . $request->titulo . '%');
         }
 
         if ($request->has('id') && $request->id != '') {
@@ -1285,7 +1285,7 @@ class EventoController extends Controller
             $query->where('id', $request->id);
         }
         if ($request->filled('titulo')) {
-            $query->where('titulo', 'ilike', '%' . $request->titulo . '%');
+            $query->where('titulo', 'like', '%' . $request->titulo . '%');
         }
 
         if ($user_logado->eventosComoCoordEixo()->pluck('eventos.id')->contains($evento->id) &&
@@ -1359,7 +1359,7 @@ class EventoController extends Controller
             $query->where('id', $request->id);
         }
         if ($request->filled('titulo')) {
-            $query->where('titulo', 'ilike', '%' . $request->titulo . '%');
+            $query->where('titulo', 'like', '%' . $request->titulo . '%');
         }
 
         $user_logado = auth()->user();
@@ -1750,7 +1750,7 @@ class EventoController extends Controller
         }
 
         if ($request->has('search') && !empty($request->search)) {
-            $query->where('titulo', 'ILIKE', '%' . $request->search . '%');
+            $query->where('titulo', 'LIKE', '%' . $request->search . '%');
         }
         if ($status == 'rascunho') {
             $query->where('status', '!=', 'arquivado');

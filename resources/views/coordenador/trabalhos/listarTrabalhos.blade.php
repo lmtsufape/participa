@@ -306,6 +306,11 @@
             </div>
         </div>
     @endforeach
+    @if(isset($trabalhos) && $trabalhos->hasPages())
+        <div class="d-flex justify-content-center mt-4">
+            {{ $trabalhos->appends(request()->query())->links() }}
+        </div>
+    @endif
 <!-- End Trabalhos -->
 <!-- Modal Trabalho -->
 {{-- <div class="modal fade" id="modalDistribuicaoAutomatica" tabindex="-1" role="dialog" aria-labelledby="modalDistribuicaoAutomatica" aria-hidden="true">
