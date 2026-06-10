@@ -210,7 +210,7 @@ class EventoController extends Controller
         }
 
         // OTIMIZAÇÃO: Usando chunk para evitar problemas de memória
-        $trabalhos = $query->simplePaginate(50)->withQueryString();
+        $trabalhos = $query->simplePaginate(15)->withQueryString();
 
         $coautoresSemCpfPorTrabalho = collect();
         foreach ($trabalhos as $trabalho) {
@@ -312,7 +312,7 @@ class EventoController extends Controller
             $query->whereIn('areaId', $areasCoordEixo);
         }
 
-        $trabalhos = $query->simplePaginate(50)->withQueryString();
+        $trabalhos = $query->simplePaginate(15)->withQueryString();
 
         $modalidades = Modalidade::where('evento_id', $evento->id)
             ->whereHas('trabalho', function ($q) use ($eixoSelecionado, $statusFilter) {
@@ -573,7 +573,7 @@ class EventoController extends Controller
             $query->whereIn('areaId', $areasCoordEixo);
         }
 
-        $trabalhos = $query->simplePaginate(10)->withQueryString();
+        $trabalhos = $query->simplePaginate(15)->withQueryString();
 
         foreach ($trabalhos as $trabalho) {
             try {

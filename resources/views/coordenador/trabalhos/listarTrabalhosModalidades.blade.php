@@ -248,6 +248,11 @@
                 </tbody>
               </table>
           </div>
+          @if(isset($trabalhos) && $trabalhos->hasPages())
+              <div class="d-flex justify-content-center mt-4">
+                  {{ $trabalhos->appends(request()->query())->links() }}
+              </div>
+          @endif
         </form>
       </div>
 
