@@ -109,7 +109,7 @@
     @else
         @include('componentes.mensagens')
 
-        <main class="flex-grow-1 @yield('main-classes', 'py-5') bg-my-shadow">
+        <main class="flex-grow-1 @yield('main-classes', 'pt-5') bg-my-shadow">
 
             @yield('content')
         </main>
