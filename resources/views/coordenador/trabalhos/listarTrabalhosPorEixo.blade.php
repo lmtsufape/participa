@@ -320,6 +320,12 @@
                     </div>
                 @endif
             @endforeach
+
+            @if(isset($trabalhos) && $trabalhos->hasPages())
+              <div class="d-flex justify-content-center mt-4">
+                  {{ $trabalhos->appends(request()->query())->links() }}
+              </div>
+            @endif
         @elseif($eixoSelecionado)
             <div class="row justify-content-center">
                 <div class="col-sm-12">

@@ -359,7 +359,7 @@ class EventoController extends Controller
         $this->authorize('isCoordenadorOrCoordCientificaOrCoordEixo', $evento);
         $modalidades = Modalidade::where('evento_id', $evento->id)->orderBy('nome')->get();
         $user_logado = auth()->user();
-        $perPage = 50;
+        $perPage = 15;
 
         $query = Trabalho::whereIn('modalidadeId', $modalidades->pluck('id'));
 
@@ -436,7 +436,7 @@ class EventoController extends Controller
         $areas = Area::where('eventoId', $evento->id)->orderBy('ordem')->get();
         $eixoSelecionado = $request->get('eixo_id');
         $user_logado = auth()->user();
-        $perPage = 50;
+        $perPage = 15;
 
         if (!$eixoSelecionado) {
             return view('coordenador.trabalhos.listarAvaliacoesPorEixo', [
@@ -1010,7 +1010,7 @@ class EventoController extends Controller
             abort(403, 'Acesso negado');
         }
 
-        $perPage = 50; 
+        $perPage = 15; 
 
         $query = Trabalho::where('eventoId', $evento->id)
                          ->where('status', '!=', 'arquivado')
@@ -1122,7 +1122,7 @@ class EventoController extends Controller
         $areas = Area::where('eventoId', $evento->id)->orderBy('ordem')->get();
         $eixoSelecionado = $request->get('eixo_id');
         $user_logado = auth()->user();
-        $perPage = 50;
+        $perPage = 15;
         $trabalhosPaginados = null;
         $trabalhosPorModalidade = collect();
 
@@ -1262,7 +1262,7 @@ class EventoController extends Controller
         $areas = Area::where('eventoId', $evento->id)->orderBy('ordem')->get();
         $eixoSelecionado = $request->get('eixo_id');
         $user_logado = auth()->user();
-        $perPage = 50;
+        $perPage = 15;
         $trabalhosPaginados = null;
         $trabalhosPorModalidade = collect();
 
@@ -1741,7 +1741,7 @@ class EventoController extends Controller
         $areasId = Area::where('eventoId', $evento->id)->select('id')->orderBy('nome')->get();
 
         $user_logado = auth()->user();
-        $perPage = 50;
+        $perPage = 15;
 
         $query = Trabalho::where('modalidadeId', $request->modalidadeId);
 
