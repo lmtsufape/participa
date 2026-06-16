@@ -203,5 +203,10 @@
                     </div>
                 </div>
         @endforeach
+        @if($trabalhosPaginados->hasPages())
+            <div class="d-flex justify-content-center mt-4">
+                {{ $trabalhosPaginados->links() }}
+            </div>
+        @endif
     </div>
 @endsection
