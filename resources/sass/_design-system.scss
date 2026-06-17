@@ -1,5 +1,6 @@
+@use "bootstrap/scss/bootstrap" as bootstrap;
 
-@each $name, $color in $colors {
+@each $name, $color in bootstrap.$colors {
     .btn-my-#{$name} {
       background-color: $color;
       color: white;
