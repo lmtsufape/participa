@@ -22,14 +22,16 @@ class AvaliadoresAtivosExport implements FromQuery, WithHeadings, WithMapping
     public function query()
     {
         return Revisor::query()
-            ->where('evento_id', $this->eventoId)
-            // Filtra apenas revisores que possuem relacionamento em "respostas" (indica que avaliou algo)
-            // Ou use 'avaliacoes' dependendo de como seu sistema valida uma avaliação concluída.
+            ->where('revisors.evento_id', $this->eventoId)
+            // Filtra apenas revisores que possuem relacionamento em "respostas"
             ->whereHas('respostas') 
             // Faz o join com a tabela de usuários para poder ordenar por nome
             ->join('users', 'revisors.user_id', '=', 'users.id')
+            // Agrupa pelo ID do usuário para eliminar qualquer duplicidade de linhas
+            ->groupBy('revisors.user_id', 'users.name', 'users.email') 
             ->orderBy('users.name', 'asc')
-            ->select('revisors.*'); // Evita sobreposição de colunas do join
+            // Seleciona as colunas explicitamente (usando MAX ou agregadores se o banco for rigoroso)
+            ->select('revisors.user_id', 'users.name', 'users.email', DB::raw('MAX(revisors.trabalhosCorrigidos) as trabalhosCorrigidos'));
     }
 
     /**
