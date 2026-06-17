@@ -6,6 +6,7 @@ use App\Models\Users\Revisor;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
+use Illuminate\Support\Facades\DB;
 
 class AvaliadoresAtivosExport implements FromQuery, WithHeadings, WithMapping
 {
@@ -31,7 +32,7 @@ class AvaliadoresAtivosExport implements FromQuery, WithHeadings, WithMapping
             ->groupBy('revisors.user_id', 'users.name', 'users.email') 
             ->orderBy('users.name', 'asc')
             // Seleciona as colunas explicitamente (usando MAX ou agregadores se o banco for rigoroso)
-            ->select('revisors.user_id', 'users.name', 'users.email', DB::raw('MAX(revisors.trabalhosCorrigidos) as trabalhosCorrigidos'));
+            ->select('revisors.user_id', 'users.name', 'users.email', DB::raw('MAX(revisors."trabalhosCorrigidos") as "trabalhosCorrigidos"'));
     }
 
     /**
