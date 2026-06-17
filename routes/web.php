@@ -251,6 +251,7 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
 
             Route::get('revisores/listarRevisores', [EventoController::class, 'listarRevisores'])->name('listarRevisores');
             Route::get('/evento/{evento}/exportar-revisores', [EventoController::class, 'exportarRevisoresXLSX'])->name('evento.exportarRevisores');
+            Route::get('/evento/{eventoId}/exportar-avaliadores-ativos', [RevisorController::class, 'exportarAvaliadoresAtivos'])->name('evento.exportarAvaliadoresAtivos');
             Route::get('revisores/listarUsuarios', [EventoController::class, 'listarUsuarios'])->name('listarUsuarios');
             Route::post('/evento/candidatos-avaliadores', [CandidatoAvaliadorController::class, 'store'])->name('candidatoAvaliador.store');
             Route::get('revisores/listarCandidatos/{evento}', [CandidatoAvaliadorController::class, 'listarCandidatos'])->name('candidatoAvaliador.listarCandidatos');
