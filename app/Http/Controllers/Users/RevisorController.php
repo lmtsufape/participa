@@ -20,6 +20,7 @@ use App\Models\Submissao\Trabalho;
 use App\Models\Users\Revisor;
 use App\Models\Users\User;
 use App\Notifications\LembreteRevisorCompletarCadastro;
+use App\Exports\AvaliadoresAtivosExport;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -29,6 +30,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 
 class RevisorController extends Controller
 {
@@ -713,5 +715,18 @@ class RevisorController extends Controller
         $trabalho->update();
 
         return redirect()->back()->with('success', 'Validação da correção realizada com sucesso!');
+    }
+
+    public function exportarAvaliadoresAtivos($eventoId)
+    {
+        $evento = Evento::find($eventoId);
+        
+        if (!Gate::any(['isCoordenadorOrCoordenadorDaComissaoCientifica', 'isCoordenadorDasComissoes'], $evento)) {
+            abort(403, 'Acesso negado');
+        }
+
+        $nomeArquivo = 'avaliadores_ativos_' . Str::slug($evento->nome) . '.xlsx';
+
+        return Excel::download(new AvaliadoresAtivosExport($eventoId), $nomeArquivo);
     }
 }
