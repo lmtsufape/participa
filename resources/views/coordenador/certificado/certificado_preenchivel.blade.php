@@ -116,6 +116,45 @@
             font-style: italic;
         }
 
+        @font-face {
+            font-family: 'Pally';
+            src: url('{{ public_path('fonts/pally/WEB/fonts/Pally-Regular.woff2') }}') format('woff2'),
+                 url('{{ public_path('fonts/pally/WEB/fonts/Pally-Regular.woff') }}') format('woff'),
+                 url('{{ public_path('fonts/pally/WEB/fonts/Pally-Regular.ttf') }}') format('truetype');
+            font-weight: 400;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'Pally';
+            src: url('{{ public_path('fonts/pally/WEB/fonts/Pally-Medium.woff2') }}') format('woff2'),
+                 url('{{ public_path('fonts/pally/WEB/fonts/Pally-Medium.woff') }}') format('woff'),
+                 url('{{ public_path('fonts/pally/WEB/fonts/Pally-Medium.ttf') }}') format('truetype');
+            font-weight: 500;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'Pally';
+            src: url('{{ public_path('fonts/pally/WEB/fonts/Pally-Bold.woff2') }}') format('woff2'),
+                 url('{{ public_path('fonts/pally/WEB/fonts/Pally-Bold.woff') }}') format('woff'),
+                 url('{{ public_path('fonts/pally/WEB/fonts/Pally-Bold.ttf') }}') format('truetype');
+            font-weight: 700;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'Pally-Variable';
+            src: url('{{ public_path('fonts/pally/WEB/fonts/Pally-Variable.woff2') }}') format('woff2'),
+                 url('{{ public_path('fonts/pally/WEB/fonts/Pally-Variable.woff') }}') format('woff'),
+                 url('{{ public_path('fonts/pally/WEB/fonts/Pally-Variable.ttf') }}') format('truetype');
+            font-weight: 400 700;
+            font-style: normal;
+            font-display: swap;
+        }
 
     </style>
 </head>
@@ -229,7 +268,7 @@
                 font-size: {{$medida->fontSize}}px;
                 top: {{$medida->y}}px;
                 width: {{$medida->largura}}px;">
-                Código para validação do certificado: <br>
+                <strong>Código para validação do certificado: </strong><br>
                 {{$validacao}}
             </p>
             @php
@@ -241,7 +280,7 @@
                 font-size: {{$medida->fontSize}}px;
                 top: {{$medida->y}}px;
                 width: {{$medida->largura}}px;">
-                Certificado emitido pela plataforma {{config('app.name')}} em {{ $now }}
+                <strong>Certificado emitido pela plataforma {{config('app.name')}}.</strong>
             </p>
             @php
                 $medida = $certificado->medidas->where('tipo', $tipos["logo"])->first();

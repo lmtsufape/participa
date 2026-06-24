@@ -1,4 +1,4 @@
-require('./bootstrap');
+import './bootstrap';
 
-
-var elemento = document.getElementById('')
+import * as bootstrap from 'bootstrap';
+window.bootstrap = bootstrap;

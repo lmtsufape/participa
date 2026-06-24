@@ -25,36 +25,6 @@
             border-bottom: 2px solid #004d51;
         }
 
-        .required-field::after {
-            content: "*";
-            color: #D44100;
-            margin-left: 2px;
-        }
-        .upload-area:hover {
-            border-color: #0d6efd !important;
-            background-color: #f8f9ff;
-        }
-
-        .upload-area.dragover {
-            border-color: #0d6efd !important;
-            background-color: #f8f9ff;
-            transform: scale(1.01);
-        }
-
-        .upload-content {
-            pointer-events: none;
-        }
-
-        .upload-area {
-            position: relative;
-            z-index: 1;
-        }
-
-        label {
-            position: relative;
-            z-index: 3;
-            display: block;
-        }
     </style>
 
     <div class="container">
@@ -101,7 +71,7 @@
 
                     <div class="form-group row">
                         <div class="col-md-6">
-                            <label for="nome" class="col-form-label text-start d-block fw-bold required-field">{{ __('Nome do evento') }}</label>
+                            <label for="nome" class="col-form-label text-start d-block fw-bold mb-3">{{ __('Nome do evento') }}</label>
                             <input id="nome" type="text" class="form-control @error('nome') is-invalid @enderror"
                                 name="nome" value="{{ old('nome', $evento->nome) }}" required autocomplete="nome" autofocus>
                             <div id="erro-nome" class="text-danger mt-1" style="display: none;">
@@ -116,7 +86,7 @@
                         </div>
 
                         <div class="col-md-6">
-                            <label for="email" class="col-form-label text-start d-block fw-bold required-field">{{ __('E-mail de contato') }}</label>
+                            <label for="email" class="col-form-label text-start d-block fw-bold mb-3">{{ __('E-mail de contato') }}</label>
                             <input class="form-control @error('email') is-invalid @enderror" type="email"
                                 value="{{ old('email', $evento->email) }}" name="email" id="email" required autofocus
                                 autocomplete="email">
@@ -152,7 +122,7 @@
 
                     <div class="form-group row">
                         <div class="col-md-6 multilingual_fields" style="display: none;">
-                            <label for="nome_en" class="col-form-label text-start d-block fw-bold required-field">{{ __('Nome em inglês') }}</label>
+                            <label for="nome_en" class="col-form-label text-start d-block fw-bold mb-3">{{ __('Nome em inglês') }}</label>
                             <input id="nome_en" type="text" class="form-control @error('nome_en') is-invalid @enderror"
                                 name="nome_en" value="{{ old('nome_en', $evento->nome_en) }}" autocomplete="nome_en" autofocus>
 
@@ -164,7 +134,7 @@
                         </div>
 
                         <div class="col-md-6 multilingual_fields" style="display: none;">
-                            <label for="nome_es" class="col-form-label text-start d-block fw-bold required-field">{{ __('Nome em espanhol') }}</label>
+                            <label for="nome_es" class="col-form-label text-start d-block fw-bold mb-3">{{ __('Nome em espanhol') }}</label>
                             <input id="nome_es" type="text" class="form-control @error('nome_es') is-invalid @enderror"
                                 name="nome_es" value="{{ old('nome_es', $evento->nome_es) }}" autocomplete="nome_es" autofocus>
                             @error('nome_es')
@@ -175,7 +145,7 @@
 
                     <div class="form-group row">
                         <div class="@if ($eventoPai ?? '') col-md-3 @else col-md-4 @endif">
-                            <label for="tipo" class="col-form-label text-start d-block fw-bold required-field">{{ __('Tipo') }}</label>
+                            <label for="tipo" class="col-form-label text-start d-block fw-bold mb-3">{{ __('Tipo') }}</label>
                              <select id="tipo" type="text" class="form-control @error('tipo') is-invalid @enderror" name="tipo" required>
                             @if (old('tipo') != null)
                             <option @if(old('tipo')=="Congresso" ) selected @endif value="Congresso">Congresso</option>
@@ -218,7 +188,7 @@
                         </div>
 
                         <div class="@if ($eventoPai ?? '') col-md-3 @else col-md-4 @endif">
-                            <label for="recolhimento" class="col-form-label text-start d-block fw-bold required-field">{{ __('Recolhimento') }}</label>
+                            <label for="recolhimento" class="col-form-label text-start d-block fw-bold mb-3">{{ __('Recolhimento') }}</label>
                              <select name="recolhimento" id="recolhimento" class="form-control @error('recolhimento') is-invalid @enderror">
                             @if (old('recolhimento') != null)
                             <option @if(old('recolhimento')=="apoiado" ) selected @endif value="apoiado">Apoiado</option>
@@ -316,8 +286,8 @@
 
                     <div class="form-group row">
                         <div class="col-md-12">
-                            <label for="descricao" class="fw-bold">{{ __('Descrição:') }}</label>
-                            <textarea class="form-control ckeditor-texto mb-3 @error('descricao') is-invalid @enderror required-field" required
+                            <label for="descricao" class="fw-bold mb-3 ">{{ __('Descrição:') }}</label>
+                            <textarea class="form-control mb-3 @error('descricao') is-invalid @enderror" required
                                 autocomplete="descricao" autofocus id="descricao" name="descricao" rows="8">
                                 @if(old('descricao') != null) {{ old('descricao') }} @else {{$evento->descricao}} @endif</textarea>
                             <div id="erro-descricao" class="text-danger mt-1" style="display: none;">
@@ -335,8 +305,8 @@
 
                     <div class="form-group row multilingual_fields" style="display: none;">
                         <div class="col-md-12">
-                            <label for="descricao_en" class="fw-bold required-field">{{ __('Descrição em inglês') }}</label>
-                            <textarea class="form-control ckeditor-texto @error('descricao_en') is-invalid @enderror" autocomplete="descricao_en" autofocus
+                            <label for="descricao_en" class="fw-bold mb-3">{{ __('Descrição em inglês') }}</label>
+                            <textarea class="form-control @error('descricao_en') is-invalid @enderror" autocomplete="descricao_en" autofocus
                                 id="descricao_en" name="descricao_en" rows="8">
                                 @if(old('descricao_en') != null) {{ old('descricao_en') }} @else {{$evento->descricao_en}} @endif</textarea>
                             @error('descricao_en')
@@ -351,8 +321,8 @@
 
                     <div class="form-group row multilingual_fields" style="display: none;">
                         <div class="col-md-12">
-                            <label for="exampleFormControlTextarea1" class="fw-bold required-field">{{__('Descrição em espanhol')}}</label>
-                            <textarea class="form-control ckeditor-texto @error('descricao_es') is-invalid @enderror" autocomplete="descricao_es" autofocus
+                            <label for="exampleFormControlTextarea1" class="fw-bold mb-3">{{__('Descrição em espanhol')}}</label>
+                            <textarea class="form-control @error('descricao_es') is-invalid @enderror" autocomplete="descricao_es" autofocus
                                 id="descricao_es" name="descricao_es" rows="8">
                                 @if(old('descricao_es') != null){{ old('descricao_en') }} @else {{$evento->descricao_en}} @endif</textarea>
                             @error('descricao_es')
@@ -1006,10 +976,7 @@
             $(".apenasLetras").mask("#", {
                 maxlength: false,
                 translation: {
-                    '#': {
-                        pattern: /[A-zÀ-ÿ ]/,
-                        recursive: true
-                    }
+                    '#': {pattern: /[A-zÀ-ÿ0-9\s\-\.\(\)\[\]\{\}\/\\,;&@#$%*+=|<>!?~`'"]/, recursive: true}
                 }
             });
             /*$('#numero').mask('#', {

@@ -104,6 +104,10 @@ class Modalidade extends Model
         }
     }
 
+    public function emPeriodoDeValidacao(){
+        return $this->inicioValidacao <= now() && now() <= $this->fimValidacao;
+    }
+
     public function midiasExtra()
     {
         return $this->hasMany('App\Models\Submissao\MidiaExtra');

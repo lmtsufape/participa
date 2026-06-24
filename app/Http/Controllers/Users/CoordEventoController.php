@@ -12,7 +12,7 @@ class CoordEventoController extends Controller
     public function index()
     {
         $eventos = QueryBuilder::for(Evento::class)
-        ->allowedFilters([
+        ->allowedFilters(
             AllowedFilter::callback('q', function ($query, $value) {
                 $term = trim((string) $value);
                 if ($term === '') return;
@@ -26,7 +26,7 @@ class CoordEventoController extends Controller
                       ->orWhere('descricao', 'ILIKE', "%{$term}%");
                 });
             }),
-        ])
+        )
         ->latest()
         ->paginate(request('per_page', 15))
         ->withQueryString();

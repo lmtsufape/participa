@@ -7,17 +7,12 @@
 @section('content')
 <div class="container my-5">
     <div class="row">
-        <!-- Seção esquerda - Logo e descrição -->
-        <section class="col-lg-6 col-md-12 d-flex flex-column justify-content-center mobile-center">
-            <div class="logo-container">
-                <a class="navbar-brand" href="{{route('index')}}">
-                    <img src="{{ asset('/img/logo-novo2.png') }}" alt="logo" width="50%">
-                </a>
-            </div>
+        <section class="col-md-6 d-flex flex-column justify-content-center">
+            <a class="navbar-brand" href="{{route('index')}}">
+                <img src="{{ asset('/img/logo_sistema.png') }}" alt="logo" width="50%">
+            </a>
 
-            <p class="mt-3 description-text">
-                {{ __('É um sistema de Gestão de Eventos Científicos que busca contribuir com instituições acadêmicas públicas ou privadas que necessitem de uma ferramenta para gerenciar eventos científicos') }}.
-            </p>
+            <p class="mt-3 fs-4 text-justify">{{ __('É um sistema de Gestão de Eventos Científicos que busca contribuir com instituições acadêmicas públicas ou privadas que necessitem de uma ferramenta para gerenciar eventos científicos') }}.</p>
         </section>
 
         <!-- Seção direita - Formulário -->
@@ -87,7 +82,7 @@
                     </div>
 
                     @if (Route::has('password.request'))
-                        <a class="btn btn-link link-secondary p-0" href="{{ route('password.request') }}">
+                        <a class="link-my-gray" href="{{ route('password.request') }}">
                             {{ __('Esqueceu a senha?') }}
                         </a>
                     @endif
@@ -103,7 +98,7 @@
                 <!-- Link para cadastro -->
                 <div class="text-center pt-4">
                     <span>{{ __('Não possui conta?') }}</span>
-                    <a class="text-my-secondary fw-bold" href="{{ route('preRegistro') }}">
+                    <a class="link-my-secondary fw-bold" href="{{ route('preRegistro') }}">
                         {{ __('Crie agora') }}
                     </a>
                 </div>

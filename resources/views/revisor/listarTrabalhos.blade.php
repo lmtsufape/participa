@@ -97,6 +97,7 @@
                                     <img src="{{asset('img/icons/check-solid.svg')}}" style="width:20px" title="Avaliação disponível em {{date('d/m/Y',strtotime($trabalho->modalidade->inicioRevisao))}} até {{date('d/m/Y',strtotime($trabalho->modalidade->fimRevisao))}}">
                                   </td>
                                 @endif
+                                {{-- {{$trabalho->revisores()->where('user_id', auth()->user()->id)->first()->id}} --}}
                                 <td>
 
 

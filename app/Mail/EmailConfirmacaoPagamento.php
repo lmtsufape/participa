@@ -5,6 +5,7 @@ namespace App\Mail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class EmailConfirmacaoPagamento extends Mailable
 {
@@ -35,6 +36,15 @@ class EmailConfirmacaoPagamento extends Mailable
                 'user' => $this->user,
                 'evento' => $this->evento,
                 'inscricao' => $this->inscricao
-            ]);
+        ]);
+    }
+
+    private function gerarCodigoValidacao()
+    {
+        do {
+            $codigo = strtoupper(substr(md5(uniqid()), 0, 16));
+        } while (\App\Models\Inscricao\Inscricao::where('codigo_validacao', $codigo)->exists());
+
+        return $codigo;
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Models\Users;
 
 use App\Models\CandidatoAvaliador;
+use App\Models\PerfilIdentitario;
 use App\Models\Submissao\Area;
 use App\Models\Submissao\Atividade;
 use App\Models\Submissao\Certificado;
@@ -38,8 +39,8 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name', 'email', 'password', 'cpf','cnpj', 'passaporte', 'instituicao', 'celular',
-        'especProfissional', 'enderecoId',
-        'usuarioTemp', 'user_id', 'dataNascimento', 'nomeSocial'
+        'especProfissional', 'enderecoId', 'data_nascimento',
+        'usuarioTemp', 'user_id', 'incompleto',
     ];
 
     /**
@@ -59,6 +60,8 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'deleted_at' => 'datetime',
+        'incompleto' => 'boolean',
+        'data_nascimento' => 'date:Y-m-d',
     ];
 
     protected static function boot()
@@ -219,7 +222,7 @@ class User extends Authenticatable
 
     public function certificados()
     {
-        return $this->belongsToMany(Certificado::class, 'certificado_user')->withTrashed()->withPivot('id', 'valido', 'validacao', 'trabalho_id', 'palestra_id', 'comissao_id')->withTimestamps();
+        return $this->belongsToMany(Certificado::class, 'certificado_user')->withTrashed()->withPivot('id', 'valido', 'validacao', 'trabalho_id', 'palestra_id', 'comissao_id', 'path')->withTimestamps();
     }
 
     public function atividades()
@@ -245,7 +248,7 @@ class User extends Authenticatable
 
     public function areasComoCoordEixoNoEvento($evento_id)
     {
-        return $this->hasManyThrough(
+        $query = $this->hasManyThrough(
             Area::class,
             CoordEixoTematico::class,
             'user_id',
@@ -253,5 +256,14 @@ class User extends Authenticatable
             'id',
             'area_id'
         )->where('coordenadores_eixos_tematicos.evento_id', $evento_id);
+
+        $query->select('areas.*');
+
+        return $query;
+    }
+
+    public function perfilIdentitario()
+    {
+        return $this->hasOne(PerfilIdentitario::class, 'user_id', 'id');
     }
 }

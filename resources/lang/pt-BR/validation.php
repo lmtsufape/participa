@@ -251,7 +251,6 @@ return [
         'inicioValidacao*' => [
             'required' => 'O campo é obrigatório.',
             'date' => 'O campo deve ter uma data válida.',
-            'after' => 'Início da validação deve ser uma data depois do fim da correção.',
             'required_with' => 'O campo início da validação é obrigatório quando fim da validação está presente.',
         ],
         'fimValidacao*' => [

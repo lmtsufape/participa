@@ -10,7 +10,7 @@
     <meta name="token" content="{{ csrf_token() }}">
 
     <title>{{ config('app.name', 'Laravel') }}</title>
-
+    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <!-- <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet"> -->
@@ -22,8 +22,6 @@
     </style>
 
     <!-- Styles -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/sidebar.css') }}" rel="stylesheet">
 
@@ -31,7 +29,6 @@
 
     <link href="{{ asset('css/styleIndex.css') }}" rel="stylesheet">
     <link href="{{ asset('css/dark-mode.css') }}" rel="stylesheet">
-  
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     <link rel="stylesheet" href="{{ asset('css/required-fields.css') }}">
@@ -50,6 +47,14 @@
             border-color:rgb(3, 70, 82) !important;       /* padrão azul Bootstrap */
             box-shadow: 0 0 0 .2rem rgba(3, 70, 82, 0.25) !important;
         }
+        /* Marca automaticamente o label que está dentro de um elemento com form-group e o campo está como required */
+        .form-group:has(> input[required]) label::after,
+        .form-group:has(> select[required]) label::after,
+        .form-group:has(> textarea[required]) label::after {
+            content: " *";
+            color: #dc2626;
+            font-weight: 700;
+        }
     </style>
 
 
@@ -62,14 +67,9 @@
     @yield('css')
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
-    <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
-    referrerpolicy="no-referrer"
-  />
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js" defer></script>
 
     <!-- icon eye -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
@@ -79,7 +79,9 @@
 
 <body class="d-flex flex-column min-vh-100" style="background-color: #f5f5f5;">
     @include('navbar')
+
     <livewire:ui.modal />
+
     @if(View::hasSection('sidebar'))
         {{-- <div class="ml-auto mensagem"> apagar o css depois
         </div> --}}
@@ -90,7 +92,7 @@
                     @include('components.sidebar', ['evento' => $evento])
 
                 </div>
-                <div class="col-md-9 my-5">
+                <div class="col-md-9 mt-3 mb-5">
                     @include('componentes.mensagens')
 
                     @yield('content')
@@ -120,7 +122,6 @@
     <script src="{{ asset('js/submit.js') }}"></script>
     <!-- CKEditor -->
     <script src="{{ asset('ckeditor/ckeditor.js') }}"></script>
-
     <!-- Swiper JS -->
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script>

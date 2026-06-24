@@ -1,352 +1,360 @@
 @extends('coordenador.detalhesEvento')
+
+@section('css')
+<style>
+    .registration-form-builder {
+        max-width: 1120px;
+    }
+
+    .builder-header {
+        margin-bottom: 1.25rem;
+    }
+
+    .builder-title {
+        font-size: clamp(1.75rem, 3vw, 2.5rem);
+        font-weight: 700;
+        color: #111827;
+        margin-bottom: .25rem;
+    }
+
+    .builder-subtitle {
+        color: #6b7280;
+        margin-bottom: 0;
+    }
+
+    .builder-panel,
+    .field-card {
+        border: 1px solid #d9e2e7;
+        border-radius: 8px;
+        box-shadow: 0 1px 2px rgba(15, 23, 42, .04);
+    }
+
+    .builder-panel {
+        background: #fff;
+        padding: 1.15rem 1.25rem;
+    }
+
+    .field-card {
+        background: #fff;
+        padding: 1rem;
+        height: 100%;
+    }
+
+    .field-card__title {
+        font-size: 1rem;
+        font-weight: 700;
+        color: #111827;
+        margin-bottom: .2rem;
+    }
+
+    .field-card__meta,
+    .field-card__categories {
+        color: #6b7280;
+        font-size: .9rem;
+        margin-bottom: .25rem;
+    }
+
+    .field-type-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(155px, 1fr));
+        gap: .75rem;
+    }
+
+    .field-type-option {
+        border: 1px solid #d9e2e7;
+        border-radius: 8px;
+        padding: .8rem;
+        cursor: pointer;
+        background: #fff;
+    }
+
+    .field-type-option:has(input:checked) {
+        border-color: #0d6efd;
+        box-shadow: 0 0 0 .2rem rgba(13, 110, 253, .14);
+    }
+
+    .field-type-option input {
+        margin-right: .35rem;
+    }
+
+    .field-type-option.is-disabled {
+        cursor: not-allowed;
+        opacity: .65;
+    }
+
+    .field-type-description {
+        display: block;
+        color: #6b7280;
+        font-size: .82rem;
+        margin-top: .25rem;
+    }
+
+    .option-row + .option-row {
+        margin-top: .5rem;
+    }
+
+    .empty-state {
+        border: 1px dashed #b8c4cc;
+        border-radius: 8px;
+        padding: 2rem;
+        text-align: center;
+        color: #6b7280;
+        background: #fbfcfd;
+    }
+</style>
+@endsection
+
 @section('menu')
-<div id="" style="display: block">
-    @if(session('excluirCampoExtra'))
-    <div class="row">
-        <div class="col-md-12" style="margin-top: 5px;">
-            <div class="alert alert-danger">
-                <p>{{session('excluirCampoExtra')}}</p>
-            </div>
+@php
+    $typeLabel = fn (string $type) => $fieldTypes[$type]['label'] ?? ucfirst($type);
+@endphp
+
+<div class="registration-form-builder">
+    <div class="builder-header d-flex flex-column flex-md-row justify-content-between gap-3">
+        <div>
+            <h1 class="builder-title">Formulário de inscrição</h1>
+            <p class="builder-subtitle">Crie campos extras para coletar informações de acordo com a categoria do participante.</p>
+        </div>
+
+        <div class="align-self-md-end">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalCriarCampo">
+                <i class="bi bi-plus-lg"></i> Novo campo
+            </button>
         </div>
     </div>
+
+    @if($errors->any())
+        <div class="alert alert-danger">
+            @foreach ($errors->all() as $error)
+                <div>{{ $error }}</div>
+            @endforeach
+        </div>
     @endif
-    <div class="row">
-        <div class="col-md-12">
-            <h1 class="titulo-detalhes">Formulário de inscrição</h1>
-        </div>
-    </div>
-    <div class="row justify-content-center">
-        <div class="col-sm-12">
-            <div class="card">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <h5 class="card-title">Campos do formulário</h5>
-                            <h6 class="card-subtitle mb-2 text-muted">Campos que o formulário de inscrição vai ter.</h6>
-                        </div>
-                            <div class="col-12 col-md-6 d-flex justify-content-md-end align-items-start">
-                            <button id="criarCampo" data-bs-toggle="modal" data-bs-target="#modalCriarCampo" class="btn btn-primary">+ Novo campo</button>
-                        </div>
-                    </div>
-                    <p class="card-text">
-                    <div class="row" style="position: relative; right: 25px;">
-                        @if ($campos != null && count($campos) > 0)
-                        @foreach ($campos as $campo)
-                        <div class="col-sm-3">
-                            <div class="card" style="width: 15rem; height: 11rem;">
-                                <div class="card-body">
-                                    <h5 class="card-title">{{$campo->titulo}}</h5>
-                                    @if ($campo->obrigatorio)
-                                    <h6 class="card-subtitle mb-2 text-muted">Obrigatório</h6>
-                                    @else
-                                    <h6 class="card-subtitle mb-2 text-muted">Opcional</h6>
-                                    @endif
-                                    @if ($campo->tipo == "text")
-                                    <h6 class="card-subtitle mb-2 text-muted">Campo de texto</h6>
-                                    @elseif ($campo->tipo == "email")
-                                    <h6 class="card-subtitle mb-2 text-muted">E-mail</h6>
-                                    @elseif ($campo->tipo == "date")
-                                    <h6 class="card-subtitle mb-2 text-muted">Calendario</h6>
-                                    @elseif ($campo->tipo == "file")
-                                    <h6 class="card-subtitle mb-2 text-muted">Submeter um arquivo</h6>
-                                    @elseif ($campo->tipo == "endereco")
-                                    <h6 class="card-subtitle mb-2 text-muted">Campos de endereço</h6>
-                                    @elseif ($campo->tipo == "contato")
-                                    <h6 class="card-subtitle mb-2 text-muted">Contato</h6>
-                                    @elseif ($campo->tipo == "cpf")
-                                    <h6 class="card-subtitle mb-2 text-muted">Campo de CPF</h6>
-                                    @endif
-                                    <a href="#" class="card-link button-a btn-excluir" data-bs-toggle="modal" data-bs-target="#modalCampoDelete{{$campo->id}}">Excluir</a>
-                                    <a href="#" class="card-link button-a btn-editar" data-bs-toggle="modal" data-bs-target="#modalCampoEdit{{$campo->id}}">Editar</a>
-                                </div>
-                            </div>
-                        </div>
-                        @endforeach
-                        @else
-                        <div class="col-sm-12" style="position: relative; left: 25px;">
-                            Nenhum campo extra salvo.
-                        </div>
-                        @endif
-                    </div>
-                    </p>
-                </div>
+
+    <div class="builder-panel">
+        <div class="d-flex flex-column flex-md-row justify-content-between gap-2 mb-3">
+            <div>
+                <h2 class="h5 mb-1">Campos cadastrados</h2>
+                <p class="builder-subtitle">{{ $campos->count() }} campo(s) extra(s) neste evento.</p>
             </div>
         </div>
+
+        @if ($campos->isEmpty())
+            <div class="empty-state">
+                Nenhum campo extra salvo.
+            </div>
+        @else
+            <div class="row g-3">
+                @foreach ($campos as $campo)
+                    <div class="col-md-6 col-xl-4">
+                        <article class="field-card">
+                            <div class="d-flex justify-content-between gap-2">
+                                <div>
+                                    <h3 class="field-card__title">{{ $campo->titulo }}</h3>
+                                    <p class="field-card__meta">
+                                        <i class="bi {{ $fieldTypes[$campo->tipo]['icon'] ?? 'bi-ui-checks' }}"></i>
+                                        {{ $typeLabel($campo->tipo) }}
+                                        <span class="mx-1">•</span>
+                                        {{ $campo->obrigatorio ? 'Obrigatório' : 'Opcional' }}
+                                    </p>
+                                </div>
+                            </div>
+
+                            <p class="field-card__categories">
+                                Categorias:
+                                @if ($categorias->count() > 0 && $campo->categorias->count() === $categorias->count())
+                                    todas
+                                @else
+                                    {{ $campo->categorias->pluck('nome')->join(', ') ?: 'nenhuma' }}
+                                @endif
+                            </p>
+
+                            @if ($campo->tipo === 'select')
+                                <p class="field-card__categories">
+                                    Opções: {{ $campo->opcoes->pluck('nome')->join(', ') ?: 'sem opções' }}
+                                </p>
+                            @endif
+
+                            @if ($campo->inscricoes_feitas_count > 0)
+                                <p class="field-card__categories mb-3">
+                                    {{ $campo->inscricoes_feitas_count }} resposta(s). O tipo não pode ser alterado.
+                                </p>
+                            @endif
+
+                            <div class="d-flex gap-2 mt-3">
+                                <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalCampoEdit{{ $campo->id }}">
+                                    <i class="bi bi-pencil"></i> Editar
+                                </button>
+                                <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#modalCampoDelete{{ $campo->id }}">
+                                    <i class="bi bi-trash"></i> Excluir
+                                </button>
+                            </div>
+                        </article>
+                    </div>
+                @endforeach
+            </div>
+        @endif
     </div>
 </div>
 
-<div class="modal fade" id="modalCriarCampo" tabindex="-1" role="dialog" aria-labelledby="modalCriarCampoLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+<div class="modal fade" id="modalCriarCampo" tabindex="-1" aria-labelledby="modalCriarCampoLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
         <div class="modal-content">
-            <div class="modal-header" style="background-color: #114048ff; color: white;">
-                <h5 class="modal-title" id="modalCriarCampoLabel">Novo campo do formulario</h5>
-            </div>
-            <div class="modal-body">
-                <form id="formCriarCampo" action="{{route('campo.formulario.store')}}" method="POST">
-                    @csrf
-                    <input type="hidden" name="evento_id" id="" value="{{$evento->id}}">
-                    <input type="hidden" name="criarCampo" id="" value="0">
-                    <input type="hidden" id="tipo_campo" name="tipo_campo" value="">
-                    <input type="hidden" name="para_todas" value="on">
-                    @if($errors->any())
-                    <div class="alert alert-danger">
-                        @foreach ($errors->all() as $error)
-                        <p>{{$error}}</p>
-                        @endforeach
-                    </div>
-                    @endif
-                    <div class="container">
-                        <div id="escolherInput">
-                            <p>
-                            <div class="row justify-content-center">
-                                <div class="col-sm-6">
-                                    <button id="btn-tipo-email" type="button" class="btn btn-primary largura-maxima" onclick="mostrarCampos('email')">E-mail</button>
-                                </div>
-                                <div class="col-sm-6">
-                                    <button id="btn-tipo-email" type="button" class="btn btn-primary btn-block" onclick="mostrarCampos('select')">Seleção</button>
-                                </div>
-                            </div>
-                            </p>
-                            <p>
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <button id="btn-tipo-text" type="button" class="btn btn-primary largura-maxima" onclick="mostrarCampos('text')">Texto</button>
-                                </div>
-                                <div class="col-sm-6">
-                                    <button id="btn-tipo-file" type="button" class="btn btn-primary largura-maxima" onclick="mostrarCampos('file')">Arquivo</button>
-                                </div>
-                            </div>
-                            </p>
-                            <p>
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <button id="btn-tipo-date" type="button" class="btn btn-primary largura-maxima" onclick="mostrarCampos('date')">Data</button>
-                                </div>
-                                <div class="col-sm-6">
-                                    <button id="btn-tipo-endereco" type="button" class="btn btn-primary largura-maxima" onclick="mostrarCampos('endereco')">Endereço</button>
-                                </div>
-                            </div>
-                            </p>
-                            <p>
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <button id="btn-tipo-date" type="button" class="btn btn-primary largura-maxima" onclick="mostrarCampos('cpf')">CPF</button>
-                                </div>
-                                <div class="col-sm-6">
-                                    <button id="btn-tipo-contato" type="button" class="btn btn-primary largura-maxima" onclick="mostrarCampos('contato')">Contato</button>
-                                </div>
-                            </div>
-                            </p>
-                        </div>
-                        <div id="preencherDados" style="display: none;">
-                            <div class="row form-group">
-                                <div class="col-sm-12">
-                                    <label class="required-field fw-bold" for="titulo_do_campo">Titulo do campo</label>
-                                    <input type="text" id="titulo_do_campo" name="titulo_do_campo" class="form-control @error('titulo_do_campo') is-invalid @enderror" required value="{{old('titulo_do_campo')}}">
+            <form class="field-form" action="{{ route('campo.formulario.store') }}" method="POST">
+                @csrf
+                <input type="hidden" name="evento_id" value="{{ $evento->id }}">
 
-                                    @error('titulo_do_campo')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <input type="checkbox" value="1" id="campo_obrigatorio" name="campo_obrigatorio" @if (old('campo_obrigatorio') !=null) checked @endif>
-                                <label for="campo_obrigatorio">Campo obrigatório</label>
-                            </div>
-                            <div id="input-text-form">
-                                <div class="row">
-                                    <div class="col-sm-12">
-                                        <hr>
-                                        <h4>Exemplo</h4>
-                                        <div id="tituloExemplo" class="">
-                                            <label id="labelCampoExemplo" for="campoExemplo"></label>
-                                            <p><input type="" class="" id="campoExemplo" style="display: block"></p>
-                                            <p><input type="text" class="form-control" id="campoExemploCpf" style="display: none;"></p>
-                                            <p><input type="text" class="form-control" id="campoExemploNumero" style="display: none;"></p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div id="divEnderecoExemplo" class="" style="display: none;">
-                                    <div class="row">
-                                        <div class="col-sm-6">
-                                            <label for="cep">CEP</label>
-                                            <input onblur="pesquisacep(this.value);" type="text" class="form-control" id="cep" placeholder="00000-000">
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <label for="bairro">Bairro</label>
-                                            <input type="text" class="form-control" id="bairro" placeholder="Centro">
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-sm-12">
-                                            <label for="rua">Rua</label>
-                                            <input type="text" class="form-control" id="rua" placeholder="Av. 15 de Novembro">
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-sm-6">
-                                            <label for="cidade">Cidade</label>
-                                            <input type="text" class="form-control" id="cidade" placeholder="Recife">
-                                        </div>
-                                        <div class="col-sm-3">
-                                            <label for="uf">UF</label>
-                                            <select class="form-control" id="uf">
-                                                <option value="" disabled selected hidden>-- UF --</option>
-                                                <option value="AC">AC</option>
-                                                <option value="AL">AL</option>
-                                                <option value="AP">AP</option>
-                                                <option value="AM">AM</option>
-                                                <option value="BA">BA</option>
-                                                <option value="CE">CE</option>
-                                                <option value="DF">DF</option>
-                                                <option value="ES">ES</option>
-                                                <option value="GO">GO</option>
-                                                <option value="MA">MA</option>
-                                                <option value="MT">MT</option>
-                                                <option value="MS">MS</option>
-                                                <option value="MG">MG</option>
-                                                <option value="PA">PA</option>
-                                                <option value="PB">PB</option>
-                                                <option value="PR">PR</option>
-                                                <option value="PE">PE</option>
-                                                <option value="PI">PI</option>
-                                                <option value="RJ">RJ</option>
-                                                <option value="RN">RN</option>
-                                                <option value="RS">RS</option>
-                                                <option value="RO">RO</option>
-                                                <option value="RR">RR</option>
-                                                <option value="SC">SC</option>
-                                                <option value="SP">SP</option>
-                                                <option value="SE">SE</option>
-                                                <option value="TO">TO</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-sm-3">
-                                            <label for="numero">Número</label>
-                                            <input type="number" class="form-control" id="numero" placeholder="10">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div id="selects" style="display: none;" x-data="selectsFormulario()">
-                                <template x-for="(opcao, index) in opcoes" :key="index">
-                                    <div class="form-group" x-id="['text-input']">
-                                        <div class="d-flex justify-content-between">
-                                            <label :for="$id('text-input')" x-text="'Opção ' + (index + 1)"></label>
-                                            <div>
-                                                <button type="button" @click="adicionaOpcao(index)" style="color: #117711;" class="btn py-0"><i class="bi bi-plus-circle"></i></button>
-                                                <button type="button" @click="removeOpcao(index)" style="color: #d30909;" class="btn py-0"><i class="bi bi-dash-circle"></i></button>
-                                            </div>
-                                        </div>
-                                        <input type="text" class="form-control" :id="$id('text-input')" name="select-text[]">
-                                    </div>
-                                </template>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div id="botoesDeSubmissao" class="modal-footer" style="display: none;">
-                <button type="button" class="btn btn-secondary" onclick="voltarBotoes()">Voltar</button>
-                <button type="submit" class="btn btn-primary" form="formCriarCampo">Salvar</button>
-            </div>
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalCriarCampoLabel">Novo campo do formulário</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                </div>
+
+                <div class="modal-body">
+                    @include('coordenador.inscricoes.partials.campo-form', [
+                        'campo' => null,
+                        'categorias' => $categorias,
+                        'fieldTypes' => $fieldTypes,
+                        'selectedType' => old('tipo_campo', 'text'),
+                        'selectedCategories' => collect(old('categoria', []))->map(fn ($id) => (int) $id),
+                        'allCategories' => old('para_todas', '1') === '1',
+                        'options' => collect(old('select_text', ['', ''])),
+                        'hasResponses' => false,
+                    ])
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Salvar campo</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
-{{-- Fim do modal criar campo --}}
 
 @foreach ($campos as $campo)
-{{-- modal excluir campo --}}
-<div class="modal fade" id="modalCampoDelete{{$campo->id}}" tabindex="-1" role="dialog" aria-labelledby="modalCampoDelete{{$campo->id}}Label" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header" style="background-color: #114048ff; color: white;">
-                <h5 class="modal-title" id="modalCampoDelete{{$campo->id}}Label">Confirmação</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                @if(count($campo->inscricoesFeitas) > 0)
-                <p></p>
-                <form id="formDeletarCampo{{$campo->id}}" action="{{route('campo.destroy', ['id' => $campo->id])}}" method="POST">
+    <div class="modal fade" id="modalCampoEdit{{ $campo->id }}" tabindex="-1" aria-labelledby="modalCampoEdit{{ $campo->id }}Label" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content">
+                <form class="field-form" action="{{ route('campo.edit', ['id' => $campo->id]) }}" method="POST">
                     @csrf
-                    <p style="color: red;">Atenção!</p>
-                    <p>
+                    <input type="hidden" name="evento_id" value="{{ $evento->id }}">
+                    <input type="hidden" name="campo_id" value="{{ $campo->id }}">
 
-                        Este campo do cadastro já foi alimentado por dados advindos de inscrições realizadas no evento. Se for deletado, estas informações também serão apagadas. </p>
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalCampoEdit{{ $campo->id }}Label">Editar {{ $campo->titulo }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                    </div>
 
-                    <p style="color: red;">Tem certeza que deseja excluir esse campo?</p>
-                </form>
-                @else
-                <form id="formDeletarCampo{{$campo->id}}" action="{{route('campo.destroy', ['id' => $campo->id])}}" method="POST">
-                    @csrf
-                    Tem certeza que deseja excluir esse campo?
-                </form>
-                @endif
+                    <div class="modal-body">
+                        @include('coordenador.inscricoes.partials.campo-form', [
+                            'campo' => $campo,
+                            'categorias' => $categorias,
+                            'fieldTypes' => $fieldTypes,
+                            'selectedType' => old('campo_id') == $campo->id ? old('tipo_campo', $campo->tipo) : $campo->tipo,
+                            'selectedCategories' => old('campo_id') == $campo->id
+                                ? collect(old('categoria', []))->map(fn ($id) => (int) $id)
+                                : $campo->categorias->pluck('id'),
+                            'allCategories' => old('campo_id') == $campo->id
+                                ? old('para_todas') === '1'
+                                : $categorias->count() > 0 && $campo->categorias->count() === $categorias->count(),
+                            'options' => old('campo_id') == $campo->id
+                                ? collect(old('select_text', ['', '']))
+                                : ($campo->opcoes->isNotEmpty() ? $campo->opcoes->pluck('nome') : collect(['', ''])),
+                            'hasResponses' => $campo->inscricoes_feitas_count > 0,
+                        ])
+                    </div>
 
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Não</button>
-                <button type="submit" class="btn btn-primary" form="formDeletarCampo{{$campo->id}}">Sim</button>
-            </div>
-        </div>
-    </div>
-</div>
-{{-- fim modal excluir campo --}}
-{{-- modal editar campo --}}
-<div class="modal fade" id="modalCampoEdit{{$campo->id}}" tabindex="-1" role="dialog" aria-labelledby="modalCampoEdit{{$campo->id}}Label" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header" style="background-color: #114048ff; color: white;">
-                <h5 class="modal-title" id="modalCampoEdit{{$campo->id}}Label">Editar campo {{$campo->titulo}}</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form id="formEditCampo{{$campo->id}}" action="{{route('campo.edit', ['id' => $campo->id])}}" method="POST">
-                    @csrf
-                    <input type="hidden" name="evento_id" value="{{$evento->id}}">
-                    <input type="hidden" name="campo_id" value="{{$campo->id}}">
-                    <input type="hidden" name="para_todas" value="on">
-                    <div class="container">
-                        <div class="row form-group">
-                            <div class="col-sm-12">
-                                <label for="titulo_do_campo{{$campo->id}}">Titulo do campo*</label>
-                                <input type="text" id="titulo_do_campo{{$campo->id}}" name="titulo_do_campo" class="form-control @error('titulo_do_campo') is-invalid @enderror" required value="@if(old('titulo_do_campo') != null){{old('titulo_do_campo')}}@else{{$campo->titulo}}@endif">
-
-                                @error('titulo_do_campo')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="row form-group">
-                            <div class="col-sm-12">
-                                <input type="checkbox" id="campo_obrigatorio{{$campo->id}}" name="campo_obrigatório" @if (old('campo_obrigatorio') !=null) checked @elseif($campo->obrigatorio) checked @endif>
-                                <label for="campo_obrigatorio{{$campo->id}}">Campo obrigatório</label>
-
-                                @error('campo_obrigatório')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-                        </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Salvar alterações</button>
                     </div>
                 </form>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                <button type="submit" class="btn btn-primary" form="formEditCampo{{$campo->id}}">Salvar</button>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalCampoDelete{{ $campo->id }}" tabindex="-1" aria-labelledby="modalCampoDelete{{ $campo->id }}Label" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form action="{{ route('campo.destroy', ['id' => $campo->id]) }}" method="POST">
+                    @csrf
+
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalCampoDelete{{ $campo->id }}Label">Excluir campo</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                    </div>
+
+                    <div class="modal-body">
+                        @if($campo->inscricoes_feitas_count > 0)
+                            <div class="alert alert-danger">
+                                Este campo já possui respostas. Ao excluir, as respostas preenchidas também serão removidas.
+                            </div>
+                        @endif
+
+                        Tem certeza que deseja excluir <strong>{{ $campo->titulo }}</strong>?
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-danger">Excluir</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
-</div>
-{{-- fim modal editar campo --}}
 @endforeach
+@endsection
+
+@section('javascript')
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    function syncForm(form) {
+        var selectedType = form.querySelector('input[name="tipo_campo"]:checked');
+        var selectOptions = form.querySelector('[data-select-options]');
+        var allCategories = form.querySelector('[data-all-categories]');
+        var categories = form.querySelector('[data-category-list]');
+
+        if (selectOptions) {
+            selectOptions.hidden = !selectedType || selectedType.value !== 'select';
+        }
+
+        if (categories && allCategories) {
+            categories.hidden = allCategories.checked;
+        }
+    }
+
+    document.querySelectorAll('.field-form').forEach(function (form) {
+        syncForm(form);
+
+        form.addEventListener('change', function (event) {
+            if (event.target.name === 'tipo_campo' || event.target.matches('[data-all-categories]')) {
+                syncForm(form);
+            }
+        });
+
+        form.addEventListener('click', function (event) {
+            var addButton = event.target.closest('[data-add-option]');
+            var removeButton = event.target.closest('[data-remove-option]');
+
+            if (addButton) {
+                var list = form.querySelector('[data-options-list]');
+                var template = form.querySelector('[data-option-template]');
+                list.insertAdjacentHTML('beforeend', template.innerHTML);
+            }
+
+            if (removeButton) {
+                var rows = form.querySelectorAll('.option-row');
+
+                if (rows.length > 2) {
+                    removeButton.closest('.option-row').remove();
+                }
+            }
+        });
+    });
+
+    @if ($errors->any() && old('campo_id') === null)
+        bootstrap.Modal.getOrCreateInstance(document.getElementById('modalCriarCampo')).show();
+    @endif
+});
+</script>
 @endsection

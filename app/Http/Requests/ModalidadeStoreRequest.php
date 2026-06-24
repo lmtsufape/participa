@@ -40,7 +40,7 @@ class ModalidadeStoreRequest extends FormRequest
             'fimRevisao' => ['nullable', 'date', 'after:inicioRevisao'],
             'inicioCorrecao' => ['nullable', 'date', 'after:fimRevisao', 'required_with:fimCorrecao'],
             'fimCorrecao' => ['nullable', 'date', 'after:inicioCorrecao', 'required_with:inicioCorrecao'],
-            'inicioValidacao' => ['nullable', 'date', 'after:fimCorrecao', 'required_with:fimValidacao'],
+            'inicioValidacao' => ['nullable', 'date', 'required_with:fimValidacao'],
             'fimValidacao' => ['nullable', 'date', 'after:inicioValidacao', 'required_with:inicioValidacao'],
             'inicioResultado' => ['required', 'date', 'after:fimSubmissao'],
             'texto' => ['nullable'],

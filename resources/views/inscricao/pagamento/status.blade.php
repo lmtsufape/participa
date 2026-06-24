@@ -1,7 +1,36 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container w-50"><div id="statusScreenBrick_container"></div></div>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div id="statusScreenBrick_container"></div>
+
+                @if(isset($pagamento))
+                    @php
+                        $statusPermitemRetry = ['rejected', 'cancelled', 'expired', 'refunded', 'charged_back'];
+                    @endphp
+
+                    @if(in_array($pagamento->status, $statusPermitemRetry))
+                        <div class="card mt-4">
+                            <div class="card-body text-center">
+                                <h5 class="card-title text-danger">Pagamento não aprovado</h5>
+                                <p class="card-text">
+                                    Seu pagamento não foi aprovado. Você pode tentar novamente com outro método de pagamento.
+                                </p>
+                                <form action="{{ route('checkout.novaTentativa', $pagamento->inscricao->evento) }}" method="POST" class="d-inline">
+                                    @csrf
+                                    <button type="submit" class="btn btn-primary">
+                                        <img src="{{ asset('img/icons/reload.svg') }}" alt="" style="width:16px; height:16px; margin-right:6px;"> Tentar Novamente
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    @endif
+                @endif
+            </div>
+        </div>
+    </div>
 @endsection
 
 @section('javascript')

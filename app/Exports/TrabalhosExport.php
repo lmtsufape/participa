@@ -12,24 +12,33 @@ class TrabalhosExport implements WithMultipleSheets
 {
     use Exportable;
 
-    protected $trabalhosPorArea;
+    protected $trabalhos;
 
-    public function __construct($trabalhosPorArea)
+    public function headings(): array
     {
-        $this->trabalhosPorArea = $trabalhosPorArea;
+        return [
+            'Id',
+            'Área/Eixo',
+            'Modalidade',
+            'Título do trabalho',
+            'Autor',
+            'CPF',
+            'E-mail',
+            'Telefone',
+            'Co-autor(es)',
+            'CPF',
+            'E-mail',
+            'Telefone',
+        ];
     }
 
-    /**
-     * @return array
-     */
-    public function sheets(): array
+    public function __construct($trabalhos)
     {
-        $sheets = [];
+        $this->trabalhos = $trabalhos;
+    }
 
-        foreach ($this->trabalhosPorArea as $areaNome => $trabalhos) {
-            $sheets[] = new TrabalhosPorAreaSheetExport($trabalhos, $areaNome);
-        }
-
-        return $sheets;
+    public function collection()
+    {
+        return $this->trabalhos;
     }
 }

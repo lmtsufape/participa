@@ -24,44 +24,6 @@
             font-weight: bold;
             border-bottom: 2px solid #004d51;
         }
-
-        .upload-area:hover {
-            border-color: #0d6efd !important;
-            background-color: #f8f9ff;
-        }
-
-        .upload-area.dragover {
-            border-color: #0d6efd !important;
-            background-color: #f8f9ff;
-            transform: scale(1.01);
-        }
-
-        .upload-content {
-            pointer-events: none;
-        }
-
-        .required-field::after {
-            content: " *";
-            color: red;
-        }
-
-        .upload-area {
-            position: relative;
-            z-index: 1;
-        }
-
-        label {
-            position: relative;
-            z-index: 3;
-            display: block;
-        }
-
-        .row.form-group.pb-4.pt-4 {
-            clear: both;
-            margin-top: 2rem;
-            position: relative;
-            z-index: 5;
-        }
     </style>
 
     <div class="container">
@@ -108,7 +70,7 @@
 
                     <div class="form-group row">
                         <div class="col-md-6">
-                            <label for="nome" class="col-form-label text-start d-block fw-bold required-field">{{ __('Nome do evento') }}</label>
+                            <label for="nome" class="col-form-label text-start d-block fw-bold mb-3">{{ __('Nome do evento') }}</label>
                             <input id="nome" type="text" class="form-control @error('nome') is-invalid @enderror"
                                 name="nome" value="{{ old('nome') }}" required autocomplete="nome" autofocus>
 
@@ -120,7 +82,7 @@
                         </div>
 
                         <div class="col-md-6">
-                            <label for="email" class="col-form-label text-start d-block fw-bold required-field">{{ __('E-mail de contato') }}</label>
+                            <label for="email" class="col-form-label text-start d-block fw-bold mb-3">{{ __('E-mail de contato') }}</label>
                             <input class="form-control @error('email') is-invalid @enderror" type="email"
                                 value="{{ old('email') }}" name="email" id="email" required autofocus
                                 autocomplete="email">
@@ -137,7 +99,7 @@
 
                     <div class="form-group row">
                         <div class="col-md-6 multilingual_fields" style="display: none;">
-                            <label for="nome_en" class="col-form-label text-start d-block fw-bold required-field">{{ __('Nome em inglês') }}</label>
+                            <label for="nome_en" class="col-form-label text-start d-block fw-bold mb-3">{{ __('Nome em inglês') }}</label>
                             <input id="nome_en" type="text" class="form-control @error('nome_en') is-invalid @enderror"
                                 name="nome_en" value="{{ old('nome_en') }}" autocomplete="nome_en" autofocus>
 
@@ -149,7 +111,7 @@
                         </div>
 
                         <div class="col-md-6 multilingual_fields" style="display: none;">
-                            <label for="nome_es" class="col-form-label text-start d-block fw-bold required-field">{{ __('Nome em espanhol') }}</label>
+                            <label for="nome_es" class="col-form-label text-start d-block fw-bold mb-3">{{ __('Nome em espanhol') }}</label>
                             <input id="nome_es" type="text" class="form-control @error('nome_es') is-invalid @enderror"
                                 name="nome_es" value="{{ old('nome_es') }}" autocomplete="nome_es" autofocus>
                             @error('nome_es')
@@ -161,7 +123,7 @@
 
                     <div class="form-group row">
                         <div class="@if ($eventoPai ?? '') col-md-3 @else col-md-4 @endif">
-                            <label for="tipo" class="col-form-label text-start d-block fw-bold required-field">{{ __('Tipo') }}</label>
+                            <label for="tipo" class="col-form-label text-start d-block fw-bold mb-3">{{ __('Tipo') }}</label>
                             <select id="tipo" type="text" class="form-control @error('tipo') is-invalid @enderror"
                                 name="tipo" required>
                                 <option disabled selected hidden value="">-- {{ __('Tipo') }} --</option>
@@ -189,7 +151,7 @@
                         </div>
 
                         <div class="@if ($eventoPai ?? '') col-md-3 @else col-md-4 @endif">
-                            <label for="recolhimento" class="col-form-label text-start d-block fw-bold required-field">{{ __('Recolhimento') }}</label>
+                            <label for="recolhimento" class="col-form-label text-start d-block fw-bold mb-3">{{ __('Recolhimento') }}</label>
                             <select name="recolhimento" id="recolhimento"
                                 class="form-control @error('recolhimento') is-invalid @enderror">
                                 @if (old('recolhimento') != null)
@@ -291,9 +253,9 @@
 
                     <div class="form-group row">
                         <div class="col-md-12">
-                            <label for="descricao" class="fw-bold required-field">{{ __('Descrição:') }}</label>
-                                <textarea class="form-control mb-3 ckeditor-texto @error('descricao') is-invalid @enderror" required
-                                    autocomplete="descricao" autofocus id="descricao" name="descricao" rows="8">{{ old('descricao') }}</textarea>
+                            <label for="descricao" class="fw-bold mb-3 ">{{ __('Descrição:') }}</label>
+                            <textarea class="form-control mb-3 @error('descricao') is-invalid @enderror" required
+                                autocomplete="descricao" autofocus id="descricao" name="descricao" rows="8">{{ old('descricao') }}</textarea>
                             @error('descricao')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -306,9 +268,9 @@
 
                     <div class="form-group row multilingual_fields" style="display: none;">
                         <div class="col-md-12">
-                            <label for="descricao_en" class="fw-bold required-field">{{ __('Descrição em inglês') }}</label>
-                                <textarea class="form-control ckeditor-texto @error('descricao_en') is-invalid @enderror" autocomplete="descricao_en" autofocus
-                                    id="descricao_en" name="descricao_en" rows="8">{{ old('descricao_en') }}</textarea>
+                            <label for="descricao_en" class="fw-bold mb-3">{{ __('Descrição em inglês') }}</label>
+                            <textarea class="form-control @error('descricao_en') is-invalid @enderror" autocomplete="descricao_en" autofocus
+                                id="descricao_en" name="descricao_en" rows="8">{{ old('descricao_en') }}</textarea>
                             @error('descricao_en')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -321,9 +283,9 @@
 
                     <div class="form-group row multilingual_fields" style="display: none;">
                         <div class="col-md-12">
-                            <label for="exampleFormControlTextarea1" class="fw-bold required-field">{{__('Descrição em espanhol')}}</label>
-                                <textarea class="form-control ckeditor-texto @error('descricao_es') is-invalid @enderror" autocomplete="descricao_es" autofocus
-                                    id="descricao_es" name="descricao_es" rows="8">{{ old('descricao_es') }}</textarea>
+                            <label for="exampleFormControlTextarea1" class="fw-bold mb-3">{{__('Descrição em espanhol')}}</label>
+                            <textarea class="form-control @error('descricao_es') is-invalid @enderror" autocomplete="descricao_es" autofocus
+                                id="descricao_es" name="descricao_es" rows="8">{{ old('descricao_es') }}</textarea>
                             @error('descricao_es')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -337,39 +299,9 @@
                     <div class="form-group row">
                         <!-- BANNER -->
                         <div class="col-md-6">
-                            <label for="fotoEvento" class="fw-bold mb-1 required-field">{{ __('Banner (tamanho: 1024 x 425, formato: JPEG, JPG e PNG):') }}</label>
-
-                            <!-- Área de upload drag & drop -->
-                            <div class="upload-area border border-2 border-dashed rounded-3 p-3 text-center position-relative"
-                                style="min-height: 200px; border-color: #dee2e6 !important; cursor: pointer; transition: all 0.3s ease;"
-                                onclick="document.getElementById('logo-input').click()"
-                                ondrop="handleDrop(event, 'logo')"
-                                ondragover="handleDragOver(event)"
-                                ondragenter="handleDragEnter(event)"
-                                ondragleave="handleDragLeave(event)">
-
-                                <!-- Estado inicial - placeholder -->
-                                <div id="logo-placeholder" class="upload-content d-flex flex-column align-items-center justify-content-center h-100">
-                                    <i class="bi bi-cloud-upload fs-1 text-primary mb-2"></i>
-                                    <h6 class="text-primary mb-2">Arraste sua imagem aqui</h6>
-                                    <p class="text-muted small mb-2">ou clique para selecionar</p>
-                                    <button type="button" class="btn btn-outline-primary btn-sm">
-                                        <i class="bi bi-upload me-1"></i>Escolher Banner
-                                    </button>
-                                    <small class="text-muted mt-2">1024 x 425px - JPEG, JPG, PNG</small>
-                                </div>
-
-                                <!-- Preview da imagem (substitui o imagem-loader) -->
-                                <div id="logo-preview-container" class="d-none">
-                                    <img id="logo-preview" class="img-fluid rounded" style="max-height: 180px;" src="" alt="Preview Banner">
-                                    <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 m-2"
-                                            onclick="removeImage('logo')" style="opacity: 0.8;">
-                                        <i class="bi bi-x"></i>
-                                    </button>
-                                    <div class="mt-2">
-                                        <small class="text-success"><i class="bi bi-check-circle me-1"></i>Banner carregado</small>
-                                    </div>
-                                </div>
+                            <label for="fotoEvento" class="fw-bold mb-3" >{{ __('Banner (tamanho: 1024 x 425, formato: JPEG, JPG e PNG):') }}</label>
+                            <div id="imagem-loader" class="imagem-loader">
+                                <img id="logo-preview" class="img-fluid" src="{{ asset('/img/nova_imagem.PNG') }}" alt="">
                             </div>
 
                             <!-- Input mantido exatamente como original -->
@@ -389,39 +321,9 @@
 
                         <!-- ÍCONE -->
                         <div class="col-md-6">
-                            <label for="icone" class="fw-bold mb-1 required-field">{{ __('Ícone (tamanho: 600 x 600, formato: JPEG, JPG e PNG):') }}</label>
-
-                            <!-- Área de upload drag & drop -->
-                            <div class="upload-area border border-2 border-dashed rounded-3 p-3 text-center position-relative"
-                                style="min-height: 200px; border-color: #dee2e6 !important; cursor: pointer; transition: all 0.3s ease;"
-                                onclick="document.getElementById('icone-input').click()"
-                                ondrop="handleDrop(event, 'icone')"
-                                ondragover="handleDragOver(event)"
-                                ondragenter="handleDragEnter(event)"
-                                ondragleave="handleDragLeave(event)">
-
-                                <!-- Estado inicial - placeholder -->
-                                <div id="icone-placeholder" class="upload-content d-flex flex-column align-items-center justify-content-center h-100">
-                                    <i class="bi bi-cloud-upload fs-1 text-success mb-2"></i>
-                                    <h6 class="text-success mb-2">Arraste seu ícone aqui</h6>
-                                    <p class="text-muted small mb-2">ou clique para selecionar</p>
-                                    <button type="button" class="btn btn-outline-success btn-sm">
-                                        <i class="bi bi-upload me-1"></i>Escolher Ícone
-                                    </button>
-                                    <small class="text-muted mt-2">600 x 600px - JPEG, JPG, PNG</small>
-                                </div>
-
-                                <!-- Preview da imagem (substitui o imagem-loader-icone) -->
-                                <div id="icone-preview-container" class="d-none">
-                                    <img id="icone-preview" class="img-fluid rounded" style="max-height: 180px;" src="" alt="Preview Ícone">
-                                    <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 m-2"
-                                            onclick="removeImage('icone')" style="opacity: 0.8;">
-                                        <i class="bi bi-x"></i>
-                                    </button>
-                                    <div class="mt-2">
-                                        <small class="text-success"><i class="bi bi-check-circle me-1"></i>Ícone carregado</small>
-                                    </div>
-                                </div>
+                            <label for="icone" class="fw-bold mb-3">{{ __('Ícone (tamanho: 600 x 600, formato: JPEG, JPG e PNG):') }}</label>
+                            <div id="imagem-loader-icone" class="imagem-loader">
+                                <img id="icone-preview" class="img-fluid" src="{{ asset('/img/nova_imagem.PNG') }}" alt="">
                             </div>
 
                             <!-- Input mantido exatamente como original -->
@@ -1160,10 +1062,7 @@
             $(".apenasLetras").mask("#", {
                 maxlength: false,
                 translation: {
-                    '#': {
-                        pattern: /[A-zÀ-ÿ ]/,
-                        recursive: true
-                    }
+                    '#': {pattern: /[A-zÀ-ÿ0-9\s\-\.\(\)\[\]\{\}\/\\,;&@#$%*+=|<>!?~`'"]/, recursive: true}
                 }
             });
             /*$('#numero').mask('#', {

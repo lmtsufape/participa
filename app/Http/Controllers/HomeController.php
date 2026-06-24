@@ -35,8 +35,7 @@ class HomeController extends Controller
             $eventos = $eventos->concat(Evento::all());
 
             return view('administrador.index', ['eventos' => $eventos]);
-        }
-        else if ($user->coordComissaoCientifica()->exists() || $user->coordComissaoOrganizadora()->exists()) {
+        }else if ($user->coordComissaoCientifica()->exists() || $user->coordComissaoOrganizadora()->exists()) {
             $eventos = QueryBuilder::for(Evento::class)
             ->where(function($q) use ($user) {
                 $q->whereHas('coordComissaoCientifica', fn($r) => $r->where('user_id', $user->id))

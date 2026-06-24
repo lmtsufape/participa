@@ -130,22 +130,63 @@
 
                 @if ($etiquetas->modinscricao)
                     <div class="d-flex flex-wrap gap-2">
-                        <button id="btn-inscrevase" class="btn btn-my-success w-60 rounded btn-lg" data-bs-toggle="modal" data-bs-target="#modalInscrever"
-                            @if (($isInscrito && !$InscritoSemCategoria)  || $encerrada || (isset($inscricao) && $inscricao->finalizada)) disabled @endif>
-                            @if ($isInscrito)
-                                @if($inscricao->finalizada)
-                                    {{ __('Já inscrito') }}
-                                @elseif($InscritoSemCategoria)
-                                    {{ __('Realize sua inscrição aqui!') }}
-                                @else
-                                    {{ __('Inscrição com pendência de pagamento!') }}
+                        @if ($isInscrito && isset($inscricao) && !$inscricao->finalizada && !$InscritoSemCategoria)
+                            <a href="{{ route('checkout.telaPagamento', $evento) }}" id="btn-inscrevase" class="btn btn-my-success w-60 rounded btn-lg">
+                                {{ __('Inscrição com pendência de pagamento!') }}
+                            </a>
+                        @else
+                            @php
+                                $solicitacaoPCD = null;
+                                $inscricaoPCDHabilitada = $evento->inscricaoPCDHabilitada();
+                                if ($inscricaoPCDHabilitada && auth()->check()) {
+                                    $solicitacaoPCD = \App\Models\Inscricao\InscricaoPCD::where('user_id', auth()->id())->where('evento_id', $evento->id)->first();
+                                }
+                            @endphp
+
+                            <button id="btn-inscrevase" class="btn btn-my-success w-60 rounded btn-lg"
+                                @if (!$encerrada && !($isInscrito && isset($inscricao) && $inscricao->finalizada))
+                                    data-bs-toggle="modal" data-bs-target="#modalInscrever"
                                 @endif
-                            @elseif($encerrada)
-                                {{ __('Encerradas!') }}
-                            @else
-                                {{ __('Realize sua inscrição aqui!') }}
+                                @if ($encerrada || ($isInscrito && isset($inscricao) && $inscricao->finalizada))
+                                    disabled
+                                @endif
+                                @if (isset($solicitacaoPCD) && $solicitacaoPCD->status == 'pendente')
+                                    style="display: none;"
+                                @endif
+                            >
+                                @if ($isInscrito && isset($inscricao) && $inscricao->finalizada)
+                                    {{ __('Já inscrito') }}
+                                @elseif($encerrada)
+                                    {{ __('Encerradas!') }}
+                                @else
+                                    {{ __('Realize sua inscrição aqui!') }}
+                                @endif
+                            </button>
+                            @if ($inscricaoPCDHabilitada)
+                            <button class="btn btn-my-success w-60 rounded btn-lg"
+                                @if (!$encerrada && !($isInscrito && isset($inscricao) && $inscricao->finalizada))
+                                    data-bs-toggle="modal" data-bs-target="#modalInscricaoPCD"
+                                @endif
+                                @if ($encerrada || ($isInscrito && isset($inscricao) && $inscricao->finalizada))
+                                    style="display: none;"
+                                @endif
+                                @if (isset($solicitacaoPCD) && $solicitacaoPCD->status == 'rejeitado' || isset($solicitacaoPCD) && $solicitacaoPCD->status == 'aprovado')
+                                    disabled
+                                @endif
+
+                            >
+                                @if (isset($solicitacaoPCD) && $solicitacaoPCD->status == 'rejeitado')
+                                    {{ __('Solicitação como PCD rejeitada') }}
+                                @elseif (isset($solicitacaoPCD) && $solicitacaoPCD->status == 'pendente')
+                                    {{ __('Solicitação como PCD em análise') }}
+                                @elseif (isset($solicitacaoPCD) && $solicitacaoPCD->status == 'aprovado')
+                                    {{ __('Solicitação como PCD aprovada') }}
+                                @else
+                                    {{ __('Solicitação como PCD') }}
+                                @endif
+                            </button>
                             @endif
-                        </button>
+                        @endif
                     </div>
                     <br>
                    @if($evento->recolhimento == "pago")
@@ -175,12 +216,17 @@
                     <br>
 
                     @isset($inscricao)
-                        @if(isset($inscricao->pagamento))
+                        @if(isset($inscricao->pagamento) && $inscricao->finalizada)
                             <a href="{{ route('checkout.statusPagamento', $evento->id) }}"
                                 class="text-center mt-2 w-100">{{ __('Visualizar status do pagamento') }}</a>
-                        @elseif(!$InscritoSemCategoria && $inscricao->categoria->valor_total > 0)
-                            <a href="{{ route('checkout.telaPagamento', $evento) }}"
-                                    class="text-center mt-2 w-100">{{ __('Realizar pagamento') }}</a>
+                        @elseif(!$InscritoSemCategoria && $inscricao->categoria->valor_total > 0 && !$inscricao->finalizada)
+                            @if(isset($inscricao->pagamento))
+                                <a href="{{ route('checkout.statusPagamento', $evento->id) }}"
+                                    class="text-center mt-2 w-100">{{ __('Visualizar status do pagamento') }}</a>
+                            @else
+                                <a href="{{ route('checkout.telaPagamento', $evento) }}"
+                                        class="text-center mt-2 w-100">{{ __('Realizar pagamento') }}</a>
+                            @endif
 
                             <a href="#" class="ms-3" data-bs-toggle="modal" data-bs-target="#modalAlterarCategoria">
                                 {{ __('Alterar categoria') }}
@@ -204,7 +250,6 @@
                     @endif
                 </div>
             </div>
-
 
         </div>
         <hr class="border-dark">
@@ -450,27 +495,25 @@
                                             </div>
                                         </div>
                                     @endforeach
-                                    @if($etiquetas->modavaliacao)
-                                            @if(Auth::user())
-                                                @if (!$jaCandidatou)
-                                                    <button class="btn btn-my-success w-50 rounded btn-lg mt-3"
-                                                            data-bs-toggle="modal"
-                                                            data-bs-target="#modalInscreverAvaliador">
-                                                        {{ __('Quero ser avaliador') }}
-                                                    </button>
-                                                @else
-                                                    <button class="btn btn-my-success w-100 rounded btn-lg mt-3" disabled>
-                                                        {{ __('Você já se candidatou a avaliador neste evento') }}
-                                                    </button>
-                                                @endif
-                                            @else
-                                                <button class="btn btn-my-success w-50 rounded btn-lg mt-3"
-                                                        data-bs-toggle="modal"
-                                                        data-bs-target="#modalLoginPrompt"
-                                                        data-acao="{{ __('se candidatar a avaliador') }}">
-                                                    {{ __('Quero ser avaliador') }}
-                                                </button>
-                                            @endif
+                                    @if(Auth::user())
+                                        @if (!$jaCandidatou)
+                                           <!-- <button class="btn btn-my-success w-50 rounded btn-lg mt-3"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#modalInscreverAvaliador">
+                                                {{ __('Quero ser avaliador') }}
+                                            </button>-->
+                                        @else
+                                            <button class="btn btn-my-success w-100 rounded btn-lg mt-3" disabled>
+                                                {{ __('Você já se candidatou a avaliador neste evento') }}
+                                            </button>
+                                        @endif
+                                    @else
+                                           <!--{ <button class="btn btn-my-success w-50 rounded btn-lg mt-3"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#modalLoginPrompt"
+                                                data-acao="{{ __('se candidatar a avaliador') }}">
+                                                { __('Quero ser avaliador') }}
+                                            </button>-->
                                     @endif
 
                                 </div>
@@ -783,13 +826,6 @@
         @endif
 
         <div id="contato" class="row py-4 d-flex">{{-- Contatos --}}
-            <h4 class="text-my-primary mb-4">{{ __('Evento organizado por:') }}</h4>
-            <!-- <div class="col-md-2">
-                <img src="" class="" alt="">
-            </div> -->
-            <div class=" d-flex flex-column align-items-center">
-                <h4 class="mb-3">{{ $evento->coordenador->name }}</h4>
-            </div>
              <div class="col-12 d-flex justify-content-center align-items-center gap-2">
                 <a href="mailto:@if($evento->email){{ $evento->email }}@else{{ $evento->coordenador->email }}@endif" class="btn btn-my-secondary rounded-3">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-envelope me-1" viewBox="0 0 16 16">
@@ -809,7 +845,7 @@
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-whatsapp" viewBox="0 0 16 16">
                             <path d="M13.601 2.326A7.85 7.85 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.9 7.9 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.9 7.9 0 0 0 13.6 2.326zM7.994 14.521a6.6 6.6 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.56 6.56 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592m3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.73.73 0 0 0-.529.247c-.182.198-.691.677-.691 1.654s.71 1.916.81 2.049c.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232"/>
                         </svg>
-                        {{ __('Canal de suporte') }}
+                        {{ __('Canal de suporte da plataforma de inscrições') }}
                     </a>
                 @endif
 
@@ -839,6 +875,9 @@
         @include('evento.modal-submeter-trabalho')
         @include('evento.modal-confirm-inscricao')
         @include('evento.modal-inscricao-avaliador')
+        @if ($evento->inscricaoPCDHabilitada())
+            @include('evento.modal-inscricao-pcd')
+        @endif
 
     </div>
 
@@ -1138,7 +1177,7 @@
                     if (ativ.vagas > 0) {
                         botVagas = `<span class="badge bg-success px-4 py-2 rounded-pill">Vagas disponíveis</span>`;
                     } else {
-                        botVagas = `<span class="badge bg-danger px-4 py-2 rounded-pill">Vagas encerradas</span>`;
+                        botVagas = `<span class="badge bg-success px-4 py-2 rounded-pill">Vagas encerradas</span>`;
                     }
                 }
 
@@ -1220,5 +1259,4 @@
             document.getElementById('trabalhoNovaVersaoId').value = x;
         }
     </script>
-
 @endsection

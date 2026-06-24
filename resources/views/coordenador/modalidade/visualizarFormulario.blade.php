@@ -40,10 +40,14 @@
             <tbody>
                 <tr>
                     <td style="text-align:center">
-                        <a href="#" data-bs-toggle="modal" data-focus="false" data-bs-target="#modalEditarForm{{$form->id}}"><img src="{{asset('img/icons/edit-regular.svg')}}" style="width:20px"></a>
+                        <a href="#" data-bs-toggle="modal" data-focus="false" data-bs-target="#modalEditarForm{{$form->id}}">
+                            <img src="{{ asset('img/icons/edit-regular.svg') }}" style="width:20px" alt="Editar">
+                        </a>
                     </td>
                     <td style="text-align:center">
-                        <a href="" data-bs-toggle="modal" data-bs-target="#modalExcluirForm{{$form->id}}"><i class="bi bi-trash text-danger fa-lg"></i></a>
+                        <a href="" data-bs-toggle="modal" data-bs-target="#modalExcluirForm{{$form->id}}">
+                            <img src="{{ asset('img/icons/trash-alt-regular.svg') }}" style="width:20px" alt="Excluir">
+                        </a>
                     </td>
                 </tr>
             </tbody>
@@ -253,16 +257,19 @@
                                                         <div class="col-sm-4">
                                                             <div class="form-group">
                                                                 <label for="exampleFormControlSelect1">Tipo</label>
-                                                                <select onchange="escolha(this.value, event)" name="tipo[]" class="form-control" id="FormControlSelect" readonly="readonly">
+                                                                <select onchange="escolha(this, event)" name="tipo[]" class="form-control" id="FormControlSelect" data-rowid="{{$index}}">
                                                                     <option @if($pergunta->respostas->first()->opcoes->count()) selected @endif value="radio">Múltipla escolha</option>
                                                                     <option @if($pergunta->respostas->first()->paragrafo) selected @endif value="paragrafo">Parágrafo</option>
                                                                     {{-- <option value="radio">Seleção</option> --}}
                                                                 </select>
                                                             </div>
                                                         </div>
-                                                        <div class="col-sm-3 d-flex align-items-center gap-3 pt-4">
-                                                            <a href="#" class="delete2 text-danger pr-2 mr-2">
-                                                                <i class="bi bi-trash3 fs-4 icon-card"></i>
+                                                        <div class="col-md-5"></div>
+                                                        <div class="col-sm-7">
+                                                            <div class="row">
+                                                            <div class="col">
+                                                            <a href="#" class="delete2 pr-2 mr-2">
+                                                                <img src="{{ asset('img/icons/trash-alt-regular.svg') }}" style="width:20px" alt="Excluir">
                                                             </a>
                                                             <a class="move-up text-success"><i class="bi bi-arrow-up-circle fs-4"></i></a>
                                                             <a class="move-down text-success"><i class="bi bi-arrow-down-circle fs-4"></i></a>
@@ -336,23 +343,133 @@
     let order = 1;
     let pergunta = 1;
 
-    function escolha(select) {
-        if ('paragrafo' == select) {
-            console.log('paragrafo')
-            console.log(event)
-            event.path[3].children[1].children[1].innerHTML = addParagrafo();
+    // variavel p/ perguntas novas
+    let novaPerguntaIndex = 0;
 
-        } else if ('checkbox' == select) {
-            console.log('checkbox')
-            console.log(event.path[3].children[1].children[1].id)
-            let id = event.path[3].children[1].children[1].id;
+    function gerarOpcoesMultiplaEscolhaNovaPerguntaHtml(idx) {
+        return `
+            <div class="optionResposta col-md-12 p-0 m-0 row">
+                <div class="input-group mb-3 col-md-10">
+                    <div class="input-group-prepend">
+                        <div class="input-group-text">
+                            <input type="checkbox" disabled>
+                        </div>
+                    </div>
+                    <input type="text" name="tituloCheckox[${idx}][]" class="form-control" required>
+                </div>
+                <div class="col-md-1 mt-2 d-flex align-items-center" style="gap: 4px;">
+                    <a href="#" class="addOpcaoNova" data-novoid="${idx}"><img src="{{ asset('img/icons/plus-square-solid_black.svg') }}" style="width:20px" alt="Adicionar"></a>
+                    <a href="#" class="removeOpcao"><img src="{{ asset('img/icons/trash-alt-regular.svg') }}" style="width:20px" alt="Excluir"></a>
+                </div>
+            </div>
+        `;
+    }
 
-            event.path[3].children[1].children[1].innerHTML = montarOpcao(id);
+    function gerarOpcoesMultiplaEscolhaExistenteHtml(rowId) {
+        return `
+            <div class="optionResposta col-md-12 p-0 m-0 row">
+                <div class="input-group mb-3 col-md-10">
+                    <div class="input-group-prepend">
+                        <div class="input-group-text">
+                            <input type="checkbox" disabled>
+                        </div>
+                    </div>
+                    <input type="text" name="tituloRadio[${rowId}][]" class="form-control" required>
+                </div>
+                <div class="col-md-1 mt-2">
+                    <a href="#" class="addOpcaoExistente" data-rowid="${rowId}"><img src="{{ asset('img/icons/plus-square-solid.svg') }}" style="width:20px" alt="Adicionar"></a>
+                    <a href="#" class="removeOpcao"><img src="{{ asset('img/icons/trash-alt-regular.svg') }}" style="width:20px" alt="Excluir"></a>
+                </div>
+            </div>
+        `;
+    }
 
-        } else if ('radio' == select) {
-
+    // Função para atualizar o campo de resposta conforme o tipo
+    function escolha(selectElement, event) {
+        var tipo = selectElement.value;
+        var respostaContainer = $(selectElement).closest('.row.card-body').find('.row[id^="row"]');
+        // Verifica se é uma pergunta nova (sem data-rowid)
+        let rowId = $(selectElement).data('rowid');
+        let novoId = $(selectElement).data('novoid');
+        if (typeof rowId === 'undefined' && typeof novoId !== 'undefined') {
+            if (tipo === 'paragrafo') {
+                respostaContainer.html(`
+                    <div class="col-md-12">
+                        <input type="text" style="margin-bottom:10px" disabled='true' class="form-control" name="resposta[]">
+                    </div>
+                `);
+            } else if (tipo === 'checkbox') {
+                respostaContainer.html(gerarOpcoesMultiplaEscolhaNovaPerguntaHtml(novoId));
+            }
+        } else if (typeof rowId !== 'undefined') {
+            // Pergunta existente
+            if (tipo === 'paragrafo') {
+                respostaContainer.html(`
+                    <div class="col-md-12">
+                        <input type="text" style="margin-bottom:10px" disabled='true' class="form-control" name="resposta[]">
+                    </div>
+                `);
+            } else if (tipo === 'radio') {
+                respostaContainer.html(gerarOpcoesMultiplaEscolhaExistenteHtml('row' + rowId));
+            }
         }
     }
+
+    // Delegar eventos para adicionar/remover opções de múltipla escolha para perguntas novas
+    $(document).on('click', '.addOpcaoNova', function(e) {
+        e.preventDefault();
+        var idx = $(this).data('novoid');
+        var novaOpcao = `
+            <div class="optionResposta col-md-12 p-0 m-0 row">
+                <div class="input-group mb-3 col-md-10">
+                    <div class="input-group-prepend">
+                        <div class="input-group-text">
+                            <input type="checkbox" disabled>
+                        </div>
+                    </div>
+                    <input type="text" name="tituloCheckox[${idx}][]" class="form-control" required>
+                </div>
+                <div class="col-md-1 mt-2 d-flex align-items-center" style="gap: 4px;">
+                    <a href="#" class="addOpcaoNova" data-novoid="${idx}"><img src="{{ asset('img/icons/plus-square-solid_black.svg') }}" style="width:20px" alt="Adicionar"></a>
+                    <a href="#" class="removeOpcao"><img src="{{ asset('img/icons/trash-alt-regular.svg') }}" style="width:20px" alt="Excluir"></a>
+                </div>
+            </div>
+        `;
+        $(this).closest('.row').append(novaOpcao);
+    });
+
+    // Delegar eventos para adicionar/remover opções de múltipla escolha para perguntas existentes
+    $(document).on('click', '.addOpcaoExistente', function(e) {
+        e.preventDefault();
+        var rowId = $(this).data('rowid');
+        var novaOpcao = `
+            <div class="optionResposta col-md-12 p-0 m-0 row">
+                <div class="input-group mb-3 col-md-10">
+                    <div class="input-group-prepend">
+                        <div class="input-group-text">
+                            <input type="checkbox" disabled>
+                        </div>
+                    </div>
+                    <input type="text" name="tituloRadio[${rowId}][]" class="form-control" required>
+                </div>
+                <div class="col-md-1 mt-2">
+                    <a href="#" class="addOpcaoExistente" data-rowid="${rowId}"><img src="{{ asset('img/icons/plus-square-solid.svg') }}" style="width:20px" alt="Adicionar"></a>
+                    <a href="#" class="removeOpcao"><img src="{{ asset('img/icons/trash-alt-regular.svg') }}" style="width:20px" alt="Excluir"></a>
+                </div>
+            </div>
+        `;
+        $(this).closest('.row').append(novaOpcao);
+    });
+
+    $(document).on('click', '.removeOpcao', function(e) {
+        e.preventDefault();
+        $(this).closest('.optionResposta').remove();
+    });
+
+
+    $(document).on('change', 'select[name="tipo[]"]', function(e) {
+        escolha(this, e);
+    });
 
 
 
@@ -440,6 +557,8 @@
 
     function montarLinhaInput(order) {
 
+        let idx = novaPerguntaIndex;
+        novaPerguntaIndex++;
         return `<div class="item card" style="order:${order}">
                     <div class="row card-body">
                         <div class="col-sm-12">
@@ -457,10 +576,9 @@
                         <div class="col-sm-4">
                             <div class="form-group">
                                 <label for="exampleFormControlSelect1">Tipo</label>
-                                <select onchange="escolha(this.value)" name="tipo[]" class="form-control" id="FormControlSelect">
+                                <select onchange="escolha(this, event)" name="tipo[]" class="form-control" id="FormControlSelect" data-novoid="${idx}">
                                     <option value="paragrafo">Parágrafo</option>
                                     <option value="checkbox">Múltipla escolha</option>
-                                    {{-- <option value="radio">Seleção</option> --}}
                                 </select>
                               </div>
                         </div>
@@ -489,7 +607,7 @@
                         </div>
                     </div>
                     <div class="col-md-1 mt-2">
-                        <a href="#"  onclick="addCheckbox(event)"><i class="fas fa-plus"></i></a>
+                        <a href="#"  onclick="addCheckbox(event)"><img src="{{ asset('img/icons/plus-square-solid.svg') }}" style="width:20px" alt="Adicionar"></a>
                     </div>
                     `;
     }
@@ -508,7 +626,7 @@
                         <input type="text" name="tituloCheckox[${check}][]" class="form-control" aria-label="Text input with checkbox">
                     </div>
                     <div class="col-md-1 mt-2">
-                         <a type="button" class="removeRow" ><i class="fas fa-trash-alt"></i></a>
+                         <a type="button" class="removeRow" ><img src="{{ asset('img/icons/trash-alt-regular.svg') }}" style="width:20px" alt="Excluir"></a>
                     </div>
                </div>
                    `;

@@ -15,15 +15,22 @@ class PreRegistroController extends Controller
 {
     public function preRegistro()
     {
-        return view('auth.preRegistro');
+        $paises = config('paises');
+
+        return view('auth.preRegistro', compact('paises'));
     }
 
     public function enviarCodigo(Request $request)
     {
         $rules = [
-            'nome' => 'required|string|max:255',
-            'email' => 'required|email',
-            'pais' => 'required|string',
+            'nome' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email'],
+            'pais' => ['required', 'string'],
+            'documento_tipo' => ['required', 'in:cpf,cnpj,passaporte'],
+            'cpf' => ['nullable','required_if:documento_tipo,cpf', 'cpf'],
+            'cnpj' => ['nullable','required_if:documento_tipo,cnpj', 'cnpj'],
+            'passaporte' => ['nullable','required_if:documento_tipo,passaporte', 'min:6', 'max:9', 'regex:/^[A-Za-z0-9]{6,9}$/']
+
         ];
 
         $messages = [
@@ -31,7 +38,6 @@ class PreRegistroController extends Controller
         ];
 
         if ($request->filled('cpf')) {
-            $rules['cpf'] = 'required|string';
             // Verifica se existe um usuário ativo com esse CPF
             $userCpfAtivo = User::where('cpf', $request->cpf)->whereNull('deleted_at')->first();
             if ($userCpfAtivo) {
@@ -39,7 +45,6 @@ class PreRegistroController extends Controller
             }
             $messages['cpf.unique'] = 'Este CPF já está cadastrado no sistema.';
         } elseif ($request->filled('cnpj')) {
-            $rules['cnpj'] = 'required|string';
             // Verifica se existe um usuário ativo com esse CNPJ
             $userCnpjAtivo = User::where('cnpj', $request->cnpj)->whereNull('deleted_at')->first();
             if ($userCnpjAtivo) {
@@ -47,7 +52,6 @@ class PreRegistroController extends Controller
             }
             $messages['cnpj.unique'] = 'Este CNPJ já está cadastrado no sistema.';
         } elseif ($request->filled('passaporte')) {
-            $rules['passaporte'] = 'required|string|min:6|max:9|regex:/^[A-Za-z0-9]{6,9}$/';
             $messages['passaporte.regex'] = 'O passaporte deve conter apenas letras e números (sem símbolos) e ter entre 6 e 9 caracteres.';
             // Verifica se existe um usuário ativo com esse passaporte
             $userPassaporteAtivo = User::where('passaporte', $request->passaporte)->whereNull('deleted_at')->first();
@@ -61,7 +65,7 @@ class PreRegistroController extends Controller
 
         // Verifica se existe um usuário com soft delete
         $userDeletado = User::withTrashed()->where('email', $request->email)->first();
-        
+
         if ($userDeletado && $userDeletado->deleted_at === null) {
             return back()->withErrors(['email' => 'Este email já está cadastrado no sistema.']);
         }

@@ -1,5 +1,6 @@
+@use "bootstrap/scss/bootstrap" as bootstrap;
 
-@each $name, $color in $colors {
+@each $name, $color in bootstrap.$colors {
     .btn-my-#{$name} {
       background-color: $color;
       color: white;
@@ -34,11 +35,31 @@
         }
     }
 
+    .link-my-#{$name} {
+        color: $color;
+        text-decoration: none;
+    }
+
+    .link-my-#{$name}:hover,
+    .link-my-#{$name}:focus {
+        color: darken($color, 10%);;
+        text-decoration: underline;
+        text-decoration-color: darken($color, 5%);;
+    }
+
     .bg-my-#{$name} {
       background-color: $color !important;
     }
 
     .text-my-#{$name} {
       color: $color !important;
+    }
+
+    .hover-scale {
+        transition: transform 0.2s ease;
+    }
+
+    .hover-scale:hover {
+        transform: scale(1.15);
     }
 }
