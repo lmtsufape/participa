@@ -114,7 +114,7 @@
                 <span class="text-my-primary">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
                         <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6" />
-                    </svg> {{$evento->endereco->rua}}, {{$evento->endereco->numero}}, {{$evento->endereco->cidade}}-{{$evento->endereco->uf}}
+                    </svg> {{$evento->endereco->rua}}, {{$evento->endereco->numero}}, {{$evento->endereco->cidade}}-{{$evento->endereco->uf_sigla}}
                 </span>
                 <div class="text-secondary py-3">
                     <p class="m-0">
@@ -767,7 +767,7 @@
                                                                 {{ $subevento->endereco->rua }},
                                                                 {{ $subevento->endereco->numero }} -
                                                                 {{ $subevento->endereco->cidade }} /
-                                                                {{ $subevento->endereco->uf }}.
+                                                                {{ $subevento->endereco->uf_sigla }}.
                                                             </div>
                                                         </div>
                                                         </p>
@@ -1120,7 +1120,7 @@
         });
         window.initMap = function() {
             // monta o endereço completo;
-            const address = "{{ $evento->endereco->rua }}, {{ $evento->endereco->numero }}, {{ $evento->endereco->cidade }}, {{$evento->endereco->uf}}, Brasil";
+            const address = "{{ $evento->endereco->rua }}, {{ $evento->endereco->numero }}, {{ $evento->endereco->cidade }}, {{$evento->endereco->uf_sigla}}, Brasil";
 
             const geocoder = new google.maps.Geocoder();
 
