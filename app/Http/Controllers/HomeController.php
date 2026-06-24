@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Inscricao\Inscricao;
 use App\Models\Submissao\Evento;
 use Auth;
 use Illuminate\Support\Facades\DB;
