@@ -33,6 +33,11 @@ class Endereco extends Model
 
     public function getEnderecoFormatado()
     {
-        return "{$this->rua}, {$this->numero}, {$this->bairro}, {$this->cidade} - {$this->uf}, {$this->cep}, {$this->pais}";
+        return "{$this->rua}, {$this->numero}, {$this->bairro}, {$this->cidade} - {$this->uf_sigla}, {$this->cep}, {$this->pais}";
+    }
+
+    public function getUfSiglaAttribute(): ?string
+    {
+        return $this->uf instanceof EstadoBrasileiro ? $this->uf->value : $this->uf;
     }
 }

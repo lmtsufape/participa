@@ -193,13 +193,13 @@ class Evento extends Model
                           ->first()
             : null;
         $isPCDAprovado = $solicitacaoPCD !== null;
-        $svc = new AssociadoService();
+        //$svc = new AssociadoService();
         $userCpf = auth()->user()->cpf ?? '';
-        $assoc = $svc->fetchByCpf($userCpf);
+        //$assoc = $svc->fetchByCpf($userCpf);
 
         $baseCats = $this->categoriasQuePermitemInscricao()->get();
 
-        if ($assoc) {
+        /*if ($assoc) {
             if ($assoc && ($assoc['allowed'] ?? false)) {
                 if($isPCDAprovado) {
                     $map = [
@@ -255,7 +255,7 @@ class Evento extends Model
                 $tiposPermitidos = $map[$assoc['category']] ?? [];
                 return $baseCats->whereIn('nome', $tiposPermitidos);
             }
-        }
+        } */
 
         // Mostra APENAS a categoria "Pessoa com Deficiência (PCD)"
         if ($isPCDAprovado) {
