@@ -52,7 +52,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use Intervention\Image\ImageManagerStatic as Image;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Gate;
@@ -101,6 +100,12 @@ class EventoController extends Controller
             ->find($request->eventoId);
 
         $this->authorize('isUsuarioDaComissao', $evento);
+        $evento->setRelation('formEvento', FormEvento::firstOrCreate([
+            'eventoId' => $evento->id,
+        ]));
+        FormSubmTraba::firstOrCreate([
+            'eventoId' => $evento->id,
+        ]);
 
         $evento->loadCount([
             'inscricaos',
@@ -2341,28 +2346,28 @@ class EventoController extends Controller
         $evento->save();
         // Se o evento tem foto
         if ($request->fotoEvento != null) {
-            $evento->fotoEvento = $this->uploadFile($request, $evento);
+            $evento->fotoEvento = $this->uploadFile($request, $evento, 'fotoEvento');
             $evento->save();
         }
         if ($request->fotoEvento_en != null) {
-            $evento->fotoEvento_en = $this->uploadFile($request, $evento);
+            $evento->fotoEvento_en = $this->uploadFile($request, $evento, 'fotoEvento_en');
             $evento->save();
         }
         if ($request->fotoEvento_es != null) {
-            $evento->fotoEvento_es = $this->uploadFile($request, $evento);
+            $evento->fotoEvento_es = $this->uploadFile($request, $evento, 'fotoEvento_es');
             $evento->save();
         }
 
         if ($request->icone != null) {
-            $evento->icone = $this->uploadIconeFile($request, $evento);
+            $evento->icone = $this->uploadIconeFile($request, $evento, 'icone');
             $evento->save();
         }
         if ($request->icone_en != null) {
-            $evento->icone_en = $this->uploadIconeFile($request, $evento);
+            $evento->icone_en = $this->uploadIconeFile($request, $evento, 'icone_en');
             $evento->save();
         }
         if ($request->icone_es != null) {
-            $evento->icone_es = $this->uploadIconeFile($request, $evento);
+            $evento->icone_es = $this->uploadIconeFile($request, $evento, 'icone_es');
             $evento->save();
         }
 
@@ -2379,32 +2384,17 @@ class EventoController extends Controller
         return redirect()->route('home')->with(['message' => 'Evento criado com sucesso!']);
     }
 
-    public function uploadFile($request, $evento)
+    public function uploadFile($request, $evento, string $field = 'fotoEvento')
     {
-        if ($request->hasFile('fotoEvento')) {
-            $file = $request->fotoEvento;
+        if ($request->hasFile($field)) {
+            $file = $request->file($field);
             $path = 'eventos/' . $evento->id;
-            $nome = $request->file('fotoEvento')->getClientOriginalName();
-            Storage::disk('public')->putFileAs($path, $file, $nome);
-
-            return 'eventos/'.$evento->id.'/'.$nome;
-        }
-
-        if ($request->hasFile('fotoEvento_en')) {
-            $file = $request->fotoEvento_en;
-            $path = 'eventos/'.$evento->id;
-            $extensao = $request->file('fotoEvento_en')->getClientOriginalExtension();
-            $nome = 'banner-en.'.$extensao;
-            Storage::disk('public')->putFileAs($path, $file, $nome);
-
-            return 'eventos/' . $evento->id . '/' . $nome;
-        }
-
-        if ($request->hasFile('fotoEvento_es')) {
-            $file = $request->fotoEvento_es;
-            $path = 'eventos/'.$evento->id;
-            $extensao = $request->file('fotoEvento_es')->getClientOriginalExtension();
-            $nome = 'banner-es.'.$extensao;
+            $nomes = [
+                'fotoEvento' => $file->getClientOriginalName(),
+                'fotoEvento_en' => 'banner-en.' . $file->getClientOriginalExtension(),
+                'fotoEvento_es' => 'banner-es.' . $file->getClientOriginalExtension(),
+            ];
+            $nome = $nomes[$field];
             Storage::disk('public')->putFileAs($path, $file, $nome);
 
             return 'eventos/' . $evento->id . '/' . $nome;
@@ -2413,37 +2403,18 @@ class EventoController extends Controller
         return null;
     }
 
-    public function uploadIconeFile($request, $evento)
+    public function uploadIconeFile($request, $evento, string $field = 'icone')
     {
-        if ($request->hasFile('icone')) {
-            $file = $request->icone;
+        if ($request->hasFile($field)) {
+            $file = $request->file($field);
             $path = 'eventos/' . $evento->id;
-            $extensao = $request->file('icone')->getClientOriginalExtension();
-            $nome = 'icone.' . $extensao;
-            $image = Image::make($file)->encode();
-            Storage::disk('public')->put($path . '/' . $nome, $image);
-
-            return $path.'/'.$nome;
-        }
-
-        if ($request->hasFile('icone_en')) {
-            $file = $request->icone_en;
-            $path = 'eventos/'.$evento->id;
-            $extensao= $request->file('icone_en')->getClientOriginalExtension();
-            $nome = 'icone-en.'.$extensao;
-            $image = Image::make($file)->encode();
-            Storage::disk('public')->put($path.'/'.$nome, $image);
-
-            return $path . '/' . $nome;
-        }
-
-        if ($request->hasFile('icone_es')) {
-            $file = $request->icone_es;
-            $path = 'eventos/'.$evento->id;
-            $extensao= $request->file('icone_es')->getClientOriginalExtension();
-            $nome = 'icone-es.'.$extensao;
-            $image = Image::make($file)->encode();
-            Storage::disk('public')->put($path.'/'.$nome, $image);
+            $nomes = [
+                'icone' => 'icone.' . $file->getClientOriginalExtension(),
+                'icone_en' => 'icone-en.' . $file->getClientOriginalExtension(),
+                'icone_es' => 'icone-es.' . $file->getClientOriginalExtension(),
+            ];
+            $nome = $nomes[$field];
+            Storage::disk('public')->putFileAs($path, $file, $nome);
 
             return $path . '/' . $nome;
         }
@@ -2465,6 +2436,7 @@ class EventoController extends Controller
         if (!$evento) {
             return abort(404);
         }
+        $enderecoMap = urlencode($evento->endereco?->getEnderecoFormatado() ?? '');
         $encerrada = $evento->eventoInscricoesEncerradas();
         $datas = DB::table('atividades')
             ->join('datas_atividades', 'atividades.id', '=', 'datas_atividades.atividade_id')
@@ -2538,7 +2510,7 @@ class EventoController extends Controller
             // dd($evento->categoriasParticipantes()->where('permite_inscricao', true)->get());
             // dd($etiquetas);
 
-            return view('evento.visualizarEvento', compact('evento', 'hasFile', 'mytime', 'etiquetas', 'modalidades', 'formSubTraba', 'atividades', 'atividadesAgrupadas', 'dataInicial', 'datas', 'isInscrito', 'inscricao', 'subeventos', 'encerrada', 'links', 'areas', 'dataInicio','dataFim', 'jaCandidatou', 'InscritoSemCategoria'));
+            return view('evento.visualizarEvento', compact('evento', 'hasFile', 'mytime', 'etiquetas', 'modalidades', 'formSubTraba', 'atividades', 'atividadesAgrupadas', 'dataInicial', 'datas', 'isInscrito', 'inscricao', 'subeventos', 'encerrada', 'links', 'areas', 'dataInicio','dataFim', 'jaCandidatou', 'InscritoSemCategoria', 'enderecoMap'));
         } else {
             $subeventos = Evento::where('deletado', false)->where('publicado', true)->where('evento_pai_id', $id)->get();
             $hasTrabalho = false;
@@ -2561,7 +2533,7 @@ class EventoController extends Controller
             }
 
 
-            return view('evento.visualizarEvento', compact('evento', 'trabalhos', 'trabalhosCoautor', 'hasTrabalho', 'hasTrabalhoCoautor', 'hasFile', 'datas', 'mytime', 'etiquetas', 'formSubTraba', 'atividadesAgrupadas', 'atividades', 'dataInicial', 'modalidades', 'isInscrito', 'subeventos', 'encerrada', 'areas', 'dataInicio', 'dataFim'));
+            return view('evento.visualizarEvento', compact('evento', 'trabalhos', 'trabalhosCoautor', 'hasTrabalho', 'hasTrabalhoCoautor', 'hasFile', 'datas', 'mytime', 'etiquetas', 'formSubTraba', 'atividadesAgrupadas', 'atividades', 'dataInicial', 'modalidades', 'isInscrito', 'subeventos', 'encerrada', 'areas', 'dataInicio', 'dataFim', 'enderecoMap'));
         }
     }
 
@@ -2636,8 +2608,7 @@ class EventoController extends Controller
 
             $evento->update();
 
-            $image = Image::make($file)->encode();
-            Storage::disk('public')->put($path . '/' . $nome, $image);
+            Storage::disk('public')->putFileAs($path, $file, $nome);
         }
 
         if ($request->dataLimiteInscricao != null) {

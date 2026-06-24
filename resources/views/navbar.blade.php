@@ -1,3 +1,75 @@
+<style>
+    .profile-dropdown {
+        width: min(420px, calc(100vw - 2rem));
+        padding: .75rem;
+        border: 1px solid rgba(17, 64, 72, .12);
+        border-radius: 8px;
+        box-shadow: 0 18px 42px rgba(7, 27, 30, .18);
+    }
+
+    .profile-dropdown .dropdown-item {
+        display: flex;
+        align-items: center;
+        gap: .75rem;
+        border-radius: 8px;
+        padding: .72rem .8rem;
+        color: #071b1eff;
+        font-weight: 600;
+        white-space: normal;
+        transition: background-color .16s ease, color .16s ease, transform .16s ease;
+    }
+
+    .profile-dropdown .dropdown-item:hover,
+    .profile-dropdown .dropdown-item:focus {
+        color: #114048ff;
+        background: rgba(25, 101, 114, .08);
+        transform: translateX(2px);
+    }
+
+    .profile-dropdown__icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 34px;
+        height: 34px;
+        border-radius: 8px;
+        color: #fff;
+        background: #114048ff;
+        flex: 0 0 auto;
+        font-size: 1rem;
+    }
+
+    .profile-dropdown__section {
+        margin-top: .35rem;
+        padding-top: .65rem;
+        border-top: 1px solid rgba(17, 64, 72, .1);
+    }
+
+    .profile-dropdown__label {
+        display: flex;
+        align-items: center;
+        gap: .45rem;
+        color: #196572ff;
+        font-size: .78rem;
+        font-weight: 800;
+        letter-spacing: .04em;
+        margin: 0 .25rem .35rem;
+        text-transform: uppercase;
+    }
+
+    .profile-dropdown__list {
+        display: grid;
+        gap: .2rem;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .profile-dropdown__logout .profile-dropdown__icon {
+        background: #071b1eff;
+    }
+</style>
+
 <nav class="navbar navbar-expand-lg shadow-sm" style="background-color: #034652">
     @php
         $incompleto = optional(Auth::user())->usuarioTemp;
@@ -61,21 +133,24 @@
                             <a id="menuDropdown" class="nav-link dropdown-toggle text-white fw-semibold" href="#"  role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 {{ Auth::user()->name }}
                             </a>
-                            <ul class="dropdown-menu" aria-labelledby="menuDropdown">
+                            <ul class="dropdown-menu dropdown-menu-end profile-dropdown" aria-labelledby="menuDropdown">
                                 {{-- Link Perfil --}}
                                 <a class="dropdown-item" href="{{ route('perfil') }}">
-                                    <img src="{{asset('img/icons/perfil.svg')}}" width="20px" alt="">
-                                    {{ __('Minha Conta') }}
+                                    <span class="profile-dropdown__icon"><i class="bi bi-person"></i></span>
+                                    <span>{{ __('Minha Conta') }}</span>
                                 </a>
 
 
-                                <li class="dropdown-item" >
-                                    @lang('public.perfis')
+                                <li class="profile-dropdown__section">
+                                    <div class="profile-dropdown__label">
+                                        <i class="bi bi-grid-3x3-gap"></i>
+                                        @lang('public.perfis')
+                                    </div>
                                     {{-- Link Perfil --}}
-                                    <ul class="list-unstyled ms-3 mt-2">
+                                    <ul class="profile-dropdown__list">
                                         <li>
                                             <a class="dropdown-item" href="{{ route('participante') }}">
-                                                <img src="{{asset('img/icons/perfil.svg')}}"  width="20px"  alt="">
+                                                <span class="profile-dropdown__icon"><i class="bi bi-person-badge"></i></span>
                                                 {{ __('Área do Participante') }}
                                             </a>
                                         </li>
@@ -83,7 +158,7 @@
                                             {{-- Rota - Area de Revisores --}}
                                             <li>
                                                 <a class="dropdown-item" href="{{ route('revisor.index') }}">
-                                                    <img src="{{asset('img/icons/revisor.png')}}"  width="20px"  alt="">
+                                                    <span class="profile-dropdown__icon"><i class="bi bi-clipboard-check"></i></span>
                                                     {{ __('Área do Avaliador') }}
                                                 </a>
                                             </li>
@@ -92,7 +167,7 @@
                                             {{-- Rota - Area da Comissao --}}
                                             <li>
                                                 <a class="dropdown-item" href="{{ route('admin.home') }}">
-                                                    <img src="{{asset('img/icons/comissao.png')}}"  width="20px"  alt="">
+                                                    <span class="profile-dropdown__icon"><i class="bi bi-shield-check"></i></span>
                                                     {{ __('Área do Administrador') }}
                                                 </a>
                                             </li>
@@ -101,7 +176,7 @@
                                             {{-- Rota - Area da Comissao --}}
                                             <li>
                                                 <a class="dropdown-item" href="{{ route('cientifica.home') }}">
-                                                    <img src="{{asset('img/icons/comissao.png')}}"  width="20px"  alt="">
+                                                    <span class="profile-dropdown__icon"><i class="bi bi-people"></i></span>
                                                     {{ __('Área da Comissão Cientifica') }}
                                                 </a>
                                             </li>
@@ -110,7 +185,7 @@
                                             {{-- Rota - Area da Comissao --}}
                                             <li>
                                                 <a class="dropdown-item" href="{{ route('home.organizadora') }}">
-                                                    <img src="{{asset('img/icons/comissao.png')}}"  width="20px"  alt="">
+                                                    <span class="profile-dropdown__icon"><i class="bi bi-diagram-3"></i></span>
                                                     {{ __('Área da Comissão Organizadora') }}
                                                 </a>
                                             </li>
@@ -119,7 +194,7 @@
                                             {{-- Rota - Area da Comissao --}}
                                             <li>
                                                 <a class="dropdown-item" href="{{ route('home.membro') }}">
-                                                    <img src="{{asset('img/icons/comissao.png')}}"  width="20px"  alt="">
+                                                    <span class="profile-dropdown__icon"><i class="bi bi-person-workspace"></i></span>
                                                     {{ __('Área do Membro da Comissão Científica') }}
                                                 </a>
                                             </li>
@@ -128,7 +203,7 @@
                                             {{-- Rota - Área de coordenador de eixo temático --}}
                                             <li>
                                                 <a class="dropdown-item" href="{{ route('coord.eixo.index') }}">
-                                                    <img src="{{asset('img/icons/comissao.png')}}"  width="20px"  alt="">
+                                                    <span class="profile-dropdown__icon"><i class="bi bi-columns-gap"></i></span>
                                                     {{ __('Área do Coordenador de Eixo Temático') }}
                                                 </a>
                                             </li>
@@ -137,7 +212,7 @@
                                             {{-- Rota - Area da Comissao --}}
                                             <li>
                                                 <a class="dropdown-item" href="{{ route('coord.membroOutrasComissoes') }}">
-                                                    <img src="{{asset('img/icons/comissao.png')}}"  width="20px"  alt="">
+                                                    <span class="profile-dropdown__icon"><i class="bi bi-kanban"></i></span>
                                                     {{ __('Área do coordenador de outras comissões') }}
                                                 </a>
                                             </li>
@@ -145,7 +220,7 @@
                                         {{-- Rota - Area da Comissao --}}
                                         <li>
                                             <a class="dropdown-item" href="{{ route('coord.index') }}">
-                                                <img src="{{asset('img/icons/comissao.png')}}"  width="20px"  alt="">
+                                                <span class="profile-dropdown__icon"><i class="bi bi-calendar2-event"></i></span>
                                                 {{ __('Área do Coordenador de Evento') }}
                                             </a>
                                         </li>
@@ -153,7 +228,7 @@
                                             {{-- Rota - Area do coautor--}}
                                             <li>
                                                 <a class="dropdown-item" href="{{ route('coautor.listarTrabalhos') }}">
-                                                    <img src="{{asset('img/icons/comissao.png')}}"  width="20px"  alt="">
+                                                    <span class="profile-dropdown__icon"><i class="bi bi-file-earmark-person"></i></span>
                                                     {{ __('Área de Coautor de Trabalho') }}
                                                 </a>
                                             </li>
@@ -169,7 +244,7 @@
 
                                 @if($temComprovantes)
                                     <a class="dropdown-item" href="{{ route('comprovantes') }}">
-                                        <img src="{{asset('img/icons/cash-payment-solid.svg')}}"  width="22px"  alt="">
+                                        <span class="profile-dropdown__icon"><i class="bi bi-receipt"></i></span>
                                         {{ __('Meus Comprovantes') }}
                                     </a>
                                 @endif
@@ -180,14 +255,14 @@
                                     Auth::user()->coautor()->exists())
                                 )
                                     <a class="dropdown-item" href="{{ route('user.meusTrabalhos') }}">
-                                        <img src="{{asset('img/icons/file-alt-regular-black.svg')}}"  width="20px"  alt="">
+                                        <span class="profile-dropdown__icon"><i class="bi bi-file-earmark-text"></i></span>
                                         {{ __('Trabalhos Submetidos') }}
                                     </a>
                                 @endif
 
                                 {{-- Link Logout --}}
-                                <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                    <img src="{{asset('img/icons/sign-out-alt-solid.svg')}}"  width="20px"  alt="">
+                                <a class="dropdown-item profile-dropdown__logout" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                    <span class="profile-dropdown__icon"><i class="bi bi-box-arrow-right"></i></span>
                                     {{ __('Sair') }}
                                 </a>
 
