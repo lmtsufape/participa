@@ -73,7 +73,7 @@ class TrabalhoController extends Controller
         $regra = RegraSubmis::where('modalidadeId', $modalidade_id)->first();
         $template = TemplateSubmis::where('modalidadeId', $modalidade_id)->first();
         $ordemCampos = explode(',', $formSubTraba->ordemCampos);
-        $modalidade = Modalidade::find($idModalidade);
+        $modalidade = Modalidade::find($modalidade_id);
 
         array_splice($ordemCampos, 6, 0, 'midiaExtra');
         array_splice($ordemCampos, 5, 0, 'apresentacao');
@@ -205,46 +205,6 @@ class TrabalhoController extends Controller
                 return redirect()->back()->withErrors(['numeroMax' => 'Número máximo de trabalhos permitidos atingido.'])->withInput($validatedData);
             }
 
-            $coautoresIds = [];
-
-            if ($request->has('nomeCoautor')) {
-                $total = count($request->nomeCoautor);
-
-                for ($key = 1; $key < $total; $key++) {
-                    $value = $request->emailCoautor[$key] ?? null;
-                    $nome = $request->nomeCoautor[$key];
-                    $cadastrado = $request->coautorCadastrado[$key] ?? 'sim';
-                    $vinculo = $request->vinculoCoautor[$key] ?? null;
-
-                    if ($cadastrado === 'sim') {
-                        if ($value && $value !== $autor->email) {
-                            $userCoautor = User::where('email', $value)->first();
-                            if ($userCoautor == null) {
-                                return back()->withErrors(['coautorNaoCadastrado' => "Coautor $value não cadastrado. Se deseja inserir um coautor não cadastrado, clique em 'Inserir coautor(a) sem cadastro.'"])->withInput($validatedData);
-                            }
-                            $coautoresIds[$key] = $userCoautor->id;
-                        } else {
-                            continue;
-                        }
-                    } else {
-                        $passwordTemporario = Str::random(8);
-                        $userCoautor = User::create([
-                            'email' => $value ?: null,
-                            'password' => bcrypt($passwordTemporario),
-                            'usuarioTemp' => true,
-                            'name' => $nome,
-                            'instituicao' => $vinculo
-                        ]);
-                        $coautoresIds[$key] = $userCoautor->id;
-
-                        if ($value) {
-                            $coord = User::find($evento->coordenadorId);
-                            Mail::to($value)->send(new EmailParaUsuarioNaoCadastrado(Auth()->user()->name, '  ', 'Coautor', $evento->nome, $passwordTemporario, $value, $coord));
-                        }
-                    }
-                }
-            }
-
             $trabalho = Trabalho::create([
                 'titulo' => $request->nomeTrabalho,
                 'resumo' => $request->resumo,
@@ -330,20 +290,20 @@ class TrabalhoController extends Controller
             $trabalho->save();
             // dd($trabalho->id);
 
-            if ($request->has('nomeCoautor') && !empty($coautoresIds)) {
-                foreach ($coautoresIds as $key => $userId) {
-                    $userCoautor = User::find($userId);
-                    if ($userCoautor) {
-                        $coauntor = $userCoautor->coautor;
-                        if ($coauntor == null) {
-                            $coauntor = Coautor::create([
-                                'ordem' => $key,
-                                'autorId' => $userCoautor->id,
-                                // 'trabalhoId'  => $trabalho->id,
-                                'eventos_id' => $evento->id,
-                            ]);
-                        }
-                        $coauntor->trabalhos()->attach($trabalho);
+            if ($request->filled('coautores')) {
+                foreach ($request->coautores as $key => $coautor) {
+
+                    $user_coautor = User::where('email', $coautor['email'])->first();
+                    if ($user_coautor == null) {
+                        $passwordTemporario = Str::random(8);
+                        $coord = User::find($evento->coordenadorId);
+                        $user_coautor = User::create([
+                            'email' => $coautor['email'],
+                            'password' => bcrypt($passwordTemporario),
+                            'usuarioTemp' => true,
+                            'name' => $request->nomeCoautor[$key],
+                        ]);
+                        Mail::to($coautor['email'])->send(new EmailParaUsuarioNaoCadastrado(Auth()->user()->name, '  ', 'Coautor', $evento->nome, $passwordTemporario, $coautor['email'], $coord));
                     }
                     $coautor = $user_coautor->coautor;
                     if ($coautor == null) {
@@ -1464,39 +1424,6 @@ class TrabalhoController extends Controller
     }
     //tirar lógica de avaliçao deste controller e inserir em um controller de avaliação
 
-    public function destroyAvaliacao(Request $request, $trabalho_id){
-        DB::beginTransaction();
-        try {
-            $trabalho = Trabalho::findOrFail($trabalho_id);
-
-            $trabalho->revisores()->detach($request->revisor_id);
-
-            Resposta::where('trabalho_id', $trabalho->id)
-                    ->where('revisor_id', $request->revisor_id)->delete();
-
-            if($trabalho->revisores()->count() == 0){
-                $trabalho->avaliado = 'nao';
-            }
-            $avaliacao = ArquivoAvaliacao::where('trabalhoId', $trabalho->id)
-                                        ->where('revisorId', $request->revisor_id)->first();
-            if($avaliacao){
-                if(Storage::exists($avaliacao->nome)){
-                    Storage::delete($avaliacao->nome);
-                }
-                $avaliacao->delete();
-            }
-            $trabalho->save();
-
-            DB::commit();
-
-            return redirect()->route('coord.listarAvaliacoes')->with('success', 'Avaliação deleta com sucesso!');
-
-        } catch (\Exception $e) {
-            DB::rollBack();
-
-            return back()->with('error', 'Erro: ' . $e->getMessage());//Definir um component global para exibição de mensagens
-        }
-    }
     public function validarTipoDoArquivo($arquivo, $tiposExtensao)
     {
         if ($tiposExtensao->arquivo == true) {
