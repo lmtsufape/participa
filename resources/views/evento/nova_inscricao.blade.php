@@ -272,7 +272,7 @@
                                             @elseif($campo->tipo == "file")
                                                 <div class="col-sm-12"  style="margin-top:10px;">
                                                     <label for="file-{{$campo->id}}" class="">{{$campo->titulo}}</label>@if($inscricao->categoria->id == $categoria->id && $campoPreechido->id == $campo->id) <a href="{{route('download.arquivo.inscricao', ['idInscricao' => $inscricao->id,'idCampo' => $campoPreechido->id])}}">Arquivo atual</a> @endif<br>
-                                                    <input type="file" id="file-{{$campo->id}}" class="form-control-file  @error('file-'.$campo->id) is-invalid @enderror" name="file-{{$campo->id}}" @if($campo->obrigatorio) required @endif>
+                                                    <input type="file" id="file-{{$campo->id}}" class="form-control-file js-registration-file @error('file-'.$campo->id) is-invalid @enderror" name="file-{{$campo->id}}" accept="{{ \App\Support\RegistrationFormFields::fileAcceptAttribute() }}" @if($campo->obrigatorio) required @endif>
                                                     <br>
                                                     @if($inscricao->categoria->id == $categoria->id && $campoPreechido->id == $campo->id)
                                                         <small>Para substituir o arquivo envie outro</small>
@@ -678,7 +678,7 @@
                                             @elseif($campo->tipo == "file")
                                                 <div class="col-sm-12"  style="margin-top:10px;">
                                                     <label for="file-{{$campo->id}}" class="">{{$campo->titulo}}</label><br>
-                                                    <input type="file" id="file-{{$campo->id}}" class="form-control-file  @error('file-'.$campo->id) is-invalid @enderror" name="file-{{$campo->id}}" @if($campo->obrigatorio) required @endif>
+                                                    <input type="file" id="file-{{$campo->id}}" class="form-control-file js-registration-file @error('file-'.$campo->id) is-invalid @enderror" name="file-{{$campo->id}}" accept="{{ \App\Support\RegistrationFormFields::fileAcceptAttribute() }}" @if($campo->obrigatorio) required @endif>
                                                     <br>
                                                     @error('file-'.$campo->id)
                                                     <span class="invalid-feedback" role="alert">
@@ -1447,4 +1447,5 @@
         }
     }
 </script>
+@include('components.registration-file-upload-validation')
 @endsection
