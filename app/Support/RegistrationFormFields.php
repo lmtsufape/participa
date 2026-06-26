@@ -4,6 +4,26 @@ namespace App\Support;
 
 class RegistrationFormFields
 {
+    public const ALLOWED_FILE_EXTENSIONS = [
+        'jpg',
+        'jpeg',
+        'png',
+        'gif',
+        'webp',
+        'pdf',
+        'doc',
+        'docx',
+        'xls',
+        'xlsx',
+        'csv',
+        'odt',
+        'ods',
+        'ppt',
+        'pptx',
+        'txt',
+        'rtf',
+    ];
+
     public static function types(): array
     {
         return [
@@ -58,5 +78,26 @@ class RegistrationFormFields
     public static function label(string $type): string
     {
         return self::types()[$type]['label'] ?? ucfirst($type);
+    }
+
+    public static function allowedFileExtensions(): array
+    {
+        return self::ALLOWED_FILE_EXTENSIONS;
+    }
+
+    public static function allowedFileMimesRule(): string
+    {
+        return 'mimes:'.implode(',', self::allowedFileExtensions());
+    }
+
+    public static function fileAcceptAttribute(): string
+    {
+        return implode(',', array_map(fn ($extension) => '.'.$extension, self::allowedFileExtensions()));
+    }
+
+    public static function allowedFileTypesMessage(): string
+    {
+        return 'Tipo de arquivo não permitido. Envie apenas imagens ou documentos nos formatos: '
+            .implode(', ', self::allowedFileExtensions()).'.';
     }
 }

@@ -380,8 +380,9 @@
                                             <label :for="'file-{{$campo->id}}-' + index" class="">{{$campo->titulo}}@if($campo->obrigatorio) * @endif</label><br>
                                             <input type="file"
                                                     :id="'file-{{$campo->id}}-' + index"
-                                                    class="form-control-file @error('file-'.$campo->id) is-invalid @enderror"
+                                                    class="form-control-file js-registration-file @error('file-'.$campo->id) is-invalid @enderror"
                                                     :name="'participantes[' + index + '][file-{{$campo->id}}]'"
+                                                    accept="{{ \App\Support\RegistrationFormFields::fileAcceptAttribute() }}"
                                                     @if($campo->obrigatorio) required @endif>
                                             <br>
                                             @error('file-'.$campo->id)
@@ -426,6 +427,7 @@
 
 @section('javascript')
 @parent
+    @include('components.registration-file-upload-validation')
     <script type="text/javascript" >
         $(document).ready(function($){
             $(document).on('input', '.cpf-mask', function() {
