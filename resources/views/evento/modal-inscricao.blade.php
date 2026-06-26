@@ -461,8 +461,9 @@
                                                                     @endif
                                                                 </label><br>
                                                                 <input type="file" id="file-{{ $campo->id }}"
-                                                                    class="form-control-file  @error('file-' . $campo->id) is-invalid @enderror"
+                                                                    class="form-control-file js-registration-file @error('file-' . $campo->id) is-invalid @enderror"
                                                                     name="file-{{ $campo->id }}"
+                                                                    accept="{{ \App\Support\RegistrationFormFields::fileAcceptAttribute() }}"
                                                                     @if ($campo->obrigatorio) required @endif>
                                                                 <br>
                                                                 @error('file-' . $campo->id)
@@ -510,6 +511,8 @@
         </div>
     </div>
 </div>
+
+@include('components.registration-file-upload-validation')
 
 <style>
 .carousel-arrow-btn {
