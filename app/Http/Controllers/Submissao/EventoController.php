@@ -11,7 +11,9 @@ use App\Exports\TrabalhosExportForCertifica;
 use App\Exports\RelatorioGeralExport;
 use App\Exports\ComissaoCientificaExport;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\modalidades\forms\UpdateFormModalidadeRequest;
 use App\Http\Requests\StoreEventoRequest;
+use App\Http\Requests\modalidades\forms\StoreFormRequest;
 use App\Http\Requests\UpdateEventoRequest;
 use App\Mail\AvisoPeriodoCorrecao;
 use App\Mail\EmailParaUsuarioNaoCadastrado;
@@ -31,6 +33,7 @@ use App\Models\Submissao\Form;
 use App\Models\Submissao\FormEvento;
 use App\Models\Submissao\FormSubmTraba;
 use App\Models\Submissao\Modalidade;
+use App\Models\Submissao\Opcao;
 use App\Models\Submissao\Paragrafo;
 use App\Models\Submissao\Pergunta;
 use App\Models\Submissao\Resposta;
@@ -1397,6 +1400,7 @@ class EventoController extends Controller
         if ($request->has('id') && $request->id != '') {
             $query->where('id', $request->id);
         }
+        Opcao::whereNull('parent_id')->whereHas('resposta', function($q){$q->whereNull('revisor_id');});
 
         if ($column == 'autor') {
             $query->orderBy(User::select('name')->whereColumn('autorId', 'users.id'), $direction);
@@ -1856,16 +1860,17 @@ class EventoController extends Controller
         ]);
     }
 
-    public function forms(Request $request)
+    public function forms(Request $request, $modalidade_id)
     {
         $evento = Evento::find($request->eventoId);
         $this->authorize('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento);
 
-        $modalidades = Modalidade::where('evento_id', $evento->id)->orderBy('nome')->get();
-
+        $forms = Form::where('modalidadeId', $modalidade_id)->orderBy('titulo')->get();
+        $modalidade = Modalidade::findOrFail($modalidade_id);
         return view('coordenador.modalidade.formulario', compact(
             'evento',
-            'modalidades'
+            'forms',
+            'modalidade'
         ));
     }
 
@@ -1879,55 +1884,59 @@ class EventoController extends Controller
         return view('coordenador.modalidade.atribuirFormulario', compact('evento', 'modalidade'));
     }
 
-    public function salvarForm(Request $request)
+    public function salvarForm(StoreFormRequest $request)
     {
         $evento = Evento::find($request->evento_id);
         $this->authorize('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento);
 
         $modalidade = Modalidade::find($request->modalidade_id);
-        $data = $request->all();
-        $form = $modalidade->forms()->create([
-            'titulo' => $data['titulo'],
-            'instrucoes' => $data['instrucoes'],
-        ]);
-        foreach ($data['perguntas'] as $index => $value) {
-            $pergunta = $form->perguntas()->create([
-                'pergunta' => $value,
-                'visibilidade' => $request->has('visibilidades') && array_key_exists($index, $request['visibilidades']),
+        $dados = $request->all();
+
+        DB::transaction(function () use ($modalidade, $dados) {
+            $form = $modalidade->forms()->create([
+                'titulo' => $dados['titulo'],
+                'instrucoes' => $dados['instrucoes'],
             ]);
+            foreach ($dados['perguntas'] as $index => $value) {
+                $pergunta = $form->perguntas()->create([
+                    'pergunta' => $value,
+                    'visibilidade' => array_key_exists($index, $dados['visibilidades'] ?? []),
+                ]);
 
-            $resposta = new Resposta();
-            $resposta->pergunta_id = $pergunta->id;
-            $resposta->save();
+                $resposta = new Resposta();
+                $resposta->pergunta_id = $pergunta->id;
+                $resposta->save();
 
-            if ($data['tipos'][$index] == 'paragrafo') {
-                $paragrafo = new Paragrafo();
-                $resposta->paragrafo()->save($paragrafo);
-            } elseif ($data['tipos'][$index] == 'radio') {
-                foreach ($data['opcoes'][$index] as $titulo) {
-                    $resposta->opcoes()->create([
-                        'titulo' => $titulo,
-                        'tipo' => 'radio',
-                    ]);
+                if ($dados['tipos'][$index] == 'paragrafo') {
+                    $paragrafo = new Paragrafo();
+                    $resposta->paragrafo()->save($paragrafo);
+                } elseif ($dados['tipos'][$index] == 'radio') {
+                    foreach ($dados['opcoes'][$index] as $titulo) {
+                        $resposta->opcoes()->create([
+                            'titulo' => $titulo,
+                            'tipo' => 'radio',
+                        ]);
+                    }
                 }
             }
-        }
 
-        return view('coordenador.modalidade.atribuirFormulario', compact('evento', 'modalidade'))->with('message', 'Formulário cadastrado com sucesso');
+        });
+
+        return redirect()->route('coord.forms', ['modalidade_id' => $modalidade->id])->with('success', 'Formulário cadastrado com sucesso');
     }
 
-    public function updateForm(Request $request)
+    public function modalidadeFormUpdate(UpdateFormModalidadeRequest $request, $form_id)
     {
-        $form = Form::find($request->formEditId);
+        $form = Form::find($request->form_id);
         $evento = $form->modalidade->evento;
         $this->authorize('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento);
 
         $data = $request->all();
-        //dd($data);
+        dd($data);
         $perguntasMantidas = [];
 
-        if (!isset($request->pergunta_id)) {
-            return redirect()->back()->withErrors(['excluirFormulario' => 'Não é possivel apagar todas as perguntas!!']);
+        if (now() > $form->modalidade->inicioRevisao) {
+            return redirect()->back()->with(['error' => 'Não é permitida a editação após o início do período de avaliação']);
         }
 
         if (isset($request->pergunta_id)) {
@@ -2066,6 +2075,21 @@ class EventoController extends Controller
         $data = $request->all();
 
         return view('coordenador.modalidade.visualizarFormulario', compact('evento', 'modalidade'));
+    }
+
+    public function modalidadeFormEdit(Evento $evento, Form $form)
+    {
+        $this->authorize('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento);
+        $form = $form->load([
+            'perguntas' => function ($query) {
+                $query->orderBy('id');
+            },
+            'perguntas.respostaPadrao.opcoes',
+            'perguntas.respostaPadrao.paragrafo',
+        ]);
+        $modalidade = $form->modalidade;
+
+        return view('coordenador.modalidade.forms.edit', compact('form', 'evento', 'modalidade'));
     }
 
     public function respostas(Request $request)
@@ -2225,7 +2249,6 @@ class EventoController extends Controller
         $revisor = Revisor::find($request->revisorId);
         $revisorUser = User::find($revisor->user_id);
         $avaliacao = Avaliacao::where('revisor_id', $revisor->id)->where('trabalho_id', $trabalho->id)->first();
-        $respostas = [];
 
         $arquivoAvaliacao = $trabalho->arquivoAvaliacao()->where('revisorId', $revisor->id)->first();
         if ($arquivoAvaliacao == null) {
@@ -2233,13 +2256,26 @@ class EventoController extends Controller
             $arquivoAvaliacao = $trabalho->arquivoAvaliacao()->whereIn('revisorId', $permissoes_revisao)->first();
         }
 
-        foreach ($modalidade->forms as $form) {
-            foreach ($form->perguntas as $pergunta) {
-                $respostas[$pergunta->id] = $pergunta->respostas->where('trabalho_id', $trabalho->id)->where('revisor_id', $revisor->id)->first();
-            }
-        }
+        $perguntas = Pergunta::query()
+            ->whereHas('respostas', function ($q) use ($trabalho, $revisor) {
+                $q->where('trabalho_id', $trabalho->id)
+                ->where('revisor_id',  $revisor->id);
+            })
+            ->with(['respostasPadrao.opcoes'])->orderBy('pergunta')
+            ->get();
 
-        return view('coordenador.trabalhos.visualizarRespostaFormulario', compact('evento', 'modalidade', 'trabalho', 'revisorUser', 'revisor', 'respostas', 'arquivoAvaliacao', 'avaliacao'));
+        $opcoes = Opcao::whereHas('resposta', function ($q) use ($revisor, $trabalho) {
+                        $q->where('trabalho_id', $trabalho->id)
+                            ->where('revisor_id', $revisor->id);//preciso dizer das respostas que tenha relaçao com opcao?
+
+                })
+                ->get()
+                ->keyBy('parent_id');
+
+        // dd( $opcoes->load('resposta.revisor')->toJson(JSON_PRETTY_PRINT));
+        $form = $trabalho->respostas()->where('revisor_id', $revisor->id)->first()->pergunta->form;
+
+        return view('coordenador.trabalhos.visualizarRespostaFormulario', compact('evento', 'perguntas', 'opcoes', 'form', 'modalidade', 'trabalho', 'revisorUser', 'revisor', 'arquivoAvaliacao', 'avaliacao'));
     }
 
     public function editarEtiqueta(Request $request)
@@ -2436,6 +2472,18 @@ class EventoController extends Controller
         if (!$evento) {
             return abort(404);
         }
+
+        $agora = now();
+        $periodoSubmissao = $evento->modalidades->some(function ($modalidade) use ($agora) {
+            if (is_null($modalidade->inicioSubmissao) || is_null($modalidade->fimSubmissao)) {
+                return false;
+            }
+            $inicio = \Carbon\Carbon::parse($modalidade->inicioSubmissao);
+            $fim = \Carbon\Carbon::parse($modalidade->fimSubmissao);
+
+            return $agora->between($inicio, $fim);
+        });
+
         $enderecoMap = urlencode($evento->endereco?->getEnderecoFormatado() ?? '');
         $encerrada = $evento->eventoInscricoesEncerradas();
         $datas = DB::table('atividades')
@@ -2510,7 +2558,7 @@ class EventoController extends Controller
             // dd($evento->categoriasParticipantes()->where('permite_inscricao', true)->get());
             // dd($etiquetas);
 
-            return view('evento.visualizarEvento', compact('evento', 'hasFile', 'mytime', 'etiquetas', 'modalidades', 'formSubTraba', 'atividades', 'atividadesAgrupadas', 'dataInicial', 'datas', 'isInscrito', 'inscricao', 'subeventos', 'encerrada', 'links', 'areas', 'dataInicio','dataFim', 'jaCandidatou', 'InscritoSemCategoria', 'enderecoMap'));
+            return view('evento.visualizarEvento', compact('evento', 'hasFile', 'mytime', 'etiquetas', 'modalidades', 'formSubTraba', 'atividades', 'atividadesAgrupadas', 'dataInicial', 'datas', 'isInscrito', 'inscricao', 'subeventos', 'encerrada', 'links', 'areas', 'dataInicio','dataFim', 'jaCandidatou', 'InscritoSemCategoria', 'enderecoMap', 'periodoSubmissao'));
         } else {
             $subeventos = Evento::where('deletado', false)->where('publicado', true)->where('evento_pai_id', $id)->get();
             $hasTrabalho = false;

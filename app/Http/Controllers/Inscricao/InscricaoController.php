@@ -504,6 +504,7 @@ class InscricaoController extends Controller
     public function validarCamposExtras(Request $request, $categoria)
     {
         $regras = [];
+        $mensagens = [];
         foreach ($categoria->camposNecessarios()->orderBy('tipo')->get() as $campo) {
             switch ($campo->tipo) {
                 case 'email':
@@ -516,7 +517,13 @@ class InscricaoController extends Controller
                     $regras['text-'.$campo->id] = $campo->obrigatorio ? 'required|string' : 'nullable|string';
                     break;
                 case 'file':
-                    $regras['file-'.$campo->id] = $campo->obrigatorio ? 'required|file|max:2000' : 'nullable|file|max:2000';
+                    $regras['file-'.$campo->id] = [
+                        $campo->obrigatorio ? 'required' : 'nullable',
+                        'file',
+                        'max:2000',
+                        RegistrationFormFields::allowedFileMimesRule(),
+                    ];
+                    $mensagens['file-'.$campo->id.'.mimes'] = RegistrationFormFields::allowedFileTypesMessage();
                     break;
                 case 'date':
                     $regras['date-'.$campo->id] = $campo->obrigatorio ? 'required|date' : 'nullable|date';
@@ -539,7 +546,7 @@ class InscricaoController extends Controller
             }
         }
 
-        $validator = Validator::make($request->all(), $regras);
+        $validator = Validator::make($request->all(), $regras, $mensagens);
 
         return $validator;
     }
@@ -558,7 +565,8 @@ class InscricaoController extends Controller
                         Storage::delete($campoSalvo->pivot->valor);
                     }
 
-                    $path = Storage::putFileAs('eventos/'.$inscricao->evento->id.'/inscricoes/'.$inscricao->id.'/'.$campo->id, $request->file('file-'.$campo->id), $campo->titulo.'.pdf');
+                    $extensao = $request->file('file-'.$campo->id)->getClientOriginalExtension();
+                    $path = Storage::putFileAs('eventos/'.$inscricao->evento->id.'/inscricoes/'.$inscricao->id.'/'.$campo->id, $request->file('file-'.$campo->id), $campo->titulo.'.'.$extensao);
 
                     $inscricao->camposPreenchidos()->updateExistingPivot($campo->id, ['valor' => $path]);
                 } elseif ($campo->tipo == 'date' && $request->input('date-'.$campo->id) != null) {
