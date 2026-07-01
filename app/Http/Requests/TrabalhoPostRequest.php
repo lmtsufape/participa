@@ -23,16 +23,6 @@ class TrabalhoPostRequest extends FormRequest
      */
     public function authorize()
     {
-        $modalidade = Modalidade::find($this->request->get('modalidade_id'));
-        $mytime = Carbon::now('America/Recife');
-        $evento = Evento::find($modalidade->eventoId);
-        // if (! $modalidade->estaEmPeriodoDeSubmissao()) {
-        //     return $this->user()->can('isCoordenadorOrCoordenadorDasComissoes', $evento);
-        // }
-        // if (! $modalidade->estaEmPeriodoDeSubmissao()) {
-        //     return redirect()->route('home');
-        // }
-
         return true;
     }
 
@@ -43,7 +33,7 @@ class TrabalhoPostRequest extends FormRequest
      */
     public function rules()
     {
-        $modalidade = Modalidade::find(request()->modalidade_id);
+        $modalidade = Modalidade::with('evento')->findOrFail($this->request->get('modalidade_id'));
         $validate_array = [
             'nomeTrabalho' => ['required', 'string'],
             'nomeTrabalho_en' => ['nullable', 'string'],
@@ -52,12 +42,12 @@ class TrabalhoPostRequest extends FormRequest
             'evento_id'     => ['required', 'exists:eventos,id'],
             'resumo' => ['nullable', 'string'],
             'resumo_en' => ['nullable', 'string'],
-            'nomeCoautor.*' => ['string'],
-            'emailCoautor' => [new MaxCoautoresNaModalidade($modalidade)],
-            'emailCoautor.*' => ['nullable','string', new MaxTrabalhosCoautor($evento->numMaxCoautores), new CoautorInscritoNoEvento($evento), new CoautorCadastrado($evento)],
-            'coautorCadastrado.*' => ['nullable', 'in:sim,nao'],
-            'vinculoCoautor.*' => ['nullable', 'string'],
-            'arquivo' => ['nullable', 'file', new FileType($modalidade, new MidiaExtra, request()->arquivo, true)],
+            'autor.email' => ['required', 'email'],
+            'autor.nome'  => ['required', 'string', 'max:255'],
+            'coautores' => ['array', new MaxCoautoresNaModalidade($modalidade)],
+            'coautores.*.nome'  => ['required','string','max:255'],
+            'coautores.*.email' => ['required','email:rfc', 'distinct', 'different:autor.email'],
+            'arquivo' => ['required', 'file', new FileType($modalidade, new MidiaExtra, request()->arquivo, true)],
             'campoextra1arquivo' => ['nullable', 'file', 'max:2048'],
             'campoextra2arquivo' => ['nullable', 'file', 'max:2048'],
             'campoextra3arquivo' => ['nullable', 'file', 'max:2048'],
