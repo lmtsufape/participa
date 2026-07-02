@@ -1860,17 +1860,16 @@ class EventoController extends Controller
         ]);
     }
 
-    public function forms(Request $request, $modalidade_id)
+    public function forms(Request $request)
     {
         $evento = Evento::find($request->eventoId);
         $this->authorize('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento);
 
-        $forms = Form::where('modalidadeId', $modalidade_id)->orderBy('titulo')->get();
-        $modalidade = Modalidade::findOrFail($modalidade_id);
+        $modalidades = Modalidade::where('evento_id', $evento->id)->orderBy('nome')->get();
+
         return view('coordenador.modalidade.formulario', compact(
             'evento',
-            'forms',
-            'modalidade'
+            'modalidades'
         ));
     }
 
