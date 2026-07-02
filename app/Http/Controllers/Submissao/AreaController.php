@@ -25,12 +25,6 @@ class AreaController extends Controller
             'areas' => $areas,
         ]);
     }
-
-        return view('coordenador.areas.listarAreas', [
-            'evento' => $evento,
-            'areas' => $areas,
-        ]);
-    }
     /**
      * Show the form for creating a new resource.
      *
