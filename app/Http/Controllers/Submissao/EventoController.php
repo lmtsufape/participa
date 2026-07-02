@@ -2248,6 +2248,7 @@ class EventoController extends Controller
         $revisor = Revisor::find($request->revisorId);
         $revisorUser = User::find($revisor->user_id);
         $avaliacao = Avaliacao::where('revisor_id', $revisor->id)->where('trabalho_id', $trabalho->id)->first();
+        $respostas = [];
 
         $arquivoAvaliacao = $trabalho->arquivoAvaliacao()->where('revisorId', $revisor->id)->first();
         if ($arquivoAvaliacao == null) {
@@ -2255,26 +2256,13 @@ class EventoController extends Controller
             $arquivoAvaliacao = $trabalho->arquivoAvaliacao()->whereIn('revisorId', $permissoes_revisao)->first();
         }
 
-        $perguntas = Pergunta::query()
-            ->whereHas('respostas', function ($q) use ($trabalho, $revisor) {
-                $q->where('trabalho_id', $trabalho->id)
-                ->where('revisor_id',  $revisor->id);
-            })
-            ->with(['respostasPadrao.opcoes'])->orderBy('pergunta')
-            ->get();
+        foreach ($modalidade->forms as $form) {
+            foreach ($form->perguntas as $pergunta) {
+                $respostas[$pergunta->id] = $pergunta->respostas->where('trabalho_id', $trabalho->id)->where('revisor_id', $revisor->id)->first();
+            }
+        }
 
-        $opcoes = Opcao::whereHas('resposta', function ($q) use ($revisor, $trabalho) {
-                        $q->where('trabalho_id', $trabalho->id)
-                            ->where('revisor_id', $revisor->id);//preciso dizer das respostas que tenha relaçao com opcao?
-
-                })
-                ->get()
-                ->keyBy('parent_id');
-
-        // dd( $opcoes->load('resposta.revisor')->toJson(JSON_PRETTY_PRINT));
-        $form = $trabalho->respostas()->where('revisor_id', $revisor->id)->first()->pergunta->form;
-
-        return view('coordenador.trabalhos.visualizarRespostaFormulario', compact('evento', 'perguntas', 'opcoes', 'form', 'modalidade', 'trabalho', 'revisorUser', 'revisor', 'arquivoAvaliacao', 'avaliacao'));
+        return view('coordenador.trabalhos.visualizarRespostaFormulario', compact('evento', 'modalidade', 'trabalho', 'revisorUser', 'revisor', 'respostas', 'arquivoAvaliacao', 'avaliacao'));
     }
 
     public function editarEtiqueta(Request $request)
