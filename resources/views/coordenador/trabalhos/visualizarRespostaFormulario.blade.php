@@ -18,36 +18,29 @@
             @csrf
             <input type="hidden" name="trabalho_id" value="{{ $trabalho->id }}">
             <input type="hidden" name="revisor_id" value="{{ $revisor->id }}">
-            @foreach ($modalidade->forms as $form)
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ $form->titulo }}</h5>
-                        <p class="card-text">
-                            @foreach ($form->perguntas()->orderBy('id')->get() as $index => $pergunta)
-                                <input type="hidden" name="pergunta_id[]" value="{{ $pergunta->id }}">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <p><strong>{{ strip_tags($pergunta->pergunta) }}</strong> <span><small
-                                                    style="float: right">Pergunta visível para o autor? <input
-                                                        type="checkbox" name="pergunta_checkBox[]"
-                                                        value="{{ $pergunta->id }}"
-                                                        {{ $pergunta->visibilidade == true ? ' checked' : '' }}
-                                                        disabled></small></span>
-                                        </p>
-                                        @if ($pergunta->respostas()->exists() && $pergunta->respostas->first()->opcoes->count())
-                                            @if ($respostas[$pergunta->id] != null)
-                                                <input type="hidden" name="opcao_id[]"
-                                                    value="{{ $respostas[$pergunta->id]->opcoes[0]->id }}">
-                                            @endif
-                                            @foreach ($pergunta->respostas->first()->opcoes->sortBy('id') as $opcao)
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">{{ $form->titulo }}</h5>
+                    <p class="card-text">
+                        @foreach ($perguntas as $pergunta)
+                            <input type="hidden" name="pergunta_id[]" value="{{ $pergunta->id }}">
+                            <div class="card">
+                                <div class="card-body">
+                                    <p><strong>{{ strip_tags($pergunta->pergunta) }}</strong> <span><small
+                                                style="float: right">Pergunta visível para o autor? <input
+                                                    type="checkbox" name="pergunta_checkBox[]"
+                                                    value="{{ $pergunta->id }}"
+                                                    {{ $pergunta->visibilidade == true ? ' checked' : '' }}
+                                                    disabled></small></span>
+                                    </p>
+                                    @foreach ($pergunta->respostasPadrao as $resposta)
+                                        @if ($resposta->opcoes()->exists())
+                                            @foreach ($resposta->opcoes as $opcao)
                                                 <div class="form-check">
-                                                    @if (
-                                                        $respostas[$pergunta->id] != null &&
-                                                            $respostas[$pergunta->id]->opcoes != null &&
-                                                            $respostas[$pergunta->id]->opcoes->pluck('titulo')->contains($opcao->titulo))
+                                                    @if ($opcoes->get($opcao->id))
                                                         <input class="form-check-input" type="radio"
                                                             name="{{ $pergunta->id }}" checked
-                                                            value="{{ $respostas[$pergunta->id]->opcoes[0]->titulo }}"
+                                                            value="{{ $opcao->titulo }}"
                                                             id="{{ $opcao->id }}">
                                                     @else
                                                         <input class="form-check-input" type="radio"
@@ -59,16 +52,7 @@
                                                     </label>
                                                 </div>
                                             @endforeach
-                                            @if ($respostas[$pergunta->id] != null)
-                                                <div class="col-form-label text-md-left">
-                                                    <small>Resposta visível para o autor? (selecione se sim) </small>
-                                                    <input type="checkbox" name="visivilidade_opcoes[]"
-                                                        value="{{ $respostas[$pergunta->id]->opcoes->first()->id }}"
-                                                        {{ $respostas[$pergunta->id]->opcoes->first()->visibilidade == true ? ' checked' : '' }}
-                                                        {{ $pergunta->visibilidade == true ? '' : 'disabled' }}>
-                                                </div>
-                                            @endif
-                                        @elseif($pergunta->respostas->first()->paragrafo != null)
+                                        @elseif($resposta->paragrafo()->exists())
                                             @forelse ($pergunta->respostas as $resposta)
                                                 @if ($resposta->revisor != null && $resposta->trabalho != null && $resposta->paragrafo != null)
                                                     @if ($resposta->revisor->user_id == $revisorUser->id && $resposta->trabalho->id == $trabalho->id)
@@ -95,17 +79,18 @@
                                                 <p>Sem respostas</p>
                                             @endforelse
                                         @endif
-                                    </div>
+
+                                    @endforeach
                                 </div>
-                            @endforeach
-                        <div class="col-form-label text-md-left">
-                            <small>Selecionar todas as respostas </small><input id="selecionarTodas" type="checkbox"
-                                onclick="select_all()">
-                        </div>
-                        </p>
+                            </div>
+                        @endforeach
+                    <div class="col-form-label text-md-left">
+                        <small>Selecionar todas as respostas </small><input id="selecionarTodas" type="checkbox"
+                            onclick="select_all()">
                     </div>
+                    </p>
                 </div>
-            @endforeach
+            </div>
             <div class="col-sm-12" style="margin-top: 20px;">
                 <small>Para trocar o arquivo de avaliação do avaliador, envie um novo.</small><br>
                 <div class="custom-file">

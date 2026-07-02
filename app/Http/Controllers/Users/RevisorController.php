@@ -474,7 +474,7 @@ class RevisorController extends Controller
         $data['modalidade'] = Modalidade::find($data['modalidade_id']);
         $data['trabalho'] = Trabalho::find($data['trabalho_id']);
 
-        $forms = $data['modalidade']->forms;
+        $forms = $data['modalidade']->forms->sortBy('perguta.opcoes.id');
 
         return view('revisor.formularioRevisor', compact('evento', 'data', 'forms'));
     }

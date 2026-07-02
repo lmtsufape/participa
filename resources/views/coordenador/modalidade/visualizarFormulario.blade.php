@@ -1,335 +1,129 @@
-@extends('coordenador.detalhesEvento')
+@extends('layouts.app')
+@section('sidebar')
+@endsection
+@section('content')
 
-@section('menu')
-@error('excluirFormulario')
-@include('componentes.mensagens')
-@enderror
+    <style>
+        select[readonly] {
+            background: #eee;
+            /*Simular campo inativo - Sugestão @GabrielRodrigues*/
+            pointer-events: none;
+            touch-action: none;
+        }
+    </style>
 
-<style>
-    select[readonly] {
-        background: #eee;
-        /*Simular campo inativo - Sugestão @GabrielRodrigues*/
-        pointer-events: none;
-        touch-action: none;
-    }
-</style>
-
-<div id="divListarCriterio" class="comissao">
-    <div class="row">
-        <div class="col-sm-12">
-            <h3 class="titulo-detalhes">Formulário(s) da modalidade: <strong> {{$modalidade->nome}}</strong> </h3>
+    <div id="divListarCriterio" class="comissao">
+        <div class="row">
+            <div class="col-sm-12">
+                <h3 class="titulo-detalhes">Formulário(s) da modalidade: <strong> {{$modalidade->nome}}</strong> </h3>
+            </div>
         </div>
     </div>
-</div>
-{{-- {{dd($modalidade->forms)}} --}}
-@foreach ($modalidade->forms->sortBy("created_at") as $form)
-<div class="card" style="width: 48rem;">
-    <div class="card-body">
-        <h5 class="card-title">{{$form->titulo}}</h5>
-        <h5 class="card-title">Orientações aos(as) avaliadores(as):</h5>
-        {!! $form->instrucoes !!}
-
-        <p class="card-text">
-        <table class="table table-hover table-responsive-lg table-sm">
-            <thead>
-                <tr>
-                    <th scope="col" style="text-align:center">Editar</th>
-                    <th scope="col" style="text-align:center">Excluir</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td style="text-align:center">
-                        <a href="#" data-bs-toggle="modal" data-focus="false" data-bs-target="#modalEditarForm{{$form->id}}">
-                            <img src="{{ asset('img/icons/edit-regular.svg') }}" style="width:20px" alt="Editar">
-                        </a>
-                    </td>
-                    <td style="text-align:center">
-                        <a href="" data-bs-toggle="modal" data-bs-target="#modalExcluirForm{{$form->id}}">
-                            <img src="{{ asset('img/icons/trash-alt-regular.svg') }}" style="width:20px" alt="Excluir">
-                        </a>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        </p>
-
-        <p class="card-text">
-
-            @foreach ($form->perguntas->sortBy("id") as $pergunta)
-        <div class="card">
+    {{-- {{dd($modalidade->forms)}} --}}
+    @foreach ($modalidade->forms->sortBy("created_at") as $form)
+        <div class="card" style="width: 48rem;">
             <div class="card-body">
-                <div class="row">
-                    <div class="col">
-                        <p>{!! $pergunta->pergunta !!}</p>
-                    </div>
+                <h5 class="card-title">{{$form->titulo}}</h5>
+                <h5 class="card-title">Orientações aos(as) avaliadores(as):</h5>
+                {!! $form->instrucoes !!}
 
-                </div>
+                <p class="card-text">
+                <table class="table table-hover table-responsive-lg table-sm">
+                    <thead>
+                        <tr>
+                            <th scope="col" style="text-align:center">Editar</th>
+                            <th scope="col" style="text-align:center">Excluir</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="text-align:center">
+                                <a href="{{route('coord.modalidades.form.edit', compact('evento', 'form'))}}"><img src="{{asset('img/icons/edit-regular.svg')}}" style="width:20px"></a>
+                            </td>
+                            <td style="text-align:center">
+                                <a href="" data-bs-toggle="modal" data-bs-target="#modalExcluirForm{{$form->id}}"><i class="bi bi-trash text-danger fa-lg"></i></a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                </p>
+
+                <p class="card-text">
+
+                    @foreach ($form->perguntas->sortBy("id") as $pergunta)
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col">
+                                <p>{!! $pergunta->pergunta !!}</p>
+                            </div>
+
+                        </div>
 
 
                 @if($pergunta->respostas->first()->opcoes->count())
-                <p>Resposta com Múltipla escolha:</p>
-                @foreach ($pergunta->respostas->first()->opcoes->sortBy("id") as $opcao)
-                <div class="col-md-10 itemRadio">
-                    <div class="input-group mb-3">
-                        <div class="input-group-prepend">
-                            <div class="input-group-text">
-                                <input type="checkbox" disabled @if($opcao->check) checked @endif>
+                        <p>Resposta com Múltipla escolha:</p>
+                        @foreach ($pergunta->respostas->first()->opcoes->sortBy("id") as $opcao)
+                        <div class="col-md-10 itemRadio">
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">
+                                        <input type="checkbox" disabled @if($opcao->check) checked @endif>
+                                    </div>
+                            </div>
+                            <input type="text" class="form-control" value=" {{$opcao->titulo}}" disabled>
+                        </div>
+                    </div>
+                                        @endforeach
+                        @elseif($pergunta->respostas->first()->paragrafo)
+                        <p>Resposta com parágrafo: </p>
+                        <div class="col-md-10">
+                            <input type="text" style="margin-bottom:10px" disabled='true' class="form-control">
+                        </div>
+                        @endif
+                        <div class="col-md-5">
+                            <div class="col-form-label text-md-left">
+                                <small>Visível para o autor? </small><input disabled type="checkbox" @if ($pergunta->visibilidade) checked @endif>
                             </div>
                         </div>
-                        <input type="text" class="form-control" value=" {{$opcao->titulo}}" disabled>
                     </div>
                 </div>
+
+
                 @endforeach
-                @elseif($pergunta->respostas->first()->paragrafo)
-                <p>Resposta com parágrafo: </p>
-                <div class="col-md-10">
-                    <input type="text" style="margin-bottom:10px" disabled='true' class="form-control">
-                </div>
-                @endif
-                <div class="col-md-5">
-                    <div class="col-form-label text-md-left">
-                        <small>Visível para o autor? </small><input disabled type="checkbox" @if ($pergunta->visibilidade) checked @endif>
-                    </div>
-                </div>
+                </p>
+
             </div>
         </div>
-
-        @endforeach
-        </p>
-
-    </div>
-</div>
-
-@endforeach
-
+    @endforeach
 
 @endsection
 
-{{-- <div class="row">
-    <div class="col-md-12">
-        <div id="coautores" class="flexContainer " >
-            <div class="item card" style="order:1">
-                <div class="row card-body">
-                    <div class="col-sm-12">
-                        <label>Pergunta</label>
-                        <input type="text" syle="margin-bottom:10px"   class="form-control " name="pergunta[]" value="{{$pergunta}}" required>
-</div>
-<div class="col-sm-8">
-    <label>Resposta</label>
-    <div class="row" id="row1">
-        <div class="col-md-12">
-            <input type="text" style="margin-bottom:10px" class="form-control " name="resposta[]" required>
-        </div>
-    </div>
-</div>
-<div class="col-sm-4">
-    <div class="form-group">
-        <label for="exampleFormControlSelect1">Tipo</label>
-        <select onchange="escolha(this.value)" name="tipo[]" class="form-control" id="FormControlSelect">
-            <option value="paragrafo">Parágrafo</option>
-            <option value="checkbox">Múltipla escolha</option>
-
-        </select>
-    </div>
-</div>
-<div class="col-md-5"></div>
-<div class="col-sm-7">
-    <a href="#" class="delete pr-2 mr-2">
-        <i class="fas fa-trash-alt fa-2x"></i>
-    </a>
-    <a href="#" onclick="myFunction(event)">
-
-        <i class="fas fa-arrow-up fa-2x" id="arrow-up" style=""></i>
-    </a>
-    <a href="#" onclick="myFunction(event)">
-        <i class="fas fa-arrow-down fa-2x" id="arrow-down" style="margin-top:35px"></i>
-    </a>
-
-</div>
-</div>
-</div>
-</div>
-</div>
-</div> --}}
-
 
 @foreach ($modalidade->forms as $form)
-<!-- Modal editar modalidade -->
-<div class="modal fade" id="modalEditarForm{{$form->id}}" data-focus="false" tabindex="-1" role="dialog" aria-labelledby="modalEditarForm" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header" style="background-color: #114048ff; color: white;">
-                <h5 class="modal-title" id="exampleModalLongTitle">Editar {{$form->titulo}}</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="row justify-content-center">
-                    <div class="col-sm-12">
-                        <div class="card">
-                            <div class="card-body">
-                                <div>
-                                    @error('marcarextensao')
-                                    @include('componentes.mensagens')
-                                    @enderror
-                                </div>
-                                <form method="POST" action="{{route('coord.update.form')}}" enctype="multipart/form-data">
-                                    @method('PUT')
-                                    @csrf
-                                    <p class="card-text">
-                                        <input type="hidden" name="formEditId" value="{{$form->id}}">
-                                        {{-- <input type="hidden" name="eventoId" value="{{$evento->id}}">--}}
-                                    <div class="row">
-                                        <div class="col-sm-12">
-                                            <label for="tituloFormEdit" class="col-form-label">*{{ __('Título do Formulário') }}</label>
-                                        </div>
-                                    </div>
-                                    <div class="row justify-content-center">
-                                        <div class="col-sm-12">
-                                            {{-- {{dd($form->perguntas)}} --}}
-                                            <input id="tituloFormEdit" type="text" class="form-control @error('titulo'.$form->id) is-invalid @enderror" name="titulo{{$form->id}}" value="@if(old('titulo'.$form->id)!=null){{old('titulo'.$form->id)}}@else{{$form->titulo}}@endif" required autocomplete="titulos" autofocus>
-                                            @error('titulo'.$form->id)
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                            @enderror
-                                        </div>
-                                        <div class="col-md-12 mt-3">
-                                            <label for="instrucoes">Orientações aos(as) avaliadores(as):</label>
-                                            <textarea type="text" class="form-control mb-2 ckeditorinput" name="instrucoes{{$form->id}}" id="instrucoes{{$form->id}}">
-                                                {{old('instrucoes'.$form->id, $form->instrucoes)}}
-                                            </textarea>
-                                        </div>
-
-                                        @foreach ($form->perguntas()->orderBy("id")->get() as $index => $pergunta)
-                                        <div class="col-md-12">
-                                            <div id="coautores" class="flexContainer">
-                                                <div class="item card" style="order:{{$index}}">
-                                                    <div class="row card-body">
-                                                        <div class="col-sm-12">
-                                                            <label>Pergunta</label>
-                                                            <input type="text" syle="margin-bottom:10px" value="{{old('pergunta['.$index.']', $pergunta->pergunta)}}" class="form-control " name="pergunta[]" required>
-                                                            <input type="hidden" name="pergunta_id[]" value="{{$pergunta->id}}">
-                                                        </div>
-                                                        <div class="col-sm-12">
-                                                            <label>Resposta</label>
-                                                            <div class="row" id="row{{$index}}">
-                                                                @if ($pergunta->respostas->first()->opcoes->count())
-                                                                <div class="col-sm-12 opcoes itemRadio">
-                                                                    @foreach ($pergunta->respostas->first()->opcoes->sortBy("id") as $indice => $opcao)
-                                                                    <div class="opcao col-sm-12">
-                                                                        <div class="row">
-                                                                            <div class="input-group pl-0 col-sm-10 mb-3">
-                                                                                <div class="input-group-prepend">
-                                                                                    <div class="input-group-text">
-                                                                                        <input name="checkbox[{{ $opcao->id }}]" type="checkbox" aria-label="Checkbox for following text input" @if($opcao->check) checked @endif>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <input id="inrow{{$index}}" type="text" name="tituloRadio[row{{$index}}][]" value="{{old('tituloRadio[row'.$index.']['.$indice.']', $opcao->titulo)}}" class="form-control" required>
-                                                                            </div>
-
-                                                                            <!--
-                                                                                    Botões de Adicionar e Remover Opção
-                                                                                    <div class="col-sm-1 mt-2">
-                                                                                        <a href="#" onclick="addRadioToResposta(event)"><i class="fas fa-plus"></i></a>
-                                                                                    </div>
-                                                                                    <div class="col-sm-1 mt-2">
-                                                                                        <a href="#" class="radioDelete" onclick="removerOpcao(event)"><i class="fas fa-trash-alt"></i></a>
-                                                                                    </div>-->
-                                                                        </div>
-                                                                    </div>
-                                                                    @endforeach
-                                                                </div>
-                                                                @elseif ($pergunta->respostas->first()->paragrafo)
-                                                                <div class="col-md-12">
-                                                                    <input type="text" style="margin-bottom:10px" disabled='true' class="form-control " name="resposta[]">
-                                                                </div>
-                                                                @endif
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-5">
-                                                            <div class="col-form-label text-md-left">
-                                                                <small>Visível para o autor? (selecione se sim) </small><input type="checkbox" name="checkboxVisibilidade_{{$pergunta->id}}" @if($pergunta->visibilidade) checked @endif>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-sm-4">
-                                                            <div class="form-group">
-                                                                <label for="exampleFormControlSelect1">Tipo</label>
-                                                                <select onchange="escolha(this, event)" name="tipo[]" class="form-control" id="FormControlSelect" data-rowid="{{$index}}">
-                                                                    <option @if($pergunta->respostas->first()->opcoes->count()) selected @endif value="radio">Múltipla escolha</option>
-                                                                    <option @if($pergunta->respostas->first()->paragrafo) selected @endif value="paragrafo">Parágrafo</option>
-                                                                    {{-- <option value="radio">Seleção</option> --}}
-                                                                </select>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-5"></div>
-                                                        <div class="col-sm-7">
-                                                            <div class="row">
-                                                            <div class="col">
-                                                            <a href="#" class="delete2 pr-2 mr-2">
-                                                                <img src="{{ asset('img/icons/trash-alt-regular.svg') }}" style="width:20px" alt="Excluir">
-                                                            </a>
-                                                            <a class="move-up text-success"><i class="bi bi-arrow-up-circle fs-4"></i></a>
-                                                            <a class="move-down text-success"><i class="bi bi-arrow-down-circle fs-4"></i></a>
-                                                        </div>
-
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        @endforeach
-
-                                    </div>{{-- end row--}}
-                                    <div class="col-md-12">
-                                        <div id="coautores2" class="flexContainer" style="width: 97.5%">
-                                        </div>
-                                        <a href="#" onclick="addLinha(event)" class="btn btn-primary" id="addCoautor" style="width:100%;margin-top:10px">Adicionar pergunta</a>
-                                    </div>
-                                    </p>
-
-                                    <br>
-                                    <div class="row justify-content-center">
-                                        <div class="col-md-12">
-                                            <button type="submit" class="btn btn-success" style="width:100%;margin-top:10px">
-                                                {{ __('Salvar') }}
-                                            </button>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
+    <!-- Modal de exclusão do form -->
+    <div class="modal fade" id="modalExcluirForm{{$form->id}}" tabindex="-1" role="dialog" aria-labelledby="#label" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: #114048ff; color: white;">
+                    <h5 class="modal-title" id="#label">Confirmação</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form action="{{route('coord.deletar.form', ['id' => $form->id])}}" method="get">
+                    @csrf
+                    <div class="modal-body">
+                        Tem certeza que deseja excluir esse formulário?
                     </div>
-                </div>{{-- end row card --}}
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Não</button>
+                        <button type="submit" class="btn btn-primary">Sim</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
-</div>
-
-<!-- Modal de exclusão do form -->
-<div class="modal fade" id="modalExcluirForm{{$form->id}}" tabindex="-1" role="dialog" aria-labelledby="#label" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header" style="background-color: #114048ff; color: white;">
-                <h5 class="modal-title" id="#label">Confirmação</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form action="{{route('coord.deletar.form', ['id' => $form->id])}}" method="get">
-                @csrf
-                <div class="modal-body">
-                    Tem certeza que deseja excluir esse formulário?
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Não</button>
-                    <button type="submit" class="btn btn-primary">Sim</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
 @endforeach
 {{-- Fim Modal --}}
 

@@ -3,173 +3,126 @@
 @section('content')
 
 <div class="container mb-4 position-relative">
-    <h5>Evento: {{$evento->nome}}</h5>
-    <br>
-    <h5>Modalidade: {{$data['modalidade']->nome}}</h5>
-    <br>
-    <h5>{{$evento->formSubTrab->etiquetaareatrabalho}}: {{$data['trabalho']->area->nome}}</h5>
-    <br>
-    <h5 class="titulo-detalhes">{{$evento->formSubTrab->etiquetatitulotrabalho}}: {{$data['trabalho']->titulo}}</h5>
-    <br>
-    @if(session('message'))
-    <div class="row">
-        <div class="col-md-12" style="margin-top: 5px;">
-            <div class="alert alert-success">
-                <p>{{session('message')}}</p>
+    <x-admin.content-header title="Formulário de avaliação"
+        description="Preencha o formulário abaixo com atenção e responsabilidade."
+    />
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="row g-3 g-md-0">
+                <p class="col-md-3 mb-0 text-muted text-break border-end pe-md-3">
+                    Evento
+                    <strong class="d-block text-my-primary">
+                        {{$evento->nome}}
+                    </strong>
+                </p>
+                <p class="col-md-3 mb-0 text-muted text-break border-end px-md-3">
+                    Modalidade
+                    <strong class="d-block text-my-primary">
+                        {{ $data['modalidade']->nome }}
+                    </strong>
+                </p>
+                <p class="col-md-3 mb-0 text-muted text-break border-end px-md-3">
+                    {{$evento->formSubTrab->etiquetaareatrabalho}}
+                    <strong class="d-block text-my-primary">
+                        {{$data['trabalho']->area->nome}}
+                    </strong>
+                </p>
+                <p class="col-md-3 mb-0 text-muted text-break border-end ps-md-3">
+                    {{$evento->formSubTrab->etiquetatitulotrabalho}}
+                    <strong class="d-block text-my-primary">
+                        {{$data['trabalho']->titulo}}
+                    </strong>
+                </p>
             </div>
         </div>
     </div>
-    @endif
-    <div class="row">
-        <div class="col-sm-12">
-        @if ($errors->any())
-            <div class="alert alert-danger">
-                <ul>
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
+
+    @forelse ($forms as $form)
+        <div class="card shadow-lg">
+            <div class="card-header bg-white py-4 px-4">
+                <h3 class="card-title h4 text-my-primary"><strong>{{$form->titulo}}</strong></h3>
+                @if ($form->instrucoes)
+                    <div class="alert alert-success mt-3 mb-0">
+                        <div class="fw-semibold text-success mb-1">
+                            Orientações aos(as) avaliadores(as):
+                        </div>
+
+                        <div class="text-muted text-break">
+                            {!! $form->instrucoes !!}
+                        </div>
+                    </div>
+                @endif
             </div>
-        @endif
-        </div>
-    </div>
-    {{-- {{dd($data['modalidade']->forms)}} --}}
-    <div class="row">
-        <div class="col-md-12">
-            @forelse ($forms as $form)
-                <div class="card" style="width: 48rem;">
-                    <div class="card-body">
-                    <h5 class="card-title">{{$form->titulo}}</h5>
-                    @if ($form->instrucoes)
-                        <h5 class="card-title mt-4 mb-0">Orientações aos(as) avaliadores(as):</h5>
-                        {!! $form->instrucoes !!}
-                    @endif
+            <div class="card-body">
+                <form action="{{route('revisor.salvar.respostas')}}" method="post" enctype="multipart/form-data">
+                    @csrf
+                    <input type="hidden" name="revisor_id" value="{{$data['revisor']->id}}">
+                    <input type="hidden" name="trabalho_id" value="{{$data['trabalho']->id}}">
+                    <input type="hidden" name="modalidade_id" value="{{$data['modalidade']->id}}">
+                    <input type="hidden" name="form_id[]" value="{{$form->id}}">
+                    @foreach ($form->perguntas->sortBy("id") as $pergunta)
+                        <div class="card">
+                            <div class="card-body">
 
-                    <p class="card-text">
-
-                        <form action="{{route('revisor.salvar.respostas')}}" method="post" enctype="multipart/form-data">
-                            @csrf
-                            <input type="hidden" name="revisor_id" value="{{$data['revisor']->id}}">
-                            <input type="hidden" name="trabalho_id" value="{{$data['trabalho']->id}}">
-                            <input type="hidden" name="modalidade_id" value="{{$data['modalidade']->id}}">
-                            <input type="hidden" name="form_id[]" value="{{$form->id}}">
-                            @foreach ($form->perguntas->sortBy("id") as $pergunta)
-                                <div class="card">
-                                    <div class="card-body">
-
-                                        <p><b>{!! $pergunta->pergunta !!}</b></p>
-                                        <input type="hidden" name="pergunta_id[]" value="{{$pergunta->id}}">
-                                        @if($pergunta->respostas->first()->opcoes->count())
-                                            @foreach ($pergunta->respostas->first()->opcoes as $opcao)
-                                            <div class="form-check">
-                                                <input class="form-check-input" required type="radio" name="{{$pergunta->id}}" value="{{$opcao->titulo}}" id="{{$opcao->id}}">
-                                                <label class="form-check-label" for="{{$opcao->id}}">
-                                                  {!! $opcao->titulo !!}
-                                                </label>
-                                              </div>
-                                            @endforeach
-                                        @else
-                                            <textarea type="text" style="margin-bottom:10px"  class="form-control " name="{{$pergunta->id}}" required></textarea>
-                                        @endif
-                                    </div>
-                                </div>
-                            @endforeach
-                            <div class="row justify-content-center">
-                                {{-- Submeter Arquivo Avalicao --}}
-
-                                @if ($data['modalidade']->arquivo == true)
-                                  <div class="col-sm-12" style="margin-top: 20px;">
-                                    <label for="nomeTrabalho" class="col-form-label"><strong>Trabalho corrigido e/ou com comentários (opcional):</strong> </label>
-
-                                    <div class="custom-file">
-                                      <input type="file" class="filestyle" data-placeholder="Nenhum arquivo" data-text="Selecionar" data-btnClass="btn-primary-lmts" name="arquivo" accept=".pdf, .odt, .docx, .rtf">
-                                    </div>
-                                    <small><strong>Extensão de arquivos aceitas:</strong>
-                                      <span> / ".pdf"</span>
-                                      <span> / ".docx"</span>
-                                      <span> / ".odt"</span>
-                                      <span> / ".rtf"</span>
-                                    </small>
-                                    @error('arquivo')
-                                    <span class="invalid-feedback" role="alert" style="overflow: visible; display:block">
-                                      <strong>{{ $message }}</strong>
-                                    </span>
-                                    @enderror
-                                  </div>
+                                <p><b>{!! $pergunta->pergunta !!}</b></p>
+                                <input type="hidden" name="pergunta_id[]" value="{{$pergunta->id}}">
+                                @if($pergunta->respostas->first()->opcoes->count())
+                                    @foreach ($pergunta->respostas->first()->opcoes as $opcao)
+                                        <div class="form-check">
+                                            <input class="form-check-input" required type="radio" name="{{$pergunta->id}}" value="{{$opcao->titulo}}" id="{{$opcao->id}}">
+                                            <label class="form-check-label" for="{{$opcao->id}}">
+                                                {!! $opcao->titulo !!}
+                                            </label>
+                                        </div>
+                                    @endforeach
+                                @else
+                                    <textarea type="text" style="margin-bottom:10px"  class="form-control " name="{{$pergunta->id}}" required></textarea>
                                 @endif
                             </div>
-                            <br>
+                        </div>
+                    @endforeach
+                    @if ($data['modalidade']->arquivo == true)
+                        <div class="row justify-content-center">
+                            {{-- Submeter Arquivo Avalicao --}}
 
-                            <div class="row justify-content-center">
-                                <div class="col-md-6">
-                                    <button type="button" class="btn btn-secondary" onclick="window.location='{{ route('revisor.index') }}'" style="width:100%">Cancelar</button>
-                                </div>
-                                <div class="col-md-6">
-                                    <button type="submit" class="btn btn-primary" style="width:100%" id="submeterFormBotao">
-                                        {{ __('Enviar avaliação') }}
-                                    </button>
-                                </div>
+                            <div class="col-sm-12 mt-2">
+                                <label for="arquivo" class="form-label"><strong>Trabalho corrigido e/ou com comentários (opcional):</strong> </label>
+                                <input type="file" class="form-control" name="arquivo" id="arquivo" accept=".pdf, .odt, .docx, .rtf">
+
+                                <small><strong>Extensão de arquivos aceitas:</strong>
+                                    <span> / ".pdf"</span>
+                                    <span> / ".docx"</span>
+                                    <span> / ".odt"</span>
+                                    <span> / ".rtf"</span>
+                                </small>
+                                @error('arquivo')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
                             </div>
+                        </div>
+                    @endif
 
-                        </form>
-                    </p>
-
+                    <div class="row justify-content-center mt-4">
+                        <div class="col-md-6">
+                            <button type="button" class="btn btn-secondary w-100" onclick="window.location='{{ route('revisor.index') }}'">Cancelar</button>
+                        </div>
+                        <div class="col-md-6">
+                            <button type="submit" class="btn btn-primary w-100" id="submeterFormBotao">
+                                {{ __('Enviar avaliação') }}
+                            </button>
+                        </div>
                     </div>
-                </div>
 
-            @empty
-                <h4>Não há formulário para ser respondido</h4>
-            @endforelse
+                </form>
+            </div>
         </div>
-    </div>
 
+    @empty
+        <h4>Não há formulário para ser respondido</h4>
+    @endforelse
 </div>
 
 
 @endsection
-
-{{-- <div class="row">
-    <div class="col-md-12">
-        <div id="coautores" class="flexContainer " >
-            <div class="item card" style="order:1">
-                <div class="row card-body">
-                    <div class="col-sm-12">
-                        <label>Pergunta</label>
-                        <input type="text" syle="margin-bottom:10px"   class="form-control " name="pergunta[]" value="{{$pergunta}}" required>
-                    </div>
-                    <div class="col-sm-8" >
-                        <label>Resposta</label>
-                        <div class="row" id="row1">
-                            <div class="col-md-12">
-                                <input type="text" style="margin-bottom:10px"  class="form-control " name="resposta[]" required>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-4">
-                        <div class="form-group">
-                            <label for="exampleFormControlSelect1">Tipo</label>
-                            <select onchange="escolha(this.value)" name="tipo[]" class="form-control" id="FormControlSelect">
-                                <option value="paragrafo">Parágrafo</option>
-                                <option value="checkbox">Múltipla escolha</option>
-
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-md-5"></div>
-                    <div class="col-sm-7">
-                        <a href="#" class="delete pr-2 mr-2">
-                            <i class="fas fa-trash-alt fa-2x"></i>
-                        </a>
-                        <a href="#" onclick="myFunction(event)">
-                        <i class="fas fa-arrow-up fa-2x" id="arrow-up" style=""></i>
-                        </a>
-                        <a href="#" onclick="myFunction(event)">
-                        <i class="fas fa-arrow-down fa-2x" id="arrow-down" style="margin-top:35px"></i>
-                        </a>
-
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div> --}}

@@ -58,6 +58,7 @@ use Illuminate\Support\Str;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Gate;
+use InvalidArgumentException;
 
 // dd($request->all());
 class EventoController extends Controller
@@ -1897,27 +1898,29 @@ class EventoController extends Controller
                 'titulo' => $dados['titulo'],
                 'instrucoes' => $dados['instrucoes'],
             ]);
-            foreach ($dados['perguntas'] as $index => $value) {
+
+            foreach ($dados['perguntas'] as $index => $perguntaData) {
                 $pergunta = $form->perguntas()->create([
-                    'pergunta' => $value,
-                    'visibilidade' => array_key_exists($index, $dados['visibilidades'] ?? []),
+                    'pergunta' => $perguntaData['titulo'],
+                    'visibilidade' => isset($perguntaData['visibilidade']),
+                    'ordem' => $perguntaData['ordem']
                 ]);
 
-                $resposta = new Resposta();
-                $resposta->pergunta_id = $pergunta->id;
-                $resposta->save();
+                $resposta = $pergunta->respostasPadrao()->create([]);
 
-                if ($dados['tipos'][$index] == 'paragrafo') {
-                    $paragrafo = new Paragrafo();
-                    $resposta->paragrafo()->save($paragrafo);
-                } elseif ($dados['tipos'][$index] == 'radio') {
-                    foreach ($dados['opcoes'][$index] as $titulo) {
-                        $resposta->opcoes()->create([
-                            'titulo' => $titulo,
-                            'tipo' => 'radio',
-                        ]);
-                    }
-                }
+                match ($perguntaData['tipo']) {
+                    'paragrafo' => $resposta->paragrafo()->create([]),
+                    'radio' => collect($pergunta['opcoes'])
+                                    ->each(function ($opcao) use ($resposta){
+                                        $resposta->opcoes()->create([
+                                            'titulo' => $opcao['titulo'],
+                                            'tipo' => $opcao['tipo'],
+                                            'ordem' => $opcao['ordem'],
+
+                                        ]);
+                                    }),
+                    default => throw new InvalidArgumentException('Tipo de pergunta inválido.'),
+                };
             }
 
         });
@@ -2084,8 +2087,8 @@ class EventoController extends Controller
             'perguntas' => function ($query) {
                 $query->orderBy('id');
             },
-            'perguntas.respostaPadrao.opcoes',
-            'perguntas.respostaPadrao.paragrafo',
+            'perguntas.respostasPadrao.opcoes',
+            'perguntas.respostasPadrao.paragrafo',
         ]);
         $modalidade = $form->modalidade;
 
@@ -2261,7 +2264,7 @@ class EventoController extends Controller
                 $q->where('trabalho_id', $trabalho->id)
                 ->where('revisor_id',  $revisor->id);
             })
-            ->with(['respostasPadrao.opcoes'])->orderBy('pergunta')
+            ->with(['respostasPadrao.opcoes'])->orderBy('id')
             ->get();
 
         $opcoes = Opcao::whereHas('resposta', function ($q) use ($revisor, $trabalho) {
@@ -2581,7 +2584,7 @@ class EventoController extends Controller
             }
 
 
-            return view('evento.visualizarEvento', compact('evento', 'trabalhos', 'trabalhosCoautor', 'hasTrabalho', 'hasTrabalhoCoautor', 'hasFile', 'datas', 'mytime', 'etiquetas', 'formSubTraba', 'atividadesAgrupadas', 'atividades', 'dataInicial', 'modalidades', 'isInscrito', 'subeventos', 'encerrada', 'areas', 'dataInicio', 'dataFim', 'enderecoMap'));
+            return view('evento.visualizarEvento', compact('evento', 'trabalhos', 'trabalhosCoautor', 'hasTrabalho', 'hasTrabalhoCoautor', 'hasFile', 'datas', 'mytime', 'etiquetas', 'formSubTraba', 'atividadesAgrupadas', 'atividades', 'dataInicial', 'modalidades', 'isInscrito', 'subeventos', 'encerrada', 'areas', 'dataInicio', 'dataFim', 'enderecoMap', 'periodoSubmissao'));
         }
     }
 

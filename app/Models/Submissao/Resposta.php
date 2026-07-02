@@ -2,6 +2,7 @@
 
 namespace App\Models\Submissao;
 
+use App\Models\Users\Revisor;
 use Illuminate\Database\Eloquent\Model;
 
 class Resposta extends Model
@@ -10,26 +11,26 @@ class Resposta extends Model
 
     public function pergunta()
     {
-        return $this->belongsTo('App\Models\Submissao\Pergunta');
+        return $this->belongsTo(Pergunta::class);
     }
 
     public function opcoes()
     {
-        return $this->hasMany('App\Models\Submissao\Opcao');
+        return $this->hasMany(Opcao::class);
     }
 
     public function paragrafo()
     {
-        return $this->hasOne('App\Models\Submissao\Paragrafo');
+        return $this->hasOne(Paragrafo::class);
     }
 
     public function revisor()
     {
-        return $this->belongsTo('App\Models\Users\Revisor');
+        return $this->belongsTo(Revisor::class);
     }
 
     public function trabalho()
     {
-        return $this->belongsTo('App\Models\Submissao\Trabalho');
+        return $this->belongsTo(Trabalho::class);
     }
 }

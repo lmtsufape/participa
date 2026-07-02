@@ -1,108 +1,276 @@
-@extends('coordenador.detalhesEvento')
-@section('menu')
-<div id="divListarCriterio" class="comissao">
-    <div class="row">
-        <div class="col-lg-12">
-            <h3 class="titulo-detalhes">Adicionar formulário na modalidade:
-                <p>
-                    <strong>{{$modalidade->nome}}</strong>
-                </p>
-            </h3>
+@extends('layouts.app')
+@section('sidebar')
+
+
+@endsection
+@section('content')
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2">
+                <div>
+                    <h3 class="mb-1 fw-bold">
+                        Adicionar formulário
+                    </h3>
+
+                    <p class="mb-0 text-muted">
+                        Modalidade:
+                        <strong class="text-my-primary">
+                            {{ $modalidade->nome }}
+                        </strong>
+                    </p>
+                </div>
+            </div>
         </div>
     </div>
-</div>
-<form action="{{route('coord.salvar.form')}}" method="post">
-    @csrf
-    <input type="hidden" name="modalidade_id" value="{{$modalidade->id}}">
-    <input type="hidden" name="evento_id" value="{{$evento->id}}">
-    <div class="row">
-        <div class="col-sm-12">
-            <div class="card">
-                <div class="card-body">
-                    <label> <strong> Titulo do Formulário*:</strong></label>
-                    <input type="text" class="form-control mb-2" name="titulo" required>
+    <form action="{{route('coord.salvar.form')}}" method="post">
+        @csrf
+        <input type="hidden" name="modalidade_id" value="{{$modalidade->id}}">
+        <input type="hidden" name="evento_id" value="{{$evento->id}}">
+        <div class="row">
+            <div class="col-md-12 mb-3">
+                <div class="card border-0 shadow-sm border-start border-4 border-primary">
+
+                    <div class="card-body">
+
+                        <div class="mb-3 pb-3 border-bottom">
+                            <h5 class="mb-1 fw-bold text-my-primary">
+                                Informações do Formulário
+                            </h5>
+
+                            <small class="text-muted">
+                                Preencha os dados principais do formulário de avaliação.
+                            </small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="titulo" class="form-label">
+                                Título do Formulário
+                            </label>
+
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="titulo"
+                                value="{{ old('titulo') }}"
+                                name="titulo"
+                                placeholder="Ex: Formulário de avaliação dos trabalhos"
+                                required
+                            >
+                        </div>
+
+                        <div class="mb-0">
+                            <label for="instrucoes" class="form-label">
+                                Orientações aos(as) avaliadores(as)
+                            </label>
+
+                            <textarea
+                                class="form-control"
+                                name="instrucoes"
+                                id="instrucoes"
+                                rows="4"
+                                placeholder="Digite as orientações que serão exibidas aos avaliadores..."
+                            >{{ old('instrucoes') }}</textarea>
+                        </div>
+
+                    </div>
                 </div>
             </div>
-            <div class="card">
-                <div class="card-body">
-                    <label for="instrucoes"> <strong> Orientações aos(as) avaliadores(as):</strong></label>
-                    <textarea type="text" class="form-control mb-2" name="instrucoes" id="instrucoes">
-                        {{old('instrucoes', '')}}
-                    </textarea>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-12" x-data="handler()">
-            <div class="flexContainer">
-                <template x-for="(pergunta, index) in perguntas" :key="index">
-                    <div class="item card">
-                        <div class="row card-body">
-                            <div class="form-group col-sm-12">
-                                <label>Pergunta</label>
-                                <textarea type="text" id="ckeditor-texto" class=" form-control " x-model="pergunta.titulo" name="perguntas[]" required></textarea>
-                            </div>
-                            <div class="form-group col-sm-12">
-                                <label>Resposta</label>
-                                <template x-if="pergunta.tipo == 'paragrafo'">
-                                    <input type="text" disabled class="form-control">
-                                </template>
-                                <template x-if="pergunta.tipo == 'radio'">
-                                    <template x-for="(opcao, j) in pergunta.opcoes" :key="j">
-                                        <div class="row my-1">
-                                            <div class="col-sm-8 col-md-10">
-                                                <div class="input-group">
-                                                    <div class="input-group-prepend">
-                                                        <div class="input-group-text">
-                                                            <input type="checkbox">
-                                                        </div>
-                                                    </div>
-                                                    <input x-model="opcao.titulo" :name="'opcoes['+index+'][]'" type="text" class="form-control">
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-4 col-md-2 d-flex justify-content-start">
-                                                <button type="button" class="btn btn-link" @click="adicionaOpcao(index, j)"><i class="bi bi-plus-circle text-success fa-lg"></i></button>
-                                                <button type="button" class="btn btn-link" @click="removeOpcao(index, j)"><i class="bi bi-dash-circle text-danger fa-lg"></i></button>
+
+            <div class="col-md-12">
+                <div x-data="handler()">
+                    <div class="d-flex flex-column gap-3">
+                        <template x-for="(pergunta, index) in perguntas" :key="index">
+                            <div class="card border-0 shadow-sm mb-3 border-start border-4 border-primary">
+
+                                <div class="card-body">
+                                    <!-- Cabeçalho -->
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <h6 class="mb-0 fw-bold">
+                                            Pergunta <span x-text="index + 1"></span>
+                                        </h6>
+
+                                        <input type="hidden" :name="'perguntas[' + index + '][ordem]'" :value="index + 1">
+
+                                        <div class="d-flex align-items-center gap-2">
+                                            <button
+                                                type="button"
+                                                class="btn btn-sm btn-outline-secondary"
+                                                @click="sobePergunta(index)"
+                                                :disabled="index === 0"
+                                                title="Mover para cima"
+                                            >
+                                                <i class="bi bi-arrow-up"></i>
+                                            </button>
+
+                                            <button
+                                                type="button"
+                                                class="btn btn-sm btn-outline-secondary"
+                                                @click="descePergunta(index)"
+                                                :disabled="index === perguntas.length - 1"
+                                                title="Mover para baixo"
+                                            >
+                                                <i class="bi bi-arrow-down"></i>
+                                            </button>
+
+                                            <button
+                                                type="button"
+                                                class="btn btn-sm btn-outline-danger"
+                                                @click="removePergunta(index)"
+                                                title="Remover pergunta"
+                                            >
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <!-- Linha de configuração -->
+                                    <div class="row g-3 mb-3">
+                                        <div class="col-md-6">
+                                            <label class="form-label">
+                                                Tipo
+                                            </label>
+
+                                            <select
+                                                x-model="pergunta.tipo"
+                                                class="form-control"
+                                                :id="'tipo-' + index"
+                                                :name="'perguntas[' + index + '][tipo]'"
+                                            >
+                                                <option value="paragrafo">Parágrafo</option>
+                                                <option value="radio">Múltipla escolha</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="col-md-6 d-flex align-items-end">
+                                            <div class="form-check mb-2">
+                                                <input
+                                                    class="form-check-input"
+                                                    x-model="pergunta.visibilidade"
+                                                    :name="'perguntas[' + index + '][visibilidade]'"
+                                                    type="checkbox"
+                                                    :id="'visibilidade-' + index"
+                                                >
+
+                                                <label
+                                                    class="form-check-label"
+                                                    :for="'visibilidade-' + index"
+                                                >
+                                                    Visível para o autor
+                                                </label>
                                             </div>
                                         </div>
-                                    </template>
-                                </template>
-                            </div>
-                            <div class="col-sm-12 col-md-6 col-lg-4">
-                                <div class="form-check">
-                                    <label class="form-check-label">
-                                        <input class="form-check-input" x-model="pergunta.visibilidade" :value="pergunta.visibilidade" :name="'visibilidades['+index+']'" type="checkbox"><small>Visível para o autor? (selecione se sim)</small>
-                                    </label>
+                                    </div>
+
+                                    <!-- Pergunta -->
+                                    <div class="form-group mb-3">
+                                        <label class="form-label">
+                                            Pergunta
+                                        </label>
+
+                                        <textarea
+                                            :id="'ckeditor-texto-' + index"
+                                            class="form-control"
+                                            rows="3"
+                                            x-model="pergunta.titulo"
+                                            :name="'perguntas[' + index + '][titulo]'"
+                                            placeholder="Digite a pergunta"
+                                            required
+                                        ></textarea>
+                                    </div>
+
+                                    <!-- Resposta -->
+                                    <div class="form-group mb-0">
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <label class="form-label mb-0">
+                                                Resposta
+                                            </label>
+
+                                            <template x-if="pergunta.tipo == 'radio'">
+                                                <button
+                                                    type="button"
+                                                    class="btn btn-sm btn-outline-primary"
+                                                    @click="adicionaOpcao(index)"
+                                                >
+                                                    <i class="bi bi-plus-lg"></i>
+                                                    Adicionar alternativa
+                                                </button>
+                                            </template>
+                                        </div>
+
+                                        <!-- Resposta parágrafo -->
+                                        <template x-if="pergunta.tipo == 'paragrafo'">
+                                            <input
+                                                type="text"
+                                                disabled
+                                                class="form-control bg-light"
+                                                placeholder="Resposta em texto livre"
+                                            >
+                                        </template>
+
+                                        <!-- Resposta múltipla escolha -->
+                                        <template x-if="pergunta.tipo == 'radio'">
+                                            <div>
+
+                                                <template x-for="(opcao, j) in pergunta.opcoes" :key="j">
+                                                    <div class="input-group mb-2">
+
+                                                        <input type="hidden" :name="'perguntas[' + index + '][opcoes][' + j + '][ordem]'" :value="j + 1">
+                                                        <span class="input-group-text bg-white">
+                                                            <input
+                                                                class="form-check-input mt-0"
+                                                                type="checkbox"
+                                                                :name="'opcoes_marcadas[' + index + '][]'"
+                                                                :value="j"
+                                                            >
+                                                        </span>
+
+                                                        <input
+                                                            x-model="opcao.titulo"
+                                                            :name="'perguntas[' + index + '][opcoes][' + j + '][titulo]'"
+                                                            type="text"
+                                                            class="form-control"
+                                                            placeholder="Alternativa"
+                                                        >
+
+                                                        <button
+                                                            type="button"
+                                                            class="btn btn-outline-danger"
+                                                            @click="removeOpcao(index, j)"
+                                                            title="Remover alternativa"
+                                                        >
+                                                            <i class="bi bi-trash"></i>
+                                                        </button>
+
+                                                    </div>
+                                                </template>
+
+                                            </div>
+                                        </template>
+                                    </div>
+
                                 </div>
                             </div>
-                            <div class="form-inline col-sm-12 col-md-6 col-lg-4">
-                                <label class="mr-2" for="exampleFormControlSelect1">Tipo</label>
-                                <select x-model="pergunta.tipo" class="form-control" name="tipos[]">
-                                    <option value="paragrafo">Parágrafo</option>
-                                    <option value="radio">Múltipla escolha</option>
-                                </select>
-                            </div>
-                            <div class="col-sm-12 col-md-12 col-lg-4 d-flex justify-content-start pt-4">
-                                <button type="button" class="btn btn-link" @click="removePergunta(index)">
-                                    <i class="bi bi-trash fa-lg text-danger"></i>
-                                </button>
-                                <button type="button" class="btn btn-link" @click="sobePergunta(index)">
-                                    <i class="bi bi-arrow-up-circle fa-lg"></i>
-                                </button>
-                                <button type="button" class="btn btn-link" @click="descePergunta(index)">
-                                    <i class="bi bi-arrow-down-circle fa-lg"></i>
-                                </button>
-                            </div>
-                        </div>
+                        </template>
                     </div>
-                </template>
+
+                    <button
+                        type="button"
+                        @click="adicionaPergunta"
+                        class="btn btn-primary w-100 mt-2 py-2"
+                    >
+                        <i class="bi bi-plus-lg"></i>
+                        Adicionar pergunta
+                    </button>
+
+                </div>
             </div>
-            <button type="button" @click="adicionaPergunta" class="btn btn-primary col-12 mt-1">Adicionar pergunta</button>
-            <button type="submit" class="btn btn-success col-12 mt-1">
-                Salvar
-            </button>
         </div>
-    </div>
-</form>
+        <button type="submit" class="btn btn-success col-12 mt-1">
+            Salvar
+        </button>
+    </form>
+</div>
 @endsection
 @section('javascript')
     @parent

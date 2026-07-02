@@ -10,11 +10,11 @@ class Form extends Model
 
     public function modalidade()
     {
-        return $this->belongsTo('App\Models\Submissao\Modalidade', 'modalidadeId');
+        return $this->belongsTo(Modalidade::class, 'modalidadeId');
     }
 
     public function perguntas()
     {
-        return $this->hasMany('App\Models\Submissao\Pergunta')->orderBy('id');
+        return $this->hasMany(Pergunta::class)->orderBy('id');
     }
 }
