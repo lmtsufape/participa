@@ -388,18 +388,18 @@
           <div class="card card-body mt-3 mb-3 border-info">
               <div class="row">
                   <div class="col-sm-12">
-                      <label class="fw-bold" style="color: #114048ff;">Orientador(a)</label>
+                      <label class="fw-bold" style="color: #114048ff;">Orientador(a) (Opcional)</label>
                   </div>
                   <div class="col-md-6">
                       <label for="emailOrientador_{{$trabalho->id}}">E-mail</label>
                       <input type="email" name="emailOrientador" id="emailOrientador_{{$trabalho->id}}" class="form-control" 
-                              value="{{ old('emailOrientador', $trabalho->orientador->email ?? '') }}" 
-                              oninput="buscarEmailOrientador(this, {{$trabalho->id}})" required>
+                          value="{{ old('emailOrientador', $trabalho->orientador->email ?? '') }}" 
+                          oninput="buscarEmailOrientador(this, {{$trabalho->id}})">
                   </div>
                   <div class="col-md-6">
                       <label for="nomeOrientador_{{$trabalho->id}}">Nome Completo</label>
                       <input type="text" name="nomeOrientador" id="nomeOrientador_{{$trabalho->id}}" class="form-control" 
-                              value="{{ old('nomeOrientador', $trabalho->orientador->name ?? '') }}" required>
+                          value="{{ old('nomeOrientador', $trabalho->orientador->name ?? '') }}">
                   </div>
               </div>
           </div>

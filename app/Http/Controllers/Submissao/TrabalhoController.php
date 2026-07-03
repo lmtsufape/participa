@@ -172,21 +172,24 @@ class TrabalhoController extends Controller
 
             $user = auth()->user();
 
-            $orientador = User::where('email', $request->emailOrientador)->first();
-            if ($orientador == null) {
-                $passwordTemporario = Str::random(8);
-                $coord = User::find($evento->coordenadorId);
-                
-                Mail::to($request->emailOrientador)->send(new EmailParaUsuarioNaoCadastrado(
-                    auth()->user()->name, ' ', 'Orientador', $evento->nome, $passwordTemporario, $request->emailOrientador, $coord
-                ));
+            $orientador = null;
+            if ($request->emailOrientador) {
+                $orientador = User::where('email', $request->emailOrientador)->first();
+                if ($orientador == null) {
+                    $passwordTemporario = Str::random(8);
+                    $coord = User::find($evento->coordenadorId);
+                    
+                    Mail::to($request->emailOrientador)->send(new EmailParaUsuarioNaoCadastrado(
+                        auth()->user()->name, ' ', 'Orientador', $evento->nome, $passwordTemporario, $request->emailOrientador, $coord
+                    ));
 
-                $orientador = User::create([
-                    'email' => $request->emailOrientador,
-                    'password' => bcrypt($passwordTemporario),
-                    'usuarioTemp' => true,
-                    'name' => $request->nomeOrientador,
-                ]);
+                    $orientador = User::create([
+                        'email' => $request->emailOrientador,
+                        'password' => bcrypt($passwordTemporario),
+                        'usuarioTemp' => true,
+                        'name' => $request->nomeOrientador,
+                    ]);
+                }
             }
 
             // Cria uma pré-inscrição se o usuário não estiver inscrito
@@ -301,7 +304,7 @@ class TrabalhoController extends Controller
                 'areaId' => $request->areaId,
                 'autorId' => $autor->id,
                 'eventoId' => $evento->id,
-                'orientador_id' => $orientador->id,
+                'orientador_id' => $orientador ? $orientador->id : null,
                 'avaliado' => 'nao',
             ]);
 
@@ -578,7 +581,6 @@ class TrabalhoController extends Controller
                 $passwordTemporario = Str::random(8);
                 $coord = User::find($evento->coordenadorId);
                 
-                // Envia e-mail informando o cadastro temporário
                 Mail::to($request->emailOrientador)->send(new EmailParaUsuarioNaoCadastrado(
                     auth()->user()->name, ' ', 'Orientador', $evento->nome, $passwordTemporario, $request->emailOrientador, $coord
                 ));
@@ -591,8 +593,9 @@ class TrabalhoController extends Controller
                 ]);
             }
             
-            // Atualiza o ID do orientador no objeto do trabalho
             $trabalho->orientador_id = $orientador->id;
+        } else {
+            $trabalho->orientador_id = null; 
         }
 
         if ($arquivo != null && $this->validarTipoDoArquivo($arquivo, $trabalho->modalidade)) {
