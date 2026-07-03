@@ -1037,18 +1037,18 @@
                                                     <div class="card card-body mt-3">
                                                         <div class="row">
                                                             <div class="col-sm-12">
-                                                                <label class="fw-bold">Orientador(a) do Trabalho</label>
+                                                                <label class="fw-bold">Orientador(a) do Trabalho (Opcional)</label>
                                                             </div>
                                                             <div class="col-md-6">
                                                                 <label for="emailOrientador">E-mail</label>
                                                                 <input type="email" name="emailOrientador" id="emailOrientador" class="form-control" 
                                                                     placeholder="E-mail do orientador" 
-                                                                    x-on:focusout="checarOrientador()" required>
+                                                                    x-on:focusout="checarOrientador()">
                                                             </div>
                                                             <div class="col-md-6">
                                                                 <label for="nomeOrientador">Nome Completo</label>
                                                                 <input type="text" name="nomeOrientador" id="nomeOrientador" class="form-control" 
-                                                                    placeholder="Nome do orientador" required>
+                                                                    placeholder="Nome do orientador">
                                                             </div>
                                                         </div>
                                                     </div>
