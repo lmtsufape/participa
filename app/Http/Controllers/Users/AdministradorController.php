@@ -193,7 +193,7 @@ class AdministradorController extends Controller
             $validator = $request->validate([
                 'name' => 'required|string|max:255',
                 'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
-                'cpf' => ($request->passaporte == null ? ['bail', 'required', 'cpf', Rule::unique('users')->ignore($user->id)] : 'nullable'),
+                'cpf' => ($request->passaporte == null ? ['bail', 'required', Rule::unique('users')->ignore($user->id)] : 'nullable'),
                 'passaporte' => ($request->cpf == null && $request->cpf == null ? ['bail', 'required', 'max:10', Rule::unique('users')->ignore($user->id)] : ['nullable']),
                 'celular' => 'required|string|max:16',
                 'instituicao' => 'required|string| max:255',
@@ -308,7 +308,7 @@ class AdministradorController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'cpf' => ($request->input('passaporte') == null ? ['required', 'cpf'] : 'nullable'),
+            'cpf' => ($request->input('passaporte') == null ? ['required'] : 'nullable'),
             'passaporte' => ($request->input('cpf') == null ? 'required|max:10' : 'nullable'),
             'celular' => ['required', 'string', 'max:20'],
             'instituicao' => ['required', 'string', 'max:255'],
