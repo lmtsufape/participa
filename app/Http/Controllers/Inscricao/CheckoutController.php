@@ -240,13 +240,14 @@ class CheckoutController extends Controller
     }
 
     private function gerarRequest($contents, CategoriaParticipante $categoria)
-    {;
-        // dd($contents);
+    {
         $request = [];
+        $valorEfetivo = (float) $categoria->valorComDescontoDeAssociado();
+
         switch ($contents['payment_method_id']) {
             case 'pix':
                 $request = [
-                    "transaction_amount" => (float) $contents['transaction_amount'],
+                    "transaction_amount" => $valorEfetivo,
                     "payment_method_id" => "pix",
                     "notification_url" => route('checkout.notifications'),
                     "payer" => [
@@ -256,12 +257,11 @@ class CheckoutController extends Controller
                 break;
             case 'bolbradesco':
                 $request = [
-                    "transaction_amount" => (float) $contents['transaction_amount'],
-                    // "description" => $contents['description'],
+                    "transaction_amount" => $valorEfetivo,
                     "payment_method_id" => $contents['payment_method_id'],
                     "notification_url" => route('checkout.notifications'),
                     "payer" => [
-                        "email" =>  $contents['payer']['email'],
+                        "email" => $contents['payer']['email'],
                         "first_name" => $contents['payer']['first_name'],
                         "last_name" => $contents['payer']['last_name'],
                         "identification" => [
@@ -276,11 +276,10 @@ class CheckoutController extends Controller
                             "city" => $contents['payer']['address']['city'],
                             "federal_unit" => $contents['payer']['address']['federal_unit'],
                         ],
-
                     ],
                     "date_of_expiration"   => Carbon::now('America/Recife')
-                                            ->addDays(10)
-                                            ->format('Y-m-d\TH:i:s.000-03:00'),
+                                                ->addDays(10)
+                                                ->format('Y-m-d\TH:i:s.000-03:00'),
                 ];
                 break;
             case 'master':
@@ -290,7 +289,7 @@ class CheckoutController extends Controller
             case 'elo':
             case 'visa':
                 $request = [
-                    "transaction_amount" => (float) $categoria->valor_total,
+                    "transaction_amount" => $valorEfetivo,
                     "token" => $contents['token'],
                     "installments" => $contents['installments'],
                     "payment_method_id" => $contents['payment_method_id'],
