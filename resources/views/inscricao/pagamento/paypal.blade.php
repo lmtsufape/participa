@@ -13,7 +13,7 @@
                 <div class="card-body">
                     <div class="alert alert-info">
                         <strong>Evento:</strong> {{ $evento->nome }}<br>
-                        <strong>Valor:</strong> {{ config('paypal.currency', 'USD') }} {{ number_format($categoria->valor_total, 2, '.', ',') }}
+                        <strong>Valor:</strong> {{ config('paypal.currency', 'BRL') }} {{ number_format($categoria->valorComDescontoDeAssociado(), 2, ',', '.') }}
                     </div>
 
                     <div class="text-center mb-4">
