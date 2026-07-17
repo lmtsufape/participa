@@ -12,9 +12,6 @@
                     <h1>Trabalhos/Atividades a serem avaliadas</h1>
                     <br>
                 </div>
-                {{-- <div class="col-sm-2">
-                    <a href="{{route('evento.criar')}}" class="btn btn-primary">Novo Evento</a>
-                </div> --}}
             </div>
         </div>
     </div>
