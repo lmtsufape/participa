@@ -8,11 +8,8 @@
     <div class="row justify-content-center titulo-detalhes">
         <div class="col-sm-12">
             <div class="row">
-                <div class="col-sm-10">
+                <div class="col-sm-12">
                     <h1>{{ __('Meus eventos - Coordenação comissão científica') }}</h1>
-                </div>
-                <div class="col-sm-2">
-                    <a href="{{route('evento.criar')}}" class="btn btn-primary">{{ __('Novo evento') }}</a>
                 </div>
             </div>
         </div>
