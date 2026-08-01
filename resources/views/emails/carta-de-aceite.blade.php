@@ -58,7 +58,7 @@
                             <p style="margin:0 0 14px 0;font-size:16px; text-align:justify;">
                                 A Comissão Científica do <strong>{{ $trabalho->evento->nome }}</strong> tem a satisfação de comunicar o ACEITE do seu trabalho "<strong>{{ $trabalho->titulo }}</strong>", 
                                 na modalidade <strong>{{$trabalho->modalidade->nome}}</strong> para ser apresentado no Círculo de Cultura do Eixo:
-                                <strong>{{$trabalho->area->nome}} — Agroecologia, no <strong>{{ $trabalho->evento->nome }}</strong>. Reafirmamos que o trabalho para ser publicado nos anais do encontro precisa ser apresentado.
+                                <strong>{{$trabalho->area->nome}}</strong>, no <strong>{{ $trabalho->evento->nome }}</strong>. Reafirmamos que o trabalho para ser publicado precisa ser apresentado.
                             </p>
 
                             <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%"
