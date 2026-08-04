@@ -36,6 +36,23 @@
                                 </a>
                             </div>
                         </div>
+                        <div class="card-body p-4 border-start border-4" style="border-color: #f2a440 !important;">
+                            <h2 class="h3 mb-3" style="color: #3d93a9;">Prêmio EtnociênciAção</h2>
+                            <p class="text-muted">
+                                Confira abaixo as informações detalhadas para a edição de 2026.
+                            </p>
+                            
+                            <hr class="my-4">
+
+                            <div class="d-grid d-md-flex gap-3">
+                                <!-- Link Cronograma -->
+                                <a href="{{ route('premio.etnocienciacao', ['locale' => app()->getLocale()]) }}" 
+                                   class="btn btn-outline-info d-flex align-items-center" 
+                                   target="_blank">
+                                   <i class="bi bi-file-earmark-text me-2"></i> Visualizar informações
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </div>
 

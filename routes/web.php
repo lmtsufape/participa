@@ -124,6 +124,7 @@ Auth::routes(['verify' => true, 'register' => false]);
             Route::view('/premiacoes', 'premiacoes')->name('premiacoes');
             Route::view('/normas', 'normas')->name('normas');
             Route::view('/noticias', 'noticias')->name('noticias');
+            Route::view('/premio-etnocienciacao', 'premio_etnocienciacao')->name('premio.etnocienciacao');
         });
 
 
