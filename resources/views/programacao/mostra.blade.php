@@ -284,7 +284,7 @@
                 <h5 class="mb-4 fw-bold" style="color: #3d93a9; padding-bottom: 10px;">9. Cronograma</h5>
                 
                 <p style="text-align: justify; line-height: 1.6;">
-                    23/03/2026 a 22/07/2026
+                    23/03/2026 a 31/08/2026
                 </p>
                 
                 <hr>
