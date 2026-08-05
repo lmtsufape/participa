@@ -22,9 +22,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 use App\Models\Users\User;
 use App\Models\Users\Administrador;
 use Barryvdh\DomPDF\Facade\Pdf;
+use App\Exports\InscritosApoioInfantilExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class InscricaoController extends Controller
 {
@@ -878,5 +881,14 @@ class InscricaoController extends Controller
 
         return redirect()->route('evento.visualizar', ['id' => $inscricao->evento_id])
                         ->with('message', 'Sua pré-inscrição foi cancelada com sucesso.');
+    }
+
+    public function exportarInscritosApoioInfantilXLSX(Evento $evento)
+    {
+        $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
+
+        $nomeArquivo = 'inscritos_apoio_infantil_' . Str::slug($evento->nome) . '_' . date('d_m_Y') . '.xlsx';
+
+        return Excel::download(new InscritosApoioInfantilExport($evento), $nomeArquivo);
     }
 }
