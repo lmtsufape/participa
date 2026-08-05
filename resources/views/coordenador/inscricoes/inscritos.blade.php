@@ -43,6 +43,7 @@
                             Enviar e-mail
                         </button>
                         <a href="{{route('evento.exportarInscritosXLSX', $evento)}}" class="btn btn-success">Exportar .xlsx</a>
+                        <a href="{{route('evento.exportarInscritosApoioInfantilXLSX', $evento)}}" class="btn btn-warning" title="Exportar apenas inscritos com solicitação de apoio infantil">Exportar Apoio Infantil (.xlsx)</a>
                         {{-- <a href="{{route('evento.downloadInscritos', $evento)}}" class="btn btn-primary">Exportar .csv</a>--}}
 {{--                        <a href="{{route('evento.downloadInscritosCertifica', $evento)}}" class="btn btn-primary float-md-right mt-2">Exportar XLSX para o Certifica</a>--}}
                         <button type="button" class="button-prevent-multiple-submits btn btn-outline-success my-2 ml-1" data-bs-toggle="modal" data-bs-target="#modal-inscrever-participante">
@@ -355,6 +356,16 @@
                     <div class="form-group col-md-6">
                         <label for="">Celular</label>
                         <input type="text" class="form-control" disabled value="{{ $inscricao->user->celular }}">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="">Apoio Infantil Solicito?</label>
+                        <input type="text" 
+                            class="form-control" 
+                            value="{{ $inscricao->apoio_infantil ? 'Sim' : 'Não' }}" 
+                            disabled>
                     </div>
                 </div>
 
