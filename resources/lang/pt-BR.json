@@ -27,7 +27,7 @@
   "Register": "Registrar",
   "Remember Me": "Lembre-se de mim",
   "Reset Password": "Redefinir senha",
-  "Reset Password Notification": "Notificação de redefinição de senha",
+  "Reset Password Notification": "Redefinição de senha",
   "Send Password Reset Link": "Enviar link de redefinição de senha",
   "Server Error": "Erro do servidor",
   "Service Unavailable": "Serviço indisponível",
@@ -37,13 +37,17 @@
   "Too Many Attempts.": "Muitas tentativas.",
   "Too Many Requests": "Muitas solicitações",
   "Unauthorized": "Não autorizado",
-  "Verify Email Address": "(UFAPE/LMTS/Sistema Participa) Verifique o endereço de e-mail",
+  "Verify Email Address": "(UFRPE/LMTS/Sistema Participa) Verifique o endereço de e-mail",
   "Verify Your Email Address": "Verifique seu endereço de e-mail",
   "We won't ask for your password again for a few hours.": "Não solicitaremos sua senha novamente por algumas horas.",
   "You are receiving this email because we received a password reset request for your account.": "Você recebeu esse e-mail porque foi solicitado uma redefinição de senha na sua conta.",
   "Your email address is not verified.": "Seu endereço de e-mail não está verificado.",
   "Whoops!": "Ops!",
     "Visualizar eventos passados":"Visualizar eventos passados",
-  "usuarioInscritoNoEvento": "O usuário com e-mail :input precisa estar inscrito no evento"
+  "usuarioInscritoNoEvento": "O usuário com e-mail :input precisa estar inscrito no evento",
+  "usuarioCadastradoNaPlataforma": "O usuário com e-mail :input precisa estar cadastrado na plataforma",
+  "Meus Comprovantes": "Meus Comprovantes",
+  "Você ainda não possui comprovantes de inscrição.": "Você ainda não possui comprovantes de inscrição.",
+  "Os comprovantes ficarão disponíveis após a confirmação do pagamento das suas inscrições em eventos.": "Os comprovantes ficarão disponíveis após a confirmação do pagamento das suas inscrições em eventos."
 
 }

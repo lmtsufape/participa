@@ -6,6 +6,7 @@ use App\Models\Users\Revisor;
 use App\Models\Users\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
 
 class Trabalho extends Model
 {
@@ -21,8 +22,17 @@ class Trabalho extends Model
         'titulo', 'autores', 'data', 'modalidadeId', 'areaId', 'autorId', 'eventoId', 'resumo', 'avaliado',
         'campoextra1simples', 'campoextra2simples', 'campoextra3simples', 'campoextra4simples',
         'campoextra5simples', 'campoextra1grande', 'campoextra2grande', 'campoextra3grande',
-        'campoextra4grande', 'campoextra5grande', 'status',
+        'campoextra4grande', 'campoextra5grande', 'status', 'aprovado', 'permite_correcao', 'apresentado'
     ];
+
+    protected $casts = [
+        'aprovacao_emitida_em' => 'datetime',
+        'permite_correcao' => 'boolean'
+    ];
+
+    public static function gerarCodigo(){
+        return strtoupper(implode('-', str_split(bin2hex(random_bytes(16)), 4)));
+    }
 
     public function recurso()
     {
@@ -69,14 +79,27 @@ class Trabalho extends Model
         return $this->hasMany('App\Models\Submissao\Parecer', 'trabalhoId');
     }
 
-    public function atribuicoes()
+    public function revisores()
     {
-        return $this->belongsToMany('App\Models\Users\Revisor', 'atribuicaos', 'trabalho_id', 'revisor_id')->withPivot('confirmacao', 'parecer')->withTimestamps();
+        return $this->belongsToMany('App\Models\Users\Revisor', 'atribuicaos', 'trabalho_id', 'revisor_id')->withPivot('confirmacao', 'parecer','prazo_correcao', 'justificativa_recusa')->withTimestamps();
     }
 
     public function evento()
     {
         return $this->belongsTo('App\Models\Submissao\Evento', 'eventoId');
+    }
+
+    public function userRevisorTrabalho(): ?Revisor
+    {
+        $user = Auth::user();
+
+        if (!$user) {
+            return null;
+        }
+
+        return $this->revisores()
+                    ->where('user_id', $user->id)
+                    ->first();
     }
 
     public function avaliacoes()
@@ -115,13 +138,24 @@ class Trabalho extends Model
     {
         $revisor = Revisor::where([['user_id', $user->id], ['areaId', $this->area->id],
             ['modalidadeId', $this->modalidade->id], ])->first();
+                // Armazena o resultado da consulta em uma variável.
+        $atribuicao = $this->revisores()->where('revisor_id', $revisor->id)->first();
 
-        return $this->atribuicoes()->where('revisor_id', $revisor->id)->first()->pivot->parecer;
+        // Verifica se a atribuição foi encontrada.
+        if ($atribuicao === null) {
+            return null;
+        }
+
+        if ($atribuicao->pivot === null) {
+            return null;
+        } else {
+            return $atribuicao->pivot->parecer;
+        }
     }
 
     public function getQuantidadeAvaliacoes()
     {
-        return $this->atribuicoes->map(function ($revisor) {
+        return $this->revisores->map(function ($revisor) {
             return $this->avaliado($revisor->user);
         })->filter()->count();
     }

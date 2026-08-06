@@ -40,6 +40,9 @@ class LoginController extends Controller
 
     protected function redirectTo()
     {
+        if (empty(auth()->user()->name)){
+            return route('perfil.update');
+        }
         return route('index');
     }
 }

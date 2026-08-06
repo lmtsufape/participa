@@ -3,6 +3,7 @@
 namespace App\Models\Users;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Submissao\Atividade;
 
 class Convidado extends Model
 {
@@ -12,6 +13,6 @@ class Convidado extends Model
 
     public function atividade()
     {
-        return $this->belongsTo('App\Models\Submissao\Atividade', 'atividade_id');
+        return $this->belongsTo(Atividade::class, 'atividade_id');
     }
 }

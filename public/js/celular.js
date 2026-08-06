@@ -1,11 +1,18 @@
 
-const phoneInputField = document.querySelector("#phone");
+const phoneInputField = document.querySelector("#celular");
 const phoneInput = window.intlTelInput(phoneInputField, {
     formatOnDisplay: true,
     hiddenInput: "full_number",
     preferredCountries: ["br", "us"],
         utilsScript:
         "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+
+    customPlaceholder: function(selectedCountryPlaceholder, selectedCountryData) {
+        if (selectedCountryData.iso2 === 'br') {
+            return '(00) 00000-0000';
+        }
+        return selectedCountryPlaceholder;
+    }
 });
 const info = document.querySelector(".alert-info");
 const error = document.querySelector("#celular-invalido");
@@ -33,7 +40,7 @@ $(phoneInputField).on("countrychange", function(event) {
     mask = newPlaceholder.replace(/[1-9]/g, "0");
 
     $(this).mask(mask);
-        
+
     if(phoneInputField.value == ""){
         phoneInput.setNumber("");
     }else{

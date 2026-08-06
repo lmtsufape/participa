@@ -35,10 +35,10 @@
                                                 <td>{{$criterio->peso}}</td>
                                                 <td>{{$modalidade->nome}}</td>
                                                 <td style="text-align:center">
-                                                    <a href="#" data-toggle="modal" data-target="#modalEditarCriterio{{$criterio->id}}"><img src="{{asset('img/icons/edit-regular.svg')}}" style="width:20px"></a>
+                                                    <a href="#" data-bs-toggle="modal" data-bs-target="#modalEditarCriterio{{$criterio->id}}"><img src="{{asset('img/icons/edit-regular.svg')}}" style="width:20px"></a>
                                                 </td>
                                                 <td style="text-align:center">
-                                                    <a href="#" data-toggle="modal" data-target="#modalExcluirCriterio{{$criterio->id}}"><img src="{{asset('img/icons/lixo.png')}}" style="width:20px"></a> 
+                                                    <a href="#" data-bs-toggle="modal" data-bs-target="#modalExcluirCriterio{{$criterio->id}}"><img src="{{asset('img/icons/lixo.png')}}" style="width:20px"></a>
                                                 </td>
                                             </tr>
                                         @endif
@@ -90,7 +90,7 @@
                                             <h6>Valores reais</h6>
                                         </div>
                                     </div>
-                                </div> 
+                                </div>
                             @endif
                             <div class="form-group">
                                 <div class="row">

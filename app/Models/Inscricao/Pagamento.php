@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Pagamento extends Model
 {
     protected $fillable = [
-        'valor', 'descricao', 'reference', 'codigo', 'status', 'tipo_pagamento_id',
+        'valor', 'taxa', 'descricao', 'reference', 'codigo', 'status', 'tipo_pagamento_id',
     ];
 
     public function inscricao()

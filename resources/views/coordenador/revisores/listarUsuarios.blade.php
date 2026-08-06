@@ -12,7 +12,7 @@
 {{--         <div class="col-sm-2">
 
           <!-- Button trigger modal -->
-          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
             Adicionar Usuário
           </button>
 
@@ -58,12 +58,6 @@
       </div>
     </div>
     <hr>
-    @if(session('error'))
-    <div class="alert alert-danger">{{ session('error') }}</div>
-    @endif
-    @if(session('success'))
-    <div class="alert alert-success">{{ session('success') }}</div>
-    @endif
     <table class="table table-bordered">
       <thead>
         <tr>
@@ -101,7 +95,7 @@
             </td>
             <td>
               <!-- Button trigger modal -->
-              <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal{{ $usuario->id }}">
+              <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal{{ $usuario->id }}">
                 Permissões
               </button>
               <!--inicio modal -->

@@ -15,7 +15,7 @@
                     {{__("Tem certeza de deseja excluir esse evento")}}?
                     <hr>
                     <div class="form-group">
-                        <label for="email">Email do criador do evento</label>
+                        <label for="email">{{ __('Email do criador do evento') }}</label>
                         <input type="email" class="form-control @error('email'.$evento->id) is-invalid @enderror" id="email" name="email{{$evento->id}}" placeholder="name@example.com" value="{{old('email'.$evento->id)}}">
                     </div>
                     @error('email'.$evento->id)

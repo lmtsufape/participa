@@ -5,14 +5,16 @@ namespace App\Http\Controllers\Submissao;
 use App\Http\Controllers\Controller;
 use App\Models\Submissao\Evento;
 use App\Models\Submissao\FormEvento;
+use App\Support\EventoModules;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class FormEventoController extends Controller
 {
     public function update(Request $request, $id)
     {
 
-        $evento = Evento::find($id);
+        $evento = Evento::findOrFail($id);
         $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
         $request->validate([
             'etiquetanomeevento' => ['nullable', 'string'],
@@ -76,42 +78,48 @@ class FormEventoController extends Controller
 
     public function exibirModulo(Request $request, $id)
     {
-        $formevento = FormEvento::where('eventoId', $id)->first();
-        $evento = Evento::find($id);
+        $evento = Evento::findOrFail($id);
         $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
-        if (isset($request->modinscricao)) {
-            $formevento->modinscricao = $request->modinscricao;
-        }
-        if (isset($request->modvalidarinscricao)) {
-            $formevento->modvalidarinscricao = $request->modvalidarinscricao;
-        }
-        if (isset($request->modprogramacao)) {
-            $formevento->modprogramacao = $request->modprogramacao;
-            $evento->exibir_calendario_programacao = isset($request->exibir_calendario);
-            $evento->exibir_pdf = isset($request->exibir_pdf);
-        }
-        if (isset($request->modorganizacao)) {
-            $formevento->modorganizacao = $request->modorganizacao;
-        }
-        if (isset($request->modsubmissao)) {
-            $formevento->modsubmissao = $request->modsubmissao;
-        }
-        $formevento->modinscritonoevento = $request->boolean('modinscritonoevento');
-        if (isset($request->modarquivo)) {
-            $evento->modarquivo = $request->modarquivo;
-        }
-        $evento->update();
-        $formevento->save();
+        $request->validate(array_fill_keys(EventoModules::requestFields(), ['sometimes', 'boolean']));
+
+        DB::transaction(function () use ($request, $evento) {
+            $formevento = FormEvento::where('eventoId', $evento->id)->firstOrFail();
+
+            foreach (EventoModules::definitions() as $module) {
+                $enabledField = $module['enabled']['field'];
+                $enabled = $request->boolean($enabledField);
+
+                $formevento->{$enabledField} = $enabled;
+
+                foreach ($module['options'] as $option) {
+                    $value = $enabled && $request->boolean($option['field']);
+                    $column = $option['column'] ?? $option['field'];
+
+                    if ($option['storage'] === 'evento') {
+                        $evento->{$column} = $value;
+                    } else {
+                        $formevento->{$column} = $value;
+                    }
+                }
+            }
+
+            $evento->save();
+            $formevento->save();
+        });
 
         return redirect()->back()->with(['success' => 'Módulos em uso salvos com sucesso!']);
     }
 
     public function indexModulo($id)
     {
-        $evento = Evento::find($id);
+        $evento = Evento::findOrFail($id);
         $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
-        $modulos = FormEvento::where('eventoId', $id)->first();
+        $modulos = FormEvento::where('eventoId', $id)->firstOrFail();
 
-        return view('coordenador.evento.modulos')->with(['modulos' => $modulos, 'evento' => $evento]);
+        return view('coordenador.evento.modulos')->with([
+            'modulos' => $modulos,
+            'evento' => $evento,
+            'moduleGroups' => EventoModules::definitions(),
+        ]);
     }
 }
