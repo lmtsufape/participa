@@ -348,7 +348,7 @@
 
         @if($temSubmissao || $temAreas)
             <div id="submissao_trabalho" class="row py-4">
-                @if($periodoSubmissao)
+                @if($periodoSubmissao ?? false)
                     <h4 class="text-my-primary">{{ __('Submeta seu trabalho') }}</h4>
                 @endif
                 {{-- coluna de Modalidades --}}
