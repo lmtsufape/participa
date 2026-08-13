@@ -10,6 +10,7 @@
 
 <div id="paymentBrick_container">
 </div>
+<div id="payment-error" class="alert alert-danger d-none mt-3" role="alert"></div>
 @endsection
 
 @section('javascript')
@@ -23,6 +24,7 @@
     const bricksBuilder = mp.bricks();
     const categoria = @json($categoria);
     const user = @json($user);
+    const endereco = user.endereco || {};
     const inscricao = @json($inscricao);
     const evento = @json($evento);
     const renderPaymentBrick = async (bricksBuilder) => {
@@ -41,13 +43,13 @@
                     },
                     email: user.email,
                     address: {
-                        zipCode: user.endereco.cep,
-                        federalUnit: user.endereco.uf,
-                        city: user.endereco.cidade,
-                        neighborhood: user.endereco.bairro,
-                        streetName: user.endereco.rua,
-                        streetNumber: user.endereco.numero,
-                        complement: user.endereco.complemento,
+                        zipCode: endereco.cep || '',
+                        federalUnit: endereco.uf || '',
+                        city: endereco.cidade || '',
+                        neighborhood: endereco.bairro || '',
+                        streetName: endereco.rua || '',
+                        streetNumber: endereco.numero || '',
+                        complement: endereco.complemento || '',
                     },
                 },
             },
@@ -89,19 +91,27 @@
                                 },
                                 body: JSON.stringify(formData),
                             })
-                            .then((response) => window.location.href = '/checkout/status-pagamento/' + evento.id)
-                            .then((response) => {
+                            .then(async (response) => {
+                                if (!response.ok) {
+                                    const data = await response.json().catch(() => ({}));
+                                    throw new Error(data.message || 'Não foi possível processar o pagamento. Tente novamente.');
+                                }
+                                window.location.href = '/checkout/status-pagamento/' + evento.id;
                                 resolve();
                             })
                             .catch((error) => {
-                                // manejar a resposta de erro ao tentar criar um pagamento
+                                const errorContainer = document.getElementById('payment-error');
+                                errorContainer.textContent = error.message;
+                                errorContainer.classList.remove('d-none');
                                 reject();
                             });
                     });
                 },
                 onError: (error) => {
-                    // callback chamado para todos os casos de erro do Brick
                     console.error(error);
+                    const errorContainer = document.getElementById('payment-error');
+                    errorContainer.textContent = 'Não foi possível carregar o formulário de pagamento. Atualize a página e tente novamente.';
+                    errorContainer.classList.remove('d-none');
                 },
             },
         };

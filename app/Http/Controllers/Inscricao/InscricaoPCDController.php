@@ -9,6 +9,7 @@ use App\Models\Submissao\Evento;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
 use App\Mail\SolicitacaoPCDRejeitada;
 use App\Mail\SolicitacaoPCDAprovada;
 
@@ -66,7 +67,14 @@ class InscricaoPCDController extends Controller
         
         $solicitacao->update(['status' => 'aprovado']);
 
-        Mail::to($solicitacao->user->email)->send(new SolicitacaoPCDAprovada($solicitacao->user, $solicitacao->evento));
+        try {
+            Mail::to($solicitacao->user->email)->send(new SolicitacaoPCDAprovada($solicitacao->user, $solicitacao->evento));
+        } catch (\Throwable $exception) {
+            Log::error('Solicitação PCD aprovada, mas o e-mail de confirmação falhou.', [
+                'solicitacao_id' => $solicitacao->id,
+                'erro' => $exception->getMessage(),
+            ]);
+        }
 
         return redirect()->back()->with(['message' => 'Solicitação aprovada e inscrição criada com sucesso.']);
     }
@@ -79,7 +87,14 @@ class InscricaoPCDController extends Controller
 
         $solicitacao->update(['status' => 'rejeitado']);
         
-        Mail::to($solicitacao->user->email)->send(new SolicitacaoPCDRejeitada($solicitacao->user, $solicitacao->evento));
+        try {
+            Mail::to($solicitacao->user->email)->send(new SolicitacaoPCDRejeitada($solicitacao->user, $solicitacao->evento));
+        } catch (\Throwable $exception) {
+            Log::error('Solicitação PCD rejeitada, mas o e-mail de confirmação falhou.', [
+                'solicitacao_id' => $solicitacao->id,
+                'erro' => $exception->getMessage(),
+            ]);
+        }
 
         return redirect()->back()->with(['message' => 'Solicitação rejeitada com sucesso.']);
     }
@@ -88,6 +103,13 @@ class InscricaoPCDController extends Controller
     {
         $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $solicitacao->evento);
         abort_unless($solicitacao->evento->inscricaoPCDHabilitada(), 404);
+
+        if (!$solicitacao->comprovante_path || !Storage::exists($solicitacao->comprovante_path)) {
+            return redirect()->back()->with([
+                'message' => 'O comprovante desta solicitação não foi encontrado.',
+                'class' => 'danger',
+            ]);
+        }
 
         return Storage::download($solicitacao->comprovante_path);
     }

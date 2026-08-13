@@ -1,10 +1,14 @@
+@php
+    $categoriasPermitidas = auth()->check() ? $evento->categoriasPermitidasParaUsuario() : collect();
+    $eventoExigeCategoria = $evento->categoriasParticipantes()->where('permite_inscricao', true)->exists();
+@endphp
 <div class="modal fade" id="modalInscrever" tabindex="-1" role="dialog" aria-labelledby="#label" aria-hidden="true">
     <div class="modal-dialog modal-lg " role="document">
         <div class="modal-content">
             <div class="modal-header position-relative" style="background-color: #114048ff; color: white;">
                 <h5 class="modal-title w-100 text-center m-0">
-                    @if (auth()->check() && $evento->categoriasParticipantes()->where('permite_inscricao', true)->exists()) {{ __('Escolha uma das categorias abaixo e clique em "Confirmar" para realizar a sua pré-inscrição!') }}
-                    @elseif(auth()->check() && !$evento->categoriasParticipantes()->where('permite_inscricao', true)->exists()) {{ __('Clique em "Confirmar" para realizar a sua pré-inscrição!') }}
+                    @if (auth()->check() && $categoriasPermitidas->isNotEmpty()) {{ __('Escolha uma das categorias abaixo e clique em "Confirmar" para realizar a sua pré-inscrição!') }}
+                    @elseif(auth()->check() && !$eventoExigeCategoria) {{ __('Clique em "Confirmar" para realizar a sua pré-inscrição!') }}
                     @else {{ __('Atenção') }}! @endif</h5>
                 <button type="button" class="btn-close btn-close-white position-absolute end-0 top-50 translate-middle-y me-3" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -35,7 +39,7 @@
                             </a>
                         </div>
 {{--           --}}
-                    @elseif ($evento->categoriasParticipantes()->where('permite_inscricao', true)->exists())
+                    @elseif ($categoriasPermitidas->isNotEmpty())
                         <h6>Atenção!</h6>
                         <ul>
                             <li>Para participar do {{$evento->nome}}, é necessário concluir a inscrição e, caso a modalidade escolhida seja paga, efetuar o pagamento.</li>
@@ -51,7 +55,7 @@
                                                     {{ $message }}
                                                 </div>
                                             @enderror
-                                            @if ($evento->categoriasPermitidasParaUsuario()->count() > 4)
+                                            @if ($categoriasPermitidas->count() > 4)
                                             <div class="d-flex align-items-center justify-content-center gap-2 mb-3">
                                                 <a class="carousel-arrow-btn btn" id="categoriaAnterior"
                                                     href="#carouselCategorias" title="Previous" role="button"
@@ -70,7 +74,7 @@
                                             </div>
                                             @endif
                                             <div class="card-group">
-                                                @foreach ($evento->categoriasPermitidasParaUsuario()->chunk(4) as $chunk)
+                                                @foreach ($categoriasPermitidas->chunk(4) as $chunk)
                                                     <div class="carousel-item {{ $loop->first ? 'active' : '' }}">
                                                         <div class="row">
                                                             @foreach ($chunk as $categoria)
@@ -113,7 +117,7 @@
                                 </div>
                             </div>
                             <div x-show="categoria != ''">
-                                @foreach ($evento->categoriasParticipantes as $categoria)
+                                @foreach ($categoriasPermitidas as $categoria)
                                     <div x-data="{ id: {{ $categoria->id }} }">
                                         <template x-if="categoria == id">
                                             <div class="campos-extras" id="campos-extras-{{ $categoria->id }}">
@@ -487,9 +491,13 @@
                             </div>
                         </div>
                 </div>
-            @else
+            @elseif (!$eventoExigeCategoria)
                 @include('componentes.mensagens')
                 <p>{{ __('Tem certeza que deseja se inscrever nesse evento?') }}</p>
+            @else
+                <div class="alert alert-warning" role="alert">
+                    {{ __('Não há uma categoria de inscrição disponível para o seu perfil neste momento.') }}
+                </div>
                 @endif
 
 
@@ -504,7 +512,7 @@
                         <button type="submit"
                                 class="btn btn-primary button-prevent-multiple-submits"
                                 style="background-color: #114048ff; border-color: #114048ff;"
-                                @if($evento->categoriasParticipantes()->where('permite_inscricao', true)->exists())
+                                @if($eventoExigeCategoria)
                                     :disabled="!categoria || categoria === ''"
                             @endif
                         >
