@@ -596,6 +596,21 @@
                         <div class="card h-100">
                             <div class="card-body text-center">
                                 <div class="mb-3">
+                                    <img src="{{asset('img/icons/file-download-solid.svg')}}" alt="Necessidades Especiais" style="width: 48px; height: 48px;">
+                                </div>
+                                <h5 class="card-title">Necessidades Especiais</h5>
+                                <p class="card-text">Exportar inscritos com necessidades especiais (.xlsx)</p>
+                                <a href="{{ route('evento.exportarInscritosNecessidadesEspeciaisXLSX', $evento) }}" class="btn btn-outline-success w-100">
+                                    <img src="{{asset('img/icons/file-download-solid.svg')}}" alt="Exportar" style="width: 16px; height: 16px;" class="me-2">Exportar PCD/Especiais (.xlsx)
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <div class="card h-100">
+                            <div class="card-body text-center">
+                                <div class="mb-3">
                                     <img src="{{asset('img/icons/file-download-solid.svg')}}" alt="Confirmar presença" style="width: 48px; height: 48px;">
                                 </div>
                                 <h5 class="card-title">Confirmar presença</h5>

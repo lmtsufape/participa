@@ -10,6 +10,7 @@ use App\Exports\TrabalhosExport;
 use App\Exports\TrabalhosExportForCertifica;
 use App\Exports\RelatorioGeralExport;
 use App\Exports\ComissaoCientificaExport;
+use App\Exports\InscritosNecessidadesEspeciaisExport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreEventoRequest;
 use App\Http\Requests\UpdateEventoRequest;
@@ -3089,5 +3090,14 @@ class EventoController extends Controller
 
         $nomeArquivo = Str::slug($evento->nome) . '-revisores.xlsx';
         return Excel::download(new \App\Exports\RevisoresExport($evento), $nomeArquivo, \Maatwebsite\Excel\Excel::XLSX);
+    }
+
+    public function exportarInscritosNecessidadesEspeciaisXLSX(Evento $evento)
+    {
+        $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
+
+        $nomeArquivo = Str::slug($evento->nome) . '-inscritos-necessidades-especiais.xlsx';
+
+        return Excel::download(new InscritosNecessidadesEspeciaisExport($evento), $nomeArquivo, \Maatwebsite\Excel\Excel::XLSX);
     }
 }
