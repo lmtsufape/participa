@@ -198,115 +198,160 @@ class CheckoutController extends Controller
         $user = auth()->user();
         $inscricao = $evento->inscricaos()->where('user_id', $user->id)->first();
         $categoria = $inscricao->categoria;
-        $descricao = 'Inscrição no evento '.$evento->nome.' com valor de '.$categoria->valor_total;
 
-        $request = $this->gerarRequest($contents, $categoria);
+        $requestMP = $this->gerarRequest($contents, $categoria, $inscricao, $evento, $user);
 
         $request_options = new RequestOptions();
-        $request_options->setCustomHeaders(["X-Idempotency-Key: ".Str::uuid()]);
-        $valorEfetivo = $categoria->valorComDescontoDeAssociado();
+        $request_options->setCustomHeaders(["X-Idempotency-Key: " . (string) Str::uuid()]);
+        
+        $valorEfetivo = (float) str_replace(',', '.', (string) $categoria->valorComDescontoDeAssociado());
 
         try {
-            $payment = $client->create($request, $request_options);
-            // $tipo_pagamento = TipoPagamento::where('descricao', $contents['payment_method_id'])->first();
-            $descricao = 'Inscrição no evento '.$evento->nome.' com valor de '.$categoria->valor_total;
+            $payment = $client->create($requestMP, $request_options);
+            
+            $descricao = 'Inscrição no evento ' . $evento->nome . ' - ' . $categoria->nome;
             $pagamento = Pagamento::create([
                 'valor' => (float) $valorEfetivo,
-                // 'tipo_pagamento_id' => $tipo_pagamento->id,
                 'descricao' => $descricao,
-                'codigo' => $payment->id,
+                'codigo' => (string) $payment->id,
                 'status' => $payment->status,
                 'gateway' => 'mercadopago',
             ]);
+            
             $inscricao->pagamento_id = $pagamento->id;
+            
+            if ($payment->status === 'approved') {
+                $inscricao->finalizada = true;
+            }
+            
             $inscricao->save();
-            return redirect()->route('checkout.statusPagamento', ['evento' => $evento->id]);
+
+            return response()->json([
+                'status' => 'success',
+                'payment_id' => $payment->id,
+                'payment_status' => $payment->status,
+                'redirect_url' => route('checkout.statusPagamento', ['evento' => $evento->id])
+            ]);
+
         } catch (MPApiException $e) {
-            Log::error('MPApiException: Erro em operação de pagamento com'.$contents['payment_method_id'], [
+            Log::error('MPApiException: Erro em operação de pagamento MP', [
+                'payment_method_id' => $contents['payment_method_id'] ?? null,
                 'status_code' => $e->getApiResponse()->getStatusCode(),
                 'content' => $e->getApiResponse()->getContent(),
             ]);
-        } catch (\Exception $e) {
-            Log::error('Exception: ' . $e->getMessage());
-        } catch (Throwable $e) {
-            Log::error('Erro em operação de pagamento com'.$contents['payment_method_id'], [
+
+            $errorContent = $e->getApiResponse()->getContent();
+            $msgErro = $errorContent['message'] ?? 'Ocorreu um erro ao processar com Mercado Pago.';
+
+            return response()->json(['status' => 'error', 'message' => $msgErro], 422);
+        } catch (\Throwable $e) {
+            Log::error('Erro em operação de pagamento Mercado Pago', [
                 'message' => $e->getMessage(),
                 'file' => $e->getFile(),
                 'line' => $e->getLine(),
                 'trace' => $e->getTraceAsString(),
             ]);
-            return redirect()->back()->withErrors(['msg' => 'Ocorreu um erro ao tentar realizar o pagamento, tente novamente.']);
+
+            return response()->json(['status' => 'error', 'message' => 'Erro interno ao processar o pagamento.'], 500);
         }
     }
 
-    private function gerarRequest($contents, CategoriaParticipante $categoria)
+    private function gerarRequest($contents, CategoriaParticipante $categoria, $inscricao, Evento $evento, $user)
     {
-        $request = [];
-        $valorEfetivo = (float) $categoria->valorComDescontoDeAssociado();
+        $valorEfetivo = (float) number_format((float) str_replace(',', '.', (string) $categoria->valorComDescontoDeAssociado()), 2, '.', '');
+        $description = 'Inscricao: ' . Str::limit($evento->nome, 30, '') . ' - ' . Str::limit($categoria->nome, 20, '');
+        
+        $partesNome = explode(' ', trim($user->name));
+        $firstName = $partesNome[0] ?? 'Participante';
+        $lastName = count($partesNome) > 1 ? implode(' ', array_slice($partesNome, 1)) : 'Sobrenome';
 
-        switch ($contents['payment_method_id']) {
-            case 'pix':
-                $request = [
-                    "transaction_amount" => $valorEfetivo,
-                    "payment_method_id" => "pix",
-                    "notification_url" => route('checkout.notifications'),
-                    "payer" => [
-                        "email" => $contents['payer']['email'],
-                    ],
-                ];
-                break;
-            case 'bolbradesco':
-                $request = [
-                    "transaction_amount" => $valorEfetivo,
-                    "payment_method_id" => $contents['payment_method_id'],
-                    "notification_url" => route('checkout.notifications'),
-                    "payer" => [
-                        "email" => $contents['payer']['email'],
-                        "first_name" => $contents['payer']['first_name'],
-                        "last_name" => $contents['payer']['last_name'],
-                        "identification" => [
-                            "type" => $contents['payer']['identification']['type'],
-                            "number" => $contents['payer']['identification']['number'],
-                        ],
-                        "address"=>  [
-                            "zip_code" => $contents['payer']['address']['zip_code'],
-                            "street_name" => $contents['payer']['address']['street_name'],
-                            "street_number" => $contents['payer']['address']['street_number'],
-                            "neighborhood" => $contents['payer']['address']['neighborhood'],
-                            "city" => $contents['payer']['address']['city'],
-                            "federal_unit" => $contents['payer']['address']['federal_unit'],
-                        ],
-                    ],
-                    "date_of_expiration"   => Carbon::now('America/Recife')
-                                                ->addDays(10)
-                                                ->format('Y-m-d\TH:i:s.000-03:00'),
-                ];
-                break;
-            case 'master':
-            case 'amex':
-            case 'cabal':
-            case 'hipercard':
-            case 'elo':
-            case 'visa':
-                $request = [
-                    "transaction_amount" => $valorEfetivo,
-                    "token" => $contents['token'],
-                    "installments" => $contents['installments'],
-                    "payment_method_id" => $contents['payment_method_id'],
-                    "issuer_id" => $contents['issuer_id'],
-                    "notification_url" => route('checkout.notifications'),
-                    "payer" => [
-                        "email" => $contents['payer']['email'],
-                        "identification" => [
-                            "type" => $contents['payer']['identification']['type'],
-                            "number" => $contents['payer']['identification']['number'],
-                        ],
-                    ],
-                ];
-                break;
-            default:
-                throw new Exception('Método de pagamento não suportado: '.$contents['payment_type_id']);
+        $docType = 'CPF';
+        $docNumber = preg_replace('/\D/', '', (string) ($user->cpf ?? ''));
+        if (empty($docNumber) && !empty($user->cnpj)) {
+            $docType = 'CNPJ';
+            $docNumber = preg_replace('/\D/', '', (string) $user->cnpj);
         }
+
+        $payerBase = [
+            "email" => $contents['payer']['email'] ?? $user->email,
+            "first_name" => $contents['payer']['first_name'] ?? $firstName,
+            "last_name" => $contents['payer']['last_name'] ?? $lastName,
+            "identification" => [
+                "type" => $contents['payer']['identification']['type'] ?? $docType,
+                "number" => preg_replace('/\D/', '', (string) ($contents['payer']['identification']['number'] ?? $docNumber)),
+            ]
+        ];
+
+        if ($user->endereco) {
+            $payerBase["address"] = [
+                "zip_code" => preg_replace('/\D/', '', (string) $user->endereco->cep),
+                "street_name" => $user->endereco->rua ?? 'Rua',
+                "street_number" => $user->endereco->numero ?? 'S/N',
+                "neighborhood" => $user->endereco->bairro ?? 'Bairro',
+                "city" => $user->endereco->cidade ?? 'Cidade',
+                "federal_unit" => $user->endereco->uf ?? 'PE',
+            ];
+        }
+
+        $items = [
+            [
+                "id" => (string) $categoria->id,
+                "title" => $description,
+                "description" => 'Inscrição de participante na categoria ' . $categoria->nome,
+                "category_id" => "services",
+                "quantity" => 1,
+                "unit_price" => $valorEfetivo,
+            ]
+        ];
+
+        $request = [
+            "transaction_amount" => $valorEfetivo,
+            "description" => $description,
+            "external_reference" => "INSCRICAO_" . $inscricao->id . "_EVT_" . $evento->id,
+            "notification_url" => route('checkout.notifications'),
+            "additional_info" => [
+                "items" => $items,
+                "payer" => [
+                    "first_name" => $firstName,
+                    "last_name" => $lastName,
+                    "phone" => [
+                        "area_code" => substr(preg_replace('/\D/', '', (string)$user->celular), 0, 2) ?: "11",
+                        "number" => substr(preg_replace('/\D/', '', (string)$user->celular), 2) ?: "999999999"
+                    ]
+                ]
+            ],
+            "payer" => $payerBase
+        ];
+
+        $paymentMethodId = $contents['payment_method_id'] ?? '';
+
+        switch ($paymentMethodId) {
+            case 'pix':
+                $request["payment_method_id"] = "pix";
+                break;
+
+            case 'bolbradesco':
+            case 'pec':
+                $request["payment_method_id"] = $paymentMethodId;
+                $request["date_of_expiration"] = Carbon::now('America/Recife')
+                    ->addDays(5)
+                    ->format('Y-m-d\TH:i:s.000-03:00');
+                break;
+
+            default:
+                if (isset($contents['token'])) {
+                    $request["token"] = $contents['token'];
+                    $request["installments"] = (int) ($contents['installments'] ?? 1);
+                    $request["payment_method_id"] = $contents['payment_method_id'];
+                    if (isset($contents['issuer_id'])) {
+                        $request["issuer_id"] = (int) $contents['issuer_id'];
+                    }
+                } else {
+                    throw new Exception('Método ou token de pagamento inválido: ' . $paymentMethodId);
+                }
+                break;
+        }
+
         return $request;
     }
 
