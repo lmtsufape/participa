@@ -41,6 +41,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class TrabalhoController extends Controller
 {
@@ -1571,5 +1572,42 @@ class TrabalhoController extends Controller
         $trabalho->update();
 
         return redirect()->back()->with('success', 'Validação da correção realizada com sucesso!');
+    }
+
+    /**
+     * Gera e faz o download do PDF da Carta de Aceite
+     *
+     * @param string $codigo
+     * @return \Illuminate\Http\Response
+     */
+    public function downloadCartaAceitePdf($codigo)
+    {
+        $hash = hash('sha256', str_replace('-', '', $codigo));
+        
+        $trabalho = Trabalho::where('hash_codigo_aprovacao', $hash)
+            ->where('aprovado', true)
+            ->firstOrFail();
+
+        $logoPath = public_path('img/logo.png');
+        $logoBase64 = null;
+        if (file_exists($logoPath)) {
+            $type = pathinfo($logoPath, PATHINFO_EXTENSION);
+            $data = file_get_contents($logoPath);
+            $logoBase64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
+        }
+
+        $pdf = Pdf::loadView('pdf.carta-de-aceite-pdf', [
+            'trabalho'   => $trabalho,
+            'codigo'     => $codigo,
+            'logoBase64' => $logoBase64,
+        ])->setPaper('a4', 'portrait')->setOptions([
+            'defaultFont'          => 'sans-serif',
+            'isHtml5ParserEnabled' => true,
+            'isRemoteEnabled'      => true,
+        ]);
+
+        $nomeArquivo = 'carta-de-aceite-' . Str::slug($trabalho->titulo) . '.pdf';
+
+        return $pdf->download($nomeArquivo);
     }
 }
