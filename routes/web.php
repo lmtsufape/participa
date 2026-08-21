@@ -92,6 +92,8 @@ Route::view('/aviso-de-privacidade', 'avisodeprivacidade')->name('aviso.de.priva
 Route::get('/evento/busca', [EventoController::class, 'buscaLivre'])->name('busca.eventos');
 Route::get('/evento/buscar-livre', [EventoController::class, 'buscaLivreAjax'])->name('busca.livre.ajax');
 
+Route::get('/carta-de-aceite/download/{codigo}', [TrabalhoController::class, 'downloadCartaAceitePdf'])->name('trabalho.cartaAceite.downloadPdf');
+
 Route::post('/inscricao/cancelar-propria/{id}', [InscricaoController::class, 'cancelarPropriaInscricao'])->name('inscricao.cancelar-propria');
 
 
