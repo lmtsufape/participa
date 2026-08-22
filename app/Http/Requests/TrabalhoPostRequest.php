@@ -45,6 +45,12 @@ class TrabalhoPostRequest extends FormRequest
     {
         $evento = Evento::find(request()->eventoId);
         $modalidade = Modalidade::find(request()->modalidadeId);
+        $emailRules = ['nullable', 'string', new CoautorInscritoNoEvento($evento), new CoautorCadastrado($evento)];
+
+        if (!is_null($evento->numMaxCoautores) && $evento->numMaxCoautores > 0) {
+            $emailRules[] = new MaxTrabalhosCoautor($evento->numMaxCoautores);
+        }
+        
         $validate_array = [
             'nomeTrabalho' => ['required', 'string'],
             'nomeTrabalho_en' => ['nullable', 'string'],
@@ -55,7 +61,7 @@ class TrabalhoPostRequest extends FormRequest
             'resumo_en' => ['nullable', 'string'],
             'nomeCoautor.*' => ['string'],
             'emailCoautor' => [new MaxCoautoresNaModalidade($modalidade)],
-            'emailCoautor.*' => ['nullable','string', new MaxTrabalhosCoautor($evento->numMaxCoautores), new CoautorInscritoNoEvento($evento), new CoautorCadastrado($evento)],
+            'emailCoautor.*' => $emailRules,
             'coautorCadastrado.*' => ['nullable', 'in:sim,nao'],
             'vinculoCoautor.*' => ['nullable', 'string'],
             'arquivo' => ['nullable', 'file', new FileType($modalidade, new MidiaExtra, request()->arquivo, true)],

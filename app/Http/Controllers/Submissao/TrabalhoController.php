@@ -213,8 +213,10 @@ class TrabalhoController extends Controller
             $trabalhosDoAutor = Trabalho::where('eventoId', $request->eventoId)->where('autorId', Auth::user()->id)->where('status', '!=', 'arquivado')->count();
             // $areaModalidade = AreaModalidade::where('areaId', $request->araeaId)->where('modalidadeId', $request->modalidadeId)->first();
             Log::debug('Numero de trabalhos' . $evento);
-            if ($evento->numMaxTrabalhos != null && $trabalhosDoAutor >= $evento->numMaxTrabalhos) {
-                return redirect()->back()->withErrors(['numeroMax' => 'Número máximo de trabalhos permitidos atingido.'])->withInput($validatedData);
+            if (!is_null($evento->numMaxTrabalhos) && $evento->numMaxTrabalhos > 0 && $trabalhosDoAutor >= $evento->numMaxTrabalhos) {
+                return redirect()->back()
+                    ->withErrors(['numeroMax' => 'Número máximo de trabalhos permitidos atingido.'])
+                    ->withInput($validatedData);
             }
 
             $coautoresIds = [];
@@ -1134,7 +1136,10 @@ class TrabalhoController extends Controller
 
             switch ($request->aprovado) {
                 case 'true':
-                    if($trabalho->coautors->count() <= $trabalho->modalidade->numMaxCoautores){
+                    $limiteModalidade = $trabalho->modalidade->numMaxCoautores;
+                    $coautoresValidos = is_null($limiteModalidade) || $limiteModalidade <= 0 || ($trabalho->coautors->count() <= $limiteModalidade);
+
+                    if($coautoresValidos){
                         $autor_inscrito = Inscricao::where('user_id', $trabalho->autor->id)
                             ->where('evento_id', $trabalho->eventoId)
                             ->where('finalizada', true)
