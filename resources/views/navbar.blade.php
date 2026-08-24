@@ -2,6 +2,8 @@
     .profile-dropdown {
         width: min(420px, calc(100vw - 2rem));
         padding: .75rem;
+        max-height: calc(100vh - 5rem);
+        overflow-y: auto;
         border: 1px solid rgba(17, 64, 72, .12);
         border-radius: 8px;
         box-shadow: 0 18px 42px rgba(7, 27, 30, .18);
@@ -45,6 +47,12 @@
         border-top: 1px solid rgba(17, 64, 72, .1);
     }
 
+    .profile-dropdown__section:first-child {
+        margin-top: 0;
+        padding-top: 0;
+        border-top: 0;
+    }
+
     .profile-dropdown__label {
         display: flex;
         align-items: center;
@@ -63,6 +71,23 @@
         list-style: none;
         padding: 0;
         margin: 0;
+    }
+
+    .profile-dropdown__section--access .profile-dropdown__list {
+        padding: .3rem;
+        border-radius: 10px;
+        background: rgba(25, 101, 114, .055);
+    }
+
+    .profile-dropdown__section--activity .profile-dropdown__icon {
+        color: #114048ff;
+        background: rgba(25, 101, 114, .12);
+    }
+
+    .profile-dropdown__logout {
+        margin-top: .35rem;
+        padding-top: .65rem;
+        border-top: 1px solid rgba(17, 64, 72, .1);
     }
 
     .profile-dropdown__logout .profile-dropdown__icon {
@@ -133,18 +158,34 @@
                             <a id="menuDropdown" class="nav-link dropdown-toggle text-white fw-semibold" href="#"  role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 {{ Auth::user()->name }}
                             </a>
+                            @php
+                                $temComprovantes = Auth::user()->inscricaos()
+                                    ->where('finalizada', true)
+                                    ->exists();
+                                $temTrabalhos = Auth::user()->trabalho()
+                                    ->where('status', '!=', 'arquivado')
+                                    ->exists() || Auth::user()->coautor()->exists();
+                            @endphp
                             <ul class="dropdown-menu dropdown-menu-end profile-dropdown" aria-labelledby="menuDropdown">
-                                {{-- Link Perfil --}}
-                                <a class="dropdown-item" href="{{ route('perfil') }}">
-                                    <span class="profile-dropdown__icon"><i class="bi bi-person"></i></span>
-                                    <span>{{ __('Minha Conta') }}</span>
-                                </a>
-
-
                                 <li class="profile-dropdown__section">
                                     <div class="profile-dropdown__label">
+                                        <i class="bi bi-person-circle"></i>
+                                        @lang('public.conta')
+                                    </div>
+                                    <ul class="profile-dropdown__list">
+                                        <li>
+                                            <a class="dropdown-item" href="{{ route('perfil') }}">
+                                                <span class="profile-dropdown__icon"><i class="bi bi-person"></i></span>
+                                                <span>{{ __('Minha Conta') }}</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+
+                                <li class="profile-dropdown__section profile-dropdown__section--access">
+                                    <div class="profile-dropdown__label">
                                         <i class="bi bi-grid-3x3-gap"></i>
-                                        @lang('public.perfis')
+                                        @lang('public.perfisAcesso')
                                     </div>
                                     {{-- Link Perfil --}}
                                     <ul class="profile-dropdown__list">
@@ -236,41 +277,46 @@
                                     </ul>
                                 </li>
 
-                                @php
-                                    $temComprovantes = Auth::user()->inscricaos()
-                                        ->where('finalizada', true)
-                                        ->exists();
-                                @endphp
+                                @if($temComprovantes || $temTrabalhos)
+                                    <li class="profile-dropdown__section profile-dropdown__section--activity">
+                                        <div class="profile-dropdown__label">
+                                            <i class="bi bi-folder2-open"></i>
+                                            @lang('public.minhaAtividade')
+                                        </div>
+                                        <ul class="profile-dropdown__list">
+                                            @if($temComprovantes)
+                                                <li>
+                                                    <a class="dropdown-item" href="{{ route('comprovantes') }}">
+                                                        <span class="profile-dropdown__icon"><i class="bi bi-receipt"></i></span>
+                                                        {{ __('Meus Comprovantes') }}
+                                                    </a>
+                                                </li>
+                                            @endif
 
-                                @if($temComprovantes)
-                                    <a class="dropdown-item" href="{{ route('comprovantes') }}">
-                                        <span class="profile-dropdown__icon"><i class="bi bi-receipt"></i></span>
-                                        {{ __('Meus Comprovantes') }}
-                                    </a>
-                                @endif
-
-                                {{-- Link Trabalhos --}}
-                                @if (
-                                    (Auth::user()->trabalho()->where('status', '!=', 'arquivado')->exists() ||
-                                    Auth::user()->coautor()->exists())
-                                )
-                                    <a class="dropdown-item" href="{{ route('user.meusTrabalhos') }}">
-                                        <span class="profile-dropdown__icon"><i class="bi bi-file-earmark-text"></i></span>
-                                        {{ __('Trabalhos Submetidos') }}
-                                    </a>
+                                            @if($temTrabalhos)
+                                                <li>
+                                                    <a class="dropdown-item" href="{{ route('user.meusTrabalhos') }}">
+                                                        <span class="profile-dropdown__icon"><i class="bi bi-file-earmark-text"></i></span>
+                                                        {{ __('Trabalhos Submetidos') }}
+                                                    </a>
+                                                </li>
+                                            @endif
+                                        </ul>
+                                    </li>
                                 @endif
 
                                 {{-- Link Logout --}}
-                                <a class="dropdown-item profile-dropdown__logout" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                    <span class="profile-dropdown__icon"><i class="bi bi-box-arrow-right"></i></span>
-                                    {{ __('Sair') }}
-                                </a>
-
-
-                                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                    @csrf
-                                </form>
+                                <li class="profile-dropdown__logout">
+                                    <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                        <span class="profile-dropdown__icon"><i class="bi bi-box-arrow-right"></i></span>
+                                        {{ __('Sair') }}
+                                    </a>
+                                </li>
                             </ul>
+
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                @csrf
+                            </form>
                         </li>
                     @endif
 

@@ -21,6 +21,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 use App\Models\Users\User;
 use App\Models\Users\Administrador;
 use App\Support\RegistrationFormFields;
@@ -361,8 +362,7 @@ class InscricaoController extends Controller
 
     public function inscrever(Request $request)
     {
-        auth()->user() != null;
-        $evento = Evento::find($request->evento_id);
+        $evento = Evento::findOrFail($request->evento_id);
         //"pre inscrição" feita na submissão de trabalhos por um user não inscrito, sem categoria e pagamento
         $preInscricao = false;
         if (Inscricao::where('user_id', auth()->user()->id)->where('evento_id', $evento->id)->where('finalizada', true)->exists()) {
@@ -374,17 +374,36 @@ class InscricaoController extends Controller
         if(Inscricao::where('user_id', auth()->user()->id)->where('evento_id', $evento->id)->where('finalizada', false)->exists()){
             $preInscricao = true;
         }
-        $categoria = CategoriaParticipante::find($request->categoria);
-        $possuiFormulario = $evento->possuiFormularioDeInscricao();
+        $categoriasPermitidas = $evento->categoriasPermitidasParaUsuario();
+        $exigeCategoria = $evento->categoriasParticipantes()
+            ->where('permite_inscricao', true)
+            ->exists();
+
+        $validator = Validator::make($request->all(), [
+            'categoria' => [
+                $exigeCategoria ? 'required' : 'nullable',
+                'integer',
+                Rule::in($categoriasPermitidas->pluck('id')->all()),
+            ],
+        ], [
+            'categoria.required' => 'Selecione uma categoria para realizar a inscrição.',
+            'categoria.in' => 'A categoria selecionada não está disponível para esta inscrição.',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()
+                ->back()
+                ->withErrors($validator)
+                ->withInput()
+                ->with('abrirmodalinscricao', true);
+        }
+
+        $categoria = $request->filled('categoria')
+            ? $categoriasPermitidas->firstWhere('id', (int) $request->categoria)
+            : null;
+        $possuiFormulario = $categoria !== null && $evento->possuiFormularioDeInscricao();
+
         if ($possuiFormulario) {
-            $validator = Validator::make($request->all(), ['categoria' => 'required']);
-            if ($validator->fails()) {
-                return redirect()
-                    ->back()
-                    ->withErrors($validator)
-                    ->withInput()
-                    ->with('abrirmodalinscricao', true);
-            }
             $validator = $this->validarCamposExtras($request, $categoria);
             if ($validator->fails()) {
                 return redirect()
@@ -400,7 +419,7 @@ class InscricaoController extends Controller
             'Associado - Pessoa com Deficiência (PCD)',
         ];
 
-        if (in_array($categoria->nome, $categoriasInscricaoAutomatica)) {
+        if ($categoria !== null && in_array($categoria->nome, $categoriasInscricaoAutomatica, true)) {
             if ($preInscricao){
                 $inscricao = Inscricao::where('user_id', auth()->user()->id)->where('evento_id', $evento->id)->first();
                 $inscricao->categoria_participante_id = $request->categoria;

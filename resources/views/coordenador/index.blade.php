@@ -14,14 +14,14 @@
     <div class="container">
 
         {{-- titulo da página --}}
-        <div class="d-flex justify-content-between align-items-center mb-5">
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-5">
             <div>
                 <h1>{{__('Meus Eventos')}}</h1>
             </div>
-{{--            <div>--}}
-{{--                <a href="{{route('evento.criar')}}" class="btn btn-primary">{{__('Novo Evento')}}</a>--}}
-{{--            </div>--}}
-
+            <a href="{{ route('evento.criar') }}" class="btn btn-primary d-inline-flex align-items-center gap-2">
+                <i class="bi bi-plus-lg" aria-hidden="true"></i>
+                {{ __('Novo Evento') }}
+            </a>
         </div>
         <div class="row">
             @php

@@ -11,9 +11,6 @@
                 <div class="col-sm-10">
                     <h1>{{ __('Eventos como Membro da Comissão Científica') }}</h1>
                 </div>
-                {{-- <div class="col-sm-2">
-                    <a href="{{route('evento.criar')}}" class="btn btn-primary">Novo Evento</a>
-                </div> --}}
             </div>
         </div>
     </div>

@@ -2713,6 +2713,7 @@ class EventoController extends Controller
         $revisor = Revisor::find($request->revisorId);
         $revisorUser = User::find($revisor->user_id);
         $avaliacao = Avaliacao::where('revisor_id', $revisor->id)->where('trabalho_id', $trabalho->id)->first();
+        $respostas = [];
 
         $arquivoAvaliacao = $trabalho->arquivoAvaliacao()->where('revisorId', $revisor->id)->first();
         if ($arquivoAvaliacao == null) {
