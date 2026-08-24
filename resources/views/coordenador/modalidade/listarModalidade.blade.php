@@ -5,6 +5,423 @@
 @error('excluirModalidade')
 @include('componentes.mensagens')
 @enderror
+
+<style>
+    /* Card */
+
+    .modalidades-card {
+        border-radius: 0.75rem;
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Tabela
+    |--------------------------------------------------------------------------
+    */
+
+    .table-modalidades {
+        --bs-table-bg: transparent;
+        --bs-table-hover-bg: #f8fafc;
+    }
+
+
+    /* Cabeçalho */
+
+    .table-modalidades thead th {
+        padding: 0.9rem 1rem;
+
+        background-color: #f8f9fa;
+
+        border-top: 0;
+        border-bottom: 1px solid #e5e7eb;
+
+        color: #6c757d;
+
+        font-size: 0.75rem;
+        font-weight: 600;
+
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+
+        white-space: nowrap;
+    }
+
+
+    /* Mantém os cantos arredondados sem overflow-hidden */
+
+    .table-modalidades thead th:first-child {
+        border-top-left-radius: 0.75rem;
+    }
+
+    .table-modalidades thead th:last-child {
+        border-top-right-radius: 0.75rem;
+    }
+
+
+    /* Linhas */
+
+    .table-modalidades tbody td {
+        padding: 1.15rem 1rem;
+
+        border-top: 0;
+        border-bottom: 1px solid #edf0f2;
+
+        vertical-align: middle;
+    }
+
+    .table-modalidades tbody tr:last-child td {
+        border-bottom: 0;
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Modalidade
+    |--------------------------------------------------------------------------
+    */
+
+    .modalidade-info {
+        display: flex;
+        flex-direction: column;
+
+        gap: 0.2rem;
+    }
+
+    .modalidade-nome {
+        color: #212529;
+
+        font-size: 0.9375rem;
+        font-weight: 600;
+
+        line-height: 1.3;
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Cronograma
+    |--------------------------------------------------------------------------
+    */
+
+    .cronograma-grid {
+        display: grid;
+
+        grid-template-columns: repeat(3, minmax(135px, 1fr));
+
+        gap: 1rem;
+    }
+
+    .cronograma-etapa {
+        min-width: 0;
+    }
+
+    .cronograma-titulo {
+        margin-bottom: 0.3rem;
+
+        color: #6c757d;
+
+        font-size: 0.75rem;
+        font-weight: 500;
+
+        text-transform: uppercase;
+    }
+
+    .cronograma-data {
+        display: flex;
+        align-items: center;
+
+        gap: 0.4rem;
+
+        color: #343a40;
+
+        font-size: 0.8125rem;
+        font-weight: 500;
+
+        white-space: nowrap;
+    }
+
+    .cronograma-data i {
+        color: #adb5bd;
+
+        font-size: 0.7rem;
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Resultado
+    |--------------------------------------------------------------------------
+    */
+
+    .resultado-data {
+        display: inline-flex;
+        align-items: center;
+
+        gap: 0.45rem;
+
+        color: #495057;
+
+        font-size: 0.8125rem;
+        font-weight: 500;
+
+        white-space: nowrap;
+    }
+
+    .resultado-data i {
+        color: #6c757d;
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Drag
+    |--------------------------------------------------------------------------
+    */
+
+    .drag-handle {
+        display: inline-flex;
+
+        align-items: center;
+        justify-content: center;
+
+        width: 32px;
+        height: 34px;
+
+        padding: 0;
+
+        border: 0;
+        border-radius: 0.4rem;
+
+        background: transparent;
+
+        color: #adb5bd;
+
+        cursor: grab;
+    }
+
+    .drag-handle:hover {
+        background-color: #f1f3f5;
+
+        color: #495057;
+    }
+
+    .drag-handle:active {
+        cursor: grabbing;
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Ações
+    |--------------------------------------------------------------------------
+    */
+
+    .action-btn {
+        display: inline-flex;
+
+        align-items: center;
+        justify-content: center;
+
+        width: 34px;
+        height: 34px;
+
+        padding: 0;
+
+        color: #495057;
+    }
+
+    .action-btn:hover {
+        background-color: #f1f3f5;
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Dropdown
+    |--------------------------------------------------------------------------
+    */
+
+    .table-modalidades .dropdown {
+        position: relative;
+    }
+
+    .table-modalidades .dropdown-menu {
+        min-width: 240px;
+
+        padding: 0.4rem;
+
+        border: 1px solid #e5e7eb;
+
+        border-radius: 0.65rem;
+
+        z-index: 1055;
+    }
+
+    .table-modalidades .dropdown-item {
+        padding: 0.55rem 0.7rem;
+
+        border-radius: 0.4rem;
+
+        font-size: 0.875rem;
+    }
+
+    .table-modalidades .dropdown-header {
+        padding: 0.5rem 0.7rem;
+
+        color: #8a9199;
+
+        font-size: 0.7rem;
+        font-weight: 600;
+
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+    }
+    /* Indicador padrão */
+    .etapa-indicador {
+        display: inline-block;
+        flex-shrink: 0;
+
+        width: 7px;
+        height: 7px;
+
+        border-radius: 50%;
+    }
+
+
+    /* Finalizado */
+    .etapa-finalizada {
+        color: #198754;
+
+        font-size: 0.8rem;
+
+        flex-shrink: 0;
+    }
+
+    .cronograma-titulo-finalizado {
+        color: #198754;
+    }
+
+    .cronograma-data-finalizada {
+        color: #868e96;
+    }
+
+
+    /* Ainda não iniciado */
+    .etapa-pendente {
+        color: #adb5bd;
+
+        font-size: 0.75rem;
+
+        flex-shrink: 0;
+    }
+
+
+    /* Datas não configuradas */
+    .etapa-indefinida {
+        color: #ced4da;
+
+        font-size: 0.75rem;
+
+        flex-shrink: 0;
+    }
+
+
+    /* Status textual */
+    .cronograma-status-finalizado,
+    .cronograma-status-andamento {
+        margin-left: 0.15rem;
+
+        font-size: 0.625rem;
+        font-weight: 600;
+
+        text-transform: none;
+        letter-spacing: 0;
+
+        white-space: nowrap;
+    }
+
+    .cronograma-status-finalizado {
+        color: #198754;
+    }
+
+    .cronograma-status-andamento {
+        color: #6c757d;
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Overflow
+    |--------------------------------------------------------------------------
+    */
+
+    /*
+    * No desktop, permitimos que o dropdown ultrapasse os limites
+    * da tabela/card.
+    */
+    @media (min-width: 992px) {
+
+        .modalidades-table-wrapper {
+            overflow: visible;
+        }
+
+    }
+
+
+    /*
+    * Em telas menores continuamos permitindo scroll horizontal.
+    */
+    @media (max-width: 991.98px) {
+
+        .modalidades-table-wrapper {
+            overflow-x: auto;
+            overflow-y: auto;
+        }
+
+    }
+    .cronograma-titulo {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+
+        margin-bottom: 0.3rem;
+
+        color: #6c757d;
+
+        font-size: 0.75rem;
+        font-weight: 500;
+
+        text-transform: uppercase;
+    }
+
+    .etapa-indicador {
+        display: inline-block;
+        flex-shrink: 0;
+
+        width: 7px;
+        height: 7px;
+
+        border-radius: 50%;
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Responsividade do cronograma
+    |--------------------------------------------------------------------------
+    */
+
+    @media (max-width: 1200px) {
+
+        .cronograma-grid {
+            grid-template-columns: 1fr;
+
+            gap: 0.6rem;
+        }
+
+    }
+</style>
+
 <div class="modalidades container">
 
     <x-admin.content-header
@@ -15,131 +432,471 @@
         ])"
         button-text="Nova modalidade"
     />
-    <div>
-                <div class="card-body">
-                    <p class="card-text">
-                    <table class="table table-hover">
-                        <thead>
-                        <tr>
-                            {{-- coluna vazia para o drag handle --}}
-                            <th style="width:40px;"></th>
-                            <th>Título</th>
-                            <th>Submissão</th>
-                            <th>Avaliação</th>
-                            <th>Correção</th>
-                            <th>Resultado</th>
+    <div class="card border-0 shadow-sm modalidades-card">
 
-                            <th class="text-center">Ações</th>
+        <div class="table-responsive modalidades-table-wrapper">
+
+            <table class="table table-modalidades align-middle mb-0">
+
+                <thead>
+                    <tr>
+                        <th style="width: 48px;"></th>
+
+                        <th style="min-width: 220px;">
+                            Modalidade
+                        </th>
+
+                        <th style="min-width: 500px;">
+                            Cronograma
+                        </th>
+
+                        <th style="width: 130px;">
+                            Resultado
+                        </th>
+
+                        <th class="text-end" style="width: 110px;">
+                            Ações
+                        </th>
+                    </tr>
+                </thead>
+
+                <tbody id="modalidades-tbody">
+
+                    @foreach($modalidades as $modalidade)
+
+                        @php
+                            $agora = now();
+
+                            $statusPeriodo = function ($inicio, $fim) use ($agora) {
+                                if (!$inicio || !$fim) {
+                                    return 'indefinido';
+                                }
+
+                                $inicioPeriodo = $inicio->copy()->startOfDay();
+                                $fimPeriodo = $fim->copy()->endOfDay();
+
+                                if ($agora->lt($inicioPeriodo)) {
+                                    return 'pendente';
+                                }
+
+                                if ($agora->gt($fimPeriodo)) {
+                                    return 'finalizado';
+                                }
+
+                                return 'andamento';
+                            };
+
+                            $statusSubmissao = $statusPeriodo(
+                                $modalidade->inicioSubmissao,
+                                $modalidade->fimSubmissao
+                            );
+
+                            $statusAvaliacao = $statusPeriodo(
+                                $modalidade->inicioRevisao,
+                                $modalidade->fimRevisao
+                            );
+
+                            $statusCorrecao = $statusPeriodo(
+                                $modalidade->inicioCorrecao,
+                                $modalidade->fimCorrecao
+                            );
+                        @endphp
+
+                        <tr data-id="{{ $modalidade->id }}">
+
+                            {{-- Ordenação --}}
+                            <td class="text-center">
+
+                                <button
+                                    type="button"
+                                    class="drag-handle handle"
+                                    title="Arrastar para reordenar"
+                                    aria-label="Arrastar para reordenar"
+                                >
+                                    <i class="bi bi-grip-vertical"></i>
+                                </button>
+
+                            </td>
+
+
+                            {{-- Modalidade --}}
+                            <td>
+
+                                <div class="modalidade-info">
+
+                                    <span class="modalidade-nome">
+                                        {{ $modalidade->nome }}
+                                    </span>
+
+                                </div>
+
+                            </td>
+
+
+                            {{-- Cronograma --}}
+                            <td>
+
+                                <div class="cronograma-grid">
+
+                                    {{-- Submissão --}}
+                                    <div class="cronograma-etapa">
+
+                                        <div @class([
+                                            'cronograma-titulo',
+                                            'cronograma-titulo-finalizado' => $statusSubmissao === 'finalizado',
+                                            'cronograma-titulo-andamento' => $statusSubmissao === 'andamento',
+                                        ])>
+
+                                            @switch($statusSubmissao)
+
+                                                @case('finalizado')
+                                                    <i
+                                                        class="bi bi-check-circle-fill etapa-finalizada"
+                                                        title="Período finalizado"
+                                                    ></i>
+                                                    @break
+
+                                                @case('andamento')
+                                                    <span
+                                                        class="etapa-indicador bg-primary"
+                                                        title="Em andamento"
+                                                    ></span>
+                                                    @break
+
+                                                @case('pendente')
+                                                    <i
+                                                        class="bi bi-circle etapa-pendente"
+                                                        title="Ainda não iniciado"
+                                                    ></i>
+                                                    @break
+
+                                                @default
+                                                    <i
+                                                        class="bi bi-dash-circle etapa-indefinida"
+                                                        title="Período não definido"
+                                                    ></i>
+
+                                            @endswitch
+
+                                            <span>
+                                                Submissão
+                                            </span>
+
+                                            @if($statusSubmissao === 'finalizado')
+                                                <span class="cronograma-status-finalizado">
+                                                    Finalizado
+                                                </span>
+                                            @elseif($statusSubmissao === 'andamento')
+                                                <span class="cronograma-status-andamento">
+                                                    Em andamento
+                                                </span>
+                                            @endif
+
+                                        </div>
+
+                                        <div @class([
+                                            'cronograma-data',
+                                            'cronograma-data-finalizada' => $statusSubmissao === 'finalizado',
+                                        ])>
+
+                                            {{ $modalidade->inicioSubmissao?->format('d/m/Y') ?? '—' }}
+
+                                            <i class="bi bi-arrow-right"></i>
+
+                                            {{ $modalidade->fimSubmissao?->format('d/m/Y') ?? '—' }}
+
+                                        </div>
+
+                                    </div>
+
+
+                                    {{-- Avaliação --}}
+                                    <div class="cronograma-etapa">
+
+                                        <div @class([
+                                            'cronograma-titulo',
+                                            'cronograma-titulo-finalizado' => $statusAvaliacao === 'finalizado',
+                                            'cronograma-titulo-andamento' => $statusAvaliacao === 'andamento',
+                                        ])>
+
+                                            @switch($statusAvaliacao)
+
+                                                @case('finalizado')
+                                                    <i
+                                                        class="bi bi-check-circle-fill etapa-finalizada"
+                                                        title="Período finalizado"
+                                                    ></i>
+                                                    @break
+
+                                                @case('andamento')
+                                                    <span
+                                                        class="etapa-indicador bg-info"
+                                                        title="Em andamento"
+                                                    ></span>
+                                                    @break
+
+                                                @case('pendente')
+                                                    <i
+                                                        class="bi bi-circle etapa-pendente"
+                                                        title="Ainda não iniciado"
+                                                    ></i>
+                                                    @break
+
+                                                @default
+                                                    <i
+                                                        class="bi bi-dash-circle etapa-indefinida"
+                                                        title="Período não definido"
+                                                    ></i>
+
+                                            @endswitch
+
+                                            <span>
+                                                Avaliação
+                                            </span>
+
+                                            @if($statusAvaliacao === 'finalizado')
+                                                <span class="cronograma-status-finalizado">
+                                                    Finalizado
+                                                </span>
+                                            @elseif($statusAvaliacao === 'andamento')
+                                                <span class="cronograma-status-andamento">
+                                                    Em andamento
+                                                </span>
+                                            @endif
+
+                                        </div>
+
+                                        <div @class([
+                                            'cronograma-data',
+                                            'cronograma-data-finalizada' => $statusAvaliacao === 'finalizado',
+                                        ])>
+
+                                            {{ $modalidade->inicioRevisao?->format('d/m/Y') ?? '—' }}
+
+                                            <i class="bi bi-arrow-right"></i>
+
+                                            {{ $modalidade->fimRevisao?->format('d/m/Y') ?? '—' }}
+
+                                        </div>
+
+                                    </div>
+
+
+                                    {{-- Correção --}}
+                                    <div class="cronograma-etapa">
+
+                                        <div @class([
+                                            'cronograma-titulo',
+                                            'cronograma-titulo-finalizado' => $statusCorrecao === 'finalizado',
+                                            'cronograma-titulo-andamento' => $statusCorrecao === 'andamento',
+                                        ])>
+
+                                            @switch($statusCorrecao)
+
+                                                @case('finalizado')
+                                                    <i
+                                                        class="bi bi-check-circle-fill etapa-finalizada"
+                                                        title="Período finalizado"
+                                                    ></i>
+                                                    @break
+
+                                                @case('andamento')
+                                                    <span
+                                                        class="etapa-indicador bg-warning"
+                                                        title="Em andamento"
+                                                    ></span>
+                                                    @break
+
+                                                @case('pendente')
+                                                    <i
+                                                        class="bi bi-circle etapa-pendente"
+                                                        title="Ainda não iniciado"
+                                                    ></i>
+                                                    @break
+
+                                                @default
+                                                    <i
+                                                        class="bi bi-dash-circle etapa-indefinida"
+                                                        title="Período não definido"
+                                                    ></i>
+
+                                            @endswitch
+
+                                            <span>
+                                                Correção
+                                            </span>
+
+                                            @if($statusCorrecao === 'finalizado')
+                                                <span class="cronograma-status-finalizado">
+                                                    Finalizado
+                                                </span>
+                                            @elseif($statusCorrecao === 'andamento')
+                                                <span class="cronograma-status-andamento">
+                                                    Em andamento
+                                                </span>
+                                            @endif
+
+                                        </div>
+
+                                        <div @class([
+                                            'cronograma-data',
+                                            'cronograma-data-finalizada' => $statusCorrecao === 'finalizado',
+                                        ])>
+
+                                            {{ $modalidade->inicioCorrecao?->format('d/m/Y') ?? '—' }}
+
+                                            <i class="bi bi-arrow-right"></i>
+
+                                            {{ $modalidade->fimCorrecao?->format('d/m/Y') ?? '—' }}
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </td>
+
+
+                            {{-- Resultado --}}
+                            <td>
+
+                                @if($modalidade->inicioResultado)
+
+                                    <div class="resultado-data">
+
+                                        <i class="bi bi-calendar-check"></i>
+
+                                        <span>
+                                            {{ $modalidade->inicioResultado->format('d/m/Y') }}
+                                        </span>
+
+                                    </div>
+
+                                @else
+
+                                    <span class="text-muted">
+                                        —
+                                    </span>
+
+                                @endif
+
+                            </td>
+
+
+                            {{-- Ações --}}
+                            <td class="text-end">
+
+                                <div class="d-inline-flex align-items-center gap-1">
+
+                                    <button
+                                        type="button"
+                                        class="btn btn-sm btn-light border action-btn"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#modalEditarModalidade{{ $modalidade->id }}"
+                                        title="Editar modalidade"
+                                    >
+                                        <i class="bi bi-pencil"></i>
+                                    </button>
+
+
+                                    <div class="dropdown">
+
+                                        <button
+                                            type="button"
+                                            class="btn btn-sm btn-light border action-btn"
+                                            data-bs-toggle="dropdown"
+                                            data-bs-boundary="viewport"
+                                            aria-expanded="false"
+                                            title="Mais ações"
+                                        >
+                                            <i class="bi bi-three-dots-vertical"></i>
+                                        </button>
+
+
+                                        <ul class="dropdown-menu dropdown-menu-end shadow-sm">
+
+                                            @can('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento)
+
+                                                <li>
+                                                    <h6 class="dropdown-header">
+                                                        Avaliação
+                                                    </h6>
+                                                </li>
+
+                                                <li>
+                                                    <a
+                                                        href="{{ route('coord.forms', [
+                                                            'eventoId' => $evento->id,
+                                                            'modalidade_id' => $modalidade->id
+                                                        ]) }}"
+                                                        class="dropdown-item"
+                                                    >
+                                                        <i class="bi bi-ui-checks me-2"></i>
+                                                        Formulário de avaliação
+                                                    </a>
+                                                </li>
+
+                                                <li>
+                                                    <a
+                                                        href="{{ route('coord.cadastrarCriterio', [
+                                                            'eventoId' => $evento->id
+                                                        ]) }}"
+                                                        class="dropdown-item"
+                                                    >
+                                                        <i class="bi bi-plus-circle me-2"></i>
+                                                        Cadastrar critérios
+                                                    </a>
+                                                </li>
+
+                                                <li>
+                                                    <a
+                                                        href="{{ route('coord.listarCriterios', [
+                                                            'eventoId' => $evento->id
+                                                        ]) }}"
+                                                        class="dropdown-item"
+                                                    >
+                                                        <i class="bi bi-list-check me-2"></i>
+                                                        Listar critérios
+                                                    </a>
+                                                </li>
+
+                                                <li>
+                                                    <hr class="dropdown-divider">
+                                                </li>
+
+                                            @endcan
+
+                                            <li>
+                                                <button
+                                                    type="button"
+                                                    class="dropdown-item text-danger"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#modalExcluirModalidade{{ $modalidade->id }}"
+                                                >
+                                                    <i class="bi bi-trash me-2"></i>
+                                                    Excluir modalidade
+                                                </button>
+                                            </li>
+
+                                        </ul>
+
+                                    </div>
+
+                                </div>
+
+                            </td>
+
                         </tr>
-                        </thead>
-                        <tbody id="modalidades-tbody">
-                        @foreach($modalidades as $modalidade)
-                            <tr data-id="{{ $modalidade->id }}">
-                                {{-- handle de arrastar --}}
-                                <td class="handle text-center" style="cursor: grab;">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="m7 2l6 3.9v2.272l-5-3.25v12.08H6V4.922l-5 3.25V5.9zm9 17.08V7h2v12.08l5-3.25v2.272l-6 3.9l-6-3.9V15.83z"/></svg></td>
-                                {{-- nome --}}
-                                <td>{{ $modalidade->nome }}</td>
-                                <td class="small lh-sm">
-                                    <div>
-                                        <span class="text-muted">Início:</span>
-                                        {{ $modalidade->inicioSubmissao?->format('d/m/Y') ?? '—' }}
-                                    </div>
-                                    <div>
-                                        <span class="text-muted">Fim:</span>
-                                        {{ $modalidade->fimSubmissao?->format('d/m/Y') ?? '—' }}
-                                    </div>
-                                </td>
 
-                                <td class="small lh-sm">
-                                    <div>
-                                        <span class="text-muted">Início:</span>
-                                        {{ $modalidade->inicioRevisao?->format('d/m/Y') ?? '—' }}
-                                    </div>
-                                    <div>
-                                        <span class="text-muted">Fim:</span>
-                                        {{ $modalidade->fimRevisao?->format('d/m/Y') ?? '—' }}
-                                    </div>
-                                </td>
+                    @endforeach
 
-                                <td class="small lh-sm">
-                                    <div>
-                                        <span class="text-muted">Início:</span>
-                                        {{ $modalidade->inicioCorrecao?->format('d/m/Y') ?? '—' }}
-                                    </div>
-                                    <div>
-                                        <span class="text-muted">Fim:</span>
-                                        {{ $modalidade->fimCorrecao?->format('d/m/Y') ?? '—' }}
-                                    </div>
-                                </td>
+                </tbody>
 
-                                <td class="small lh-sm">
-                                    <div>
-                                        <span class="text-muted">Resultado:</span>
-                                        {{ $modalidade->inicioResultado?->format('d/m/Y') ?? '—' }}
-                                    </div>
-                                </td>
-                               <td>
-                                    <div class="d-grid gap-1">
+            </table>
 
-                                        <button
-                                            type="button"
-                                            class="btn btn-sm btn-outline-primary text-start"
-                                            data-bs-toggle="modal"
-                                            data-bs-target="#modalEditarModalidade{{ $modalidade->id }}"
-                                        >
-                                            <i class="bi bi-pencil-square me-1"></i>
-                                            Editar
-                                        </button>
+        </div>
 
-                                        <button
-                                            type="button"
-                                            class="btn btn-sm btn-outline-danger text-start"
-                                            data-bs-toggle="modal"
-                                            data-bs-target="#modalExcluirModalidade{{ $modalidade->id }}"
-                                        >
-                                            <i class="bi bi-trash me-1"></i>
-                                            Deletar
-                                        </button>
-
-                                        @can('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento)
-
-                                            <a
-                                                href="{{ route('coord.cadastrarCriterio', ['eventoId' => $evento->id]) }}"
-                                                class="btn btn-sm btn-outline-warning text-start"
-                                            >
-                                                <i class="bi bi-plus-square me-1"></i>
-                                                Cadastrar critérios
-                                            </a>
-
-                                            <a
-                                                href="{{ route('coord.listarCriterios', ['eventoId' => $evento->id]) }}"
-                                                class="btn btn-sm btn-outline-dark text-start"
-                                            >
-                                                <i class="bi bi-list-ul me-1"></i>
-                                                Listar critérios
-                                            </a>
-
-                                            <a
-                                                href="{{ route('coord.forms', ['eventoId' => $evento->id, 'modalidade_id' => $modalidade->id]) }}"
-                                                class="btn btn-sm btn-outline-info text-start"
-                                            >
-                                                <i class="bi bi-ui-checks me-1"></i>
-                                                Formulário
-                                            </a>
-
-                                        @endcan
-
-                                    </div>
-                                </td>
-                            </tr>
-                        @endforeach
-                        </tbody>
-                    </table>
-                    </p>
-                </div>
-            </div>
-        </div>{{-- end table--}}
     </div>
 
 

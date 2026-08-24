@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Users;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\avaliacoes\StoreAvaliacaoRequest;
+use App\Http\Requests\avaliacoes\UpdateAvaliacaoRequest;
 use App\Mail\EmailConviteRevisor;
 use App\Mail\EmailLembrete;
 use App\Mail\EmailLembreteUsuarioNaoCadastrado;
@@ -12,6 +14,7 @@ use App\Models\Submissao\Area;
 use App\Models\Submissao\ArquivoAvaliacao;
 use App\Models\Submissao\Atribuicao;
 use App\Models\Submissao\Evento;
+use App\Models\Submissao\Form;
 use App\Models\Submissao\Modalidade;
 use App\Models\Submissao\Opcao;
 use App\Models\Submissao\Paragrafo;
@@ -459,7 +462,6 @@ class RevisorController extends Controller
         if($data['prazo_correcao'] < now()){
             return redirect()->back()->withErrors(['message' => 'Prazo de correção expirado.']);
         }
-
         // Verificar se o revisor recusou o convite para este trabalho
         $atribuicao = DB::table('atribuicaos')
             ->where('trabalho_id', $data['trabalho_id'])
@@ -471,200 +473,714 @@ class RevisorController extends Controller
         }
         $evento = Evento::find($data['evento_id']);
         $data['revisor'] = Revisor::find($data['revisor_id']);
-        $data['modalidade'] = Modalidade::find($data['modalidade_id']);
+        $data['modalidade'] = Modalidade::with('formAtual')->find($data['modalidade_id']);
         $data['trabalho'] = Trabalho::find($data['trabalho_id']);
 
-        $forms = $data['modalidade']->forms->sortBy('perguta.opcoes.id');
+        $form = $data['modalidade']->formAtual;
 
-        return view('revisor.formularioRevisor', compact('evento', 'data', 'forms'));
+        return view('avaliacoes.create', compact('evento', 'data', 'form'));
     }
 
-    public function salvarRespostas(Request $request)
+    public function salvarRespostas(StoreAvaliacaoRequest $request)
     {
-        // dd($request);
-        $data = $request->all();
+        $data = $request->validated();
 
-        // Verificar se o revisor recusou o convite para este trabalho
+        /*
+        |--------------------------------------------------------------------------
+        | Verifica a atribuição
+        |--------------------------------------------------------------------------
+        */
+
         $atribuicao = DB::table('atribuicaos')
             ->where('trabalho_id', $data['trabalho_id'])
             ->where('revisor_id', $data['revisor_id'])
             ->first();
 
         if ($atribuicao && $atribuicao->justificativa_recusa) {
-            return redirect()->back()->withErrors(['message' => 'Você recusou o convite para avaliar este trabalho.']);
-        }
-        // $comment = $post->comments()->create([
-        //     'message' => 'A new comment.',
-        // ]);
-        $trabalho = Trabalho::find($data['trabalho_id']);
-        $evento_id = $trabalho->eventoId;
-        if (isset($request->arquivo)) {
-            if ($this->validarTipoDoArquivo($request->arquivo, $trabalho->modalidade)) {
-                return redirect()->back()->withErrors(['message' => 'Extensão de arquivo enviado é diferente do permitido.']);
-            }
-
-            $validatedData = $request->validate([
-                'arquivo' => ['required', 'file', 'max:5120'],
-            ]);
+            return redirect()
+                ->back()
+                ->withErrors([
+                    'message' => 'Você recusou o convite para avaliar este trabalho.'
+                ]);
         }
 
-        foreach ($data['pergunta_id'] as $key => $value) {
-            $pergunta = Pergunta::find($value);
-            $resposta = $pergunta->respostas()->create([
-                'revisor_id' => $data['revisor_id'],
-                'trabalho_id' => $data['trabalho_id'],
-            ]);
-            if ($pergunta->respostas->first()->paragrafo != null) {
-                if ($pergunta->visibilidade == true) {
-                    $resposta->paragrafo()->create([
-                        'resposta' => $data[$value],
-                        'visibilidade' => true,
+
+        /*
+        |--------------------------------------------------------------------------
+        | Carrega trabalho e formulário
+        |--------------------------------------------------------------------------
+        */
+
+        $trabalho = Trabalho::findOrFail($data['trabalho_id']);
+
+        $eventoId = $trabalho->eventoId;
+
+        $form = Form::with([
+            'perguntas.respostasPadrao.opcoes',
+            'perguntas.respostasPadrao.paragrafo',
+        ])->findOrFail($data['form_id']);
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Validação complementar do arquivo
+        |--------------------------------------------------------------------------
+        */
+
+        if ($request->hasFile('arquivo')) {
+
+            if ($this->validarTipoDoArquivo(
+                $request->file('arquivo'),
+                $trabalho->modalidade
+            )) {
+                return redirect()
+                    ->back()
+                    ->withErrors([
+                        'message' => 'Extensão de arquivo enviado é diferente do permitido.'
                     ]);
-                } else {
-                    $resposta->paragrafo()->create([
-                        'resposta' => $data[$value],
-                        'visibilidade' => false,
+            }
+        }
+
+
+        DB::beginTransaction();
+
+        try {
+
+            /*
+            |--------------------------------------------------------------------------
+            | Salva as respostas
+            |--------------------------------------------------------------------------
+            */
+
+            foreach ($data['respostas'] as $perguntaId => $valor) {
+
+                /*
+                * Busca a pergunta dentro do próprio formulário.
+                *
+                * Isso evita que alguém altere o request e tente responder
+                * uma pergunta pertencente a outro formulário.
+                */
+                $pergunta = $form->perguntas
+                    ->firstWhere('id', (int) $perguntaId);
+
+                if (!$pergunta) {
+                    continue;
+                }
+
+
+                /*
+                * Estrutura padrão da pergunta.
+                */
+                $respostaPadrao = $pergunta->respostasPadrao->first();
+
+                if (!$respostaPadrao) {
+                    continue;
+                }
+
+
+                /*
+                * Cria a Resposta pertencente ao avaliador.
+                */
+                $respostaRevisor = $pergunta->respostas()->create([
+                    'revisor_id' => $data['revisor_id'],
+                    'trabalho_id' => $data['trabalho_id'],
+                ]);
+
+
+                /*
+                |--------------------------------------------------------------------------
+                | Pergunta do tipo opções
+                |--------------------------------------------------------------------------
+                */
+
+                if ($respostaPadrao->opcoes->isNotEmpty()) {
+
+                    /*
+                    * $valor é o ID da opção padrão enviada pela view.
+                    */
+                    $opcaoPadrao = $respostaPadrao->opcoes
+                        ->firstWhere('id', (int) $valor);
+
+                    if (!$opcaoPadrao) {
+                        throw new \RuntimeException(
+                            'A opção selecionada não pertence à pergunta.'
+                        );
+                    }
+
+
+                    /*
+                    * Criamos uma nova opção representando a resposta.
+                    *
+                    * parent_id aponta para a opção original/padrão.
+                    */
+                    $respostaRevisor->opcoes()->create([
+                        'titulo' => $opcaoPadrao->titulo,
+
+                        'tipo' => $opcaoPadrao->tipo ?? 'radio',
+
+                        'check' => true,
+
+                        'visibilidade' => $opcaoPadrao->visibilidade,
+
+                        'ordem' => $opcaoPadrao->ordem,
+
+                        'parent_id' => $opcaoPadrao->id,
+                    ]);
+
+                    continue;
+                }
+
+
+                /*
+                |--------------------------------------------------------------------------
+                | Pergunta do tipo parágrafo
+                |--------------------------------------------------------------------------
+                */
+
+                if ($respostaPadrao->paragrafo) {
+
+                    $respostaRevisor->paragrafo()->create([
+                        'resposta' => $valor,
+
+                        /*
+                        * Mantém a regra que você já utilizava:
+                        * se a pergunta for visível, a resposta também começa visível.
+                        */
+                        'visibilidade' => $pergunta->visibilidade,
                     ]);
                 }
-            } elseif ($pergunta->respostas->first()->opcoes->count()) {
-                $resposta->opcoes()->create([
-                    'titulo' => $data[$value],
-                    'check' => true,
-                    'tipo' => 'radio',
+            }
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | Atualiza o estado do trabalho
+            |--------------------------------------------------------------------------
+            */
+
+            $trabalho->avaliado = 'Avaliado';
+            $trabalho->save();
+
+
+            $trabalho
+                ->revisores()
+                ->where('revisor_id', $data['revisor_id'])
+                ->first()
+                ?->pivot
+                ?->update([
+                    'parecer' => 'avaliado'
+                ]);
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | Arquivo da avaliação
+            |--------------------------------------------------------------------------
+            */
+
+            $evento = Evento::findOrFail($eventoId);
+
+            $revisor = Revisor::where([
+                ['user_id', auth()->id()],
+                ['evento_id', $eventoId],
+            ])->firstOrFail();
+
+
+            if ($request->hasFile('arquivo')) {
+
+                $file = $request->file('arquivo');
+
+                $path = 'avaliacoes/' .
+                    $eventoId . '/' .
+                    $trabalho->id . '/';
+
+                $nome = 'avaliacao' .
+                    $revisor->id . '.' .
+                    $file->getClientOriginalExtension();
+
+
+                Storage::putFileAs(
+                    $path,
+                    $file,
+                    $nome
+                );
+
+
+                ArquivoAvaliacao::create([
+                    'nome' => $path . $nome,
+                    'revisorId' => $data['revisor_id'],
+                    'trabalhoId' => $trabalho->id,
+                    'versaoFinal' => true,
                 ]);
             }
-        }
-        $trabalho->avaliado = 'Avaliado';
-        $trabalho->revisores()->where('revisor_id', $data['revisor_id'])->first()->pivot->update(['parecer' => 'avaliado']);
-        $trabalho->save();
-        $evento = Evento::find($evento_id);
-        $revisor = Revisor::where([['user_id', auth()->user()->id], ['evento_id', $evento_id]])->first();
 
-        if (isset($request->arquivo)) {
-            $file = $request->arquivo;
-            $path = 'avaliacoes/'.$evento_id.'/'.$trabalho->id.'/';
-            $nome = 'avaliacao'.$revisor->id.'.'.$file->getClientOriginalExtension();
-            Storage::putFileAs($path, $file, $nome);
 
-            $arquivo = ArquivoAvaliacao::create([
-                'nome' => $path.$nome,
-                'revisorId' => $data['revisor_id'],
-                'trabalhoId' => $trabalho->id,
-                'versaoFinal' => true,
-            ]);
+            DB::commit();
+
+        } catch (\Throwable $exception) {
+
+            DB::rollBack();
+
+            report($exception);
+
+            return redirect()
+                ->back()
+                ->withInput()
+                ->withErrors([
+                    'message' => 'Não foi possível salvar a avaliação.'
+                ]);
         }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Notificações
+        |--------------------------------------------------------------------------
+        |
+        | Deixo os e-mails fora da transaction.
+        | Se o servidor de e-mail falhar, não queremos perder uma avaliação
+        | que já foi salva corretamente.
+        |
+        */
 
         $coordenador = User::find($evento->coordenadorId);
 
-        $coordenadoresEixo = \App\Models\Users\CoordEixoTematico::where('evento_id', $evento_id)
+        $coordenadoresEixo = \App\Models\Users\CoordEixoTematico::where(
+            'evento_id',
+            $eventoId
+        )
             ->where('area_id', $trabalho->areaId)
-            ->with(['user' => fn($q) => $q->select('id', 'name', 'email')])
+            ->with([
+                'user' => fn ($query) => $query
+                    ->select('id', 'name', 'email')
+            ])
             ->get()
             ->pluck('user')
-            ->filter(fn($u) => $u && !empty($u->email))
+            ->filter(fn ($user) => $user && !empty($user->email))
             ->unique('id');
 
 
         if ($coordenador?->email) {
+
             Mail::to($coordenador->email)->send(
-                new EmailNotificacaoTrabalhoAvaliado($coordenador, $trabalho->autor, $evento->nome, $trabalho, $revisor)
-            );
-        }
-        foreach ($coordenadoresEixo as $coordUser) {
-            Mail::to($coordUser->email)->send(
-                new EmailNotificacaoTrabalhoAvaliado($coordUser, $trabalho->autor, $evento->nome, $trabalho, $revisor)
+                new EmailNotificacaoTrabalhoAvaliado(
+                    $coordenador,
+                    $trabalho->autor,
+                    $evento->nome,
+                    $trabalho,
+                    $revisor
+                )
             );
         }
 
-        return redirect()->route('revisor.index')->with(['message' => 'Avaliação enviada com sucesso.']);
+
+        foreach ($coordenadoresEixo as $coordUser) {
+
+            Mail::to($coordUser->email)->send(
+                new EmailNotificacaoTrabalhoAvaliado(
+                    $coordUser,
+                    $trabalho->autor,
+                    $evento->nome,
+                    $trabalho,
+                    $revisor
+                )
+            );
+        }
+
+
+        return redirect()
+            ->route('revisor.index')
+            ->with([
+                'message' => 'Avaliação enviada com sucesso.'
+            ]);
     }
 
-    public function editarRespostasFormulario(Request $request)
+    public function editarRespostasFormulario(UpdateAvaliacaoRequest $request)
     {
-        $data = $request->all();
-        $paragrafo_checkBox = $request->paragrafo_checkBox;
-        $visivilidade_opcoes = $request->visivilidade_opcoes;
-        $trabalho = Trabalho::find($data['trabalho_id']);
+        $data = $request->validated();
 
-        if (! (Gate::allows('isCoordenadorOrCoordenadorDasComissoes', $trabalho->evento) ||
-               Gate::allows('isCoordenadorEixo', $trabalho->evento) ||
-               Gate::allows('isAdmin', Administrador::class))) {
+        $trabalho = Trabalho::findOrFail($data['trabalho_id']);
+
+        /*
+        |--------------------------------------------------------------------------
+        | Autorização
+        |--------------------------------------------------------------------------
+        */
+
+        if (!(
+            Gate::allows(
+                'isCoordenadorOrCoordenadorDasComissoes',
+                $trabalho->evento
+            )
+            ||
+            Gate::allows(
+                'isCoordenadorEixo',
+                $trabalho->evento
+            )
+            ||
+            Gate::allows(
+                'isAdmin',
+                Administrador::class
+            )
+        )) {
             abort(403, 'Acesso negado');
         }
 
-        if ($request->arquivoAvaliacao != null) {
-            if ($this->validarTipoDoArquivo($request->arquivoAvaliacao, $trabalho->modalidade)) {
-                return redirect()->back()->withErrors(['message' => 'Extensão de arquivo enviado é diferente do permitido.']);
-            }
 
-            $request->validate([
-                'arquivoAvaliacao' => ['required', 'file', 'max:5120'],
-            ]);
+        /*
+        |--------------------------------------------------------------------------
+        | Validação complementar do arquivo
+        |--------------------------------------------------------------------------
+        */
+
+        if ($request->hasFile('arquivoAvaliacao')) {
+
+            if (
+                $this->validarTipoDoArquivo(
+                    $request->file('arquivoAvaliacao'),
+                    $trabalho->modalidade
+                )
+            ) {
+                return redirect()
+                    ->back()
+                    ->withInput()
+                    ->withErrors([
+                        'message' =>
+                            'Extensão de arquivo enviado é diferente do permitido.'
+                    ]);
+            }
         }
-        $opcaoCont = 0;
-        $paraCont = 0;
-        if ($request->pergunta_id != null) {
-            foreach ($data['pergunta_id'] as $value) {
-                $pergunta = Pergunta::find($value);
-                if ($pergunta->respostas->first()->paragrafo != null && $paraCont < count($data['resposta_paragrafo_id'])) {
-                    $resposta = Paragrafo::find($data['resposta_paragrafo_id'][$paraCont++]);
-                    $resposta->resposta = $data['resposta'.$resposta->id];
-                    if ($paragrafo_checkBox != null && in_array($resposta->id, $paragrafo_checkBox)) {
-                        $resposta->visibilidade = true;
-                    } else {
-                        $resposta->visibilidade = false;
-                    }
-                    $resposta->save();
-                } elseif ($pergunta->respostas->first()->opcoes->count() && $opcaoCont < count($data['opcao_id'])) {
-                    $opcao = Opcao::find($data['opcao_id'][$opcaoCont++]);
-                    $opcao->titulo = $data[$value];
-                    if ($visivilidade_opcoes != null && in_array($opcao->id, $visivilidade_opcoes)) {
-                        $opcao->visibilidade = true;
-                    } else {
-                        $opcao->visibilidade = false;
-                    }
-                    $opcao->save();
-                } elseif ($pergunta->respostas->first()->opcoes->count() && ! $pergunta->respostas()->where('revisor_id', $data['revisor_id'])->where('trabalho_id', $data['trabalho_id'])->exists()) {
-                    $resposta = $pergunta->respostas()->create([
-                        'revisor_id' => $data['revisor_id'],
-                        'trabalho_id'=> $data['trabalho_id'],
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Carrega o formulário e a avaliação específica
+        |--------------------------------------------------------------------------
+        */
+
+        $revisorId = $data['revisor_id'];
+        $trabalhoId = $data['trabalho_id'];
+
+        $form = Form::with([
+            'perguntas.respostasPadrao.opcoes',
+            'perguntas.respostasPadrao.paragrafo',
+
+            'perguntas.respostasRevisores' => function ($query) use (
+                $revisorId,
+                $trabalhoId
+            ) {
+                $query
+                    ->where('revisor_id', $revisorId)
+                    ->where('trabalho_id', $trabalhoId)
+                    ->with([
+                        'opcoes',
+                        'paragrafo',
                     ]);
-                    $resposta->opcoes()->create([
-                        'titulo' => $data[$value],
-                        'tipo' => 'radio',
-                        'check' => true,
-                    ]);
+            },
+        ])
+            ->findOrFail($data['form_id']);
+
+
+        DB::beginTransaction();
+
+        try {
+
+            /*
+            |--------------------------------------------------------------------------
+            | Atualiza respostas
+            |--------------------------------------------------------------------------
+            */
+
+            foreach ($data['respostas'] as $perguntaId => $valor) {
+
+                /*
+                * A pergunta precisa pertencer ao formulário.
+                */
+                $pergunta = $form->perguntas
+                    ->firstWhere('id', (int) $perguntaId);
+
+                if (!$pergunta) {
+                    continue;
+                }
+
+
+                /*
+                * Estrutura original da pergunta.
+                */
+                $respostaPadrao = $pergunta
+                    ->respostasPadrao
+                    ->first();
+
+                if (!$respostaPadrao) {
+                    continue;
+                }
+
+
+                /*
+                * Resposta atual deste revisor neste trabalho.
+                */
+                $respostaRevisor = $pergunta
+                    ->respostasRevisores
+                    ->first();
+
+
+                /*
+                * Caso por algum motivo ainda não exista uma Resposta,
+                * cria uma.
+                */
+                if (!$respostaRevisor) {
+
+                    $respostaRevisor = $pergunta
+                        ->respostas()
+                        ->create([
+                            'revisor_id' => $revisorId,
+                            'trabalho_id' => $trabalhoId,
+                        ]);
+                }
+
+
+                /*
+                |--------------------------------------------------------------------------
+                | Pergunta de opções
+                |--------------------------------------------------------------------------
+                */
+
+                if ($respostaPadrao->opcoes->isNotEmpty()) {
+
+                    /*
+                    * A view envia o ID da opção padrão.
+                    */
+                    $opcaoPadrao = $respostaPadrao
+                        ->opcoes
+                        ->firstWhere(
+                            'id',
+                            (int) $valor
+                        );
+
+                    if (!$opcaoPadrao) {
+                        throw new \RuntimeException(
+                            'A opção selecionada não pertence à pergunta.'
+                        );
+                    }
+
+
+                    /*
+                    * Resposta atual do avaliador.
+                    */
+                    $opcaoRespondida = $respostaRevisor
+                        ->opcoes
+                        ->first();
+
+
+                    /*
+                    * Se já existe, atualiza.
+                    */
+                    if ($opcaoRespondida) {
+
+                        $opcaoRespondida->update([
+                            /*
+                            * Snapshot do texto da opção.
+                            */
+                            'titulo' => $opcaoPadrao->titulo,
+
+                            /*
+                            * Vínculo com a opção padrão escolhida.
+                            */
+                            'parent_id' => $opcaoPadrao->id,
+
+                            'tipo' => $opcaoPadrao->tipo ?? 'radio',
+
+                            'check' => true,
+
+                            'ordem' => $opcaoPadrao->ordem,
+                        ]);
+
+                    /*
+                    * Se não existe, cria.
+                    */
+                    } else {
+
+                        $respostaRevisor
+                            ->opcoes()
+                            ->create([
+                                'titulo' => $opcaoPadrao->titulo,
+                                'parent_id' => $opcaoPadrao->id,
+                                'tipo' => $opcaoPadrao->tipo ?? 'radio',
+                                'check' => true,
+                                'ordem' => $opcaoPadrao->ordem,
+                            ]);
+                    }
+
+                    continue;
+                }
+
+
+                /*
+                |--------------------------------------------------------------------------
+                | Pergunta de parágrafo
+                |--------------------------------------------------------------------------
+                */
+
+                if ($respostaPadrao->paragrafo) {
+
+                    /*
+                    * Checkbox não marcado não é enviado pelo HTML.
+                    */
+                    $visibilidade = isset(
+                        $data['visibilidade'][$pergunta->id]
+                    );
+
+
+                    $paragrafoRespondido = $respostaRevisor
+                        ->paragrafo;
+
+
+                    if ($paragrafoRespondido) {
+
+                        $paragrafoRespondido->update([
+                            'resposta' => $valor,
+                            'visibilidade' => $visibilidade,
+                        ]);
+
+                    } else {
+
+                        $respostaRevisor
+                            ->paragrafo()
+                            ->create([
+                                'resposta' => $valor,
+                                'visibilidade' => $visibilidade,
+                            ]);
+                    }
                 }
             }
-        }
-        if ($request->arquivoAvaliacao != null) {
-            $revisor = Revisor::find($data['revisor_id']);
-            $arquivoAvaliacao = $trabalho->arquivoAvaliacao()->where('revisorId', $revisor->id)->first();
-            if ($arquivoAvaliacao == null) {
-                $permissoes_revisao = Revisor::where([['user_id', $revisor->user_id], ['evento_id', $trabalho->evento->id]])->get()->map->only(['id']);
-                $arquivoAvaliacao = $trabalho->arquivoAvaliacao()->whereIn('revisorId', $permissoes_revisao)->first();
-            }
-            if ($arquivoAvaliacao != null) {
-                if (Storage::disk()->exists($arquivoAvaliacao->nome)) {
-                    Storage::delete($arquivoAvaliacao->nome);
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | Atualiza arquivo da avaliação
+            |--------------------------------------------------------------------------
+            */
+
+            if ($request->hasFile('arquivoAvaliacao')) {
+
+                $revisor = Revisor::findOrFail($revisorId);
+
+
+                /*
+                * Primeiro procura usando diretamente o revisor da avaliação.
+                */
+                $arquivoAvaliacao = $trabalho
+                    ->arquivoAvaliacao()
+                    ->where('revisorId', $revisor->id)
+                    ->first();
+
+
+                /*
+                * Mantém sua regra anterior de permissões/revisores relacionados.
+                */
+                if (!$arquivoAvaliacao) {
+
+                    $permissoesRevisao = Revisor::where([
+                        [
+                            'user_id',
+                            $revisor->user_id
+                        ],
+                        [
+                            'evento_id',
+                            $trabalho->evento->id
+                        ],
+                    ])
+                        ->pluck('id');
+
+
+                    $arquivoAvaliacao = $trabalho
+                        ->arquivoAvaliacao()
+                        ->whereIn(
+                            'revisorId',
+                            $permissoesRevisao
+                        )
+                        ->first();
                 }
-                $arquivoAvaliacao->delete();
+
+
+                /*
+                * Remove arquivo anterior.
+                */
+                if ($arquivoAvaliacao) {
+
+                    if (
+                        Storage::disk()
+                            ->exists($arquivoAvaliacao->nome)
+                    ) {
+                        Storage::delete(
+                            $arquivoAvaliacao->nome
+                        );
+                    }
+
+                    $arquivoAvaliacao->delete();
+                }
+
+
+                /*
+                * Salva o novo arquivo.
+                */
+                $file = $request->file(
+                    'arquivoAvaliacao'
+                );
+
+                $path =
+                    'avaliacoes/' .
+                    $trabalho->evento->id .
+                    '/' .
+                    $trabalho->id .
+                    '/';
+
+                $nome =
+                    'avaliacao' .
+                    $revisor->id .
+                    '.' .
+                    $file->getClientOriginalExtension();
+
+
+                Storage::putFileAs(
+                    $path,
+                    $file,
+                    $nome
+                );
+
+
+                ArquivoAvaliacao::create([
+                    'nome' => $path . $nome,
+                    'revisorId' => $revisor->id,
+                    'trabalhoId' => $trabalho->id,
+                    'versaoFinal' => true,
+                ]);
             }
 
-            $file = $request->arquivoAvaliacao;
-            $path = 'avaliacoes/'.$trabalho->evento->id.'/'.$trabalho->id.'/';
-            $nome = 'avaliacao'.$revisor->id.'.'.$file->getClientOriginalExtension();
-            Storage::putFileAs($path, $file, $nome);
 
-            ArquivoAvaliacao::create([
-                'nome' => $path.$nome,
-                'revisorId' => $revisor->id,
-                'trabalhoId' => $trabalho->id,
-                'versaoFinal' => true,
-            ]);
+            DB::commit();
+
+        } catch (\Throwable $exception) {
+
+            DB::rollBack();
+
+            report($exception);
+
+            return redirect()
+                ->back()
+                ->withInput()
+                ->withErrors([
+                    'error' =>
+                        'Não foi possível atualizar a avaliação.'
+                ]);
         }
 
-        return redirect()->back()->with(['message' => 'Parecer editado com sucesso.']);
+
+        return redirect()
+            ->back()
+            ->with([
+                'success' => 'Parecer editado com sucesso.'
+            ]);
     }
 
     public function validarTipoDoArquivo($arquivo, $tiposExtensao)

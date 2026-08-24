@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Submissao;
 
+use App\Enums\StatusForm;
 use App\Exports\AvaliacoesExport;
 use App\Exports\InscritosExport;
 use App\Exports\ParticipantesExportXLSX;
@@ -1868,7 +1869,7 @@ class EventoController extends Controller
 
         $forms = Form::where('modalidadeId', $modalidade_id)->orderBy('titulo')->get();
         $modalidade = Modalidade::findOrFail($modalidade_id);
-        return view('coordenador.modalidade.formulario', compact(
+        return view('coordenador.modalidade.forms.index', compact(
             'evento',
             'forms',
             'modalidade'
@@ -1882,7 +1883,7 @@ class EventoController extends Controller
 
         $modalidade = Modalidade::find($request->modalidade_id);
 
-        return view('coordenador.modalidade.atribuirFormulario', compact('evento', 'modalidade'));
+        return view('coordenador.modalidade.forms.create', compact('evento', 'modalidade'));
     }
 
     public function salvarForm(StoreFormRequest $request)
@@ -1892,11 +1893,11 @@ class EventoController extends Controller
 
         $modalidade = Modalidade::find($request->modalidade_id);
         $dados = $request->all();
-
         DB::transaction(function () use ($modalidade, $dados) {
             $form = $modalidade->forms()->create([
                 'titulo' => $dados['titulo'],
                 'instrucoes' => $dados['instrucoes'],
+                'status' => StatusForm::Rascunho,
             ]);
 
             foreach ($dados['perguntas'] as $index => $perguntaData) {
@@ -1907,14 +1908,13 @@ class EventoController extends Controller
                 ]);
 
                 $resposta = $pergunta->respostasPadrao()->create([]);
-
                 match ($perguntaData['tipo']) {
                     'paragrafo' => $resposta->paragrafo()->create([]),
-                    'radio' => collect($pergunta['opcoes'])
+                    'radio' => collect($perguntaData['opcoes'])
                                     ->each(function ($opcao) use ($resposta){
                                         $resposta->opcoes()->create([
                                             'titulo' => $opcao['titulo'],
-                                            'tipo' => $opcao['tipo'],
+                                            // 'tipo' => $opcao['tipo'],
                                             'ordem' => $opcao['ordem'],
 
                                         ]);
@@ -1925,114 +1925,554 @@ class EventoController extends Controller
 
         });
 
-        return redirect()->route('coord.forms', ['modalidade_id' => $modalidade->id])->with('success', 'Formulário cadastrado com sucesso');
+        return redirect()->route('coord.forms', ['eventoId' => $evento->id, 'modalidade_id' => $modalidade->id])->with('success', 'Formulário cadastrado com sucesso');
     }
 
-    public function modalidadeFormUpdate(UpdateFormModalidadeRequest $request, $form_id)
-    {
-        $form = Form::find($request->form_id);
+    public function modalidadeFormUpdate(
+        UpdateFormModalidadeRequest $request,
+        $form_id
+    ) {
+        $form = Form::with([
+            'modalidade.evento',
+            'perguntas.respostasPadrao.paragrafo',
+            'perguntas.respostasPadrao.opcoes',
+        ])->findOrFail($form_id);
+
         $evento = $form->modalidade->evento;
-        $this->authorize('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento);
 
-        $data = $request->all();
-        dd($data);
-        $perguntasMantidas = [];
+        $this->authorize(
+            'isCoordenadorOrCoordenadorDaComissaoCientifica',
+            $evento
+        );
 
-        if (now() > $form->modalidade->inicioRevisao) {
-            return redirect()->back()->with(['error' => 'Não é permitida a editação após o início do período de avaliação']);
-        }
+        $dados = [
+            ...$request->formData(),
+            'perguntas' => $request->items(),
+        ];
 
-        if (isset($request->pergunta_id)) {
-            foreach ($request->pergunta_id as $key => $pergunta_id) {
-                $pergunta = Pergunta::find($pergunta_id);
-                $pergunta->pergunta = $request->pergunta[$key];
+        DB::transaction(function () use ($form, $dados) {
 
-                $opcoes = $pergunta->respostas->first()->opcoes->sortBy('id');
+            /*
+            |--------------------------------------------------------------------------
+            | Verifica se existem respostas de revisores
+            |--------------------------------------------------------------------------
+            */
 
-                if (isset($data['checkboxVisibilidade_' . $pergunta->id])) {
-                    $pergunta->visibilidade = true;
+            $possuiRespostas = $form->perguntas()
+                ->whereHas('respostasRevisores')
+                ->exists();
+
+            /*
+            |--------------------------------------------------------------------------
+            | Detecta alteração estrutural
+            |--------------------------------------------------------------------------
+            |
+            | Só precisamos fazer essa verificação se o formulário já tiver
+            | respostas.
+            |
+            | É alteração estrutural:
+            |
+            | - adicionar pergunta;
+            | - remover pergunta;
+            | - mudar o tipo da pergunta;
+            | - adicionar opção;
+            | - remover opção.
+            |
+            | Alterar título, instrução, texto da pergunta ou texto da opção
+            | NÃO é alteração estrutural.
+            |
+            */
+
+            $alteracaoEstrutural = false;
+
+            if ($possuiRespostas) {
+
+                /*
+                * Perguntas atuais do formulário indexadas pelo ID.
+                */
+                $perguntasAtuais = $form->perguntas->keyBy('id');
+
+                /*
+                * IDs das perguntas existentes que vieram da edição.
+                */
+                $idsPerguntasEnviadas = collect($dados['perguntas'])
+                    ->pluck('pergunta_id')
+                    ->filter()
+                    ->map(fn ($id) => (int) $id);
+
+                /*
+                |--------------------------------------------------------------------------
+                | Adição de pergunta
+                |--------------------------------------------------------------------------
+                |
+                | Pergunta sem ID significa que ela ainda não existe no banco.
+                |
+                */
+
+                $adicionouPergunta = collect($dados['perguntas'])
+                    ->contains(
+                        fn ($pergunta) => empty($pergunta['pergunta_id'])
+                    );
+
+                /*
+                |--------------------------------------------------------------------------
+                | Remoção de pergunta
+                |--------------------------------------------------------------------------
+                */
+
+                $removeuPergunta = $perguntasAtuais
+                    ->keys()
+                    ->map(fn ($id) => (int) $id)
+                    ->diff($idsPerguntasEnviadas)
+                    ->isNotEmpty();
+
+                if ($adicionouPergunta || $removeuPergunta) {
+                    $alteracaoEstrutural = true;
+                }
+
+                /*
+                |--------------------------------------------------------------------------
+                | Verifica mudança de tipo e alterações nas opções
+                |--------------------------------------------------------------------------
+                */
+
+                if (!$alteracaoEstrutural) {
+
+                    foreach ($dados['perguntas'] as $perguntaData) {
+
+                        $pergunta = $perguntasAtuais->get(
+                            $perguntaData['pergunta_id']
+                        );
+
+                        /*
+                        * Em situação normal isso não deve ocorrer.
+                        */
+                        if (!$pergunta) {
+                            $alteracaoEstrutural = true;
+                            break;
+                        }
+
+                        $respostaPadrao = $pergunta
+                            ->respostasPadrao
+                            ->first();
+
+                        /*
+                        |--------------------------------------------------------------------------
+                        | Descobre o tipo atual da pergunta
+                        |--------------------------------------------------------------------------
+                        */
+
+                        if ($respostaPadrao?->paragrafo) {
+
+                            $tipoAtual = 'paragrafo';
+
+                        } elseif (
+                            $respostaPadrao?->opcoes
+                            && $respostaPadrao->opcoes->isNotEmpty()
+                        ) {
+
+                            $tipoAtual = 'radio';
+
+                        } else {
+
+                            $tipoAtual = null;
+                        }
+
+                        /*
+                        |--------------------------------------------------------------------------
+                        | Mudança de tipo
+                        |--------------------------------------------------------------------------
+                        |
+                        | paragrafo -> radio
+                        | radio     -> paragrafo
+                        |
+                        | Isso altera a estrutura da resposta.
+                        |
+                        */
+
+                        if ($tipoAtual !== $perguntaData['tipo']) {
+                            $alteracaoEstrutural = true;
+                            break;
+                        }
+
+                        /*
+                        * Perguntas de parágrafo não possuem opções.
+                        */
+                        if ($perguntaData['tipo'] !== 'radio') {
+                            continue;
+                        }
+
+                        /*
+                        |--------------------------------------------------------------------------
+                        | IDs das opções atuais
+                        |--------------------------------------------------------------------------
+                        */
+
+                        $idsOpcoesAtuais = $respostaPadrao
+                            ->opcoes
+                            ->pluck('id')
+                            ->map(fn ($id) => (int) $id);
+
+                        /*
+                        |--------------------------------------------------------------------------
+                        | IDs das opções enviadas
+                        |--------------------------------------------------------------------------
+                        */
+
+                        $idsOpcoesEnviadas = collect(
+                            $perguntaData['opcoes']
+                        )
+                            ->pluck('id')
+                            ->filter()
+                            ->map(fn ($id) => (int) $id);
+
+                        /*
+                        |--------------------------------------------------------------------------
+                        | Adição de opção
+                        |--------------------------------------------------------------------------
+                        */
+
+                        $adicionouOpcao = collect(
+                            $perguntaData['opcoes']
+                        )->contains(
+                            fn ($opcao) => empty($opcao['id'])
+                        );
+
+                        /*
+                        |--------------------------------------------------------------------------
+                        | Remoção de opção
+                        |--------------------------------------------------------------------------
+                        */
+
+                        $removeuOpcao = $idsOpcoesAtuais
+                            ->diff($idsOpcoesEnviadas)
+                            ->isNotEmpty();
+
+                        if ($adicionouOpcao || $removeuOpcao) {
+                            $alteracaoEstrutural = true;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            /*
+            |--------------------------------------------------------------------------
+            | CASO 3
+            |--------------------------------------------------------------------------
+            |
+            | Existem respostas + alteração estrutural.
+            |
+            | O formulário atual NÃO será modificado estruturalmente.
+            | É criada uma nova versão para os revisores que ainda não responderam.
+            |
+            */
+
+            if ($possuiRespostas && $alteracaoEstrutural) {
+
+                $formOriginalId = $form->form_original_id
+                    ?? $form->id;
+
+                $novaVersao = $form->modalidade
+                    ->forms()
+                    ->create([
+                        'titulo' => $dados['titulo'],
+                        'instrucoes' => $dados['instrucoes'],
+
+                        'versao' => ($form->versao ?? 1) + 1,
+
+                        'form_original_id' => $formOriginalId,
+
+                        'form_anterior_id' => $form->id,
+
+                        'status' => 'publicado',
+                    ]);
+
+                /*
+                |--------------------------------------------------------------------------
+                | Cria as perguntas da nova versão
+                |--------------------------------------------------------------------------
+                |
+                | Os IDs das perguntas anteriores NÃO são reutilizados.
+                |
+                */
+
+                foreach ($dados['perguntas'] as $perguntaData) {
+
+                    $pergunta = $novaVersao
+                        ->perguntas()
+                        ->create([
+                            'pergunta' => $perguntaData['titulo'],
+                            'visibilidade' => $perguntaData['visivel'],
+                            'ordem' => $perguntaData['ordem'],
+                        ]);
+
+                    /*
+                    * Toda pergunta possui uma resposta padrão que define
+                    * sua estrutura.
+                    */
+                    $resposta = $pergunta
+                        ->respostasPadrao()
+                        ->create([]);
+
+                    match ($perguntaData['tipo']) {
+
+                        'paragrafo' =>
+                            $resposta
+                                ->paragrafo()
+                                ->create([]),
+
+                        'radio' =>
+                            collect($perguntaData['opcoes'])
+                                ->each(function ($opcao) use ($resposta) {
+
+                                    $resposta
+                                        ->opcoes()
+                                        ->create([
+                                            'titulo' => $opcao['titulo'],
+                                            'ordem' => $opcao['ordem'],
+                                        ]);
+                                }),
+
+                        default =>
+                            throw new InvalidArgumentException(
+                                'Tipo de pergunta inválido.'
+                            ),
+                    };
+                }
+
+                /*
+                * A versão antiga continua existindo para preservar
+                * as respostas dos revisores que já responderam.
+                */
+                $form->update([
+                    'status' => StatusForm::Substituido,
+                ]);
+
+                return;
+            }
+
+            /*
+            |--------------------------------------------------------------------------
+            | CASOS 1 E 2
+            |--------------------------------------------------------------------------
+            |
+            | CASO 1:
+            | Não existem respostas.
+            | Qualquer alteração pode ocorrer no formulário atual.
+            |
+            | CASO 2:
+            | Existem respostas, porém houve somente alteração textual.
+            | O próprio formulário pode ser atualizado.
+            |
+            */
+
+            $form->update([
+                'titulo' => $dados['titulo'],
+                'instrucoes' => $dados['instrucoes'],
+            ]);
+
+            /*
+            * Guardaremos os IDs das perguntas que permaneceram.
+            */
+            $perguntasMantidas = [];
+
+            foreach ($dados['perguntas'] as $perguntaData) {
+
+                /*
+                |--------------------------------------------------------------------------
+                | Pergunta existente
+                |--------------------------------------------------------------------------
+                */
+
+                if ($perguntaData['pergunta_id']) {
+
+                    /*
+                    * Busca pelo relacionamento para impedir que uma pergunta
+                    * de outro formulário seja atualizada.
+                    */
+                    $pergunta = $form
+                        ->perguntas()
+                        ->findOrFail(
+                            $perguntaData['pergunta_id']
+                        );
+
+                    $pergunta->update([
+                        'pergunta' => $perguntaData['titulo'],
+                        'visibilidade' => $perguntaData['visivel'],
+                        'ordem' => $perguntaData['ordem'],
+                    ]);
+
+                /*
+                |--------------------------------------------------------------------------
+                | Nova pergunta
+                |--------------------------------------------------------------------------
+                |
+                | Este caso só pode chegar aqui quando o formulário ainda
+                | não possui respostas.
+                |
+                */
+
                 } else {
-                    $pergunta->visibilidade = false;
+
+                    $pergunta = $form
+                        ->perguntas()
+                        ->create([
+                            'pergunta' => $perguntaData['titulo'],
+                            'visibilidade' => $perguntaData['visivel'],
+                            'ordem' => $perguntaData['ordem'],
+                        ]);
                 }
 
-                //Verificação de alteração em múltipla escolha já existente
-                if ($data['tipo'][$key] == 'radio') {
-                    //dd($request->tituloRadio);
-                    $rowKey = 'row' . $key;
-                    if (isset($request->tituloRadio[$rowKey])) {
-                        foreach ($request->tituloRadio[$rowKey] as $i => $titulo) {
-                            if ($opcoes->count() > 0) {
-                                $opcoes->first()->titulo = $titulo;
-                                //Verificação de marcação da resposta da múltipla escolha
-                                if (isset($request->checkbox[$opcoes->first()->id])) {
-                                    $opcoes->first()->check = true;
-                                } else {
-                                    $opcoes->first()->check = false;
-                                }
+                $perguntasMantidas[] = $pergunta->id;
 
-                                $opcoes->first()->update();
-                                $opcoes->shift();
-                            }
+                /*
+                |--------------------------------------------------------------------------
+                | Resposta padrão
+                |--------------------------------------------------------------------------
+                */
+
+                $resposta = $pergunta
+                    ->respostasPadrao()
+                    ->firstOrCreate([]);
+
+                /*
+                |--------------------------------------------------------------------------
+                | Pergunta do tipo parágrafo
+                |--------------------------------------------------------------------------
+                */
+
+                if ($perguntaData['tipo'] === 'paragrafo') {
+
+                    /*
+                    * Caso anteriormente fosse radio.
+                    *
+                    * Isso só poderá acontecer aqui se ainda não existirem
+                    * respostas de revisores.
+                    */
+                    $resposta
+                        ->opcoes()
+                        ->delete();
+
+                    $resposta
+                        ->paragrafo()
+                        ->firstOrCreate([]);
+
+                    continue;
+                }
+
+                /*
+                |--------------------------------------------------------------------------
+                | Pergunta do tipo radio
+                |--------------------------------------------------------------------------
+                */
+
+                if ($perguntaData['tipo'] === 'radio') {
+
+                    /*
+                    * Caso anteriormente fosse parágrafo.
+                    */
+                    $resposta
+                        ->paragrafo()
+                        ->delete();
+
+                    $opcoesMantidas = [];
+
+                    foreach ($perguntaData['opcoes'] as $opcaoData) {
+
+                        /*
+                        |--------------------------------------------------------------------------
+                        | Opção existente
+                        |--------------------------------------------------------------------------
+                        */
+
+                        if ($opcaoData['id']) {
+
+                            /*
+                            * Busca a opção dentro da resposta correta.
+                            */
+                            $opcao = $resposta
+                                ->opcoes()
+                                ->findOrFail(
+                                    $opcaoData['id']
+                                );
+
+                            $opcao->update([
+                                'titulo' => $opcaoData['titulo'],
+                                'ordem' => $opcaoData['ordem'],
+                            ]);
+
+                        /*
+                        |--------------------------------------------------------------------------
+                        | Nova opção
+                        |--------------------------------------------------------------------------
+                        |
+                        | Só pode ocorrer neste fluxo quando ainda não existem
+                        | respostas de revisores.
+                        |
+                        */
+
+                        } else {
+
+                            $opcao = $resposta
+                                ->opcoes()
+                                ->create([
+                                    'titulo' => $opcaoData['titulo'],
+                                    'ordem' => $opcaoData['ordem'],
+                                ]);
                         }
+
+                        $opcoesMantidas[] = $opcao->id;
                     }
+
+                    /*
+                    |--------------------------------------------------------------------------
+                    | Remove opções excluídas
+                    |--------------------------------------------------------------------------
+                    |
+                    | Se já houvesse respostas, a remoção teria sido detectada
+                    | anteriormente e uma nova versão teria sido criada.
+                    |
+                    */
+
+                    $resposta
+                        ->opcoes()
+                        ->whereNotIn(
+                            'id',
+                            $opcoesMantidas
+                        )
+                        ->delete();
+
+                    continue;
                 }
 
-                $pergunta->update();
-
-                array_push($perguntasMantidas, $pergunta->id);
+                throw new InvalidArgumentException(
+                    'Tipo de pergunta inválido.'
+                );
             }
-        }
 
-        $perguntas = Pergunta::where('form_id', $data['formEditId'])->get();
+            /*
+            |--------------------------------------------------------------------------
+            | Remove perguntas excluídas
+            |--------------------------------------------------------------------------
+            |
+            | Se houvesse respostas, essa remoção já teria ocasionado
+            | a criação de uma nova versão.
+            |
+            */
 
-        foreach ($perguntas as $pergunta) {
-            if (!in_array($pergunta->id, $perguntasMantidas)) {
-                $pergunta->delete();
-            }
-        }
+            $form
+                ->perguntas()
+                ->whereNotIn(
+                    'id',
+                    $perguntasMantidas
+                )
+                ->delete();
+        });
 
-        $perguntasView = $request->pergunta;
-        $perguntasIdView = $request->pergunta_id;
-        if (isset($perguntasView) && isset($perguntasIdView)) {
-            if (count($perguntasView) > count($perguntasIdView)) {
-                for ($i = count($perguntasIdView); $i < count($perguntasView); $i++) {
-                    $pergunta = new Pergunta();
-                    $pergunta->form_id = $data['formEditId'];
-                    $pergunta->pergunta = $request->pergunta[$i];
-                    $pergunta->visibilidade = false;
-                    $pergunta->save();
-
-                    $resposta = new Resposta();
-                    $resposta->pergunta_id = $pergunta->id;
-                    $resposta->save();
-
-                    if ($data['tipo'][$i] == 'paragrafo') {
-                        $paragrafo = new Paragrafo();
-                        $resposta->paragrafo()->save($paragrafo);
-                    } elseif ($data['tipo'][$i] == 'checkbox') {
-                        $listResposta = (isset($data['tituloCheckoxMarc']) && is_array($data['tituloCheckoxMarc'])) ? array_shift($data['tituloCheckoxMarc']) : [];
-                        $opcoesArray = (isset($data['tituloCheckox']) && is_array($data['tituloCheckox'])) ? array_shift($data['tituloCheckox']) : [];
-                        if (is_array($opcoesArray)) {
-                            foreach ($opcoesArray as $key => $titulo) {
-                                if (!empty($titulo)) {
-                                    $resposta->opcoes()->create([
-                                        'titulo' => $titulo,
-                                        'tipo' => 'radio',
-                                        'check' => $listResposta[$key] ?? false,
-                                    ]);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        $form->titulo = $data['titulo' . $form->id];
-        $form->instrucoes = $data['instrucoes' . $form->id];
-        $form->update();
-
-        return redirect()->back()->with(['success' => 'Formulário editado com sucesso!']);
+        return redirect()->back()->with([
+            'success' => 'Formulário editado com sucesso!'
+        ]);
     }
 
     public function destroyForm($id)
@@ -2070,26 +2510,47 @@ class EventoController extends Controller
 
     public function visualizarForm(Request $request)
     {
-        $evento = Evento::find($request->evento_id);
-        $this->authorize('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento);
+        $modalidade = Modalidade::with('evento')->find($request->modalidade_id);
 
-        $modalidade = Modalidade::find($request->modalidade_id)->load('forms.perguntas.respostas');
-        // $form = $modalidade->forms;
+        $this->authorize('isCoordenadorOrCoordenadorDaComissaoCientifica', $modalidade->evento);
+
+        $form = Form::with('perguntas.respostas')->find($request->form_id);
         $data = $request->all();
 
-        return view('coordenador.modalidade.visualizarFormulario', compact('evento', 'modalidade'));
+        return view('coordenador.modalidade.forms.show', compact('modalidade', 'form'));
     }
 
     public function modalidadeFormEdit(Evento $evento, Form $form)
     {
         $this->authorize('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento);
         $form = $form->load([
-            'perguntas' => function ($query) {
-                $query->orderBy('id');
-            },
+            'perguntas',
             'perguntas.respostasPadrao.opcoes',
             'perguntas.respostasPadrao.paragrafo',
         ]);
+
+        $form->perguntas = $form->perguntas->map(function ($pergunta) {
+            $resposta = $pergunta->respostasPadrao->first();
+
+            return [
+                'id' => $pergunta->id,
+                'titulo' => $pergunta->pergunta,
+                'tipo' => $resposta?->opcoes?->isNotEmpty() ? 'radio' : 'paragrafo',
+                'ordem' => $pergunta->ordem,
+                'visibilidade' => (bool) $pergunta->visibilidade,
+                'opcoes' => $resposta
+                    ? $resposta->opcoes->map(fn ($opcao) => [
+                        'id' => $opcao->id,
+                        'titulo' => $opcao->titulo,
+                        'tipo' => $opcao->tipo,
+                        'ordem' => $opcao->ordem,
+                    ])->values()->toArray()
+                    : [],
+            ];
+        })
+        ->values()
+        ->toArray();
+
         $modalidade = $form->modalidade;
 
         return view('coordenador.modalidade.forms.edit', compact('form', 'evento', 'modalidade'));
@@ -2259,26 +2720,29 @@ class EventoController extends Controller
             $arquivoAvaliacao = $trabalho->arquivoAvaliacao()->whereIn('revisorId', $permissoes_revisao)->first();
         }
 
-        $perguntas = Pergunta::query()
-            ->whereHas('respostas', function ($q) use ($trabalho, $revisor) {
-                $q->where('trabalho_id', $trabalho->id)
-                ->where('revisor_id',  $revisor->id);
-            })
-            ->with(['respostasPadrao.opcoes'])->orderBy('id')
-            ->get();
+        $form = Form::whereHas(
+                    'perguntas.respostasRevisores',
+                    function ($query) use ($revisor, $trabalho) {
+                        $query->where('trabalho_id', $trabalho->id)
+                            ->where('revisor_id', $revisor->id);
+                    }
+                )
+                ->with([
+                    'perguntas.respostasPadrao.opcoes',
+                    'perguntas.respostasPadrao.paragrafo',
 
-        $opcoes = Opcao::whereHas('resposta', function ($q) use ($revisor, $trabalho) {
-                        $q->where('trabalho_id', $trabalho->id)
-                            ->where('revisor_id', $revisor->id);//preciso dizer das respostas que tenha relaçao com opcao?
+                    'perguntas.respostasRevisores' => function ($query) use ($revisor, $trabalho) {
+                        $query->where('trabalho_id', $trabalho->id)
+                            ->where('revisor_id', $revisor->id)
+                            ->with([
+                                'opcoes',
+                                'paragrafo'
+                            ]);
+                    }
+                ])
+                ->firstOrFail();
 
-                })
-                ->get()
-                ->keyBy('parent_id');
-
-        // dd( $opcoes->load('resposta.revisor')->toJson(JSON_PRETTY_PRINT));
-        $form = $trabalho->respostas()->where('revisor_id', $revisor->id)->first()->pergunta->form;
-
-        return view('coordenador.trabalhos.visualizarRespostaFormulario', compact('evento', 'perguntas', 'opcoes', 'form', 'modalidade', 'trabalho', 'revisorUser', 'revisor', 'arquivoAvaliacao', 'avaliacao'));
+        return view('avaliacoes.review', compact('evento', 'form', 'modalidade', 'trabalho', 'revisorUser', 'revisor', 'arquivoAvaliacao', 'avaliacao'));
     }
 
     public function editarEtiqueta(Request $request)

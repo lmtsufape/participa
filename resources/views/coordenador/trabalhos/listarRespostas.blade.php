@@ -1,5 +1,7 @@
-@extends('coordenador.detalhesEvento')
-@section('menu')
+@extends('layouts.app')
+@section('sidebar')
+@endsection
+@section('content')
     <div id="divListarAvaliacoes" style="display: block">
         <div class="row">
             <div class="col-12">

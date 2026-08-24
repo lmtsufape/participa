@@ -12,6 +12,7 @@ use App\Models\Submissao\Area;
 use App\Models\Submissao\Certificado;
 use App\Models\Submissao\Endereco;
 use App\Models\Submissao\Evento;
+use App\Models\Submissao\Form;
 use App\Models\Submissao\Modalidade;
 use App\Models\Submissao\Palestra;
 use App\Models\Submissao\TipoComissao;
@@ -183,12 +184,27 @@ class UserController extends Controller
         $modalidade = Modalidade::find($request->modalidadeId);
         $revisorUser = User::find($revisor->user_id);
         $respostas = collect();
-        foreach ($modalidade->forms as $form) {
-            foreach ($form->perguntas as $pergunta) {
-                $respostas->push($pergunta->respostas->where('trabalho_id', $trabalho->id)->where('revisor_id', $revisor->id)->first());
-            }
-        }
+        $form = Form::whereHas(
+                'perguntas.respostasRevisores',
+                function ($query) use ($revisor, $trabalho) {
+                    $query->where('trabalho_id', $trabalho->id)
+                        ->where('revisor_id', $revisor->id);
+                }
+            )
+            ->with([
+                'perguntas.respostasPadrao.opcoes',
+                'perguntas.respostasPadrao.paragrafo',
 
+                'perguntas.respostasRevisores' => function ($query) use ($revisor, $trabalho) {
+                    $query->where('trabalho_id', $trabalho->id)
+                        ->where('revisor_id', $revisor->id)
+                        ->with([
+                            'opcoes',
+                            'paragrafo'
+                        ]);
+                }
+            ])
+            ->firstOrFail();
         $arquivoAvaliacao = $trabalho->arquivoAvaliacao()->where('revisorId', $revisor->id)->first();
         if ($arquivoAvaliacao == null) {
             $permissoes_revisao = Revisor::where([['user_id', $revisor->user_id], ['evento_id', $evento->id]])->get()->map->only(['id']);
@@ -196,7 +212,7 @@ class UserController extends Controller
         }
 
 
-        return view('user.visualizarParecer', compact('evento', 'modalidade', 'trabalho', 'revisorUser', 'respostas', 'revisor', 'arquivoAvaliacao'));
+        return view('avaliacoes.show', compact('evento', 'modalidade', 'trabalho', 'revisorUser', 'respostas', 'form', 'revisor', 'arquivoAvaliacao'));
     }
 
     public function searchUser(Request $request)

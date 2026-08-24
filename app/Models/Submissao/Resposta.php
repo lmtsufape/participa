@@ -16,7 +16,7 @@ class Resposta extends Model
 
     public function opcoes()
     {
-        return $this->hasMany(Opcao::class);
+        return $this->hasMany(Opcao::class)->orderBy('ordem');
     }
 
     public function paragrafo()

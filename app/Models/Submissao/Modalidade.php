@@ -2,6 +2,7 @@
 
 namespace App\Models\Submissao;
 
+use App\Enums\StatusForm;
 use App\Models\Users\Revisor;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -15,7 +16,7 @@ class Modalidade extends Model
      */
     protected $fillable = [
         'nome', 'inicioSubmissao', 'fimSubmissao', 'inicioRevisao', 'fimRevisao', 'inicioCorrecao', 'fimCorrecao', 'inicioValidacao', 'fimValidacao', 'inicioResultado',
-        'eventoId', 'texto', 'arquivo', 'caracteres', 'mincaracteres',
+        'eventoId', 'texto', 'arquivo', 'caracteres', 'mincaracteres', 'evento_id',
         'maxcaracteres', 'palavras', 'minpalavras', 'maxpalavras',
         'pdf', 'jpg', 'jpeg', 'png', 'docx', 'odt', 'zip', 'svg', 'mp4', 'mp3', 'ogg', 'wav', 'ogv', 'mpg', 'mpeg', 'mkv', 'avi', 'odp', 'pptx', 'csv', 'ods', 'xlsx',
         'regra', 'template', 'modelo_apresentacao', 'instrucoes','numMaxCoautores', 'nome_en', 'nome_es','ordem'
@@ -52,6 +53,11 @@ class Modalidade extends Model
     public function forms()
     {
         return $this->hasMany(Form::class, 'modalidadeId');
+    }
+
+    public function formAtual()
+    {
+        return $this->hasOne(Form::class, 'modalidadeId')->where('status', StatusForm::Publicado)->latestOfMany('versao');
     }
 
     public function evento()

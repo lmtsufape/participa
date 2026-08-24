@@ -15,213 +15,512 @@ class UpdateFormModalidadeRequest extends FormRequest
         return true;
     }
 
-   /**
-     * Normaliza a entrada para evitar “buracos” e ruído de UI.
-     */
-    protected function prepareForValidation(): void
+       protected function prepareForValidation(): void
     {
-        // Força arrays e remove ruídos
-        $perguntas     = array_values((array) $this->input('perguntas', []));
-        $pergunta_id   = array_values((array) $this->input('pergunta_id', []));
-        $tipos         = array_values((array) $this->input('tipos', []));
-        $visibilidades = (array) $this->input('visibilidades', []);
-        $ordens        = array_values((array) $this->input('ordens', []));
-        $opcoesRaw     = (array) $this->input('opcoes', []);
-        $opcaoIdRaw    = (array) $this->input('opcao_id', []);
+        $perguntas = collect($this->input('perguntas', []))
+            ->values()
+            ->map(function ($pergunta, $index) {
+                $pergunta = is_array($pergunta)
+                    ? $pergunta
+                    : [];
 
-        // Trim perguntas
-        $perguntas = array_map(
-            fn($v) => is_string($v) ? trim($v) : $v,
-            $perguntas
-        );
+                $tipo = $pergunta['tipo'] ?? null;
 
-        // Visibilidade por índice (checkbox → bool)
-        $visFlags = [];
-        foreach ($perguntas as $i => $_) {
-            $val = $visibilidades[$i] ?? null;
-            $visFlags[$i] = in_array($val, ['on','1',1,true,'true','yes','checked'], true);
-        }
+                $opcoes = collect($pergunta['opcoes'] ?? [])
+                    ->map(function ($opcao) {
+                        $opcao = is_array($opcao)
+                            ? $opcao
+                            : [];
 
-        // Opções: limpa vazias/whitespace, reindexa e mantém pareamento opcao_id ↔ titulo
-        $opcoes   = [];
-        $opcao_id = [];
-        foreach ($opcoesRaw as $i => $lista) {
-            $lista = is_array($lista) ? $lista : [];
-            $lista = array_values(array_filter(
-                array_map(fn($v) => is_string($v) ? trim($v) : $v, $lista),
-                fn($v) => $v !== '' && $v !== null
-            ));
-            $opcoes[$i] = $lista;
+                        return [
+                            'id' => $this->emptyToNull(
+                                $opcao['id'] ?? null
+                            ),
 
-            $ids = (array) ($opcaoIdRaw[$i] ?? []);
-            $opcao_id[$i] = array_values($ids);
-        }
+                            'titulo' => $this->trimValue(
+                                $opcao['titulo'] ?? null
+                            ),
+                        ];
+                    })
 
-        $this->merge(compact(
-            'perguntas','pergunta_id','tipos','visFlags','ordens','opcoes','opcao_id'
-        ));
+                    // Remove opções completamente vazias.
+                    // Como ID e título estão no mesmo array,
+                    // o pareamento nunca é perdido.
+                    ->filter(
+                        fn ($opcao) =>
+                            $opcao['titulo'] !== ''
+                            && $opcao['titulo'] !== null
+                    )
+
+                    ->values()
+
+                    // Gera ordem novamente após remover vazios.
+                    ->map(function ($opcao, $index) {
+                        return [
+                            'id' => $opcao['id'],
+                            'titulo' => $opcao['titulo'],
+                            'ordem' => $index + 1,
+                        ];
+                    })
+
+                    ->toArray();
+
+                return [
+                    'id' => $this->emptyToNull(
+                        $pergunta['id'] ?? null
+                    ),
+
+                    'titulo' => $this->trimValue(
+                        $pergunta['titulo'] ?? null
+                    ),
+
+                    'tipo' => $tipo,
+
+                    // A ordem é definida pelo próprio Request.
+                    'ordem' => $index + 1,
+
+                    'visibilidade' => $this->booleanValue(
+                        $pergunta['visibilidade'] ?? false
+                    ),
+
+                    // Parágrafo nunca possui opções.
+                    'opcoes' => $tipo === 'radio'
+                        ? $opcoes
+                        : [],
+                ];
+            })
+            ->toArray();
+
+        $this->merge([
+            'titulo' => $this->trimValue(
+                $this->input('titulo')
+            ),
+
+            'instrucoes' => $this->trimValue(
+                $this->input('instrucoes')
+            ),
+
+            'perguntas' => $perguntas,
+        ]);
     }
 
+    /**
+     * Regras de validação.
+     */
     public function rules(): array
     {
         return [
-            // PERGUNTAS
-            'perguntas'      => ['required','array','min:1'],
-            'perguntas.*'    => ['bail','required','string','min:3','max:500'],
+            /*
+            |--------------------------------------------------------------------------
+            | Formulário
+            |--------------------------------------------------------------------------
+            */
 
-            // IDs das PERGUNTAS (podem vir vazios para “nova pergunta”)
-            'pergunta_id'    => ['required','array'],
-            'pergunta_id.*'  => ['nullable','string'], // use 'integer' se seus IDs forem int
+            'titulo' => [
+                'required',
+                'string',
+                'min:3',
+                'max:255',
+            ],
 
-            // TIPOS (alinhado 1:1 com perguntas)
-            'tipos'          => ['required','array'],
-            'tipos.*'        => ['bail','required', Rule::in(['paragrafo','radio'])],
+            'instrucoes' => [
+                'nullable',
+                'string',
+            ],
 
-            // ORDEM (opcional, mas recomendado)
-            'ordens'         => ['array'],
-            'ordens.*'       => ['nullable','integer','min:0'],
+            /*
+            |--------------------------------------------------------------------------
+            | Perguntas
+            |--------------------------------------------------------------------------
+            */
 
-            // VISIBILIDADE (normalizada)
-            'visFlags'       => ['array'],
-            'visFlags.*'     => ['boolean'],
+            'perguntas' => [
+                'required',
+                'array',
+                'min:1',
+            ],
 
-            // OPCOES (matriz): opcoes[indexPergunta][] = "titulo"
-            'opcoes'         => ['array'],
-            'opcoes.*'       => ['array'],
-            'opcoes.*.*'     => ['nullable','string','min:1','max:255'],
+            /*
+             * null = pergunta nova
+             * valor = pergunta já existente
+             */
+            'perguntas.*.id' => [
+                'nullable',
+                'integer',
+                'distinct',
+            ],
 
-            // Pareamento de IDs de opções: opcao_id[indexPergunta][] = "id"
-            'opcao_id'       => ['array'],
-            'opcao_id.*'     => ['array'],
-            'opcao_id.*.*'   => ['nullable','string'], // 'integer' se seus IDs forem int
+            'perguntas.*.titulo' => [
+                'bail',
+                'required',
+                'string',
+                'min:3',
+                'max:500',
+            ],
+
+            'perguntas.*.tipo' => [
+                'bail',
+                'required',
+                Rule::in([
+                    'paragrafo',
+                    'radio',
+                ]),
+            ],
+
+            'perguntas.*.ordem' => [
+                'required',
+                'integer',
+                'min:1',
+            ],
+
+            'perguntas.*.visibilidade' => [
+                'required',
+                'boolean',
+            ],
+
+            /*
+            |--------------------------------------------------------------------------
+            | Opções
+            |--------------------------------------------------------------------------
+            */
+
+            'perguntas.*.opcoes' => [
+                'array',
+            ],
+
+            /*
+             * null = opção nova
+             * valor = opção já existente
+             */
+            'perguntas.*.opcoes.*.id' => [
+                'nullable',
+                'integer',
+                'distinct',
+            ],
+
+            'perguntas.*.opcoes.*.titulo' => [
+                'bail',
+                'required',
+                'string',
+                'min:1',
+                'max:255',
+            ],
+
+            'perguntas.*.opcoes.*.ordem' => [
+                'required',
+                'integer',
+                'min:1',
+            ],
         ];
     }
 
+    /**
+     * Validações dependentes do tipo da pergunta.
+     */
     public function withValidator($validator): void
     {
-        $validator->after(function ($v) {
-            $perguntas  = $this->input('perguntas', []);
-            $pergIds    = $this->input('pergunta_id', []);
-            $tipos      = $this->input('tipos', []);
-            $opcoes     = $this->input('opcoes', []);
-            $opcaoIds   = $this->input('opcao_id', []);
+        $validator->after(function ($validator) {
 
-            // 1) Alinhamento básico: perguntas x tipos x pergunta_id
-            $n = count($perguntas);
-            if ($n !== count($tipos) || $n !== count($pergIds)) {
-                $v->errors()->add('perguntas', 'As listas de perguntas, tipos e IDs precisam ter o mesmo tamanho.');
-                return;
-            }
+            foreach (
+                $this->input('perguntas', [])
+                as $perguntaIndex => $pergunta
+            ) {
+                /*
+                 * Somente perguntas de múltipla escolha
+                 * precisam validar opções.
+                 */
+                if (($pergunta['tipo'] ?? null) !== 'radio') {
+                    continue;
+                }
 
-            // 2) Condicionais por índice
-            foreach ($tipos as $i => $tipo) {
-                if ($tipo === 'radio') {
-                    $lista = $opcoes[$i] ?? [];
+                $opcoes = $pergunta['opcoes'] ?? [];
 
-                    // a) Radio precisa de ao menos 2 opções
-                    if (!is_array($lista) || count($lista) < 2) {
-                        $v->errors()->add("opcoes.$i", 'Perguntas do tipo "radio" precisam de ao menos duas opções.');
-                        continue;
-                    }
+                /*
+                 * Perguntas radio precisam possuir
+                 * pelo menos duas alternativas.
+                 */
+                if (count($opcoes) < 2) {
+                    $validator->errors()->add(
+                        "perguntas.$perguntaIndex.opcoes",
+                        'Perguntas de múltipla escolha precisam ter ao menos duas alternativas.'
+                    );
 
-                    // b) IDs pareados com títulos (se vieram)
-                    $ids = $opcaoIds[$i] ?? [];
-                    if (count($ids) && count($ids) !== count($lista)) {
-                        $v->errors()->add("opcao_id.$i", 'IDs de opções devem estar pareados com os títulos enviados.');
-                    }
+                    continue;
+                }
 
-                    // c) Duplicatas na mesma pergunta (ignorando caixa/whitespace)
-                    $norm = static fn(string $s) => mb_strtolower(preg_replace('/\s+/u', ' ', trim($s)));
-                    $seen = [];
-                    foreach ($lista as $j => $titulo) {
-                        $k = $norm((string) $titulo);
-                        if (isset($seen[$k])) {
-                            $v->errors()->add("opcoes.$i.$j", 'Opção duplicada nesta pergunta.');
-                        }
-                        $seen[$k] = true;
-                    }
-                } else {
-                    // Se for parágrafo, não deve haver opções “relevantes”
-                    // (deixa passar se vier vazio; o controller limpa opcoes ao persistir)
+                /*
+                 * Normaliza os títulos para detectar
+                 * opções duplicadas.
+                 *
+                 * Exemplo:
+                 *
+                 * "Sim"
+                 * " sim "
+                 * "SIM"
+                 *
+                 * são consideradas iguais.
+                 */
+                $normalizadas = collect($opcoes)
+                    ->pluck('titulo')
+                    ->filter(fn ($titulo) => is_string($titulo))
+                    ->map(function ($titulo) {
+                        $titulo = preg_replace(
+                            '/\s+/u',
+                            ' ',
+                            trim($titulo)
+                        );
+
+                        return mb_strtolower($titulo);
+                    });
+
+                if ($normalizadas->duplicates()->isNotEmpty()) {
+                    $validator->errors()->add(
+                        "perguntas.$perguntaIndex.opcoes",
+                        'Esta pergunta possui alternativas duplicadas.'
+                    );
                 }
             }
         });
     }
 
+    /**
+     * Mensagens personalizadas.
+     */
     public function messages(): array
     {
         return [
-            'perguntas.required'   => 'Informe ao menos uma pergunta.',
-            'perguntas.array'      => 'Formato de perguntas inválido.',
-            'perguntas.*.required' => 'O texto da pergunta é obrigatório.',
-            'perguntas.*.min'      => 'Cada pergunta deve ter ao menos :min caracteres.',
-            'perguntas.*.max'      => 'Cada pergunta deve ter no máximo :max caracteres.',
+            /*
+            |--------------------------------------------------------------------------
+            | Formulário
+            |--------------------------------------------------------------------------
+            */
 
-            'pergunta_id.required' => 'Envie a lista de IDs (mesmo que vazios) para manter o pareamento.',
-            'tipos.required'       => 'Informe o tipo de cada pergunta.',
-            'tipos.*.in'           => 'Tipo inválido. Use "paragrafo" ou "radio".',
+            'titulo.required' =>
+                'Informe o título do formulário.',
 
-            'opcoes.array'         => 'O campo de opções deve ser uma lista.',
-            'opcoes.*.array'       => 'As opções de cada pergunta devem estar em lista.',
-            'opcoes.*.*.min'       => 'Cada opção deve ter ao menos :min caractere.',
-            'opcoes.*.*.max'       => 'Cada opção pode ter no máximo :max caracteres.',
+            'titulo.string' =>
+                'O título do formulário deve ser um texto.',
 
-            'ordens.*.integer'     => 'A ordem deve ser um número inteiro.',
-        ];
-    }
+            'titulo.min' =>
+                'O título deve ter ao menos :min caracteres.',
 
-    public function attributes(): array
-    {
-        return [
-            'perguntas.*'  => 'pergunta',
-            'pergunta_id.*'=> 'ID da pergunta',
-            'tipos.*'      => 'tipo',
-            'opcoes.*'     => 'opções',
-            'opcoes.*.*'   => 'opção',
-            'opcao_id.*.*' => 'ID da opção',
-            'ordens.*'     => 'ordem',
+            'titulo.max' =>
+                'O título deve ter no máximo :max caracteres.',
+
+            'instrucoes.string' =>
+                'As instruções devem ser um texto.',
+
+            /*
+            |--------------------------------------------------------------------------
+            | Perguntas
+            |--------------------------------------------------------------------------
+            */
+
+            'perguntas.required' =>
+                'Informe ao menos uma pergunta.',
+
+            'perguntas.array' =>
+                'Formato de perguntas inválido.',
+
+            'perguntas.min' =>
+                'Informe ao menos uma pergunta.',
+
+            'perguntas.*.id.integer' =>
+                'O identificador da pergunta é inválido.',
+
+            'perguntas.*.id.distinct' =>
+                'Uma mesma pergunta foi enviada mais de uma vez.',
+
+            'perguntas.*.titulo.required' =>
+                'O texto da pergunta é obrigatório.',
+
+            'perguntas.*.titulo.string' =>
+                'O texto da pergunta deve ser válido.',
+
+            'perguntas.*.titulo.min' =>
+                'Cada pergunta deve ter ao menos :min caracteres.',
+
+            'perguntas.*.titulo.max' =>
+                'Cada pergunta deve ter no máximo :max caracteres.',
+
+            'perguntas.*.tipo.required' =>
+                'Informe o tipo da pergunta.',
+
+            'perguntas.*.tipo.in' =>
+                'Tipo inválido. Use parágrafo ou múltipla escolha.',
+
+            'perguntas.*.ordem.required' =>
+                'A ordem da pergunta é obrigatória.',
+
+            'perguntas.*.ordem.integer' =>
+                'A ordem da pergunta deve ser um número inteiro.',
+
+            'perguntas.*.ordem.min' =>
+                'A ordem da pergunta deve começar em 1.',
+
+            'perguntas.*.visibilidade.required' =>
+                'Informe a visibilidade da pergunta.',
+
+            'perguntas.*.visibilidade.boolean' =>
+                'A visibilidade da pergunta é inválida.',
+
+            /*
+            |--------------------------------------------------------------------------
+            | Opções
+            |--------------------------------------------------------------------------
+            */
+
+            'perguntas.*.opcoes.array' =>
+                'As alternativas devem ser enviadas como uma lista.',
+
+            'perguntas.*.opcoes.*.id.integer' =>
+                'O identificador da alternativa é inválido.',
+
+            'perguntas.*.opcoes.*.id.distinct' =>
+                'Uma mesma alternativa foi enviada mais de uma vez.',
+
+            'perguntas.*.opcoes.*.titulo.required' =>
+                'O texto da alternativa é obrigatório.',
+
+            'perguntas.*.opcoes.*.titulo.string' =>
+                'O texto da alternativa deve ser válido.',
+
+            'perguntas.*.opcoes.*.titulo.min' =>
+                'Cada alternativa deve ter ao menos :min caractere.',
+
+            'perguntas.*.opcoes.*.titulo.max' =>
+                'Cada alternativa deve ter no máximo :max caracteres.',
+
+            'perguntas.*.opcoes.*.ordem.required' =>
+                'A ordem da alternativa é obrigatória.',
+
+            'perguntas.*.opcoes.*.ordem.integer' =>
+                'A ordem da alternativa deve ser um número inteiro.',
+
+            'perguntas.*.opcoes.*.ordem.min' =>
+                'A ordem da alternativa deve começar em 1.',
         ];
     }
 
     /**
-     * DTO para o controller/service:
-     * alinha tudo por índice e entrega um pacote claro para upsert.
+     * Nomes amigáveis dos campos.
+     */
+    public function attributes(): array
+    {
+        return [
+            'titulo' => 'título',
+            'instrucoes' => 'instruções',
+
+            'perguntas' => 'perguntas',
+            'perguntas.*.id' => 'ID da pergunta',
+            'perguntas.*.titulo' => 'pergunta',
+            'perguntas.*.tipo' => 'tipo da pergunta',
+            'perguntas.*.ordem' => 'ordem da pergunta',
+            'perguntas.*.visibilidade' => 'visibilidade',
+
+            'perguntas.*.opcoes' => 'alternativas',
+            'perguntas.*.opcoes.*.id' => 'ID da alternativa',
+            'perguntas.*.opcoes.*.titulo' => 'alternativa',
+            'perguntas.*.opcoes.*.ordem' => 'ordem da alternativa',
+        ];
+    }
+
+    /**
+     * Dados referentes exclusivamente ao formulário.
+     */
+    public function formData(): array
+    {
+        return [
+            'titulo' => $this->input('titulo'),
+            'instrucoes' => $this->input('instrucoes'),
+        ];
+    }
+
+    /**
+     * Retorna as perguntas no formato esperado
+     * pelo Controller/Service.
      */
     public function items(): array
     {
-        $items      = [];
-        $perguntas  = $this->input('perguntas', []);
-        $pergIds    = $this->input('pergunta_id', []);
-        $tipos      = $this->input('tipos', []);
-        $visFlags   = $this->input('visFlags', []);
-        $ordens     = $this->input('ordens', []);
-        $opcoes     = $this->input('opcoes', []);
-        $opcaoIds   = $this->input('opcao_id', []);
+        return collect($this->input('perguntas', []))
+            ->map(function ($pergunta) {
+                return [
+                    /*
+                     * null = criar nova pergunta
+                     * id   = atualizar pergunta existente
+                     */
+                    'pergunta_id' => $pergunta['id'] ?? null,
 
-        foreach ($perguntas as $i => $titulo) {
-            $titulos = (array) ($opcoes[$i] ?? []);
-            $ids     = (array) ($opcaoIds[$i] ?? []);
+                    'titulo' => $pergunta['titulo'],
 
-            // monta pares (id ↔ titulo) com ordem local
-            $opts = [];
-            foreach ($titulos as $j => $t) {
-                $opts[] = [
-                    'id'    => $ids[$j] ?? null,   // se vier, atualiza; se null, cria
-                    'titulo'=> (string) $t,
-                    'ordem' => $j,
+                    'tipo' => $pergunta['tipo'],
+
+                    'ordem' => $pergunta['ordem'],
+
+                    'visivel' => $pergunta['visibilidade'],
+
+                    'opcoes' => collect(
+                        $pergunta['opcoes'] ?? []
+                    )
+                        ->map(function ($opcao) {
+                            return [
+                                /*
+                                 * null = criar nova opção
+                                 * id   = atualizar opção existente
+                                 */
+                                'id' => $opcao['id'] ?? null,
+
+                                'titulo' => $opcao['titulo'],
+
+                                'ordem' => $opcao['ordem'],
+                            ];
+                        })
+                        ->toArray(),
                 ];
-            }
+            })
+            ->toArray();
+    }
 
-            $items[] = [
-                'pergunta_id' => $pergIds[$i] ?: null, // null => nova
-                'titulo'      => (string) $titulo,
-                'tipo'        => (string) ($tipos[$i] ?? 'paragrafo'),
-                'visivel'     => (bool)   ($visFlags[$i] ?? false),
-                'ordem'       => is_numeric($ordens[$i] ?? null) ? (int) $ordens[$i] : $i,
-                'opcoes'      => $opts, // só use se tipo=radio
-            ];
-        }
+    /**
+     * Converte valores vindos de checkboxes
+     * para boolean.
+     */
+    private function booleanValue(mixed $value): bool
+    {
+        return in_array(
+            $value,
+            [
+                'on',
+                '1',
+                1,
+                true,
+                'true',
+                'yes',
+                'checked',
+            ],
+            true
+        );
+    }
 
-        return $items;
+    /**
+     * Remove espaços extras sem converter
+     * valores inválidos silenciosamente para string.
+     */
+    private function trimValue(mixed $value): mixed
+    {
+        return is_string($value)
+            ? trim($value)
+            : $value;
+    }
+
+    /**
+     * Inputs hidden vazios normalmente chegam como "".
+     * Para atualização, queremos tratá-los como null.
+     */
+    private function emptyToNull(mixed $value): mixed
+    {
+        return $value === '' || $value === null
+            ? null
+            : $value;
     }
 }
