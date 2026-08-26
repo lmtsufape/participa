@@ -14,6 +14,7 @@ use App\Models\Users\Administrador;
 use App\Models\Users\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Validator;
 use Spatie\QueryBuilder\AllowedFilter;
@@ -142,40 +143,68 @@ class AdministradorController extends Controller
     public function updateUser(UpdateUserRequest $request, $id)
     {
         $this->authorize('isAdmin', Administrador::class);
-        $user = User::find($id);
-        $payload = $request->payload();
-        if (!empty($payload['endereco'])) {
-            if ($user->endereco()->exists()) {
-                $endereco = Endereco::findOrFail($user->enderecoId);
-                $endereco->update($payload['endereco']);
-            }else{
-                $endereco_id = Endereco::create($payload['endereco'])->id;
+
+        DB::beginTransaction();
+
+        try {
+            $user = User::findOrFail($id);
+            $payload = $request->payload();
+
+            $enderecoData = $payload['endereco'] ?? [];
+
+            $possuiDadosEndereco = collect($enderecoData)
+                ->contains(fn ($valor) => $valor !== null && $valor !== '');
+
+            if ($user->endereco) {
+                $user->endereco->update($enderecoData);
+            } elseif ($possuiDadosEndereco) {
+                $endereco = Endereco::create($enderecoData);
+                $user->enderecoId = $endereco->id;
             }
-        }
 
-        if (!empty($payload['perfilIdentitario'])) {
-            if ($user->perfilIdentitario()->exists()) {
-                $user->perfilIdentitario->update($payload['perfilIdentitario']);
-            } else {
+            $perfilIdentitarioData = $payload['perfilIdentitario'] ?? [];
 
-                $perfilIdentitario = PerfilIdentitario::create([...$payload['perfilIdentitario'], 'user_id' => $user->id]);
+            if (!empty($perfilIdentitarioData)) {
+                if ($user->perfilIdentitario) {
+                    $user->perfilIdentitario->update($perfilIdentitarioData);
+                } else {
+                    PerfilIdentitario::create([
+                        ...$perfilIdentitarioData,
+                        'user_id' => $user->id,
+                    ]);
+                }
             }
-        }
-        $data = [
-            ...$payload['user'],
-            'usuarioTemp' => null,
-        ];
 
-        if (isset($endereco_id)) {
-            $payload['enderecoId'] = $endereco_id;
-        }
-        if ($request->filled('especialidade')) {
-            $data['especProfissional'] = $request->input('especialidade');
-        }
+            $data = [
+                ...$payload['user'],
+                'usuarioTemp' => null,
+            ];
 
-        $user->update($data);
+            if ($request->filled('especialidade')) {
+                $data['especProfissional'] = $request->input('especialidade');
+            }
 
-        return redirect()->route('admin.users')->with(['success' => 'Usuário atualizado com sucesso!']);
+            $user->fill($data);
+            $user->save();
+
+            DB::commit();
+
+            return redirect()
+                ->route('admin.users')
+                ->with('success', 'Usuário atualizado com sucesso!');
+
+        } catch (\Throwable $e) {
+            DB::rollBack();
+
+            report($e);
+
+            return back()
+                ->withInput()
+                ->with(
+                    'error',
+                    'Ocorreu um erro ao atualizar o usuário. Por favor, tente novamente.'
+                );
+        }
     }
 
     public function resetPassword(ResetUserPasswordRequest $request, User $user)

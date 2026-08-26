@@ -43,43 +43,57 @@ class UserController extends Controller
 
     public function editarPerfil(UpdateUserRequest $request)
     {
+        DB::beginTransaction();
+        
         try {
             $user = Auth::user();
             $payload = $request->payload();
-            if (!empty($payload['endereco'])) {
-                if ($user->endereco()->exists()) {
-                    $endereco = Endereco::findOrFail($user->enderecoId);
-                    $endereco->update($payload['endereco']);
-                }else{
-                    $endereco_id = Endereco::create($payload['endereco'])->id;
-                }
+
+            $enderecoData = $payload['endereco'] ?? [];
+
+            $possuiDadosEndereco = collect($enderecoData)
+                ->contains(fn ($valor) => $valor !== null && $valor !== '');
+
+            if ($user->endereco) {
+                $user->endereco->update($enderecoData);
+            } elseif ($possuiDadosEndereco) {
+                $endereco = Endereco::create($enderecoData);
+                $user->enderecoId = $endereco->id;
             }
 
-            if (!empty($payload['perfilIdentitario'])) {
-                if ($user->perfilIdentitario()->exists()) {
-                    $user->perfilIdentitario->update($payload['perfilIdentitario']);
+            $perfilIdentitarioData = $payload['perfilIdentitario'] ?? [];
+
+            if (!empty($perfilIdentitarioData)) {
+                if ($user->perfilIdentitario) {
+                    $user->perfilIdentitario->update($perfilIdentitarioData);
                 } else {
-
-                    $perfilIdentitario = PerfilIdentitario::create([...$payload['perfilIdentitario'], 'user_id' => $user->id]);
+                    PerfilIdentitario::create([
+                        ...$perfilIdentitarioData,
+                        'user_id' => $user->id,
+                    ]);
                 }
             }
+
             $data = [
                 ...$payload['user'],
-                'usuarioTemp' => null,
+                'usuarioTemp' => false,
             ];
 
-            if (isset($endereco_id)) {
-                $payload['enderecoId'] = $endereco_id;
-            }
             if ($request->filled('especialidade')) {
                 $data['especProfissional'] = $request->input('especialidade');
             }
 
-            $user->update($data);
+            $user->fill($data);
+            $user->save();
+
+            DB::commit();
 
             return back()->with('success', 'Perfil atualizado com sucesso! Todas as suas informações foram salvas corretamente.');
 
         } catch (\Exception $e) {
+            DB::rollBack();
+            report($e);
+
             return redirect()->back()
                 ->withInput()
                 ->with('error', 'Ocorreu um erro ao atualizar o perfil. Por favor, tente novamente. Se o problema persistir, entre em contato com o suporte.');
