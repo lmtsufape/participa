@@ -100,7 +100,7 @@
 
   {{-- Header --}}
   <div class="header">
-    <img src="img/header_recibo_aba.png" alt="Header ABA">
+    <img src="img/banner-site-cbee.jpg" alt="Header CBEE">
   </div>
 
   {{-- Content --}}
@@ -108,21 +108,21 @@
       <h2 class="receipt-title">RECIBO</h2>
 
       <div class="receipt-text">
-        A <span class="strong">Associação Brasileira de Agroecologia</span> declara, para os devidos fins,
+        A <span class="strong">Associação Brasileira de Etnobiologia e Etnoecologia</span> declara, para os devidos fins,
         que recebeu de <span class="strong">{{ $nome }}</span> o valor de
         <span class="strong">R$ {{ number_format($valor, 2, ',', '.') }}</span>
-        referente à taxa de inscrição no 13º Congresso Brasileiro de Agroecologia.
+        referente à taxa de inscrição no 15º Congresso Brasileiro de Etnobiologia e Etnoecologia. 
       </div>
 
       <div class="receipt-date">
-        Recife, {{ \Carbon\Carbon::parse($data)->locale('pt_BR')->isoFormat('D [de] MMMM [de] YYYY') }}.
+        Belo Horizonte, {{ \Carbon\Carbon::parse($data)->locale('pt_BR')->isoFormat('D [de] MMMM [de] YYYY') }}.
       </div>
 
       <div class="signature-section">
-        <img src="img/assinatura_presidente_aba.png" alt="Assinatura Presidente" style="width: 200px; height: auto; margin-bottom: 10px; display: block; margin-left: auto; margin-right: auto;">
+        <img src="img/assinatura_presidente_cbee.jpeg" alt="Assinatura Presidente" style="width: 200px; height: auto; margin-bottom: 10px; display: block; margin-left: auto; margin-right: auto;">
         <div class="signature-line" style="width: 200px; height: 1px; background-color: #333; margin: 10px auto; display: block;"></div>
-        <div class="signature-name">José Nunes da Silva</div>
-        <div class="signature-title">Presidente</div>
+        <div class="signature-name">Emmanuel Duarte Almada</div>
+        <div class="signature-title">Presidente da comissão organizadora</div>
       </div>
 
       {{-- Código de Validação --}}
@@ -138,7 +138,7 @@
 
   {{-- Footer --}}
   <div class="footer" style="text-align: center;">
-    <img src="img/footer_recibo_aba.png" alt="Footer ABA">
+    <img src="img/logo-sbee.png" alt="Footer SBEE" style="width: 150px; height: auto;">
   </div>
 
 </body>

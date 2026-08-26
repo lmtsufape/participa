@@ -125,6 +125,8 @@ Auth::routes(['verify' => true, 'register' => false]);
             Route::view('/normas', 'normas')->name('normas');
             Route::view('/noticias', 'noticias')->name('noticias');
             Route::view('/premio-etnocienciacao', 'premio_etnocienciacao')->name('premio.etnocienciacao');
+            Route::view('/sugestao-hospedagem', 'sugestao-hospedagem')->name('sugestao.hospedagem');
+            Route::view('/hospedagem-solidaria', 'hospedagem-solidaria')->name('hospedagem.solidaria');
         });
 
 
