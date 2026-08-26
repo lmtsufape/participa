@@ -34,7 +34,6 @@ class UpdateUserRequest extends FormRequest
             'celular' => 'nullable|string|max:16',
             'instituicao' => ['nullable','string','max:255','regex:~^[\p{L}\p{M}0-9 .\-(){}\[\],;&@%*+=/\\\\|<>!?`\'"]*$~u'],
             'especialidade' => 'nullable|string',
-            'password' => 'nullable|string|min:8|confirmed',
             'rua' => 'nullable|string|max:255',
             'numero' => 'nullable|string',
             'bairro' => 'nullable|string|max:255',
@@ -71,7 +70,6 @@ class UpdateUserRequest extends FormRequest
             'passaporte' => $data['passaporte'],
             'celular' => $data['celular'],
             'instituicao' => $data['instituicao'],
-            'password' => bcrypt($data['password']),
         ];
 
         $endereco = [

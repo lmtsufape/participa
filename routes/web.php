@@ -144,6 +144,8 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
             Route::get('/areas', [AdministradorController::class, 'areas'])->name('areas');
             Route::get('/users', [AdministradorController::class, 'users'])->name('users');
             Route::get('/edit/user/{id}', [AdministradorController::class, 'editUser'])->name('editUser');
+            Route::patch('/usuarios/{user}/senha', [AdministradorController::class, 'resetPassword'])->name('users.password.reset');
+
             Route::post('/update/user/{id}', [AdministradorController::class, 'updateUser'])->name('updateUser');
             Route::delete('/delete/user/{user_id}', [UserController::class, 'destroy'])->name('user.destroy');
             Route::post('/delete/search', [AdministradorController::class, 'search'])->name('search');

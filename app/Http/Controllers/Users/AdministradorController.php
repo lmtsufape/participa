@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Users;
 
 use App\Enums\EstadoBrasileiro;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ResetUserPasswordRequest;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\PerfilIdentitario;
@@ -175,6 +176,18 @@ class AdministradorController extends Controller
         $user->update($data);
 
         return redirect()->route('admin.users')->with(['success' => 'Usuário atualizado com sucesso!']);
+    }
+
+    public function resetPassword(ResetUserPasswordRequest $request, User $user)
+    {
+        $user->update([
+            'password' => bcrypt($request->validated('password')),
+        ]);
+
+        return back()->with(
+            'success',
+            'Senha redefinida com sucesso!'
+        );
     }
 
     public function search(Request $request)
