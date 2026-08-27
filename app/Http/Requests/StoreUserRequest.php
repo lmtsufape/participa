@@ -85,8 +85,8 @@ class StoreUserRequest extends FormRequest
         ];
 
         $perfilIdentitario = [
-            'data_nascimento' => $data['data_nascimento'],
             'genero' => $data['genero'] ?? null,
+            'nomeSocial' => $data['nomeSocial'],
             'outroGenero' => $data['outroGenero'] ?? null,
             'raca' => $data['raca'] ?? null,
             'outraRaca' => $data['outraRaca'] ?? null,
