@@ -57,9 +57,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\PreRegistroController;
-
-
-
+use App\Http\Controllers\Submissao\FormController;
 
 Route::middleware(Setlocale::class)->group(function () {
     Route::get('/idioma/{lang}/{url?}', function (string $lang, $url = null) {
@@ -310,16 +308,16 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
             Route::get('modalidade/', [ModalidadeController::class, 'index'])->name('modalidade.index');
             Route::get('modalidade/cadastrarCriterio', [EventoController::class, 'cadastrarCriterio'])->name('cadastrarCriterio');
             Route::get('modalidade/listarCriterios', [EventoController::class, 'listarCriterios'])->name('listarCriterios');
-            Route::get('modalidade/{modalidade_id}/forms', [EventoController::class, 'forms'])->name('forms');
-            Route::get('modalidade/atribuir/form', [EventoController::class, 'atribuirForm'])->name('atribuir.form');
-            Route::post('modalidade/form/salvar', [EventoController::class, 'salvarForm'])->name('salvar.form');
-            Route::put('modalidade/form/{form_id}/update', [EventoController::class, 'modalidadeFormUpdate'])->name('update.form');
-            Route::get('modalidade/form/visualizar', [EventoController::class, 'visualizarForm'])->name('visualizar.form');
-            Route::get('{evento}/modalidade/form/edit/{form}', [EventoController::class, 'modalidadeFormEdit'])->name('modalidades.form.edit');
+            Route::get('modalidade/{modalidade_id}/forms', [FormController::class, 'forms'])->name('forms');
+            Route::get('modalidade/atribuir/form', [FormController::class, 'create'])->name('atribuir.form');
+            Route::post('modalidade/form/salvar', [FormController::class, 'salvarForm'])->name('salvar.form');
+            Route::put('modalidade/form/{form_id}/update', [FormController::class, 'modalidadeFormUpdate'])->name('update.form');
+            Route::get('modalidade/form/visualizar', [FormController::class, 'visualizarForm'])->name('visualizar.form');
+            Route::get('{evento}/modalidade/form/edit/{form}', [FormController::class, 'modalidadeFormEdit'])->name('modalidades.form.edit');
 
             Route::get('modalidade/form/respostas', [EventoController::class, 'respostas'])->name('respostas');
-            Route::get('modalidade/form/respostasToPdf/{modalidade}', [EventoController::class, 'respostasToPdf'])->name('respostasToPdf');
-            Route::get('modalidade/form/{id}/excluir', [EventoController::class, 'destroyForm'])->name('deletar.form');
+            Route::get('modalidade/form/respostasToPdf/{modalidade}', [FormController::class, 'respostasToPdf'])->name('respostasToPdf');
+            Route::get('modalidade/form/{id}/excluir', [FormController::class, 'destroyForm'])->name('deletar.form');
 
             Route::post('/evento/{evento}/avisoCorrecao', [EventoController::class, 'avisoCorrecao'])->name('evento.avisoCorrecao');
 
