@@ -1217,12 +1217,20 @@ class TrabalhoController extends Controller
         $trabalho = Trabalho::find($request->trabalhoCorrecaoId);
         $evento = $trabalho->evento;
         $this->authorize('permissaoCorrecao', $trabalho);
-        if ($request->arquivoCorrecao != null) {
+
+        // Atualiza o texto/resumo caso a modalidade seja de texto
+        if ($trabalho->modalidade->texto && $request->filled('resumoCorrecao')) {
+            $trabalho->resumo = $request->resumoCorrecao;
+            $trabalho->save();
+        }
+
+        // Processa o arquivo caso tenha sido enviado
+        if ($request->hasFile('arquivoCorrecao')) {
             if ($this->validarTipoDoArquivo($request->arquivoCorrecao, $trabalho->modalidade)) {
                 return redirect()->back()->withErrors(['mensagem' => 'Extensão de arquivo enviado é diferente do permitido.']);
             }
 
-            $validatedData = $request->validate([
+            $request->validate([
                 'arquivoCorrecao' => ['required', 'file', 'max:5120'],
             ]);
 
@@ -1235,15 +1243,18 @@ class TrabalhoController extends Controller
             }
 
             $path = $this->salvarArquivoComNomeOriginal($request->arquivoCorrecao, "correcoes/{$evento->id}/{$trabalho->id}");
-            $arquivo = ArquivoCorrecao::create([
+            ArquivoCorrecao::create([
                 'caminho' => $path,
                 'trabalhoId' => $trabalho->id,
             ]);
         }
 
+        // Notifica os revisores atribuídos
         $revisores = $trabalho->atribuicoes;
         foreach ($revisores as $revisor) {
-            Mail::to($revisor->user->email)->send(new EmailCorrecaoTrabalho($evento, $trabalho, $revisor));
+            if ($revisor->user && $revisor->user->email) {
+                Mail::to($revisor->user->email)->send(new EmailCorrecaoTrabalho($evento, $trabalho, $revisor));
+            }
         }
 
         return redirect()->back()->with(['success' => 'Correção de ' . $trabalho->titulo . ' enviada com sucesso!']);
