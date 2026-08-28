@@ -1160,20 +1160,21 @@
 
         {{-- MODAL CORREÇÃO DO TRABALHO --}}
         @if (
-            ($trabalho->modalidade->inicioCorrecao <= $agora && $agora <= $trabalho->modalidade->fimCorrecao) ||
-            $trabalho->modalidade->estaEmPeriodoExtraDeCorrecao())
+        ($trabalho->modalidade->inicioCorrecao <= $agora && $agora <= $trabalho->modalidade->fimCorrecao) ||
+        $trabalho->modalidade->estaEmPeriodoExtraDeCorrecao())
             <div class="modal fade" id="modalCorrecaoTrabalho_{{ $trabalho->id }}" tabindex="-1"
                 aria-labelledby="modalCorrecaoTrabalho_{{ $trabalho->id }}Label" aria-hidden="true">
                 <div class="modal-dialog modal-lg" role="document">
                     <div class="modal-content">
                         <div class="modal-header" style="background-color: #114048ff; color: white;">
-                            <h5 class="modal-title" id="modalCorrecaoTrabalho_{{ $trabalho->id }}Label">Correção do
-                                trabalho {{ $trabalho->titulo }}</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-
+                            <h5 class="modal-title" id="modalCorrecaoTrabalho_{{ $trabalho->id }}Label">
+                                Correção do trabalho: {{ $trabalho->titulo }}
+                            </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="filter: invert(1);"></button>
                         </div>
-                        <div class="alert alert-warning" role="alert" style="border-radius: 5px; margin-bottom: 15px;">
-                            <strong>⚠️ Não esqueça!</strong> Nessa segunda submissão as credenciais/vínculo (nome, instituição/organização/coletivo e e-mail) dos autores devem ser inseridas.
+                        
+                        <div class="alert alert-warning m-3" role="alert" style="border-radius: 5px;">
+                            <strong>⚠️ Não esqueça!</strong> Certifique-se de aplicar as alterações solicitadas no parecer dos avaliadores antes de submeter a correção.
                         </div>
 
                         <div class="modal-body">
@@ -1184,175 +1185,128 @@
 
                                 @php
                                     $formSubTraba = $trabalho->evento->formSubTrab;
-                                    $ordem = explode(',', $formSubTraba->ordemCampos);
                                     $modalidade = $trabalho->modalidade;
                                 @endphp
+
                                 <input type="hidden" name="trabalhoCorrecaoId" value="{{ $trabalho->id }}">
-                                @error('numeroMax' . $trabalho->id)
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="alert alert-danger" role="alert">
-                                                {{ $message }}
-                                            </div>
+
+                                {{-- Título (Apenas Leitura / Informativo) --}}
+                                <div class="row justify-content-center mb-3">
+                                    <div class="col-sm-12">
+                                        <label class="col-form-label font-weight-bold">{{ $formSubTraba->etiquetatitulotrabalho ?? 'Título' }}:</label>
+                                        <input type="text" class="form-control" value="{{ $trabalho->titulo }}" disabled>
+                                    </div>
+                                </div>
+
+                                {{-- SE A MODALIDADE FOR VIA TEXTO --}}
+                                @if ($modalidade->texto)
+                                    <div class="row justify-content-center mb-3">
+                                        <div class="col-sm-12">
+                                            <label for="resumoCorrecao_{{ $trabalho->id }}" class="col-form-label font-weight-bold">
+                                                {{ $formSubTraba->etiquetaresumotrabalho ?? 'Resumo / Texto Corrigido' }}: <span class="text-danger">*</span>
+                                            </label>
+
+                                            @if ($modalidade->caracteres)
+                                                <textarea id="resumoCorrecao_{{ $trabalho->id }}"
+                                                    class="char-count form-control @error('resumoCorrecao') is-invalid @enderror"
+                                                    name="resumoCorrecao"
+                                                    rows="8"
+                                                    minlength="{{ $modalidade->mincaracteres }}"
+                                                    maxlength="{{ $modalidade->maxcaracteres }}"
+                                                    required>{{ old('resumoCorrecao', $trabalho->resumo) }}</textarea>
+                                                
+                                                <p class="text-muted"><small>
+                                                    <span id="resumoCorrecao_{{ $trabalho->id }}_count">{{ strlen($trabalho->resumo) }}</span> caracteres 
+                                                    (Mínimo: {{ $modalidade->mincaracteres }} | Máximo: {{ $modalidade->maxcaracteres }})
+                                                </small></p>
+
+                                            @elseif ($modalidade->palavras)
+                                                <textarea id="resumoCorrecao_{{ $trabalho->id }}"
+                                                    class="palavra form-control @error('resumoCorrecao') is-invalid @enderror"
+                                                    name="resumoCorrecao"
+                                                    rows="8"
+                                                    required>{{ old('resumoCorrecao', $trabalho->resumo) }}</textarea>
+
+                                                <p class="text-muted"><small>
+                                                    <span id="resumoCorrecao_{{ $trabalho->id }}_count">{{ count(explode(' ', trim($trabalho->resumo))) }}</span> palavras 
+                                                    (Mínimo: {{ $modalidade->minpalavras }} | Máximo: {{ $modalidade->maxpalavras }})
+                                                </small></p>
+                                            @else
+                                                <textarea id="resumoCorrecao_{{ $trabalho->id }}"
+                                                    class="form-control @error('resumoCorrecao') is-invalid @enderror"
+                                                    name="resumoCorrecao"
+                                                    rows="8"
+                                                    required>{{ old('resumoCorrecao', $trabalho->resumo) }}</textarea>
+                                            @endif
+
+                                            @error('resumoCorrecao')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror
                                         </div>
                                     </div>
-                                @enderror
-                                @foreach ($ordem as $indice)
-                                    @if ($indice == 'etiquetatitulotrabalho')
-                                        <div class="row justify-content-center">
-                                            {{-- Nome Trabalho  --}}
-                                            <div class="col-sm-12">
-                                                <label for="nomeTrabalho_{{ $trabalho->id }}"
-                                                    class="col-form-label">{{ $formSubTraba->etiquetatitulotrabalho }}</label>
-                                                <input id="nomeTrabalho_{{ $trabalho->id }}" type="text"
-                                                    class="form-control @error('nomeTrabalho' . $trabalho->id) is-invalid @enderror"
-                                                    name="nomeTrabalho{{ $trabalho->id }}"
-                                                    value="@if (old('nomeTrabalho' . $trabalho->id) != null) {{ old('nomeTrabalho' . $trabalho->id) }}@else{{ $trabalho->titulo }} @endif"
-                                                    autocomplete="nomeTrabalho" autofocus disabled>
+                                @endif
 
-                                                @error('nomeTrabalho' . $trabalho->id)
-                                                    <span class="invalid-feedback" role="alert">
-                                                        <strong>{{ $message }}</strong>
-                                                    </span>
-                                                @enderror
-                                            </div>
-                                        </div>
-                                        <div class="row justify-content-center">
-                                            {{-- Autor Trabalho  --}}
-                                            <div class="col-sm-12">
-                                                <label for="autorTrabalho_{{ $trabalho->autor->id }}"
-                                                    class="col-form-label">Autor</label>
-                                                <input id="autorTrabalho_{{ $trabalho->autor->id }}" type="text"
-                                                    class="form-control @error('autorTrabalho' . $trabalho->autor->id) is-invalid @enderror"
-                                                    name="autorTrabalho{{ $trabalho->autor->id }}"
-                                                    value="@if (old('autorTrabalho' . $trabalho->autor->id) != null) {{ old('autorTrabalho' . $trabalho->autor->id) }}@else{{ $trabalho->autor->name }} @endif"
-                                                    autocomplete="autorTrabalho" autofocus disabled>
-                                            </div>
-                                        </div>
-                                    @endif
-                                    @if ($indice == 'etiquetacoautortrabalho')
-                                        <div class="flexContainer" style="margin-top:20px">
+                                {{-- SE A MODALIDADE PERMITIR ARQUIVO --}}
+                                @if ($modalidade->arquivo)
+                                    <div class="row justify-content-center mb-3">
+                                        <div class="col-sm-12">
+                                            <label for="arquivoCorrecao_{{ $trabalho->id }}" class="col-form-label font-weight-bold">
+                                                Upload do Arquivo de Correção:
+                                            </label>
 
-                                            <div id="coautores{{ $trabalho->id }}" class="flexContainer ">
-                                                @if ($trabalho->coautors->first() != null)
-                                                    <h4>Co-autores</h4>
-                                                    @foreach ($trabalho->coautors as $i => $coautor)
-                                                        <div class="item card mt-0">
-                                                            <div class="row card-body">
-                                                                <div class="col-sm-4">
-                                                                    <label>E-mail</label>
-                                                                    <input type="email" style="margin-bottom:10px"
-                                                                        value="{{ $coautor->user->email }}"
-                                                                        oninput="buscarEmail(this)"
-                                                                        class="form-control emailCoautor"
-                                                                        name="emailCoautor_{{ $trabalho->id }}[]"
-                                                                        placeholder="E-mail" disabled>
-                                                                </div>
-                                                                <div class="col-sm-5">
-                                                                    <label>Nome Completo</label>
-                                                                    <input type="text" style="margin-bottom:10px"
-                                                                        value="{{ $coautor->user->name }}"
-                                                                        class="form-control emailCoautor"
-                                                                        name="nomeCoautor_{{ $trabalho->id }}[]"
-                                                                        placeholder="Nome" disabled>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    @endforeach
-                                                @endif
-                                            </div>
-
-                                        </div>
-                                    @endif
-                                    @if ($indice == 'etiquetaareatrabalho')
-                                        <div class="row justify-content-center">
-                                            <div class="col-sm-12">
-                                                <label for="area_{{ $trabalho->id }}"
-                                                    class="col-form-label">{{ $formSubTraba->etiquetaareatrabalho }}</label>
-                                                <select id="area_{{ $trabalho->id }}"
-                                                    class="form-control @error('area' . $trabalho->id) is-invalid @enderror"
-                                                    name="area{{ $trabalho->id }}" required>
-                                                    <option value="{{ $trabalho->area->nome }}" selected disabled>
-                                                        {{ $trabalho->area->nome }}</option>
-                                                </select>
-                                                @error('area' . $trabalho->id)
-                                                    <span class="invalid-feedback" role="alert"
-                                                        style="overflow: visible; display:block">
-                                                        <strong>{{ $message }}</strong>
-                                                    </span>
-                                                @enderror
-                                            </div>
-                                        </div>
-                                    @endif
-                                    @if ($indice == 'etiquetauploadtrabalho')
-                                        <div class="row justify-content-center">
-                                            {{-- Submeter trabalho corrigido --}}
-
-                                            @if ($modalidade->arquivo == true)
-                                                <div class="col-sm-12" style="margin-top: 20px;">
-                                                    @if ($trabalho->arquivoCorrecao()->first() != null)
-                                                        <label for="nomeTrabalho" class="col-form-label">Upload de
-                                                            Correção do Trabalho:</label>
-                                                        <a
-                                                            href="{{ route('downloadCorrecao', ['id' => $trabalho->id]) }}">Arquivo
-                                                            atual</a>
-                                                        <br>
-                                                        <small>Para trocar o arquivo envie um novo.</small>
-                                                    @endif
-                                                    <div class="custom-file">
-                                                        <input type="file" class="filestyle"
-                                                            data-placeholder="Nenhum arquivo" data-text="Selecionar"
-                                                            data-btnClass="btn-primary-lmts" name="arquivoCorrecao"
-                                                            required>
-                                                    </div>
-                                                    <small>Arquivos aceitos nos formatos
-                                                        @if ($modalidade->pdf == true)
-                                                            <span> - pdf</span>
-                                                        @endif
-                                                        @if ($modalidade->jpg == true)
-                                                            <span> - jpg</span>
-                                                        @endif
-                                                        @if ($modalidade->jpeg == true)
-                                                            <span> - jpeg</span>
-                                                        @endif
-                                                        @if ($modalidade->png == true)
-                                                            <span> - png</span>
-                                                        @endif
-                                                        @if ($modalidade->docx == true)
-                                                            <span> - docx</span>
-                                                        @endif
-                                                        @if ($modalidade->odt == true)
-                                                            <span> - odt</span>
-                                                        @endif
-                                                        @if ($modalidade->zip == true)
-                                                            <span> - zip</span>
-                                                        @endif
-                                                        @if ($modalidade->svg == true)
-                                                            <span> - svg</span>
-                                                        @endif.
-                                                    </small>
-                                                    @error('arquivo' . $trabalho->id)
-                                                        <span class="invalid-feedback" role="alert"
-                                                            style="overflow: visible; display:block">
-                                                            <strong>{{ $message }}</strong>
-                                                        </span>
-                                                    @enderror
+                                            @if ($trabalho->arquivoCorrecao()->first() != null)
+                                                <div class="mb-2">
+                                                    <a href="{{ route('downloadCorrecao', ['id' => $trabalho->id]) }}" class="btn btn-sm btn-outline-info">
+                                                        <img src="{{ asset('img/icons/file-download-solid.svg') }}" style="width:14px"> Baixar arquivo de correção enviado anteriormente
+                                                    </a>
+                                                    <br>
+                                                    <small class="text-muted">Envie um novo arquivo se desejar substituir o atual.</small>
                                                 </div>
                                             @endif
+
+                                            <div class="custom-file">
+                                                <input type="file" class="form-control @error('arquivoCorrecao') is-invalid @enderror"
+                                                    id="arquivoCorrecao_{{ $trabalho->id }}"
+                                                    name="arquivoCorrecao"
+                                                    {{-- Se for modalidade puramente de arquivo e ainda não enviou nenhum, torna o input obrigatório --}}
+                                                    {{ !$modalidade->texto && $trabalho->arquivoCorrecao()->first() == null ? 'required' : '' }}>
+                                            </div>
+
+                                            <small class="text-muted">Extensões aceitas:
+                                                @if ($modalidade->pdf) - pdf @endif
+                                                @if ($modalidade->jpg) - jpg @endif
+                                                @if ($modalidade->jpeg) - jpeg @endif
+                                                @if ($modalidade->png) - png @endif
+                                                @if ($modalidade->docx) - docx @endif
+                                                @if ($modalidade->odt) - odt @endif
+                                                @if ($modalidade->zip) - zip @endif
+                                                @if ($modalidade->svg) - svg @endif
+                                            </small>
+
+                                            @error('arquivoCorrecao')
+                                                <span class="invalid-feedback" role="alert" style="display: block;">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror
                                         </div>
-                                    @endif
-                                @endforeach
+                                    </div>
+                                @endif
+
                             </form>
                         </div>
+                        
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                            <button type="submit" class="btn btn-primary"
-                                form="formCorrecaoTrabalho{{ $trabalho->id }}">Enviar correção</button>
+                            <button type="submit" class="btn btn-primary" form="formCorrecaoTrabalho{{ $trabalho->id }}">
+                                Enviar correção
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
-            @endif
+        @endif
     @endforeach
 
 @endsection

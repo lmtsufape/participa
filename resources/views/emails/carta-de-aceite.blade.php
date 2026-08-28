@@ -39,10 +39,10 @@
                     style="width:600px;background:#ffffff;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,.06);">
                     <tr>
                         <td align="center" style="padding:28px 28px 10px 28px;">
-                            @if (!empty($imgPath))
-                                <img src="{{ $message->embed($imgPath) }}" alt="Logo do evento" width="160"
-                                    style="display:block;width:160px;height:auto;border:0;outline:none;text-decoration:none;">
-                            @endif
+                            <img src="{{ $message->embed(public_path('img/banner-site-cbee.jpg')) }}" 
+                                alt="Header CBEE" 
+                                width="544"
+                                style="width: 100%; max-width: 544px; height: auto; display: block; border: 0; border-radius: 6px;">
                         </td>
                     </tr>
 
@@ -54,18 +54,25 @@
                                 Carta de Aceite</h1>
 
                             <p style="margin:0 0 14px 0;font-size:16px; text-align:justify;">
-                                Temos a satisfação de comunicar que, após análise da Comissão Científica, o trabalho
-                                intitulado
+                                Temos a satisfação de comunicar que, após análise da Comissão Científica, o trabalho intitulado
                                 "<strong>{{ $trabalho->titulo }}</strong>",
                                 de autoria de <strong>{{ $trabalho->autor->name}}</strong>@if ($trabalho->coautors->count()), com os coautores/as <strong>{{ $trabalho->coautors->pluck('user.name')->join(', ', ' e ') }}</strong>@endif,
                                 foi <strong>aprovado</strong> na modalidade
                                 <strong>{{$trabalho->modalidade->nome}}</strong> para apresentação no
                                 evento
                                 <strong>XV CONGRESSO BRASILEIRO DE ETNOBIOLOGIA E ETNOECOLOGIA (CBEE)</strong>,
-                                Convivência com os Territórios Brasileiros e Justiça Climática.
-                                A ser realizado de <strong>15 a 18 de outubro de 2025</strong>, na
-                                <strong>Universidade Federal do Vale do São Francisco (UNIVASF), Juazeiro-BA</strong>.
+                                Convivência com os Territórios Brasileiros e Justiça Climática. O evento ocorrerá entre os dias 16 a 19 de novembro de 2026 na Universidade Federal de Minas Gerais (UFMG), cidade de Belo Horizonte, estado de Minas Gerais, Brasil.
                             </p>
+                            <div class="receipt-date">
+                                Belo Horizonte, {{ \Carbon\Carbon::parse($trabalho->aprovacao_emitida_em ?? now())->locale('pt_BR')->isoFormat('D [de] MMMM [de] YYYY') }}.
+                            </div>
+                            <div class="signature-section" style="text-align: center; margin-top: 30px;">
+                                <img src="{{ $message->embed(public_path('img/assinatura_presidente_cbee.jpeg')) }}" alt="Assinatura Presidente" style="width: 200px; height: auto; margin-bottom: 10px; display: block; margin-left: auto; margin-right: auto;">
+                                <div class="signature-line" style="width: 200px; height: 1px; background-color: #333; margin: 10px auto; display: block;"></div>
+                                <div class="signature-name" style="font-weight: bold;">Emmanuel Duarte Almada</div>
+                                <div class="signature-title" style="font-size: 14px; color: #555;">Presidente da comissão organizadora</div>
+                            </div>
+
 
                             <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%"
                                     style="margin:18px 0;padding:0;">
@@ -88,6 +95,10 @@
                                                style="color:#2563eb;text-decoration:underline;">
                                               {{ route('validarCertificado') }}
                                             </a>
+                                        </div>
+                                        <br>
+                                        <div class="footer" style="text-align: center; margin-top: 10px;">
+                                            <img src="{{ $message->embed(public_path('img/logo-sbee.png')) }}" alt="Footer SBEE" style="width: 150px; height: auto; display: inline-block;">
                                         </div>
 
                                     </div>
