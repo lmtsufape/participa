@@ -27,6 +27,7 @@ use App\Models\Users\User;
 use App\Models\Users\Administrador;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Exports\InscritosApoioInfantilExport;
+use App\Exports\InscritosNecessidadesEspeciaisExport;
 use Maatwebsite\Excel\Facades\Excel;
 
 class InscricaoController extends Controller
@@ -890,5 +891,14 @@ class InscricaoController extends Controller
         $nomeArquivo = 'inscritos_apoio_infantil_' . Str::slug($evento->nome) . '_' . date('d_m_Y') . '.xlsx';
 
         return Excel::download(new InscritosApoioInfantilExport($evento), $nomeArquivo);
+    }
+
+    public function exportarInscritosNecessidadesEspeciaisXLSX(Evento $evento)
+    {
+        $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
+
+        $nomeArquivo = 'inscritos_necessidades_especiais_' . Str::slug($evento->nome) . '_' . date('d_m_Y') . '.xlsx';
+
+        return Excel::download(new InscritosNecessidadesEspeciaisExport($evento), $nomeArquivo);
     }
 }

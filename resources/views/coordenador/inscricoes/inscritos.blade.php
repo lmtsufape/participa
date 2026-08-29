@@ -44,6 +44,7 @@
                         </button>
                         <a href="{{route('evento.exportarInscritosXLSX', $evento)}}" class="btn btn-success">Exportar .xlsx</a>
                         <a href="{{route('evento.exportarInscritosApoioInfantilXLSX', $evento)}}" class="btn btn-warning" title="Exportar apenas inscritos com solicitação de apoio infantil">Exportar Apoio Infantil (.xlsx)</a>
+                        <a href="{{route('evento.exportarInscritosNecessidadesEspeciaisXLSX', $evento)}}" class="btn btn-info text-white" title="Exportar apenas inscritos com necessidades especiais">Exportar Nec. Especiais (.xlsx)</a>
                         {{-- <a href="{{route('evento.downloadInscritos', $evento)}}" class="btn btn-primary">Exportar .csv</a>--}}
 {{--                        <a href="{{route('evento.downloadInscritosCertifica', $evento)}}" class="btn btn-primary float-md-right mt-2">Exportar XLSX para o Certifica</a>--}}
                         <button type="button" class="button-prevent-multiple-submits btn btn-outline-success my-2 ml-1" data-bs-toggle="modal" data-bs-target="#modal-inscrever-participante">

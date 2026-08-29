@@ -72,6 +72,8 @@ class UserController extends Controller
 
         $user = User::find($request->id);
 
+        $isAdmin = $user->administradors()->exists();
+
         $validations = [
             'name' => 'required|string|max:255',
             'nomeSocial' => 'nullable|string|max:255',
