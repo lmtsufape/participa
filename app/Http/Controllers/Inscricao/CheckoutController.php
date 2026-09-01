@@ -21,6 +21,7 @@ use MercadoPago\Client\Payment\PaymentClient;
 use MercadoPago\MercadoPagoConfig;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 use MercadoPago\Exceptions\MPApiException;
 use Throwable;
 use Carbon\Carbon;
@@ -34,8 +35,25 @@ class CheckoutController extends Controller
     {
         $key = config('mercadopago.public_key');
         $user = auth()->user();
+        $user->loadMissing('endereco');
         $inscricao = $evento->inscricaos()->where('user_id', $user->id)->first();
         $categoria = $inscricao?->categoria;
+
+        if ($inscricao === null) {
+            return redirect()->route('evento.visualizar', ['id' => $evento->id])
+                ->with('message', 'Realize sua inscrição antes de acessar o pagamento.');
+        }
+
+        if (!$evento->inscricaoExigePagamento($categoria)) {
+            return redirect()->route('evento.visualizar', ['id' => $evento->id])
+                ->with('message', 'Esta inscrição não possui pagamento pendente.');
+        }
+
+        if (blank($key)) {
+            Log::error('Checkout indisponível: chave pública do Mercado Pago não configurada.');
+            return redirect()->route('evento.visualizar', ['id' => $evento->id])
+                ->with('message', 'O pagamento está temporariamente indisponível. Tente novamente mais tarde.');
+        }
 
         if ($inscricao->pagamento != null) {
             $pagamento = $inscricao->pagamento;
@@ -56,10 +74,27 @@ class CheckoutController extends Controller
     {
         $key = config('mercadopago.public_key');
         $user = auth()->user();
+
+        if (blank($key)) {
+            Log::error('Status de pagamento indisponível: chave pública do Mercado Pago não configurada.');
+            return redirect()->route('evento.visualizar', ['id' => $evento->id])
+                ->with('message', 'A consulta do pagamento está temporariamente indisponível. Tente novamente mais tarde.');
+        }
+
         $inscricao = $evento->inscricaos()->where('user_id', $user->id)->first();
         $pagamento = $inscricao?->pagamento;
         if ($pagamento == null) {
             return redirect()->route('evento.visualizar', ['id' => $evento->id])->with('message', 'Não existe um pagamento para esse evento.');
+        }
+
+        if ($pagamento->inscricao === null || $pagamento->inscricao->evento === null) {
+            Log::warning('Pagamento sem inscrição ou evento associado.', [
+                'pagamento_id' => $pagamento->id,
+                'evento_id' => $evento->id,
+            ]);
+
+            return redirect()->route('evento.visualizar', ['id' => $evento->id])
+                ->with('message', 'Não foi possível consultar este pagamento. Entre em contato com a organização do evento.');
         }
 
         // PAra boletos
@@ -74,7 +109,7 @@ class CheckoutController extends Controller
     private function pagamentoExpirado($pagamento)
     {
         // validade do boleto sao 10 dias
-        $dataCriacao = $pagamento->created_at;
+        $dataCriacao = $pagamento->created_at->copy();
         $dataExpiracao = $dataCriacao->addDays(10);
 
         return now()->isAfter($dataExpiracao);
@@ -82,7 +117,7 @@ class CheckoutController extends Controller
 
     public function listarPagamentos($id)
     {
-        $evento = Evento::find($id);
+        $evento = Evento::findOrFail($id);
 
         $inscricaos = $evento->inscricaos;
 
@@ -91,23 +126,67 @@ class CheckoutController extends Controller
 
     public function processPayment(Request $request)
     {
-        MercadoPagoConfig::setAccessToken(config('mercadopago.access_token'));
-        $client = new PaymentClient();
+        $metodosCartao = ['master', 'amex', 'cabal', 'hipercard', 'elo', 'visa'];
 
+        $request->validate([
+            'evento' => ['required', 'integer', 'exists:eventos,id'],
+            'payment_method_id' => ['required', 'string', 'in:pix,bolbradesco,master,amex,cabal,hipercard,elo,visa'],
+            'transaction_amount' => ['nullable', 'numeric', 'min:0.01'],
+            'token' => [Rule::requiredIf(fn () => in_array($request->payment_method_id, $metodosCartao, true)), 'nullable', 'string'],
+            'installments' => [Rule::requiredIf(fn () => in_array($request->payment_method_id, $metodosCartao, true)), 'nullable', 'integer', 'min:1'],
+            'issuer_id' => [Rule::requiredIf(fn () => in_array($request->payment_method_id, $metodosCartao, true)), 'nullable'],
+            'payer' => ['required', 'array'],
+            'payer.email' => ['required', 'email'],
+            'payer.first_name' => ['required_if:payment_method_id,bolbradesco', 'nullable', 'string'],
+            'payer.last_name' => ['required_if:payment_method_id,bolbradesco', 'nullable', 'string'],
+            'payer.identification.type' => [Rule::requiredIf(fn () => $request->payment_method_id !== 'pix'), 'nullable', 'string'],
+            'payer.identification.number' => [Rule::requiredIf(fn () => $request->payment_method_id !== 'pix'), 'nullable', 'string'],
+            'payer.address.zip_code' => ['required_if:payment_method_id,bolbradesco', 'nullable', 'string'],
+            'payer.address.street_name' => ['required_if:payment_method_id,bolbradesco', 'nullable', 'string'],
+            'payer.address.street_number' => ['required_if:payment_method_id,bolbradesco', 'nullable', 'string'],
+            'payer.address.neighborhood' => ['required_if:payment_method_id,bolbradesco', 'nullable', 'string'],
+            'payer.address.city' => ['required_if:payment_method_id,bolbradesco', 'nullable', 'string'],
+            'payer.address.federal_unit' => ['required_if:payment_method_id,bolbradesco', 'nullable', 'string'],
+        ]);
         $contents = $request->all();
-        $evento = Evento::find($contents['evento']);
+
+        if (blank(config('mercadopago.access_token'))) {
+            Log::error('Checkout indisponível: token de acesso do Mercado Pago não configurado.');
+
+            return response()->json([
+                'message' => 'O pagamento está temporariamente indisponível. Tente novamente mais tarde.',
+            ], 503);
+        }
+
+        $evento = Evento::findOrFail($contents['evento']);
         $user = auth()->user();
         $inscricao = $evento->inscricaos()->where('user_id', $user->id)->first();
-        $categoria = $inscricao->categoria;
+        $categoria = $inscricao?->categoria;
+
+        if ($inscricao === null || !$evento->inscricaoExigePagamento($categoria)) {
+            return response()->json([
+                'message' => 'Não foi encontrada uma inscrição paga válida para este evento.',
+            ], 422);
+        }
+
+        if ($inscricao->pagamento !== null
+            && !in_array($inscricao->pagamento->status, ['rejected', 'cancelled', 'expired', 'refunded', 'charged_back'], true)) {
+            return response()->json([
+                'message' => 'Esta inscrição já possui um pagamento em andamento ou aprovado.',
+            ], 409);
+        }
+
+        $contents['transaction_amount'] = (float) $categoria->valor_total;
         $descricao = 'Inscrição no evento '.$evento->nome.' com valor de '.$categoria->valor_total;
 
-        $request = $this->gerarRequest($contents, $categoria);
-
-        $request_options = new RequestOptions();
-        $request_options->setCustomHeaders(["X-Idempotency-Key: ".Str::uuid()]);
-
         try {
-            $payment = $client->create($request, $request_options);
+            MercadoPagoConfig::setAccessToken(config('mercadopago.access_token'));
+            $client = new PaymentClient();
+            $paymentRequest = $this->gerarRequest($contents, $categoria);
+            $requestOptions = new RequestOptions();
+            $requestOptions->setCustomHeaders(["X-Idempotency-Key: ".Str::uuid()]);
+
+            $payment = $client->create($paymentRequest, $requestOptions);
             // $tipo_pagamento = TipoPagamento::where('descricao', $contents['payment_method_id'])->first();
             $descricao = 'Inscrição no evento '.$evento->nome.' com valor de '.$categoria->valor_total;
             $pagamento = Pagamento::create([
@@ -122,11 +201,13 @@ class CheckoutController extends Controller
             return redirect()->route('checkout.statusPagamento', ['evento' => $evento->id]);
         } catch (MPApiException $e) {
             Log::error('MPApiException: Erro em operação de pagamento com'.$contents['payment_method_id'], [
-                'status_code' => $e->getApiResponse()->getStatusCode(),
-                'content' => $e->getApiResponse()->getContent(),
+                'status_code' => $e->getApiResponse()?->getStatusCode(),
+                'content' => $e->getApiResponse()?->getContent(),
             ]);
+            return response()->json(['message' => 'Não foi possível processar o pagamento. Confira os dados e tente novamente.'], 422);
         } catch (\Exception $e) {
             Log::error('Exception: ' . $e->getMessage());
+            return response()->json(['message' => 'Ocorreu um erro ao tentar realizar o pagamento. Tente novamente.'], 500);
         } catch (Throwable $e) {
             Log::error('Erro em operação de pagamento com'.$contents['payment_method_id'], [
                 'message' => $e->getMessage(),
@@ -134,7 +215,7 @@ class CheckoutController extends Controller
                 'line' => $e->getLine(),
                 'trace' => $e->getTraceAsString(),
             ]);
-            return redirect()->back()->withErrors(['msg' => 'Ocorreu um erro ao tentar realizar o pagamento, tente novamente.']);
+            return response()->json(['message' => 'Ocorreu um erro ao tentar realizar o pagamento. Tente novamente.'], 500);
         }
     }
 
@@ -205,7 +286,7 @@ class CheckoutController extends Controller
                 ];
                 break;
             default:
-                throw new Exception('Método de pagamento não suportado: '.$contents['payment_type_id']);
+                throw new Exception('Método de pagamento não suportado: '.($contents['payment_method_id'] ?? 'desconhecido'));
         }
         return $request;
     }
@@ -216,10 +297,28 @@ class CheckoutController extends Controller
         $client = new PaymentClient();
 
         $contents = $request->all();
-        switch($contents["type"]) {
+        switch($contents["type"] ?? null) {
             case "payment":
-                $payment = $client->get($contents["data"]["id"]);
-                $pagamento = Pagamento::where('codigo', $contents["data"]["id"])->first();
+                $paymentId = data_get($contents, 'data.id');
+                if ($paymentId === null) {
+                    return response(status: 200);
+                }
+
+                try {
+                    $payment = $client->get($paymentId);
+                } catch (Throwable $exception) {
+                    Log::error('Não foi possível consultar o pagamento informado pelo webhook.', [
+                        'payment_id' => $paymentId,
+                        'erro' => $exception->getMessage(),
+                    ]);
+
+                    return response(status: 503);
+                }
+                $pagamento = Pagamento::where('codigo', $paymentId)->first();
+                if ($pagamento === null) {
+                    Log::warning('Pagamento informado pelo webhook não foi encontrado.', ['payment_id' => $paymentId]);
+                    return response(status: 200);
+                }
 
                 $fee = 0.0;
 
@@ -269,11 +368,26 @@ class CheckoutController extends Controller
 
                 if ($payment->status == 'approved') {
                     $inscricao = $pagamento->inscricao;
+                    if ($inscricao === null) {
+                        Log::warning('Pagamento aprovado sem inscrição associada.', ['payment_id' => $paymentId]);
+                        $pagamento->status = $payment->status;
+                        $pagamento->save();
+                        return response(status: 200);
+                    }
                     $inscricao->finalizada = true;
                     $inscricao->save();
                     $evento = $inscricao->evento;
 
-                    Mail::to($inscricao->user->email)->send(new EmailConfirmacaoPagamento($inscricao, $evento));
+                    if ($inscricao->user !== null) {
+                        try {
+                            Mail::to($inscricao->user->email)->send(new EmailConfirmacaoPagamento($inscricao, $evento));
+                        } catch (Throwable $exception) {
+                            Log::error('Pagamento confirmado, mas o e-mail de confirmação falhou.', [
+                                'inscricao_id' => $inscricao->id,
+                                'erro' => $exception->getMessage(),
+                            ]);
+                        }
+                    }
                 }
                 $pagamento->status = $payment->status;
                 $pagamento->save();
@@ -333,10 +447,11 @@ class CheckoutController extends Controller
             return redirect()->back()->with('error', 'Este pagamento não permite nova tentativa.');
         }
 
+        $pagamento = $inscricao->pagamento;
         $inscricao->pagamento_id = null;
         $inscricao->save();
 
-        $inscricao->pagamento->delete();
+        $pagamento->delete();
 
         return redirect()->route('checkout.telaPagamento', ['evento' => $evento->id])->with('success', 'Você pode tentar um novo pagamento.');
     }

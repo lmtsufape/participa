@@ -19,6 +19,7 @@ use App\Notifications\InscricaoEvento;
 use App\Notifications\PreInscricao;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -32,6 +33,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use Throwable;
 
 class InscricaoController extends Controller
 {
@@ -42,7 +44,7 @@ class InscricaoController extends Controller
      */
     public function index($id)
     {
-        $evento = Evento::find($id);
+        $evento = Evento::findOrFail($id);
         $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
 
         $promocoes = Promocao::where('evento_id', $id)->get();
@@ -138,7 +140,7 @@ class InscricaoController extends Controller
      */
     public function create($id)
     {
-        $evento = Evento::find($id);
+        $evento = Evento::findOrFail($id);
 
         return view('evento.nova_inscricao', ['evento' => $evento,
             'eventoVoltar' => null,
@@ -156,7 +158,7 @@ class InscricaoController extends Controller
      */
     public function store(Request $request)
     {
-        $inscricao = Inscricao::find($request->inscricao_id);
+        $inscricao = Inscricao::where('user_id', auth()->id())->find($request->inscricao_id);
 
         if ($inscricao != null) {
             $inscricao->finalizada = true;
@@ -209,7 +211,7 @@ class InscricaoController extends Controller
      */
     public function destroy($id)
     {
-        $inscricao = Inscricao::find($id);
+        $inscricao = Inscricao::findOrFail($id);
 
         foreach ($inscricao->camposPreenchidos as $campo) {
             switch ($campo->tipo) {
@@ -221,7 +223,7 @@ class InscricaoController extends Controller
                     break;
                 case 'endereco':
                     $endereco = Endereco::find($campo->pivot->valor);
-                    $endereco->delete();
+                    $endereco?->delete();
                     break;
             }
             $campo->inscricoesFeitas()->detach($inscricao->id);
@@ -240,18 +242,44 @@ class InscricaoController extends Controller
 
     public function checarDados(Request $request, $id)
     {
+        $evento = Evento::findOrFail($id);
+
         $validatorData = $request->validate([
-            'categoria' => 'required',
-            'promocao' => 'nullable',
-            'valorTotal' => 'required',
-            'atividades' => 'nullable',
-            'cupom' => 'nullable',
+            'categoria' => [
+                'required',
+                'integer',
+                Rule::exists('categoria_participantes', 'id')
+                    ->where(fn ($query) => $query->where('evento_id', $evento->id)),
+            ],
+            'promocao' => [
+                'nullable',
+                'integer',
+                Rule::exists('promocaos', 'id')
+                    ->where(fn ($query) => $query->where('evento_id', $evento->id)),
+            ],
+            'valorTotal' => ['required', 'numeric', 'min:0'],
+            'atividades' => ['nullable', 'array'],
+            'atividades.*' => [
+                'integer',
+                Rule::exists('atividades', 'id')
+                    ->where(fn ($query) => $query->where('eventoId', $evento->id)),
+            ],
+            'cupom' => ['nullable', 'string', 'max:255'],
             'atividadesPromo' => 'nullable',
             'valorPromocao' => 'nullable',
             'descricaoPromo' => 'nullable',
+            'revisandoInscricao' => [
+                'nullable',
+                'integer',
+                Rule::exists('inscricaos', 'id')->where(fn ($query) => $query
+                    ->where('evento_id', $evento->id)
+                    ->where('user_id', auth()->id())
+                    ->whereNull('deleted_at')),
+            ],
         ]);
 
-        $categoria = CategoriaParticipante::find($request->categoria);
+        $categoria = CategoriaParticipante::where('evento_id', $evento->id)
+            ->findOrFail($validatorData['categoria']);
         $validator = $this->validarCamposExtras($request, $categoria);
 
         if ($validator->fails()) {
@@ -261,8 +289,6 @@ class InscricaoController extends Controller
                 ->withInput()
                 ->with('abrirmodalinscricao', true);
         }
-        $evento = Evento::find($id);
-
         if ($evento->recolhimento == 'gratuito' && $request->valorTotal * 1 == 0) {
             return $this->cadastrarInscricaoRetornarProEvento($evento, $request, $categoria);
         }
@@ -274,38 +300,50 @@ class InscricaoController extends Controller
         $cupom = null;
 
         if ($request->revisandoInscricao != null) {
-            $inscricao = Inscricao::find($request->revisandoInscricao);
+            $inscricao = Inscricao::where('evento_id', $evento->id)
+                ->where('user_id', auth()->id())
+                ->findOrFail($request->revisandoInscricao);
             $cupom = $inscricao->cupomDesconto;
         } else {
             $cupom = CupomDeDesconto::where([['evento_id', $evento->id], ['identificador', '=', $request->cupom]])->first();
         }
 
-        if ($request->cupom != null || $request->revisandoInscricao != null) {
-            if ($cupom != null && $cupom->porcentagem) {
+        if ($request->filled('cupom') && $cupom === null) {
+            return redirect()->back()
+                ->withErrors(['cupom' => 'O cupom informado não é válido para este evento.'])
+                ->withInput($validatorData);
+        }
+
+        if ($cupom !== null) {
+            if ($cupom->porcentagem) {
                 $valorComDesconto = $valorDaInscricao - $valorDaInscricao * ($cupom->valor / 100);
             } else {
-                $valorComDesconto -= $cupom->valor;
+                $valorComDesconto = max(0, $valorDaInscricao - $cupom->valor);
             }
         }
 
         if ($request->promocao != null) {
-            $promocao = Promocao::find($request->promocao);
+            $promocao = Promocao::where('evento_id', $evento->id)->find($request->promocao);
         }
 
         if ($request->atividades != null) {
-            if ($promocao->atividades != null) {
-                $idsAtvsPromo = $promocao->atividades()->select('atividades.id')->get();
+            if ($promocao !== null && $promocao->atividades()->exists()) {
+                $idsAtvsPromo = $promocao->atividades()->pluck('atividades.id');
                 foreach ($request->atividades as $atv) {
-                    if ($idsAtvsPromo->contains($atv)) {
+                    if ($idsAtvsPromo->contains((int) $atv)) {
                         return redirect()->back()->withErrors(['atvIguais' => 'Existem atividades adicionais que já estão presentes no pacote. Logo foram removidas.'])->withInput($validatorData);
                     }
                 }
             }
-            $atividades = Atividade::whereIn('id', $request->atividades)->get();
+            $atividades = Atividade::where('eventoId', $evento->id)
+                ->whereIn('id', $request->atividades)
+                ->get();
         }
 
         if ($request->revisandoInscricao != null) {
-            $inscricao = Inscricao::find($request->revisandoInscricao);
+            $inscricao = Inscricao::where('evento_id', $evento->id)
+                ->where('user_id', auth()->id())
+                ->findOrFail($request->revisandoInscricao);
             $inscricao->user_id = auth()->user()->id;
             $inscricao->evento_id = $evento->id;
             $inscricao->categoria_participante_id = $categoria->id;
@@ -353,7 +391,7 @@ class InscricaoController extends Controller
         $inscricao->user_id = auth()->user()->id;
         $inscricao->evento_id = $evento->id;
         $inscricao->categoria_participante_id = $categoria->id;
-        $inscricao->finalizada = !$evento->formEvento->modvalidarinscricao;
+        $inscricao->finalizada = !($evento->formEvento?->modvalidarinscricao ?? false);
         $inscricao->save();
         $this->salvarCamposExtras($inscricao, $request, $categoria);
 
@@ -361,6 +399,24 @@ class InscricaoController extends Controller
     }
 
     public function inscrever(Request $request)
+    {
+        try {
+            return $this->processarInscricao($request);
+        } catch (Throwable $exception) {
+            Log::error('Falha inesperada ao realizar inscrição em evento.', [
+                'evento_id' => $request->input('evento_id'),
+                'user_id' => auth()->id(),
+                'exception' => $exception,
+            ]);
+
+            return redirect()->back()
+                ->withInput()
+                ->with('message', 'Não foi possível concluir a inscrição agora. Seus dados foram preservados; tente novamente em alguns instantes.')
+                ->with('class', 'danger');
+        }
+    }
+
+    private function processarInscricao(Request $request)
     {
         $evento = Evento::findOrFail($request->evento_id);
         //"pre inscrição" feita na submissão de trabalhos por um user não inscrito, sem categoria e pagamento
@@ -419,7 +475,9 @@ class InscricaoController extends Controller
             'Associado - Pessoa com Deficiência (PCD)',
         ];
 
-        if ($categoria !== null && in_array($categoria->nome, $categoriasInscricaoAutomatica, true)) {
+        if ($categoria !== null
+            && !$evento->inscricaoExigePagamento($categoria)
+            && in_array($categoria->nome, $categoriasInscricaoAutomatica, true)) {
             if ($preInscricao){
                 $inscricao = Inscricao::where('user_id', auth()->user()->id)->where('evento_id', $evento->id)->first();
                 $inscricao->categoria_participante_id = $request->categoria;
@@ -430,14 +488,17 @@ class InscricaoController extends Controller
                 $inscricao->categoria_participante_id = $request->categoria;
             }
 
-            $inscricao->finalizada = true;
+            $inscricao->finalizada = false;
             $inscricao->save();
 
             if ($possuiFormulario) {
                 $this->salvarCamposExtras($inscricao, $request, $categoria);
             }
 
-            auth()->user()->notify(new InscricaoEvento($evento));
+            $inscricao->finalizada = true;
+            $inscricao->save();
+
+            $this->notificarUsuarioComSeguranca(auth()->user(), new InscricaoEvento($evento));
 
             return redirect()->action([EventoController::class, 'show'], ['id' => $request->evento_id])->with('message', 'Inscrição realizada com sucesso!');
         }
@@ -463,18 +524,20 @@ class InscricaoController extends Controller
             $this->salvarCamposExtras($inscricao, $request, $categoria);
         }
 
-        auth()->user()->notify(new PreInscricao($evento, auth()->user()));
+        $exigePagamento = $evento->inscricaoExigePagamento($categoria);
 
-        if ($categoria != null && $categoria->valor_total != 0) {
+        if ($exigePagamento) {
+            $this->notificarUsuarioComSeguranca(auth()->user(), new PreInscricao($evento, auth()->user()));
+
             return redirect()->action([CheckoutController::class, 'telaPagamento'], ['evento' => $request->evento_id]);
         } else {
-            $modvalidarinscricao = !$evento->formEvento->modvalidarinscricao;
+            $modvalidarinscricao = !($evento->formEvento?->modvalidarinscricao ?? false);
             $inscricao->finalizada = $modvalidarinscricao;
             $inscricao->save();
             $message = 'Inscricao realizada, você receberá uma notificação no e-mail quando o coordenador aprovar sua inscrição.';
             if ($modvalidarinscricao) {
                 $message = 'Inscrição realizada com sucesso';
-                auth()->user()->notify(new InscricaoEvento($evento));
+                $this->notificarUsuarioComSeguranca(auth()->user(), new InscricaoEvento($evento));
             }
 
             return redirect()->action([EventoController::class, 'show'], ['id' => $request->evento_id])->with('message', $message);
@@ -484,7 +547,7 @@ class InscricaoController extends Controller
     public function voltarTela(Request $request, $id)
     {
         $atividadeExtras = null;
-        $inscricao = Inscricao::find($id);
+        $inscricao = Inscricao::where('user_id', auth()->id())->findOrFail($id);
 
         if ($request->atividades != null) {
             $atividadeExtras = Atividade::whereIn('id', $request->atividades)->get();
@@ -504,7 +567,7 @@ class InscricaoController extends Controller
 
     public function confirmar(Request $request, $id)
     {
-        $evento = Evento::find($request->evento_id);
+        $evento = Evento::findOrFail($request->evento_id);
 
         return view('coordenador.programacao.pagamento', compact('evento'));
     }
@@ -516,7 +579,7 @@ class InscricaoController extends Controller
 
         $inscricao->finalizada = true;
         $inscricao->save();
-        $inscricao->user->notify(new InscricaoAprovada($evento));
+        $this->notificarUsuarioComSeguranca($inscricao->user, new InscricaoAprovada($evento));
         return redirect()->back()->with('message', 'Inscrição aprovada com sucesso!');
     }
 
@@ -575,9 +638,9 @@ class InscricaoController extends Controller
         if ($request->revisandoInscricao != null) {
             foreach ($categoria->camposNecessarios()->orderBy('tipo')->get() as $campo) {
                 if ($campo->tipo == 'email' && $request->input('email-'.$campo->id) != null) {
-                    $inscricao->camposPreenchidos()->updateExistingPivot($campo->id, ['valor' => $request->input('email-'.$campo->id)]);
+                    $inscricao->camposPreenchidos()->syncWithoutDetaching([$campo->id => ['valor' => $request->input('email-'.$campo->id)]]);
                 } elseif ($campo->tipo == 'text' && $request->input('text-'.$campo->id) != null) {
-                    $inscricao->camposPreenchidos()->updateExistingPivot($campo->id, ['valor' => $request->input('text-'.$campo->id)]);
+                    $inscricao->camposPreenchidos()->syncWithoutDetaching([$campo->id => ['valor' => $request->input('text-'.$campo->id)]]);
                 } elseif ($campo->tipo == 'file' && $request->file('file-'.$campo->id) != null) {
                     $campoSalvo = $inscricao->camposPreenchidos()->where('campo_formulario_id', '=', $campo->id)->first();
                     if ($campoSalvo != null && Storage::disk()->exists($campoSalvo->pivot->valor)) {
@@ -587,14 +650,15 @@ class InscricaoController extends Controller
                     $extensao = $request->file('file-'.$campo->id)->getClientOriginalExtension();
                     $path = Storage::putFileAs('eventos/'.$inscricao->evento->id.'/inscricoes/'.$inscricao->id.'/'.$campo->id, $request->file('file-'.$campo->id), $campo->titulo.'.'.$extensao);
 
-                    $inscricao->camposPreenchidos()->updateExistingPivot($campo->id, ['valor' => $path]);
+                    $inscricao->camposPreenchidos()->syncWithoutDetaching([$campo->id => ['valor' => $path]]);
                 } elseif ($campo->tipo == 'date' && $request->input('date-'.$campo->id) != null) {
-                    $inscricao->camposPreenchidos()->updateExistingPivot($campo->id, ['valor' => $request->input('date-'.$campo->id)]);
+                    $inscricao->camposPreenchidos()->syncWithoutDetaching([$campo->id => ['valor' => $request->input('date-'.$campo->id)]]);
                 } elseif ($campo->tipo == 'select' && $request->input('select-'.$campo->id) != null) {
-                    $inscricao->camposPreenchidos()->updateExistingPivot($campo->id, ['valor' => $request->input('select-'.$campo->id)]);
+                    $inscricao->camposPreenchidos()->syncWithoutDetaching([$campo->id => ['valor' => $request->input('select-'.$campo->id)]]);
                 } elseif ($campo->tipo == 'endereco' && $request->input('endereco-cep-'.$campo->id) != null) {
                     $campoSalvo = $inscricao->camposPreenchidos()->where('campo_formulario_id', '=', $campo->id)->first();
-                    $endereco = Endereco::find($campoSalvo->pivot->valor);
+                    $endereco = $campoSalvo ? Endereco::find($campoSalvo->pivot->valor) : null;
+                    $endereco ??= new Endereco();
                     $endereco->cep = $request->input('endereco-cep-'.$campo->id);
                     $endereco->bairro = $request->input('endereco-bairro-'.$campo->id);
                     $endereco->rua = $request->input('endereco-rua-'.$campo->id);
@@ -602,12 +666,12 @@ class InscricaoController extends Controller
                     $endereco->cidade = $request->input('endereco-cidade-'.$campo->id);
                     $endereco->uf = $request->input('endereco-uf-'.$campo->id);
                     $endereco->numero = $request->input('endereco-numero-'.$campo->id);
-                    $endereco->update();
-                    $inscricao->camposPreenchidos()->updateExistingPivot($campo->id, ['valor' => $endereco->id]);
+                    $endereco->save();
+                    $inscricao->camposPreenchidos()->syncWithoutDetaching([$campo->id => ['valor' => $endereco->id]]);
                 } elseif ($campo->tipo == 'cpf' && $request->input('cpf-'.$campo->id) != null) {
-                    $inscricao->camposPreenchidos()->updateExistingPivot($campo->id, ['valor' => $request->input('cpf-'.$campo->id)]);
+                    $inscricao->camposPreenchidos()->syncWithoutDetaching([$campo->id => ['valor' => $request->input('cpf-'.$campo->id)]]);
                 } elseif ($campo->tipo == 'contato' && $request->input('contato-'.$campo->id) != null) {
-                    $inscricao->camposPreenchidos()->updateExistingPivot($campo->id, ['valor' => $request->input('contato-'.$campo->id)]);
+                    $inscricao->camposPreenchidos()->syncWithoutDetaching([$campo->id => ['valor' => $request->input('contato-'.$campo->id)]]);
                 }
             }
         } else {
@@ -648,9 +712,12 @@ class InscricaoController extends Controller
     public function downloadFileCampoExtra($idInscricao, $idCampo)
     {
         $inscricao = Inscricao::findOrFail($idInscricao);
-        if (auth()->user()->can('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $inscricao->evento) || auth()->user()->administrador()->exists()) {
-            $caminho = $inscricao->camposPreenchidos()->where('campo_formulario_id', '=', $idCampo)->first()->pivot->valor;
-            if (Storage::disk()->exists($caminho)) {
+        if (auth()->id() === $inscricao->user_id
+            || auth()->user()->can('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $inscricao->evento)
+            || auth()->user()->administrador()->exists()) {
+            $campo = $inscricao->camposPreenchidos()->where('campo_formulario_id', '=', $idCampo)->first();
+            $caminho = $campo?->pivot?->valor;
+            if ($caminho && Storage::disk()->exists($caminho)) {
                 return Storage::download($caminho);
             }
 
@@ -661,7 +728,7 @@ class InscricaoController extends Controller
 
     public function inscreverParticipante(Request $request, $evento_id)
     {
-        $evento = Evento::find($evento_id);
+        $evento = Evento::findOrFail($evento_id);
 
         $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
 
@@ -674,6 +741,7 @@ class InscricaoController extends Controller
 
     private function inscreverParticipanteIndividual(Request $request, $evento)
     {
+        $participante = null;
         if ($request->identificador == 'email') {
             $participante = User::where('email', $request->email)->first();
         } elseif ($request->identificador == 'cpf') {
@@ -691,25 +759,25 @@ class InscricaoController extends Controller
             return redirect(route('inscricao.inscritos', ['evento' => $evento->id]))->with(['error_message' => 'Participante informado já está inscrito neste evento!']);
         }
 
-        $preInscricaoCancelada = $this->cancelarPreInscricao($participante->id, $evento->id);
+        $validator = Validator::make($request->all(), [
+            'categoria' => [
+                'required',
+                'integer',
+                Rule::exists('categoria_participantes', 'id')
+                    ->where(fn ($query) => $query->where('evento_id', $evento->id)),
+            ],
+        ]);
 
-        $categoria = CategoriaParticipante::find($request->categoria);
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        $categoria = CategoriaParticipante::where('evento_id', $evento->id)->findOrFail($request->categoria);
 
         $possuiFormulario = $evento->possuiFormularioDeInscricao();
 
         if ($possuiFormulario)
         {
-            $validator = Validator::make($request->all(), ['categoria' => 'required']);
-
-            if ($validator->fails())
-            {
-                return redirect()
-                    ->back()
-                    ->withErrors($validator)
-                    ->withInput()
-                    ->with('abrirmodalinscricao', true);
-            }
-
             $validator = $this->validarCamposExtras($request, $categoria);
 
             if ($validator->fails())
@@ -721,6 +789,8 @@ class InscricaoController extends Controller
                     ->with('abrirmodalinscricao', true);
             }
         }
+
+        $preInscricaoCancelada = $this->cancelarPreInscricao($participante->id, $evento->id);
 
         $inscricao = new Inscricao();
 
@@ -737,7 +807,7 @@ class InscricaoController extends Controller
             $this->salvarCamposExtras($inscricao, $request, $categoria);
         }
 
-        $participante->notify(new InscricaoEvento($evento));
+        $this->notificarUsuarioComSeguranca($participante, new InscricaoEvento($evento));
 
         return redirect(route('inscricao.inscritos', ['evento' => $evento->id]))->with(['message' => 'Participante inscrito com sucesso!']);
     }
@@ -789,12 +859,8 @@ class InscricaoController extends Controller
                     continue;
                 }
 
-                $preInscricaoCancelada = $this->cancelarPreInscricao($participante->id, $evento->id);
-                if ($preInscricaoCancelada) {
-                    $preInscricoesCanceladas++;
-                }
-
-                $categoria = CategoriaParticipante::find($dadosParticipante['categoria']);
+                $categoria = CategoriaParticipante::where('evento_id', $evento->id)
+                    ->find($dadosParticipante['categoria']);
 
                 if (!$categoria) {
                     $erros[] = "Participante " . ($index + 1) . " ({$participante->name}): Categoria inválida";
@@ -815,6 +881,11 @@ class InscricaoController extends Controller
                     }
                 }
 
+                $preInscricaoCancelada = $this->cancelarPreInscricao($participante->id, $evento->id);
+                if ($preInscricaoCancelada) {
+                    $preInscricoesCanceladas++;
+                }
+
                 $inscricao = new Inscricao();
                 $inscricao->categoria_participante_id = $dadosParticipante['categoria'];
                 $inscricao->user_id = $participante->id;
@@ -826,7 +897,7 @@ class InscricaoController extends Controller
                     $this->salvarCamposExtras($inscricao, new Request($dadosParticipante), $categoria);
                 }
 
-                $participante->notify(new InscricaoEvento($evento));
+                $this->notificarUsuarioComSeguranca($participante, new InscricaoEvento($evento));
 
                 $sucessos++;
 
@@ -876,8 +947,11 @@ class InscricaoController extends Controller
             return redirect()->back()->with(['message' => 'Não é possível alterar a categoria de uma inscrição já finalizada.', 'class' => 'danger']);
         }
 
+        $categoriasPermitidas = $inscricao->evento->categoriasPermitidasParaUsuario();
         $validator = Validator::make($request->all(), [
-            'categoria' => 'required|exists:categoria_participantes,id',
+            'categoria' => ['required', 'integer', Rule::in($categoriasPermitidas->pluck('id')->all())],
+        ], [
+            'categoria.in' => 'A categoria selecionada não está disponível para esta inscrição.',
         ]);
 
         if ($validator->fails()) {
@@ -891,8 +965,21 @@ class InscricaoController extends Controller
             $pagamentoAntigo->delete();
         }
 
-        $inscricao->categoria_participante_id = $request->categoria;
+        $categoria = $categoriasPermitidas->firstWhere('id', (int) $request->categoria);
+        $inscricao->categoria_participante_id = $categoria->id;
         $inscricao->save();
+
+        if (!$inscricao->evento->inscricaoExigePagamento($categoria)) {
+            $inscricao->finalizada = !($inscricao->evento->formEvento?->modvalidarinscricao ?? false);
+            $inscricao->save();
+
+            if ($inscricao->finalizada) {
+                $this->notificarUsuarioComSeguranca($inscricao->user, new InscricaoEvento($inscricao->evento));
+            }
+
+            return redirect()->action([EventoController::class, 'show'], ['id' => $inscricao->evento_id])
+                ->with('message', 'Categoria alterada com sucesso!');
+        }
 
         return redirect()->action([CheckoutController::class, 'telaPagamento'], ['evento' => $inscricao->evento_id])
                        ->with('message', 'Categoria alterada com sucesso! Prossiga com o pagamento.');
@@ -906,12 +993,12 @@ class InscricaoController extends Controller
         }
 
         $data = [
-            'nome' => $inscricao->user->name,
+            'nome' => $inscricao->user?->name ?? 'Participante',
             'valor' => $inscricao->pagamento ? $inscricao->pagamento->valor : 0,
             'data' => $inscricao->created_at,
             'codigo_validacao' => $inscricao->codigo_validacao,
-            'evento' => $inscricao->evento->nome ?? 'Evento',
-            'categoria' => $inscricao->categoria->nome ?? 'Categoria',
+            'evento' => $inscricao->evento?->nome ?? 'Evento',
+            'categoria' => $inscricao->categoria?->nome ?? 'Categoria',
         ];
 
         return view('validacao.recibo_valido', $data);
@@ -919,6 +1006,12 @@ class InscricaoController extends Controller
 
     public function recibo(Inscricao $inscricao)
     {
+        $usuarioPodeAcessar = auth()->id() === $inscricao->user_id
+            || auth()->user()?->can('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $inscricao->evento)
+            || auth()->user()?->administrador()->exists();
+
+        abort_unless($usuarioPodeAcessar, 403);
+
         try{
 
 
@@ -933,7 +1026,7 @@ class InscricaoController extends Controller
         }
 
         $data = [
-            'nome' => $inscricao->user->name,
+            'nome' => $inscricao->user?->name ?? 'Participante',
             'valor' => $inscricao->categoria ? $inscricao->categoria->valor_total : 0,
             'data' => now(),
             'codigo_validacao' => $inscricao->codigo_validacao,
@@ -1359,6 +1452,27 @@ class InscricaoController extends Controller
         }
 
         return $cpf;
+    }
+
+    private function notificarUsuarioComSeguranca($usuario, $notificacao): void
+    {
+        if ($usuario === null) {
+            Log::warning('Notificação de inscrição ignorada porque o usuário não existe.', [
+                'notificacao' => get_class($notificacao),
+            ]);
+
+            return;
+        }
+
+        try {
+            $usuario->notify($notificacao);
+        } catch (Throwable $exception) {
+            Log::error('Falha ao enviar notificação de inscrição.', [
+                'user_id' => $usuario->id,
+                'notificacao' => get_class($notificacao),
+                'erro' => $exception->getMessage(),
+            ]);
+        }
     }
 
 }

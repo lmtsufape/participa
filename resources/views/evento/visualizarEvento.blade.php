@@ -111,11 +111,13 @@
                     @endif
 
                 </span>
+                @if ($evento->endereco)
                 <span class="text-my-primary">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
                         <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6" />
                     </svg> {{$evento->endereco->rua}}, {{$evento->endereco->numero}}, {{$evento->endereco->cidade}}-{{$evento->endereco->uf_sigla}}
                 </span>
+                @endif
                 <div class="text-secondary py-3">
                     <p class="m-0">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
@@ -124,13 +126,28 @@
                         {{ __('Organizado por:') }}
                     </p>
                     <p class="m-0" style="padding-left: 1.3rem !important;">
-                        {{$evento->coordenador->name}}
+                        {{ $evento->coordenador?->name ?? __('Organização do evento') }}
                     </p>
                 </div>
 
-                @if ($etiquetas->modinscricao)
+                @if ($etiquetas?->modinscricao)
+                    @php
+                        $eventoExigeCategoria = $evento->categoriasParticipantes()
+                            ->where('permite_inscricao', true)
+                            ->exists();
+                        $inscricaoExigePagamento = $isInscrito
+                            && isset($inscricao)
+                            && !$inscricao->finalizada
+                            && !$InscritoSemCategoria
+                            && $evento->inscricaoExigePagamento($inscricao->categoria);
+                        $inscricaoAguardandoAprovacao = $isInscrito
+                            && isset($inscricao)
+                            && !$inscricao->finalizada
+                            && !$inscricaoExigePagamento
+                            && (!$InscritoSemCategoria || !$eventoExigeCategoria);
+                    @endphp
                     <div class="d-flex flex-wrap gap-2">
-                        @if ($isInscrito && isset($inscricao) && !$inscricao->finalizada && !$InscritoSemCategoria)
+                        @if ($inscricaoExigePagamento)
                             <a href="{{ route('checkout.telaPagamento', $evento) }}" id="btn-inscrevase" class="btn btn-my-success w-60 rounded btn-lg">
                                 {{ __('Inscrição com pendência de pagamento!') }}
                             </a>
@@ -144,10 +161,10 @@
                             @endphp
 
                             <button id="btn-inscrevase" class="btn btn-my-success w-60 rounded btn-lg"
-                                @if (!$encerrada && !($isInscrito && isset($inscricao) && $inscricao->finalizada))
+                                @if (!$encerrada && !$inscricaoAguardandoAprovacao && !($isInscrito && isset($inscricao) && $inscricao->finalizada))
                                     data-bs-toggle="modal" data-bs-target="#modalInscrever"
                                 @endif
-                                @if ($encerrada || ($isInscrito && isset($inscricao) && $inscricao->finalizada))
+                                @if ($encerrada || $inscricaoAguardandoAprovacao || ($isInscrito && isset($inscricao) && $inscricao->finalizada))
                                     disabled
                                 @endif
                                 @if (isset($solicitacaoPCD) && $solicitacaoPCD->status == 'pendente')
@@ -156,6 +173,8 @@
                             >
                                 @if ($isInscrito && isset($inscricao) && $inscricao->finalizada)
                                     {{ __('Já inscrito') }}
+                                @elseif($inscricaoAguardandoAprovacao)
+                                    {{ __('Inscrição aguardando aprovação') }}
                                 @elseif($encerrada)
                                     {{ __('Encerradas!') }}
                                 @else
@@ -189,7 +208,7 @@
                         @endif
                     </div>
                     <br>
-                   @if($evento->recolhimento == "pago")
+                   @if($inscricaoExigePagamento)
                             @if(isset($inscricao) && $inscricao)
 
                                 @if(!$inscricao->finalizada)
@@ -219,7 +238,7 @@
                         @if(isset($inscricao->pagamento) && $inscricao->finalizada)
                             <a href="{{ route('checkout.statusPagamento', $evento->id) }}"
                                 class="text-center mt-2 w-100">{{ __('Visualizar status do pagamento') }}</a>
-                        @elseif(!$InscritoSemCategoria && $inscricao->categoria->valor_total > 0 && !$inscricao->finalizada)
+                        @elseif(!$InscritoSemCategoria && $evento->inscricaoExigePagamento($inscricao->categoria) && !$inscricao->finalizada)
                             @if(isset($inscricao->pagamento))
                                 <a href="{{ route('checkout.statusPagamento', $evento->id) }}"
                                     class="text-center mt-2 w-100">{{ __('Visualizar status do pagamento') }}</a>
@@ -259,11 +278,13 @@
             <div class="d-flex flex-wrap flex-md-nowrap gap-2">
                 @php
                     $modalidadesAtivas = collect($modalidades)->filter(function($m) use($mytime) {
-                        return \Carbon\Carbon::parse($m->ultima_data) >= $mytime;
+                        return filled($m->ultima_data)
+                            && strtotime($m->ultima_data) !== false
+                            && \Carbon\Carbon::parse($m->ultima_data) >= $mytime;
                     });
 
                     // flags de exibição
-                    $temSubmissao = $etiquetas->modsubmissao && $modalidadesAtivas->isNotEmpty();
+                    $temSubmissao = ($etiquetas?->modsubmissao ?? false) && $modalidadesAtivas->isNotEmpty();
                     $temAreas     = isset($areas) && count($areas) > 0;
                 @endphp
                 @if($temSubmissao)
@@ -280,7 +301,7 @@
                 @endif
                 @php
                     $temPdfProg = $evento->exibir_pdf
-                    && $etiquetas->modprogramacao
+                    && ($etiquetas?->modprogramacao ?? false)
                     && $evento->pdf_programacao;
                     $temPdfArquivo = $evento->pdf_arquivo
                     && $evento->modarquivo;
@@ -441,7 +462,7 @@
                                                                 class="d-inline-block text-decoration-none">
                                                                     <img src="{{ asset('img/icons/file-download-solid.svg') }}" style="width:20px;">
                                                                     <span class="text-decoration-underline fs-6">
-                                                                        {{ $evento->formEvento->etiquetabaixarregra }}
+                                                                        {{ $evento->formEvento?->etiquetabaixarregra ?? __('Baixar regras') }}
                                                                     </span>
                                                                 </a>
                                                             </div>
@@ -453,7 +474,7 @@
                                                                 class="d-inline-block">
                                                                     <img src="{{ asset('img/icons/file-download-solid.svg') }}" style="width:20px;">
                                                                     <span class="text-decoration-underline fs-6">
-                                                                        {{ $evento->formEvento->etiquetabaixarapresentacao }}
+                                                                        {{ $evento->formEvento?->etiquetabaixarapresentacao ?? __('Baixar modelo de apresentação') }}
                                                                     </span>
                                                                 </a>
                                                             </div>
@@ -465,7 +486,7 @@
                                                                 class="d-inline-block text-decoration-none">
                                                                     <img src="{{ asset('img/icons/file-download-solid.svg') }}" style="width:20px;">
                                                                     <span class="text-decoration-underline fs-6">
-                                                                        {{ $evento->formEvento->etiquetabaixartemplate }}
+                                                                        {{ $evento->formEvento?->etiquetabaixartemplate ?? __('Baixar template') }}
                                                                     </span>
                                                                 </a>
                                                             </div>
@@ -599,7 +620,7 @@
             </div>
 
         @if(
-            ($evento->exibir_pdf && $etiquetas->modprogramacao && $evento->pdf_programacao)
+            ($evento->exibir_pdf && ($etiquetas?->modprogramacao ?? false) && $evento->pdf_programacao)
             || ($evento->pdf_arquivo && $evento->modarquivo)
             || $evento->arquivoInfos->isNotEmpty()
             || $evento->memorias->isNotEmpty()
@@ -607,7 +628,7 @@
             <div id="info_adicionais" class="row py-4">
 
                 @if(
-                    ($evento->exibir_pdf && $etiquetas->modprogramacao && $evento->pdf_programacao)
+                    ($evento->exibir_pdf && ($etiquetas?->modprogramacao ?? false) && $evento->pdf_programacao)
                     || ($evento->pdf_arquivo && $evento->modarquivo)
                     || $evento->arquivoInfos->isNotEmpty()
                 )
@@ -615,10 +636,10 @@
                         <h4 class="text-my-primary mb-3">{{ __('Informações adicionais') }}</h4>
 
                         {{-- Link para Programação em PDF --}}
-                        @if ($evento->exibir_pdf && $etiquetas->modprogramacao && $evento->pdf_programacao)
+                        @if ($evento->exibir_pdf && ($etiquetas?->modprogramacao ?? false) && $evento->pdf_programacao)
                             <a href="{{ asset('storage/' . $evento->pdf_programacao) }}" target="_blank" class="link-pill">
                                 <img src="{{ asset('img/icons/icon-paperclip-teal.svg') }}" alt="Anexo" class="icon-attachment">
-                                <span>{{ $etiquetas->etiquetamoduloprogramacao }}</span>
+                                <span>{{ $etiquetas?->etiquetamoduloprogramacao ?? __('Programação') }}</span>
                             </a>
                         @endif
 
@@ -626,7 +647,7 @@
                         @if ($evento->pdf_arquivo && $evento->modarquivo)
                             <a href="{{ asset('storage/' . $evento->pdf_arquivo) }}" target="_blank" class="link-pill">
                                 <img src="{{ asset('img/icons/icon-paperclip-teal.svg') }}" alt="Anexo" class="icon-attachment">
-                                <span>{{ $etiquetas->etiquetaarquivo }}</span>
+                                <span>{{ $etiquetas?->etiquetaarquivo ?? __('Arquivo') }}</span>
                             </a>
                         @endif
 
@@ -662,7 +683,7 @@
         <div id="programacao" class="row py-4">{{-- Programação --}}
             <h4 class="text-my-primary">{{ __('Programação') }}</h4>
 
-            @if ($etiquetas->modprogramacao && $evento->exibir_calendario_programacao)
+            @if (($etiquetas?->modprogramacao ?? false) && $evento->exibir_calendario_programacao)
                 @if($atividades->whereNotNull('vagas')->isEmpty())
                     <div class="alert alert-info alert-dismissible fade show" role="alert">
                         {{ __('Para participar do evento, é preciso se cadastrar na plataforma e se inscrever.') }}
@@ -764,10 +785,7 @@
                                                             <div class="col-sm-12">
                                                                 <img src="{{ asset('/img/icons/location_pointer.png') }}"
                                                                     alt="" width="18px" height="auto">
-                                                                {{ $subevento->endereco->rua }},
-                                                                {{ $subevento->endereco->numero }} -
-                                                                {{ $subevento->endereco->cidade }} /
-                                                                {{ $subevento->endereco->uf_sigla }}.
+                                                                {{ $subevento->endereco?->getEnderecoFormatado() ?? __('Local não informado') }}
                                                             </div>
                                                         </div>
                                                         </p>
@@ -827,12 +845,14 @@
 
         <div id="contato" class="row py-4 d-flex">{{-- Contatos --}}
              <div class="col-12 d-flex justify-content-center align-items-center gap-2">
-                <a href="mailto:@if($evento->email){{ $evento->email }}@else{{ $evento->coordenador->email }}@endif" class="btn btn-my-secondary rounded-3">
+                @if ($evento->email || $evento->coordenador?->email)
+                <a href="mailto:{{ $evento->email ?: $evento->coordenador?->email }}" class="btn btn-my-secondary rounded-3">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-envelope me-1" viewBox="0 0 16 16">
                         <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1zm13 2.383-4.708 2.825L15 11.105zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741M1 11.105l4.708-2.897L1 5.383z"/>
                     </svg>
                     {{ __('Entre em contato') }}
                 </a>
+                @endif
                 @if(!empty($evento->instagram))
                  <a href="https://instagram.com/{{$evento->instagram}}" class="btn btn-my-secondary rounded-3" target="_blank">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" target="_blank" class="bi bi-instagram" viewBox="0 0 16 16">
@@ -856,6 +876,7 @@
             <hr class="border-dark">
 
 
+            @if ($evento->endereco)
             <div id="local" class="row py-4">
                 <h4 class="text-my-primary">{{ __('Local') }}</h4>
                 <iframe
@@ -868,6 +889,7 @@
                     src="https://www.google.com/maps?q={{ $enderecoMap }}&output=embed">
                 </iframe>
             </div>
+            @endif
         </div>
 
         @include('evento.modal-inscricao')
@@ -905,7 +927,7 @@
                             <div class="row">
                                 <div class="col-md-6 d-flex flex-column gap-3">
                                     <p class="text-my-secondary mb-0">
-                                        <strong>{{ __('Tipo') }}: {{ $atv->tipoAtividade->descricao }}</strong>
+                                        <strong>{{ __('Tipo') }}: {{ $atv->tipoAtividade?->descricao ?? __('Não informado') }}</strong>
                                     </p>
                                     @if($primeira)
                                         <div class="d-flex align-items-center gap-2">
@@ -1069,6 +1091,10 @@
             const prevBtn  = document.getElementById('prevDates');
             const nextBtn  = document.getElementById('nextDates');
 
+            if (!prevBtn || !nextBtn) {
+                return;
+            }
+
             const datesContainer = prevBtn.nextElementSibling;
             const dateBtns       = Array.from(datesContainer.querySelectorAll('button.carregar-cards'));
 
@@ -1118,7 +1144,13 @@
                 });
             });
         });
+        @if ($evento->endereco)
         window.initMap = function() {
+            const mapElement = document.getElementById("mapaGoogle");
+            if (!mapElement) {
+                return;
+            }
+
             // monta o endereço completo;
             const address = "{{ $evento->endereco->rua }}, {{ $evento->endereco->numero }}, {{ $evento->endereco->cidade }}, {{$evento->endereco->uf_sigla}}, Brasil";
 
@@ -1128,7 +1160,7 @@
                 if (status === 'OK' && results[0]) {
                     const local = results[0].geometry.location;
                     const mapa = new google.maps.Map(
-                        document.getElementById("mapaGoogle"),
+                        mapElement,
                         { center: local, zoom: 15 }
                     );
                     new google.maps.Marker({ position: local, map: mapa });
@@ -1137,12 +1169,13 @@
                     // fallback: exiba o mapa em São Paulo centro, por exemplo
                     const fallback = { lat: -8.906580454895977, lng: -36.49428189189237 };
                     const mapa = new google.maps.Map(
-                        document.getElementById("mapaGoogle"),
+                        mapElement,
                         { center: fallback, zoom: 12 }
                     );
                 }
             });
         };
+        @endif
     </script>
     <script>
         var loginModal = document.getElementById('modalLoginPrompt');

@@ -58,6 +58,8 @@ use Illuminate\Support\Str;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
+use Throwable;
 
 // dd($request->all());
 class EventoController extends Controller
@@ -2461,18 +2463,32 @@ class EventoController extends Controller
         }
 
         $agora = now();
-        $periodoSubmissao = $evento->modalidades->some(function ($modalidade) use ($agora) {
+        $periodoSubmissao = $evento->modalidades->some(function ($modalidade) use ($agora, $evento) {
             if (is_null($modalidade->inicioSubmissao) || is_null($modalidade->fimSubmissao)) {
                 return false;
             }
-            $inicio = \Carbon\Carbon::parse($modalidade->inicioSubmissao);
-            $fim = \Carbon\Carbon::parse($modalidade->fimSubmissao);
 
-            return $agora->between($inicio, $fim);
+            try {
+                $inicio = Carbon::parse($modalidade->inicioSubmissao);
+                $fim = Carbon::parse($modalidade->fimSubmissao);
+
+                return $agora->between($inicio, $fim);
+            } catch (Throwable $exception) {
+                Log::warning('Modalidade ignorada por possuir período de submissão inválido.', [
+                    'evento_id' => $evento->id,
+                    'modalidade_id' => $modalidade->id,
+                    'erro' => $exception->getMessage(),
+                ]);
+
+                return false;
+            }
         });
 
         $enderecoMap = urlencode($evento->endereco?->getEnderecoFormatado() ?? '');
         $encerrada = $evento->eventoInscricoesEncerradas();
+        $inscricao = null;
+        $InscritoSemCategoria = false;
+        $jaCandidatou = false;
         $datas = DB::table('atividades')
             ->join('datas_atividades', 'atividades.id', '=', 'datas_atividades.atividade_id')
             ->where('eventoId', $id)
@@ -2491,8 +2507,22 @@ class EventoController extends Controller
         ->get();
         $atividadesAgrupadas = $atividades->groupBy('data');
 
-        $dataInicio = Carbon::parse($evento->dataInicio);
-        $dataFim    = Carbon::parse($evento->dataFim);
+        try {
+            if (blank($evento->dataInicio) || blank($evento->dataFim)) {
+                throw new \UnexpectedValueException('O período do evento não foi informado.');
+            }
+
+            $dataInicio = Carbon::parse($evento->dataInicio);
+            $dataFim = Carbon::parse($evento->dataFim);
+        } catch (Throwable $exception) {
+            Log::error('Evento não pôde ser exibido por possuir período inválido.', [
+                'evento_id' => $evento->id,
+                'erro' => $exception->getMessage(),
+            ]);
+
+            return redirect()->route('index')
+                ->with('message', 'Este evento está temporariamente indisponível. A organização já pode verificar a configuração das datas.');
+        }
         if (auth()->user()) {
             $subeventos = Evento::where('deletado', false)->where('publicado', true)->where('evento_pai_id', $id)->get();
             $hasTrabalho = false;
@@ -2568,7 +2598,7 @@ class EventoController extends Controller
             }
 
 
-            return view('evento.visualizarEvento', compact('evento', 'trabalhos', 'trabalhosCoautor', 'hasTrabalho', 'hasTrabalhoCoautor', 'hasFile', 'datas', 'mytime', 'etiquetas', 'formSubTraba', 'atividadesAgrupadas', 'atividades', 'dataInicial', 'modalidades', 'isInscrito', 'subeventos', 'encerrada', 'areas', 'dataInicio', 'dataFim', 'enderecoMap', 'periodoSubmissao'));
+            return view('evento.visualizarEvento', compact('evento', 'trabalhos', 'trabalhosCoautor', 'hasTrabalho', 'hasTrabalhoCoautor', 'hasFile', 'datas', 'mytime', 'etiquetas', 'formSubTraba', 'atividadesAgrupadas', 'atividades', 'dataInicial', 'modalidades', 'isInscrito', 'inscricao', 'subeventos', 'encerrada', 'areas', 'dataInicio', 'dataFim', 'jaCandidatou', 'InscritoSemCategoria', 'enderecoMap', 'periodoSubmissao'));
         }
     }
 

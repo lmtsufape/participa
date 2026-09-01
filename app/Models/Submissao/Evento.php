@@ -282,6 +282,12 @@ class Evento extends Model
         return $this->camposFormulario()->count() > 0 && $this->categoriasParticipantes()->count() > 0;
     }
 
+    public function inscricaoExigePagamento(?CategoriaParticipante $categoria): bool
+    {
+        return $this->recolhimento === 'pago'
+            && (float) ($categoria?->valor_total ?? 0) > 0;
+    }
+
     public function inscricaoPCDHabilitada(): bool
     {
         if (!$this->relationLoaded('formEvento')) {

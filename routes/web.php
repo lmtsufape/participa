@@ -17,6 +17,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Inscricao\CampoFormularioController;
 use App\Http\Controllers\Inscricao\CategoriaController;
 use App\Http\Controllers\Inscricao\CheckoutController;
+use App\Http\Controllers\Inscricao\CupomDeDescontoController;
 use App\Http\Controllers\Inscricao\InscricaoController;
 use App\Http\Controllers\Inscricao\PromocaoController;
 use App\Http\Controllers\Inscricao\InscricaoPCDController;
