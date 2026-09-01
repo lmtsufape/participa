@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreUserRequest;
 use App\Models\Submissao\Endereco;
 use App\Models\Users\User;
 use App\Providers\RouteServiceProvider;
@@ -11,6 +12,9 @@ use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\EmailConfirmacaoCadastro;
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
 
 class RegisterController extends Controller
 {
@@ -44,139 +48,76 @@ class RegisterController extends Controller
         $this->middleware('guest');
     }
 
-    /**
-     * Get a validator for an incoming registration request.
-     *
-     * @return \Illuminate\Contracts\Validation\Validator
-     */
-    protected function validator(array $data)
+    public function register(StoreUserRequest $request)
     {
-        // Verifica se existe um usuário não deletado com o mesmo email
-        $userAtivo = User::where('email', strtolower($data['email']))->whereNull('deleted_at')->first();
-        if ($userAtivo) {
-            $messages = ['email.unique' => 'Este email já está cadastrado no sistema.'];
-            return Validator::make($data, ['email' => 'unique:users'], $messages);
-        }
+        $payload = $request->payload();
 
-        $validations = [
-            'name' => ['required', 'string', 'max:255'],
-            'nomeSocial' => ['nullable', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'dataNascimento' => ['required', 'date', 'before:today'],
-            'cpf' => ($data['passaporte'] == null && $data['cnpj'] == null ? ['required', 'cpf'] : 'nullable'),
-            'cnpj' => ($data['passaporte'] == null && $data['cpf'] == null ? ['required'] : 'nullable'),
-            'passaporte' => ($data['cpf'] == null && $data['cnpj'] == null ? ['required', 'max:10'] : 'nullable'),
-            'celular' => ['required', 'string', 'max:20'],
-            'instituicao' => ['required', 'string', 'max:255', 'regex:/^[A-Za-zÀ-ÿ0-9\s\-\.\(\)\[\]\{\}\/\\,;&@#$%*+=|<>!?~`\'"]+$/'],
-            'pais' => ['required', 'string', 'max:255'],
-            'rua' => ['required', 'string', 'max:255'],
-            'numero' => ['required', 'string'],
-            'bairro' => ['required', 'string', 'max:255'],
-            'cidade' => ['required', 'string', 'max:255'],
-            'uf' => ['required', 'string'],
-            'cep' => ['required', 'string'],
-            'complemento' => ['nullable', 'string'],
-        ];
-        if ($data['pais'] != 'brasil'){
-            $validations['uf'] = ['nullable', 'string'];
-            $validations['numero'] = ['nullable', 'string'];
-            $validations['cep'] = ['nullable', 'string'];
-        }
+        $user = DB::transaction(function () use ($payload) {
+            $userData = $payload['user'];
+            $enderecoData = $payload['endereco'];
+            $perfilIdentitarioData = $payload['perfilIdentitario'];
 
-        $messages = [
-            'instituicao.regex' => 'O campo instituição contém caracteres não permitidos. Use apenas letras, números, espaços e símbolos comuns.',
-        ];
+            $user = User::withTrashed()
+                ->where('email', $userData['email'])
+                ->first();
 
-        return Validator::make($data, $validations, $messages);
-    }
+            if ($user) {
+                $user->restore();
 
-    /**
-     * Create a new user instance after a valid registration.
-     *
-     * @return \App\User
-     */
-    protected function create(array $data)
-    {
-        // Verifica se existe um usuário deletado com o mesmo email
-        $userDeletado = User::withTrashed()->where('email', strtolower($data['email']))->first();
+                $user->update($userData);
+            } else {
+                $user = User::create($userData);
+            }
 
-        if ($userDeletado) {
-            // Restaura o user
-            $userDeletado->restore();
+            if (collect($enderecoData)->contains(fn ($value) => filled($value))) {
+                if ($user->enderecoId) {
+                    $endereco = Endereco::find($user->enderecoId);
 
-            $userDeletado->name = $data['name'];
-            $userDeletado->nomeSocial = $data['nomeSocial'] ?? null;
-            $userDeletado->email = strtolower($data['email']);
-            $userDeletado->dataNascimento = $data['dataNascimento'];
-            $userDeletado->email_verified_at = now();
-            $userDeletado->password = bcrypt($data['password']);
-            $userDeletado->cpf = $data['cpf'];
-            $userDeletado->cnpj = $data['cnpj'];
-            $userDeletado->passaporte = $data['passaporte'];
-            $userDeletado->celular = $data['full_number'];
-            $userDeletado->instituicao = $data['instituicao'];
-
-            if ($data['rua'] != null && $data['cep'] != null) {
-                // Se o usuário já tinha um endereço, atualiza
-                if ($userDeletado->enderecoId) {
-                    $end = Endereco::find($userDeletado->enderecoId);
-                    if ($end) {
-                        $end->fill($data);
-                        $end->save();
+                    if ($endereco) {
+                        $endereco->update($enderecoData);
                     } else {
-                        $end = new Endereco($data);
-                        $end->save();
-                        $userDeletado->enderecoId = $end->id;
+                        $endereco = Endereco::create($enderecoData);
+
+                        $user->update([
+                            'enderecoId' => $endereco->id,
+                        ]);
                     }
                 } else {
-                    $end = new Endereco($data);
-                    $end->save();
-                    $userDeletado->enderecoId = $end->id;
+                    $endereco = Endereco::create($enderecoData);
+
+                    $user->update([
+                        'enderecoId' => $endereco->id,
+                    ]);
                 }
             }
 
-            $userDeletado->save();
+            if ($user->perfilIdentitario()->exists()) {
+                $user->perfilIdentitario()->update(
+                    $perfilIdentitarioData
+                );
+            } else {
+                $user->perfilIdentitario()->create(
+                    $perfilIdentitarioData
+                );
+            }
 
-            Mail::to($userDeletado->email)->send(new EmailConfirmacaoCadastro($userDeletado));
-
-            app()->setLocale('pt-BR');
-
-            return $userDeletado;
-        }
-
-        $user = new User();
-        $user->name = $data['name'];
-        $user->nomeSocial = $data['nomeSocial'] ?? null;
-        $user->email = strtolower($data['email']);
-        $user->dataNascimento = $data['dataNascimento'];
-        $user->email_verified_at = now();
-        $user->password = bcrypt($data['password']);
-        $user->cpf = $data['cpf'];
-        $user->cnpj = $data['cnpj'];
-        $user->passaporte = $data['passaporte'];
-        $user->celular = $data['full_number'];
-        $user->instituicao = $data['instituicao'];
-
-        if ($data['rua'] != null && $data['cep'] != null) {
-            $end = new Endereco($data);
-            $end->save();
-            $user->enderecoId = $end->id;
-            $user->save();
-
-
-            Mail::to($user->email)->send(new EmailConfirmacaoCadastro($user));
             return $user;
+        });
+
+        event(new Registered($user));
+
+        $this->guard()->login($user);
+
+        Mail::to($user->email)
+            ->send(new EmailConfirmacaoCadastro($user));
+
+        if ($response = $this->registered($request, $user)) {
+            return $response;
         }
 
-        $user->enderecoId = null;
-        $user->save();
-
-        Mail::to($user->email)->send(new EmailConfirmacaoCadastro($user));
-
-        app()->setLocale('pt-BR');
-
-        return $user;
+        return $request->wantsJson()
+            ? new JsonResponse([], 201)
+            : redirect($this->redirectPath());
     }
 
     protected function redirectTo()
