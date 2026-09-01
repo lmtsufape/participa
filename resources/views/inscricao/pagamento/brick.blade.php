@@ -87,6 +87,7 @@
                                 method: "POST",
                                 headers: {
                                     "Content-Type": "application/json",
+                                    "Accept": "application/json",
                                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
                                 },
                                 body: JSON.stringify(formData),

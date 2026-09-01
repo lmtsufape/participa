@@ -1,6 +1,6 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
-        <title>Error page</title>
+        <title>{{ config('app.name') }} - Não foi possível concluir a solicitação</title>
 
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -34,7 +34,7 @@
                     </div>
                 </div>
                 <div class="col-sm-12 conteudoCentralizado links" style="top:170px">
-                    <a href="#" onclick="window.history.back()">Voltar</a>
+                    <a href="{{ route('index') }}">Ir para a página inicial</a>
                 </div>
             </div>
         </div>

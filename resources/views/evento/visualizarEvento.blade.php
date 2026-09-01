@@ -131,8 +131,23 @@
                 </div>
 
                 @if ($etiquetas?->modinscricao)
+                    @php
+                        $eventoExigeCategoria = $evento->categoriasParticipantes()
+                            ->where('permite_inscricao', true)
+                            ->exists();
+                        $inscricaoExigePagamento = $isInscrito
+                            && isset($inscricao)
+                            && !$inscricao->finalizada
+                            && !$InscritoSemCategoria
+                            && $evento->inscricaoExigePagamento($inscricao->categoria);
+                        $inscricaoAguardandoAprovacao = $isInscrito
+                            && isset($inscricao)
+                            && !$inscricao->finalizada
+                            && !$inscricaoExigePagamento
+                            && (!$InscritoSemCategoria || !$eventoExigeCategoria);
+                    @endphp
                     <div class="d-flex flex-wrap gap-2">
-                        @if ($isInscrito && isset($inscricao) && !$inscricao->finalizada && !$InscritoSemCategoria)
+                        @if ($inscricaoExigePagamento)
                             <a href="{{ route('checkout.telaPagamento', $evento) }}" id="btn-inscrevase" class="btn btn-my-success w-60 rounded btn-lg">
                                 {{ __('Inscrição com pendência de pagamento!') }}
                             </a>
@@ -146,10 +161,10 @@
                             @endphp
 
                             <button id="btn-inscrevase" class="btn btn-my-success w-60 rounded btn-lg"
-                                @if (!$encerrada && !($isInscrito && isset($inscricao) && $inscricao->finalizada))
+                                @if (!$encerrada && !$inscricaoAguardandoAprovacao && !($isInscrito && isset($inscricao) && $inscricao->finalizada))
                                     data-bs-toggle="modal" data-bs-target="#modalInscrever"
                                 @endif
-                                @if ($encerrada || ($isInscrito && isset($inscricao) && $inscricao->finalizada))
+                                @if ($encerrada || $inscricaoAguardandoAprovacao || ($isInscrito && isset($inscricao) && $inscricao->finalizada))
                                     disabled
                                 @endif
                                 @if (isset($solicitacaoPCD) && $solicitacaoPCD->status == 'pendente')
@@ -158,6 +173,8 @@
                             >
                                 @if ($isInscrito && isset($inscricao) && $inscricao->finalizada)
                                     {{ __('Já inscrito') }}
+                                @elseif($inscricaoAguardandoAprovacao)
+                                    {{ __('Inscrição aguardando aprovação') }}
                                 @elseif($encerrada)
                                     {{ __('Encerradas!') }}
                                 @else
@@ -191,7 +208,7 @@
                         @endif
                     </div>
                     <br>
-                   @if($evento->recolhimento == "pago")
+                   @if($inscricaoExigePagamento)
                             @if(isset($inscricao) && $inscricao)
 
                                 @if(!$inscricao->finalizada)
@@ -221,7 +238,7 @@
                         @if(isset($inscricao->pagamento) && $inscricao->finalizada)
                             <a href="{{ route('checkout.statusPagamento', $evento->id) }}"
                                 class="text-center mt-2 w-100">{{ __('Visualizar status do pagamento') }}</a>
-                        @elseif(!$InscritoSemCategoria && ($inscricao->categoria?->valor_total ?? 0) > 0 && !$inscricao->finalizada)
+                        @elseif(!$InscritoSemCategoria && $evento->inscricaoExigePagamento($inscricao->categoria) && !$inscricao->finalizada)
                             @if(isset($inscricao->pagamento))
                                 <a href="{{ route('checkout.statusPagamento', $evento->id) }}"
                                     class="text-center mt-2 w-100">{{ __('Visualizar status do pagamento') }}</a>
@@ -261,7 +278,9 @@
             <div class="d-flex flex-wrap flex-md-nowrap gap-2">
                 @php
                     $modalidadesAtivas = collect($modalidades)->filter(function($m) use($mytime) {
-                        return \Carbon\Carbon::parse($m->ultima_data) >= $mytime;
+                        return filled($m->ultima_data)
+                            && strtotime($m->ultima_data) !== false
+                            && \Carbon\Carbon::parse($m->ultima_data) >= $mytime;
                     });
 
                     // flags de exibição
@@ -443,7 +462,7 @@
                                                                 class="d-inline-block text-decoration-none">
                                                                     <img src="{{ asset('img/icons/file-download-solid.svg') }}" style="width:20px;">
                                                                     <span class="text-decoration-underline fs-6">
-                                                                        {{ $evento->formEvento->etiquetabaixarregra }}
+                                                                        {{ $evento->formEvento?->etiquetabaixarregra ?? __('Baixar regras') }}
                                                                     </span>
                                                                 </a>
                                                             </div>
@@ -455,7 +474,7 @@
                                                                 class="d-inline-block">
                                                                     <img src="{{ asset('img/icons/file-download-solid.svg') }}" style="width:20px;">
                                                                     <span class="text-decoration-underline fs-6">
-                                                                        {{ $evento->formEvento->etiquetabaixarapresentacao }}
+                                                                        {{ $evento->formEvento?->etiquetabaixarapresentacao ?? __('Baixar modelo de apresentação') }}
                                                                     </span>
                                                                 </a>
                                                             </div>
@@ -467,7 +486,7 @@
                                                                 class="d-inline-block text-decoration-none">
                                                                     <img src="{{ asset('img/icons/file-download-solid.svg') }}" style="width:20px;">
                                                                     <span class="text-decoration-underline fs-6">
-                                                                        {{ $evento->formEvento->etiquetabaixartemplate }}
+                                                                        {{ $evento->formEvento?->etiquetabaixartemplate ?? __('Baixar template') }}
                                                                     </span>
                                                                 </a>
                                                             </div>
@@ -908,7 +927,7 @@
                             <div class="row">
                                 <div class="col-md-6 d-flex flex-column gap-3">
                                     <p class="text-my-secondary mb-0">
-                                        <strong>{{ __('Tipo') }}: {{ $atv->tipoAtividade->descricao }}</strong>
+                                        <strong>{{ __('Tipo') }}: {{ $atv->tipoAtividade?->descricao ?? __('Não informado') }}</strong>
                                     </p>
                                     @if($primeira)
                                         <div class="d-flex align-items-center gap-2">

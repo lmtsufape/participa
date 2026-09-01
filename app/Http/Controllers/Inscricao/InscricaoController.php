@@ -400,6 +400,24 @@ class InscricaoController extends Controller
 
     public function inscrever(Request $request)
     {
+        try {
+            return $this->processarInscricao($request);
+        } catch (Throwable $exception) {
+            Log::error('Falha inesperada ao realizar inscrição em evento.', [
+                'evento_id' => $request->input('evento_id'),
+                'user_id' => auth()->id(),
+                'exception' => $exception,
+            ]);
+
+            return redirect()->back()
+                ->withInput()
+                ->with('message', 'Não foi possível concluir a inscrição agora. Seus dados foram preservados; tente novamente em alguns instantes.')
+                ->with('class', 'danger');
+        }
+    }
+
+    private function processarInscricao(Request $request)
+    {
         $evento = Evento::findOrFail($request->evento_id);
         //"pre inscrição" feita na submissão de trabalhos por um user não inscrito, sem categoria e pagamento
         $preInscricao = false;
@@ -457,7 +475,9 @@ class InscricaoController extends Controller
             'Associado - Pessoa com Deficiência (PCD)',
         ];
 
-        if ($categoria !== null && in_array($categoria->nome, $categoriasInscricaoAutomatica, true)) {
+        if ($categoria !== null
+            && !$evento->inscricaoExigePagamento($categoria)
+            && in_array($categoria->nome, $categoriasInscricaoAutomatica, true)) {
             if ($preInscricao){
                 $inscricao = Inscricao::where('user_id', auth()->user()->id)->where('evento_id', $evento->id)->first();
                 $inscricao->categoria_participante_id = $request->categoria;
@@ -468,12 +488,15 @@ class InscricaoController extends Controller
                 $inscricao->categoria_participante_id = $request->categoria;
             }
 
-            $inscricao->finalizada = true;
+            $inscricao->finalizada = false;
             $inscricao->save();
 
             if ($possuiFormulario) {
                 $this->salvarCamposExtras($inscricao, $request, $categoria);
             }
+
+            $inscricao->finalizada = true;
+            $inscricao->save();
 
             $this->notificarUsuarioComSeguranca(auth()->user(), new InscricaoEvento($evento));
 
@@ -501,7 +524,7 @@ class InscricaoController extends Controller
             $this->salvarCamposExtras($inscricao, $request, $categoria);
         }
 
-        $exigePagamento = $categoria !== null && (float) $categoria->valor_total > 0;
+        $exigePagamento = $evento->inscricaoExigePagamento($categoria);
 
         if ($exigePagamento) {
             $this->notificarUsuarioComSeguranca(auth()->user(), new PreInscricao($evento, auth()->user()));
@@ -946,7 +969,7 @@ class InscricaoController extends Controller
         $inscricao->categoria_participante_id = $categoria->id;
         $inscricao->save();
 
-        if ((float) $categoria->valor_total <= 0) {
+        if (!$inscricao->evento->inscricaoExigePagamento($categoria)) {
             $inscricao->finalizada = !($inscricao->evento->formEvento?->modvalidarinscricao ?? false);
             $inscricao->save();
 
