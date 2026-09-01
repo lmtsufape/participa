@@ -189,15 +189,6 @@ class CategoriaController extends Controller
     {
 
         $categoria = CategoriaParticipante::find($id);
-        /*
-        $linkPagamento = LinksPagamento::where('categoria_id', $id)->get();
-        if ($linkPagamento) {
-            for ($i = 0; $i < $linkPagamento->count(); $i++) {
-                $linkParaApagar = LinksPagamento::find($linkPagamento[$i]->id);
-                $linkParaApagar->delete();
-            }
-        }
-        */
 
         $evento = $categoria->evento;
         $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
@@ -205,13 +196,11 @@ class CategoriaController extends Controller
         if ($qt_inscricoes > 0) {
             return redirect()->back()->with(['error' => 'Categoria não pode ser excluida, existem inscrições realizadas.']);
         }
-        $qt_inscricoes = $categoria->camposNecessarios()->count();
-        if ($qt_inscricoes > 0) {
-            return redirect()->back()->with(['error' => 'Categoria não pode ser excluida, existem campos criados para essa categoria.']);
-        }
-
-        $categoria->valores()->delete();
-        $categoria->delete();
+        DB::transaction(function () use ($categoria) {
+            $categoria->camposNecessarios()->detach();
+            $categoria->valores()->delete();
+            $categoria->delete();
+        });
 
         return redirect()->back()->with(['success' => 'Categoria excluida com sucesso!']);
     }
