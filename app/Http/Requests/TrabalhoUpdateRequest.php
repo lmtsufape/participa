@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\Models\Submissao\MidiaExtra;
 use App\Models\Submissao\Trabalho;
+use App\Rules\CoautorCadastrado;
 use App\Rules\CoautorInscritoNoEvento;
 use App\Rules\FileType;
 use App\Rules\MaxTrabalhosAutorUpdate;
@@ -24,9 +25,9 @@ class TrabalhoUpdateRequest extends FormRequest
         $evento = $trabalho->evento;
         $mytime = Carbon::now('America/Recife');
         if (! $trabalho->modalidade->estaEmPeriodoDeSubmissao()) {
-            return $this->user()->can('isCoordenadorOrCoordenadorDasComissoes', $evento);
+            return ($this->user()->can('isCoordenadorOrCoordenadorDasComissoes', $evento) || $this->user()->can('isCoordenadorEixo', $evento));
         } else {
-            return $this->user()->can('isCoordenadorOrComissaoOrAutor', $trabalho);
+            return ($this->user()->can('isCoordenadorOrComissaoOrAutor', $trabalho)|| $this->user()->can('isCoordenadorEixo', $evento));
         }
     }
 
@@ -51,7 +52,7 @@ class TrabalhoUpdateRequest extends FormRequest
             'emailCoautor_'.$id => ['required', 'array', 'min:1'],
             'nomeCoautor_'.$id.'.*' => ['string'],
             'emailCoautor_'.$id.'.0' => ['string', new MaxTrabalhosAutorUpdate($evento->numMaxTrabalhos)],
-            'emailCoautor_'.$id.'.*' => ['string', new MaxTrabalhosCoautorUpdate($evento->numMaxCoautores), 'exists:users,email', new CoautorInscritoNoEvento($evento)],
+            'emailCoautor_'.$id.'.*' => ['string', new MaxTrabalhosCoautorUpdate($evento->numMaxCoautores), 'exists:users,email', new CoautorInscritoNoEvento($evento), new CoautorCadastrado($evento)],
             'arquivo'.$id => ['nullable', 'file', new FileType($modalidade, new MidiaExtra, $request['arquivo'.$id], true)],
             'campoextra1arquivo' => ['nullable', 'file', 'max:2048'],
             'campoextra2arquivo' => ['nullable', 'file', 'max:2048'],
@@ -71,7 +72,7 @@ class TrabalhoUpdateRequest extends FormRequest
         ];
 
         foreach ($modalidade->midiasExtra as $midia) {
-            $validate_array[$midia->hyphenizeNome()] = ['nullable', 'file', new FileType($modalidade, $midia, request()[$midia->hyphenizeNome()], false)];
+            $validate_array[$midia->hyphenizeNome] = ['nullable', 'file', new FileType($modalidade, $midia, request()[$midia->hyphenizeNome], false)];
         }
 
         return $validate_array;
@@ -84,7 +85,6 @@ class TrabalhoUpdateRequest extends FormRequest
         return [
             'arquivo*.max' => 'O tamanho máximo permitido é de 2mb',
             'emailCoautor_'.$id.'.*.required' => 'O trabalho deve conter pelo seu autor.',
-            'emailCoautor_'.$id.'.*.exists' => 'O usuário com o e-mail :input precisa estar cadastrado no sistema.',
         ];
     }
 }

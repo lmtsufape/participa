@@ -3,10 +3,14 @@
 @section('content')
 
 <div class="container mb-4 position-relative">
-    <h3>Evento: {{$evento->nome}}</h3>
-    <h3>Modalidade: {{$data['modalidade']->nome}}</h3>
-    <h3>{{$evento->formSubTrab->etiquetaareatrabalho}}: {{$data['trabalho']->area->nome}}</h3>
-    <h3 class="titulo-detalhes">{{$evento->formSubTrab->etiquetatitulotrabalho}}: {{$data['trabalho']->titulo}}</h3>
+    <h5>Evento: {{$evento->nome}}</h5>
+    <br>
+    <h5>Modalidade: {{$data['modalidade']->nome}}</h5>
+    <br>
+    <h5>{{$evento->formSubTrab->etiquetaareatrabalho}}: {{$data['trabalho']->area->nome}}</h5>
+    <br>
+    <h5 class="titulo-detalhes">{{$evento->formSubTrab->etiquetatitulotrabalho}}: {{$data['trabalho']->titulo}}</h5>
+    <br>
     @if(session('message'))
     <div class="row">
         <div class="col-md-12" style="margin-top: 5px;">

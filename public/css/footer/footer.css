@@ -1,0 +1,130 @@
+.footer-container {
+    background-color: #114048;
+}
+
+.footer-content a {
+    transition: opacity 0.2s ease;
+}
+
+.footer-content a:hover {
+    opacity: 0.8;
+}
+
+.footer-social-icons a:hover img {
+    transform: translateY(-2px);
+}
+
+/* Abaixo apenas a responsividade do TABLET/MOBILE */
+
+/* Tablet - 768px e abaixo */
+@media (max-width: 768px) {
+
+    .d-flex.flex-wrap {
+        flex-direction: column !important;
+        text-align: center !important;
+        gap: 2rem;
+    }
+
+    .d-flex.flex-column.flex-md-row.align-items-center.justify-content-start {
+        flex-direction: column !important;
+        align-items: center !important;
+        text-align: center !important;
+        margin-bottom: 2rem;
+    }
+
+    /* Centraliza o texto da universidade */
+    .text-center.text-md-start {
+        text-align: center !important;
+    }
+
+    /* Ajusta a seção de módulos para layout vertical */
+    .d-flex.flex-column.flex-md-row.align-items-center.justify-content-center {
+        flex-direction: column !important;
+        gap: 2rem !important;
+        margin-left: 0 !important;
+    }
+
+    /* Remove margin-left negativo dos módulos */
+    .d-flex.flex-column.flex-md-row.align-items-center.justify-content-center [style*="margin-left: 90px"] {
+        margin-left: 0 !important;
+    }
+
+    /* Centraliza redes sociais */
+    .d-flex.flex-column.flex-md-row.align-items-center.justify-content {
+        justify-content: center !important;
+        margin-top: 0 !important;
+        margin-left: 0 !important;
+    }
+}
+
+/* Mobile - 576px e abaixo */
+@media (max-width: 576px) {
+    /* Reduz padding do container */
+    .pt-1.text-white {
+        padding-top: 0.75rem !important;
+    }
+
+    .d-flex.flex-wrap.text-center.p-2 {
+        padding: 0.75rem !important;
+        gap: 1.5rem !important;
+    }
+
+    /* Reduz tamanho das logos */
+    img[style*="width: 100px"] {
+        width: 80px !important;
+    }
+
+    img[style*="width: 125px"] {
+        width: 100px !important;
+    }
+
+    /* Reduz tamanho da fonte */
+    .text-center.text-md-start.list-unstyled.small.mt-3 {
+        font-size: 10px !important;
+    }
+
+    /* Reduz tamanho dos títulos */
+    h6.fw-bold {
+        font-size: 0.9rem !important;
+    }
+
+    /* Reduz tamanho das listas */
+    .list-unstyled.small {
+        font-size: 0.8rem !important;
+    }
+
+    /* Reduz gap entre ícones sociais */
+    .d-flex.gap-3.justify-content-center.align-items-center {
+        gap: 0.75rem !important;
+    }
+
+    /* Reduz tamanho dos ícones sociais */
+    .d-flex.gap-3.justify-content-center.align-items-center img {
+        width: 22px !important;
+        height: 22px !important;
+    }
+}
+
+/* Mobile pequeno - 480px e abaixo */
+@media (max-width: 480px) {
+    /* Espaçamentos ainda menores */
+    .d-flex.flex-wrap.text-center.p-2 {
+        gap: 1rem !important;
+    }
+
+    /* Fonte ainda menor para endereço */
+    .text-center.text-md-start.list-unstyled.small.mt-3 {
+        font-size: 9px !important;
+    }
+
+    /* Títulos menores */
+    h6.fw-bold {
+        font-size: 0.85rem !important;
+        margin-bottom: 0.5rem !important;
+    }
+
+    /* Listas menores */
+    .list-unstyled.small {
+        font-size: 0.75rem !important;
+    }
+}

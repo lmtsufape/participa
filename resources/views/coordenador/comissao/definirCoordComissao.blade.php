@@ -18,25 +18,27 @@
                             @csrf
                             <p class="card-text">
                                 <input type="hidden" name="eventoId" value="{{ $evento->id ?? '' }}">
-                                <div class="form-group">
-                                    @foreach ($users as $user)
-                                        <div class="form-check">
-                                            <input class="form-check-input" name="coordComissaoId[]" @if(in_array($user->id, old('coordComissaoId[]', $coordenadores))) checked @endif type="checkbox" value="{{$user->id}}" id="check{{$user->id}}">
-                                            <label class="form-check-label" for="check{{$user->id}}">
-                                                {{$user->email}} - {{$user->name}}
-                                            </label>
-                                            </div>
-                                    @endforeach
-                                </div>
-                                @error('coordComissaoId')
-                                    <span class="invalid-feedback block" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
+                            <div class="form-group">
+                                @foreach ($users as $user)
+                                    <div class="form-check">
+                                        <input class="form-check-input" name="coordComissaoId[]" type="checkbox" value="{{ $user->id }}" id="check{{ $user->id }}"
+                                            @if(in_array($user->id, old('coordComissaoId[]', $coordenadores))) checked @endif>
+                                        <label class="form-check-label" for="check{{ $user->id }}">
+                                            {{ $user->email }} – {{ $user->name }}
+                                        </label>
+                                    </div>
+                                @endforeach
+                            </div>
+                            @error('coordComissaoId')
+                            <span class="invalid-feedback block" role="alert">
+                                 <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
                             </p>
+
                             <div class="row justify-content-center">
                                 <div class="col-md-12">
-                                    <button type="submit" class="btn btn-primary" style="width:100%">
+                                    <button id="submitButton" type="submit" class="btn btn-primary" style="width:100%" disabled>
                                         {{ __('Definir Coordenador') }}
                                     </button>
                                 </div>
@@ -49,3 +51,23 @@
     </div>
 
 @endsection
+
+@push('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const checkboxes = document.querySelectorAll('input[name="coordComissaoId[]"]');
+            const submitBtn = document.getElementById('submitButton');
+
+            function toggleSubmit() {
+                const anyChecked = Array.from(checkboxes).some(cb => cb.checked);
+                submitBtn.disabled = !anyChecked;
+            }
+
+
+            checkboxes.forEach(cb => cb.addEventListener('change', toggleSubmit));
+
+
+            toggleSubmit();
+        });
+    </script>
+@endpush

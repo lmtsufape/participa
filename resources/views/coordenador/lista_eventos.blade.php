@@ -4,7 +4,7 @@
 
 <div class="container">
 		<h2 style="margin-top: 100px; ">
-	    	Lista de Meus Eventos
+	    	Lista de eventos
     	</h2>
     	<table class="table table-striped">
 		  <thead>

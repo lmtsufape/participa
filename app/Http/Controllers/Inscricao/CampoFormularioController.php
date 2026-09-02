@@ -6,169 +6,195 @@ use App\Http\Controllers\Controller;
 use App\Models\Inscricao\CampoFormulario;
 use App\Models\Inscricao\CampoFormularioSelect;
 use App\Models\Inscricao\CategoriaParticipante;
-use App\Models\Inscricao\ValorCampoExtra;
 use App\Models\Submissao\Evento;
+use App\Support\RegistrationFormFields;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 
 class CampoFormularioController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
         //
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
-        $evento = Evento::find($request->evento_id);
+        $evento = Evento::findOrFail($request->evento_id);
         $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
 
-        $validateData = $request->validate([
-            'criarCampo' => 'required',
-            'titulo_do_campo' => 'required',
-            'tipo_campo' => 'required',
-            'categoria.*' => 'nullable',
-        ]);
-
-        if ($request->para_todas == null && $request->categoria == null) {
-            return redirect()->back()->withErrors(['erroCategoria' => 'Escolha a categoria que o campo será exibido.'])->withInput($validateData);
-        }
+        $validated = $request->validate($this->rules($request));
 
         if (!$evento->categoriasParticipantes()->exists()) {
-            return redirect()->back()->withErrors(['erroCategoria' => 'É necessário criar categoria antes de cadastrar os campos do formulário.'])->withInput($validateData);
+            return redirect()
+                ->back()
+                ->withErrors(['erroCategoria' => 'É necessário criar uma categoria antes de cadastrar campos do formulário.'])
+                ->withInput($validated);
         }
 
-        $campo = new CampoFormulario();
-        $campo->titulo = $request->titulo_do_campo;
-        $campo->tipo = $request->tipo_campo;
-        $campo->evento_id = $evento->id;
-        $campo->obrigatorio = $request->input('campo_obrigatorio') == 'on';
-        $campo->save();
-
-        if ($request->input('tipo_campo') == 'select') {
-            foreach ($request->input('select-text') as $opcao) {
-                $campo->opcoes()->save(new CampoFormularioSelect(['nome' => $opcao]));
-            }
+        if (!$request->boolean('para_todas') && $request->categoria === null) {
+            return redirect()
+                ->back()
+                ->withErrors(['erroCategoria' => 'Escolha as categorias em que o campo será exibido.'])
+                ->withInput($validated);
         }
 
-        if ($request->para_todas == 'on') {
-            $categorias = $evento->categoriasParticipantes->pluck('id');
-            $campo->categorias()->attach($categorias);
-        } elseif ($request->categoria != null) {
-            $categorias = CategoriaParticipante::whereIn('id', $request->categoria)->pluck('id');
-            $campo->categorias()->attach($categorias);
+        $opcoes = $this->normalizarOpcoes($request->input('select_text', []));
+
+        if ($request->tipo_campo === 'select' && count($opcoes) < 2) {
+            return redirect()
+                ->back()
+                ->withErrors(['select_text' => 'Informe pelo menos duas opções para o campo de seleção.'])
+                ->withInput($validated);
         }
+
+        DB::transaction(function () use ($request, $evento, $opcoes) {
+            $campo = CampoFormulario::create([
+                'titulo' => $request->titulo_do_campo,
+                'tipo' => $request->tipo_campo,
+                'evento_id' => $evento->id,
+                'obrigatorio' => $request->boolean('campo_obrigatorio'),
+            ]);
+
+            $this->sincronizarOpcoes($campo, $opcoes);
+            $this->sincronizarCategorias($campo, $evento, $request);
+        });
 
         return redirect()->back()->with(['success' => 'Campo salvo com sucesso!']);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
-        $evento = Evento::find($request->evento_id);
+        $evento = Evento::findOrFail($request->evento_id);
         $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
 
-        $validateData = $request->validate([
-            'campo_id' => 'required',
-            'titulo_do_campo' => 'required',
-            'categoria' => 'nullable',
-            'categoria.*' => 'nullable',
-        ]);
+        $campo = CampoFormulario::withCount('inscricoesFeitas')->findOrFail($id);
+        abort_if($campo->evento_id !== $evento->id, 404);
 
-        if ($request->para_todas == null && $request->categoria == null) {
-            return redirect()->back()->withErrors(['erroCategoriaEdit'.$id => 'Escolha a categoria que o campo será exibido.'])->withInput($validateData);
+        $validated = $request->validate($this->rules($request));
+
+        if (!$request->boolean('para_todas') && $request->categoria === null) {
+            return redirect()
+                ->back()
+                ->withErrors(['erroCategoriaEdit'.$id => 'Escolha as categorias em que o campo será exibido.'])
+                ->withInput($validated);
         }
 
-        $campo = CampoFormulario::find($id);
-        $campo->titulo = $request->titulo_do_campo;
-        $campo->obrigatorio = $request->input('campo_obrigatório') == 'on';
-        $campo->update();
-
-        if ($request->para_todas == 'on') {
-            $categorias = $evento->categoriasParticipantes->pluck('id');
-            $campo->categorias()->attach($categorias);
-        } elseif ($request->categoria != null) {
-            $campo->categorias()->sync($request->categoria);
+        if ($campo->inscricoes_feitas_count > 0 && $campo->tipo !== $request->tipo_campo) {
+            return redirect()
+                ->back()
+                ->withErrors(['tipo_campo' => 'Não é possível alterar o tipo de um campo que já possui respostas.'])
+                ->withInput($validated);
         }
+
+        $opcoes = $this->normalizarOpcoes($request->input('select_text', []));
+
+        if ($request->tipo_campo === 'select' && count($opcoes) < 2) {
+            return redirect()
+                ->back()
+                ->withErrors(['select_text' => 'Informe pelo menos duas opções para o campo de seleção.'])
+                ->withInput($validated);
+        }
+
+        DB::transaction(function () use ($request, $evento, $campo, $opcoes) {
+            $campo->titulo = $request->titulo_do_campo;
+
+            if ($campo->inscricoes_feitas_count === 0) {
+                $campo->tipo = $request->tipo_campo;
+            }
+
+            $campo->obrigatorio = $request->boolean('campo_obrigatorio');
+            $campo->save();
+
+            $this->sincronizarOpcoes($campo, $opcoes);
+            $this->sincronizarCategorias($campo, $evento, $request);
+        });
 
         return redirect()->back()->with(['success' => 'Campo atualizado com sucesso!']);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
-        // Checar erros futuros após a criação da inscrição
-        $campo = CampoFormulario::find($id);
+        $campo = CampoFormulario::findOrFail($id);
 
         $evento = $campo->evento;
         $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
 
-        if(count($campo->inscricoesFeitas) > 0){
-            $valores = DB::table('valor_campo_extras')->where('campo_formulario_id', $campo->id)->get();
-            for ($i=0; $i < count($valores); $i++) {
-
-               DB::table('valor_campo_extras')->where('id', $valores[$i]->id)->delete();
-            }
-        }
-        if ($campo->opcoes()->exists()) {
+        DB::transaction(function () use ($campo) {
+            DB::table('valor_campo_extras')->where('campo_formulario_id', $campo->id)->delete();
             $campo->opcoes()->delete();
-        }
-
-        $campo->categorias()->detach($campo->categorias);
-        $campo->delete();
+            $campo->categorias()->detach();
+            $campo->delete();
+        });
 
         return redirect()->back()->with(['success' => 'Campo extra deletado com sucesso!']);
+    }
+
+    private function rules(Request $request): array
+    {
+        return [
+            'evento_id' => ['required', 'integer', 'exists:eventos,id'],
+            'titulo_do_campo' => ['required', 'string', 'max:255'],
+            'tipo_campo' => ['required', Rule::in(RegistrationFormFields::typeKeys())],
+            'campo_obrigatorio' => ['nullable', 'boolean'],
+            'para_todas' => ['nullable', 'boolean'],
+            'categoria' => ['nullable', 'array'],
+            'categoria.*' => ['integer', 'exists:categoria_participantes,id'],
+            'select_text' => [$request->tipo_campo === 'select' ? 'required' : 'nullable', 'array'],
+            'select_text.*' => ['nullable', 'string', 'max:255'],
+        ];
+    }
+
+    private function normalizarOpcoes(array $opcoes): array
+    {
+        return collect($opcoes)
+            ->map(fn ($opcao) => trim((string) $opcao))
+            ->filter()
+            ->unique()
+            ->values()
+            ->all();
+    }
+
+    private function sincronizarOpcoes(CampoFormulario $campo, array $opcoes): void
+    {
+        $campo->opcoes()->delete();
+
+        if ($campo->tipo !== 'select') {
+            return;
+        }
+
+        foreach ($opcoes as $opcao) {
+            $campo->opcoes()->save(new CampoFormularioSelect(['nome' => $opcao]));
+        }
+    }
+
+    private function sincronizarCategorias(CampoFormulario $campo, Evento $evento, Request $request): void
+    {
+        if ($request->boolean('para_todas')) {
+            $categorias = $evento->categoriasParticipantes()->pluck('id');
+        } else {
+            $categorias = CategoriaParticipante::query()
+                ->where('evento_id', $evento->id)
+                ->whereIn('id', $request->input('categoria', []))
+                ->pluck('id');
+        }
+
+        $campo->categorias()->sync($categorias);
     }
 }

@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Submissao;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ModalidadeStoreRequest;
+use App\Models\Submissao\Area;
 use App\Models\Submissao\DataExtra;
+use App\Models\Submissao\Evento;
 use App\Models\Submissao\MidiaExtra;
 use App\Models\Submissao\Modalidade;
 use App\Models\Submissao\TipoApresentacao;
@@ -19,9 +21,19 @@ class ModalidadeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $evento = Evento::find($request->eventoId);
+        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
+        $modalidades = Modalidade::where('evento_id', $evento->id)->orderBy('ordem')->get();
+        $areasId = Area::where('eventoId', $evento->id)->select('id')->get();
+        // $areaModalidades = AreaModalidade::whereIn('areaId', $areasId)->get();
+
+        return view('coordenador.modalidade.listarModalidade', [
+            'evento' => $evento,
+            'modalidades' => $modalidades,
+            // 'areaModalidades'         => $areaModalidades,
+        ]);
     }
 
     public function find(Request $request)
@@ -36,9 +48,18 @@ class ModalidadeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+        $evento = Evento::find($request->eventoId);
+        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
+        $areas = Area::where('eventoId', $evento->id)->get();
+        $modalidades = Modalidade::where('evento_id', $evento->id)->get();
+
+        return view('coordenador.modalidade.cadastrarModalidade', [
+            'evento' => $evento,
+            'areas' => $areas,
+            'modalidades' => $modalidades,
+        ]);
     }
 
     /**
@@ -59,6 +80,7 @@ class ModalidadeController extends Controller
         $modalidade->palavras = $request->limit == 'limit-option2';
         $modalidade->evento_id = $request->eventoId;
         $modalidade->apresentacao = $request->apresentacao ? true : false;
+        $modalidade->numMaxCoautores = $request->numMaxCoautores;
         $modalidade->save();
 
         if ($request->has('nomeDataExtra')) {
@@ -182,8 +204,8 @@ class ModalidadeController extends Controller
         $evento = $modalidadeEdit->evento;
         $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
 
-        // dd($request);
-        $validatedData = $request->validate([
+
+        $rules = [
             'nome' . $request->modalidadeEditId => ['required', 'string'],
             'inícioSubmissão' . $request->modalidadeEditId => ['required', 'date'],
             'fimSubmissão' . $request->modalidadeEditId => ['required', 'date', 'after:inícioSubmissão' . $request->modalidadeEditId],
@@ -192,10 +214,11 @@ class ModalidadeController extends Controller
 
             'inícioCorreção' . $request->modalidadeEditId => ['nullable', 'date', 'after:fimDaRevisão' . $request->modalidadeEditId, 'required_with:fimCorreção' . $request->modalidadeEditId],
             'fimCorreção' . $request->modalidadeEditId => ['nullable', 'date', 'after:inícioCorreção' . $request->modalidadeEditId, 'required_with:inícioCorreção' . $request->modalidadeEditId],
-            'inícioValidação' . $request->modalidadeEditId => ['nullable', 'date', 'after:fimCorreção' . $request->modalidadeEditId, 'required_with:fimValidação' . $request->modalidadeEditId],
+            'inícioValidação' . $request->modalidadeEditId => ['nullable', 'date', 'required_with:fimValidação' . $request->modalidadeEditId],
             'fimValidação' . $request->modalidadeEditId => ['nullable', 'date', 'after:inícioValidação' . $request->modalidadeEditId, 'required_with:inícioValidação' . $request->modalidadeEditId],
 
             'resultado' . $request->modalidadeEditId => ['required', 'date', 'after:fimRevisão' . $request->modalidadeEditId],
+            'numMaxCoautores' . $request->modalidadeEditId => ['nullable', 'integer', 'min:0'],
             'texto' . $request->modalidadeEditId => ['nullable'],
             'limit' . $request->modalidadeEditId => ['nullable'],
             'arquivoEdit' . $request->modalidadeEditId => ['nullable'],
@@ -233,11 +256,18 @@ class ModalidadeController extends Controller
             'maxcaracteres' . $request->modalidadeEditId => ['nullable', 'integer'],
             'minpalavras' . $request->modalidadeEditId => ['nullable', 'integer'],
             'maxpalavras' . $request->modalidadeEditId => ['nullable', 'integer'],
-            'arquivoRegras' . $request->modalidadeEditId => ['nullable', 'file', 'max:2048', 'mimes:pdf'],
+            'arquivoRegras' . $request->modalidadeEditId => ['nullable', 'file', 'max:10240', 'mimes:pdf'],
             'arquivoInstrucoes' . $request->modalidadeEditId => ['nullable', 'file', 'max:2048', 'mimes:pdf'],
             'arquivoModelos' . $request->modalidadeEditId => ['nullable', 'file', 'max:2048', 'mimes:odt,ott,docx,doc,rtf,txt,pdf,pptx'],
             'arquivoTemplates' . $request->modalidadeEditId => ['nullable', 'file', 'max:2048', 'mimes:odt,ott,docx,doc,rtf,txt,pdf,pptx'],
-        ]);
+        ];
+
+        if($evento->is_multilingual){
+            $rules['nome_en' . $request->modalidadeEditId] = ['required','string'];
+            $rules['nome_es' . $request->modalidadeEditId] = ['required','string'];
+        }
+
+        $validatedData = $request->validate($rules);
 
         if ($request->has('avaliacaoDuranteSubmissao')) {
             $validatedData += $request->validate(['inícioRevisão' . $request->modalidadeEditId => ['nullable', 'date']]);
@@ -356,6 +386,8 @@ class ModalidadeController extends Controller
         }
 
         $modalidadeEdit->nome = $request->input('nome' . $request->modalidadeEditId);
+        $modalidadeEdit->nome_en = $request->input('nome_en' . $request->modalidadeEditId);
+        $modalidadeEdit->nome_es = $request->input('nome_es' . $request->modalidadeEditId);
         $modalidadeEdit->inicioSubmissao = $request->input('inícioSubmissão' . $request->modalidadeEditId);
         $modalidadeEdit->fimSubmissao = $request->input('fimSubmissão' . $request->modalidadeEditId);
         $modalidadeEdit->inicioRevisao = $request->input('inícioRevisão' . $request->modalidadeEditId);
@@ -365,6 +397,7 @@ class ModalidadeController extends Controller
         $modalidadeEdit->inicioValidacao = $request->input('inícioValidação' . $request->modalidadeEditId);
         $modalidadeEdit->fimValidacao = $request->input('fimValidação' . $request->modalidadeEditId);
         $modalidadeEdit->inicioResultado = $request->input('resultado' . $request->modalidadeEditId);
+        $modalidadeEdit->numMaxCoautores = $request->input('numMaxCoautores' . $request->modalidadeEditId);
         $modalidadeEdit->texto = $request->input('texto' . $request->modalidadeEditId);
         $modalidadeEdit->arquivo = $request->input('arquivoEdit' . $request->modalidadeEditId);
         $modalidadeEdit->caracteres = $caracteres;
@@ -468,6 +501,15 @@ class ModalidadeController extends Controller
                 Storage::delete($path);
             }
             $modalidadeEdit->modelo_apresentacao = null;
+        }
+
+        if ($request->input('numMaxCoautores') != null) {
+            $path = $modalidadeEdit->numMaxCoautores;
+            if ($path  && Storage::exists($path)) {
+                Storage::delete($path);
+            }
+            $modalidadeEdit->numMaxCoautores = $request->input('numMaxCoautores');
+            $modalidadeEdit->save();
         }
 
         if ($request->apresentacao) {
@@ -702,5 +744,15 @@ class ModalidadeController extends Controller
         }
 
         return abort(404);
+    }
+
+    public function reorder(Request $request)
+    {
+        $order = $request->input('order', []);
+        foreach ($order as $item) {
+            Modalidade::where('id', $item['id'])
+                ->update(['ordem' => $item['position']]);
+        }
+        return response()->json(['status' => 'ok']);
     }
 }

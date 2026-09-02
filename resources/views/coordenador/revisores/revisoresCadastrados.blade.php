@@ -64,7 +64,7 @@
                                 <td style="text-align:center">{{$revisor->correcoesEmAndamento}}</td>
                                 <td style="text-align:center">{{$revisor->trabalhosCorrigidos}}</td>
                                 <td style="text-align:center">
-                                  <a href="#" data-toggle="modal" data-target="#modalRevisor{{$revisor->id}}">
+                                  <a href="#" data-bs-toggle="modal" data-bs-target="#modalRevisor{{$revisor->id}}">
                                     <img src="{{asset('img/icons/eye-regular.svg')}}" style="width:20px">
                                   </a>
                                 </td>
@@ -124,7 +124,7 @@
                               <td style="text-align:center">{{$revisor->correcoesEmAndamento}}</td>
                               <td style="text-align:center">{{$revisor->trabalhosCorrigidos}}</td>
                               <td style="text-align:center">
-                                <a href="#" data-toggle="modal" data-target="#modalRevisor{{$revisor->id}}">
+                                <a href="#" data-bs-toggle="modal" data-bs-target="#modalRevisor{{$revisor->id}}">
                                   <img src="{{asset('img/icons/eye-regular.svg')}}" style="width:20px">
                                 </a>
                               </td>

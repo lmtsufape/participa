@@ -251,7 +251,6 @@ return [
         'inicioValidacao*' => [
             'required' => 'O campo é obrigatório.',
             'date' => 'O campo deve ter uma data válida.',
-            'after' => 'Início da validação deve ser uma data depois do fim da correção.',
             'required_with' => 'O campo início da validação é obrigatório quando fim da validação está presente.',
         ],
         'fimValidacao*' => [
@@ -272,7 +271,7 @@ return [
         'arquivoRegras*' => [
             'file' => 'O campo arquivo regras deve ter um arquivo válido.',
             'mimes' => 'O arquivo deve ser do tipo PDF.',
-            'max' => 'O arquivo deve ter no máximo 2mb.',
+            'max' => 'O arquivo deve ter no máximo 10mb.',
         ],
         'arquivoTemplates*' => [
             'file' => 'O campo arquivo template deve ter um arquivo válido.',

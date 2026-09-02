@@ -31,4 +31,13 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'associados' => [
+        'url'   => env('ASSOCIADOS_API_URL'),
+        'token' => env('ASSOCIADOS_API_TOKEN'),
+    ],
+
+    'google_maps' => [
+        'key' => env('GOOGLE_MAPS_API_KEY'),
+    ],
+
 ];

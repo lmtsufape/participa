@@ -9,10 +9,17 @@
         </div>
         <div class="row">
             <div class="col-sm-12">
-                <div class="card">
+                                <div class="card">
                     <div class="card-body">
-                      <h5 class="card-title">Comissão</h5>
-                      <h6 class="card-subtitle mb-2 text-muted">Usuários cadastrados na comissão do seu evento.</h6>
+                      <div class="row justify-content-between">
+                        <div class="col-md-6">
+                          <h5 class="card-title">Comissão</h5>
+                          <h6 class="card-subtitle mb-2 text-muted">Usuários cadastrados na comissão do seu evento.</h6>
+                        </div>
+                        <div class="col-md-6 d-flex gap-2 flex-column align-items-end">
+                            <a href="{{ route('coord.evento.exportarComissaoCientifica', ['evento' => $evento->id]) }}" class="btn btn-success">Exportar XLSX</a>
+                        </div>
+                      </div>
                       <p class="card-text">
                         <table class="table table-hover table-responsive-lg table-sm">
                             <thead>
@@ -21,7 +28,7 @@
                                     <th>Especialidade</th>
                                     <th>Celular</th>
                                     <th>E-mail</th>
-                                    <th>Direção</th>
+                                    <th>Função</th>
                                     <th style="text-align:center">Remover</th>
                                 </th>
                             </thead>
@@ -57,15 +64,24 @@
                                           <td>{{$user->celular}}</td>
                                           <td>{{$user->email}}</td>
                                           <td>
-                                            @if($evento->userIsCoordComissaoCientifica($user))
-                                                Coordenador
-                                            @endif
+                                              @if($evento->userIsCoordComissaoCientifica($user))
+                                                  Coordenador(a) da Comissão
+                                              @elseif($user->eixosCoordenados->isNotEmpty())
+                                                  Coordenador(a) de Eixo:
+                                                  <ul class="list-unstyled mb-0 ps-3">
+                                                      @foreach($user->eixosCoordenados as $eixoNome)
+                                                          <li><small>- {{ $eixoNome }}</small></li>
+                                                      @endforeach
+                                                  </ul>
+                                              @else
+                                                  Membro da Comissão
+                                              @endif
                                           </td>
                                           <td style="text-align:center">
                                             <form id="removerComissao{{$user->id}}" action="{{route('coord.remover.comissao', ['id' => $user->id])}}" method="POST">
                                               @csrf
                                               <input type="hidden" name="evento_id" value="{{$evento->id}}">
-                                              <a href="#" data-toggle="modal" data-target="#modalRemoverComissao{{$user->id}}">
+                                              <a href="#" data-bs-toggle="modal" data-bs-target="#modalRemoverComissao{{$user->id}}">
                                                 <img src="{{asset('img/icons/user-times-solid.svg')}}" class="icon-card" style="width:25px">
                                               </a>
                                             </form>
@@ -84,7 +100,7 @@
                                             <form id="removerComissao{{$user->id}}" action="{{route('coord.remover.comissao', ['id' => $user->id])}}" method="POST">
                                               @csrf
                                               <input type="hidden" name="evento_id" value="{{$evento->id}}">
-                                              <a href="#" data-toggle="modal" data-target="#modalRemoverComissao{{$user->id}}">
+                                              <a href="#" data-bs-toggle="modal" data-bs-target="#modalRemoverComissao{{$user->id}}">
                                                 <img src="{{asset('img/icons/user-times-solid.svg')}}" class="icon-card" style="width:25px">
                                               </a>
                                             </form>
