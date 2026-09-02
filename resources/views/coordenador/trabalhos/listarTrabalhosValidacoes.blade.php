@@ -126,15 +126,17 @@
                                                 </td>
                                                 <td>
                                                     @if ($trabalho->arquivoCorrecao)
-                                                        <a href="{{route('downloadCorrecao', ['id' => $trabalho->id])}}">
-                                                            <span class="d-inline-block text-truncate" class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" title="{{$trabalho->titulo}}" style="max-width: 150px;">
-                                                                {{$trabalho->titulo}}
+                                                        <a href="{{ route('downloadCorrecao', ['id' => $trabalho->id]) }}">
+                                                            <span class="d-inline-block text-truncate" data-bs-toggle="tooltip" title="{{ $trabalho->titulo }}" style="max-width: 150px;">
+                                                                {{ $trabalho->titulo }} (Arquivo)
                                                             </span>
                                                         </a>
+                                                    @elseif ($trabalho->modalidade->texto && $trabalho->temCorrecaoSubmetida())
+                                                        <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalTextoCorrigido_{{ $trabalho->id }}">
+                                                            Ver Correção (Texto)
+                                                        </button>
                                                     @else
-                                                        <span class="d-inline-block text-truncate" class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" title="Aguardando envio da correção" style="max-width: 150px;">
-                                                            Aguardando envio
-                                                        </span>
+                                                        <span class="badge bg-secondary">Aguardando envio</span>
                                                     @endif
                                                 </td>
                                                 <td>{{$trabalho->autor->name}}</td>
@@ -199,6 +201,12 @@
                                                             </button>
                                                         @endif
 
+                                                        @if($trabalho->temCorrecaoSubmetida())
+                                                            <button type="button" class="btn btn-outline-info btn-sm" data-bs-toggle="modal" data-bs-target="#modalAvaliarCorrecaoCoord_{{ $trabalho->id }}" title="Validar Correção">
+                                                                Validar
+                                                            </button>
+                                                        @endif
+
 
                                                     </div>
                                                 </td>
@@ -238,6 +246,59 @@
                                                     @if(in_array($trabalho->avaliado, ['corrigido', 'corrigido_parcialmente', 'nao_corrigido']))
                                                         @include('coordenador.trabalhos.validacao-detalhes-modal', ['trabalho' => $trabalho])
                                                     @endif
+                                                    @foreach($modalidade->trabalho as $trabalho)
+                                                        {{-- Modal de Leitura do Texto Corrigido --}}
+                                                        @if($trabalho->modalidade->texto)
+                                                            <div class="modal fade" id="modalTextoCorrigido_{{ $trabalho->id }}" tabindex="-1" aria-hidden="true">
+                                                                <div class="modal-dialog modal-lg">
+                                                                    <div class="modal-content">
+                                                                        <div class="modal-header bg-dark text-white">
+                                                                            <h5 class="modal-title">Texto Corrigido: {{ $trabalho->titulo }}</h5>
+                                                                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                                                                        </div>
+                                                                        <div class="modal-body">
+                                                                            <p class="text-muted small">Submetido em: {{ optional($trabalho->data_correcao_submetida)->format('d/m/Y H:i') }}</p>
+                                                                            <div class="p-3 bg-light border rounded" style="white-space: pre-wrap;">{{ $trabalho->resumo }}</div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        @endif
+
+                                                        {{-- Modal de Validação pelo Coordenador --}}
+                                                        <div class="modal fade" id="modalAvaliarCorrecaoCoord_{{ $trabalho->id }}" tabindex="-1" aria-hidden="true">
+                                                            <div class="modal-dialog">
+                                                                <form method="POST" action="{{ route('coord.validarCorrecao', $trabalho->id) }}">
+                                                                    @csrf
+                                                                    <div class="modal-content">
+                                                                        <div class="modal-header" style="background-color: #114048ff; color: white;">
+                                                                            <h5 class="modal-title">Validar Correção - Trabalho #{{ $trabalho->id }}</h5>
+                                                                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                                                                        </div>
+                                                                        <div class="modal-body">
+                                                                            <div class="mb-3">
+                                                                                <label class="form-label font-weight-bold">Resultado da Validação:</label>
+                                                                                <select name="status_validacao" class="form-select" required>
+                                                                                    <option value="" disabled selected>Selecione uma opção...</option>
+                                                                                    <option value="corrigido" {{ $trabalho->avaliado == 'corrigido' ? 'selected' : '' }}>Completamente Corrigido</option>
+                                                                                    <option value="corrigido_parcialmente" {{ $trabalho->avaliado == 'corrigido_parcialmente' ? 'selected' : '' }}>Parcialmente Corrigido</option>
+                                                                                    <option value="nao_corrigido" {{ $trabalho->avaliado == 'nao_corrigido' ? 'selected' : '' }}>Não Aprovado / Não Corrigido</option>
+                                                                                </select>
+                                                                            </div>
+                                                                            <div class="mb-3">
+                                                                                <label class="form-label font-weight-bold">Justificativa / Parecer:</label>
+                                                                                <textarea name="justificativa" class="form-control" rows="4" placeholder="Insira considerações sobre a correção...">{{ $trabalho->justificativa_correcao }}</textarea>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="modal-footer">
+                                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                                                            <button type="submit" class="btn btn-primary">Salvar Validação</button>
+                                                                        </div>
+                                                                    </div>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    @endforeach
                                                 @endpush
                                             @endif
                                             </tr>

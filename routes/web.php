@@ -260,6 +260,7 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
             Route::get('/evento/{eventoId}/validacoes/modalidade/{modalidadeId}', [EventoController::class, 'listarValidacoesPorModalidade'])->name('listarValidacoesPorModalidade');
             Route::get('trabalhos/listarValidacoesPorEixo', [EventoController::class, 'listarValidacoesPorEixo'])->name('listarValidacoesPorEixo');
             Route::post('/coordenador/trabalho/{trabalho}/resetar-validacao', [EventoController::class, 'resetarValidacao'])->name('trabalho.resetarValidacao');
+            Route::post('/trabalho/{trabalho}/validar-correcao-coordenador', [EventoController::class, 'validarCorrecaoCoordenador'])->name('validarCorrecao');
 
             Route::get('areas/cadastrarAreas', [EventoController::class, 'cadastrarAreas'])->name('cadastrarAreas');
             Route::get('areas/listarAreas', [EventoController::class, 'listarAreas'])->name('listarAreas');

@@ -3100,4 +3100,20 @@ class EventoController extends Controller
 
         return Excel::download(new InscritosNecessidadesEspeciaisExport($evento), $nomeArquivo, \Maatwebsite\Excel\Excel::XLSX);
     }
+
+    public function validarCorrecaoCoordenador(Request $request, Trabalho $trabalho)
+    {
+        $this->authorize('isCoordenadorOrCoordCientificaOrCoordEixo', $trabalho->evento);
+
+        $request->validate([
+            'status_validacao' => 'required|in:corrigido,corrigido_parcialmente,nao_corrigido',
+            'justificativa' => 'nullable|string|max:2000',
+        ]);
+
+        $trabalho->avaliado = $request->status_validacao;
+        $trabalho->justificativa_correcao = $request->justificativa;
+        $trabalho->save();
+
+        return redirect()->back()->with('success', 'Correção do trabalho avaliada e validada com sucesso!');
+    }
 }
