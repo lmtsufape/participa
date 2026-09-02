@@ -36,10 +36,12 @@ class TrabalhosExportForCertifica implements FromCollection, ShouldAutoSize, Wit
 
             ];
             foreach ($trabalho->coautors as $index => $coautor) {
-                $dados_gerais["tipo_coautor_" . ($index + 1)] = 'COAUTOR';
-                $dados_gerais["nome_coautor_" . ($index + 1)] = $coautor->user->name;
-                $dados_gerais["email_coautor_" . ($index + 1)] = $coautor->user->email;
-                $dados_gerais["cpf_coautor_" . ($index + 1)] = $coautor->user->cpf;
+                if (!empty($coautor->user?->cpf)) {
+                    $dados_gerais["tipo_coautor_" . ($index + 1)] = 'COAUTOR';
+                    $dados_gerais["nome_coautor_" . ($index + 1)] = $coautor->user->name;
+                    $dados_gerais["email_coautor_" . ($index + 1)] = $coautor->user->email;
+                    $dados_gerais["cpf_coautor_" . ($index + 1)] = $coautor->user->cpf;
+                }
             }
 
             return $dados_gerais;

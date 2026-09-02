@@ -8,20 +8,15 @@
     <div class="row justify-content-center titulo-detalhes">
         <div class="col-sm-12">
             <div class="row">
-                <div class="col-sm-10">
-                    <h1>Meus Eventos - Coordenação Comissão Científica</h1>
+                <div class="col-sm-12">
+                    <h1>{{ __('Meus eventos - Coordenação comissão científica') }}</h1>
                 </div>
-                @can('create', App\Models\Submissao\Evento::class)
-                <div class="col-sm-2">
-                    <a href="{{route('evento.criar')}}" class="btn btn-primary">Novo Evento</a>
-                </div>
-                @endcan
             </div>
         </div>
     </div>
 
     <div class="row cards-eventos-index">
-
+        @if($eventos->count() != 0)
         @foreach ($eventos as $evento)
             @if ($evento->deletado == false)
                 @can('isPublishOrIsCoordenadorOrCoordenadorDasComissoes', $evento)
@@ -63,12 +58,12 @@
                             <div>
                                 <div>
                                     <a href="{{route('evento.visualizar',['id'=>$evento->id])}}">
-                                        <i class="far fa-eye" style="color: black"></i>&nbsp;&nbsp;Visualizar evento
+                                        <i class="far fa-eye" style="color: black"></i>&nbsp;&nbsp;{{ __('Visualizar evento') }}
                                     </a>
                                 </div>
                                 <div>
                                     <a href="{{ route('coord.detalhesEvento', ['eventoId' => $evento->id]) }}">
-                                        <i class="fas fa-cog" style="color: black"></i>&nbsp;&nbsp;Configurar evento
+                                        <i class="fas fa-cog" style="color: black"></i>&nbsp;&nbsp;{{ __('Configurar evento') }}
                                     </a>
                                 </div>
                             </div>
@@ -79,6 +74,15 @@
                 @endcan
             @endif
         @endforeach
+        @else
+        <div class="d-flex justify-content-center align-items-center flex-column py-5">
+            <div class="d-flex justify-content-center align-items-center flex-column card text-center shadow-sm border-0 p-4" style="max-width: 600px;">
+                <img src="{{asset('img/iconeCalendario.png')}}" style="width: 100px; margin-bottom: 10px;"/>
+                <h2 class="fw-semibold text-dark mb-3">{{ __('Você ainda não participou ou criou nenhum evento.') }}</h2>
+                <p class="text-muted mb-0">{{ __('Explore os eventos disponíveis na plataforma, inscreva-se ou crie seu próprio evento para começar a interagir.') }}</p>
+            </div>
+        </div>
+        @endif
     </div>
 
 </div>

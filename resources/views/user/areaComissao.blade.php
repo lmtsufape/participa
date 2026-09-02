@@ -40,7 +40,7 @@
                 <td>{{$trabalho->id}}</td>
                 <td>{{$trabalho->area->nome}}</td>
                 <td>
-                    @foreach($trabalho->atribuicoes as $revisor)
+                    @foreach($trabalho->revisores as $revisor)
                         {{$revisor->user->email}},
                     @endforeach
                 </td>
@@ -61,7 +61,7 @@
                 <td>
                 </td>
                 <td style="text-align:center">
-                    <a class="botaoAjax" href="#" data-toggle="modal" onclick="trabalhoId({{$trabalho->id}})" data-target="#modalTrabalho"><img src="{{asset('img/icons/eye-regular.svg')}}" style="width:20px"></a>
+                    <a class="botaoAjax" href="#" data-bs-toggle="modal" onclick="trabalhoId({{$trabalho->id}})" data-bs-target="#modalTrabalho"><img src="{{asset('img/icons/eye-regular.svg')}}" style="width:20px"></a>
                 </td>
 
                 </tr>

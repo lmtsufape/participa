@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Inscricao\Inscricao;
 use App\Models\Submissao\Evento;
 use Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
+use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class HomeController extends Controller
 {
@@ -24,54 +26,78 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function home()
+    public function home(Request $request)
     {
         $user = Auth::user();
         $eventos = collect();
-        if ($user->administradors()->exists()) {
+        if ($user->administrador()->exists()) {
             $eventos = $eventos->concat(Evento::all());
 
             return view('administrador.index', ['eventos' => $eventos]);
-        }
-        else if ($user->coordComissaoCientifica()->exists()) {
-            $eventos = $eventos->concat($user->coordComissaoCientifica);
-        }
-        else if ($user->coordComissaoOrganizadora()->exists()) {
-            $eventos = $eventos->concat($user->coordComissaoOrganizadora);
+        }else if ($user->coordComissaoCientifica()->exists() || $user->coordComissaoOrganizadora()->exists()) {
+            $eventos = QueryBuilder::for(Evento::class)
+            ->where(function($q) use ($user) {
+                $q->whereHas('coordComissaoCientifica', fn($r) => $r->where('user_id', $user->id))
+                  ->orWhereHas('coordComissaoOrganizadora', fn($r) => $r->where('user_id', $user->id))
+                  ->orWhere('coordenadorId', $user->id);
+            })
+            ->allowedFilters([
+                AllowedFilter::callback('q', function ($query, $value) {
+                    $term = trim((string) $value);
+                    if ($term === '') return;
+                    $query->where(function ($w) use ($term) {
+                        if (ctype_digit($term)) {
+                            $w->orWhere('id', (int) $term);
+                        }
+                        $w->orWhere('nome', 'ILIKE', "%{$term}%")
+                        ->orWhere('descricao', 'ILIKE', "%{$term}%");
+                    });
+                }),
+            ])
+            ->distinct()
+            ->paginate(request('per_page', 15))
+            ->withQueryString();
         }else{
             $eventos = Evento::whereHas('inscricaos', function($query) use ($user) {
                 $query->where('user_id', $user->id);
-            })->get();
+            });
 
-             return view('user.areaParticipante', ['eventos' => $eventos]);
+            if ($request->filled('busca')) {
+                $eventos->where('nome', 'ilike', '%' . $request->busca . '%');
+            }
+
+            if ($request->filled('ordenar')) {
+                switch ($request->ordenar) {
+                    case 'nome':
+                        $eventos->orderBy('nome');
+                        break;
+                    case 'data':
+                    default:
+                        $eventos->orderBy('dataFim', 'desc');
+                        break;
+                }
+            } else {
+                $eventos->orderBy('dataFim', 'desc');
+            }
+
+            $eventos = $eventos->paginate(9);
+
+            return view('user.areaParticipante', ['eventos' => $eventos]);
         }
-        $eventos = $eventos->concat($user->eventos);
-        $eventos = $eventos->concat($user->eventosCoordenador);
-        $eventos = $eventos->unique('id');
 
         return view('coordenador.index', ['eventos' => $eventos]);
     }
 
     public function index()
     {
-        $user = Auth::user();
-        $eventosDestaque = Inscricao::join('eventos', 'inscricaos.evento_id', '=', 'eventos.id')->select('eventos.id', DB::raw('count(inscricaos.evento_id) as total'))->groupBy('eventos.id')->orderBy('total', 'desc')->where([['dataInicio', '<=', today()], ['dataFim', '>=', today()]])->limit(6)->get();
-
-        $eventos = collect();
-        if (count($eventosDestaque) > 0) {
-            foreach ($eventosDestaque as $ev) {
-                $eventos->push(Evento::find($ev->id));
-            }
-        } else {
-            $eventos = Evento::where([['publicado', '=', true], ['deletado', '=', false], ['dataInicio', '<=', today()], ['dataFim', '>=', today()]])->get();
-        }
+        $eventos_destaques = Evento::where([ ['publicado', '=', 'true'], ['dataFim', '>=', 'today()']])->get();
 
         $proximosEventos = Evento::where([['publicado', '=', true], ['deletado', '=', false], ['dataFim', '>=', today()]])->whereNull('evento_pai_id')->get();
 
-        $eventosPassados = Evento::where([['publicado', '=', true], ['deletado', '=', false], ['dataFim', '<', today()]])->whereNull('evento_pai_id')->get()->sortDesc()->take(4);
+        $eventos_passados = Evento::where([['publicado', '=', true], ['deletado', '=', false], ['dataFim', '<', today()]])->whereNull('evento_pai_id')->take(6)->get()->sortDesc();
 
         $tiposEvento = Evento::where([['publicado', '=', true], ['deletado', '=', false]])->where([['dataInicio', '<=', today()], ['dataFim', '>=', today()]])->selectRaw('DISTINCT tipo')->get();
 
-        return view('index',compact('eventos','tiposEvento','proximosEventos','eventosPassados'));
+        return view('index',compact('eventos_destaques','tiposEvento','proximosEventos','eventos_passados'));
     }
 }

@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers\Users;
 
+use App\Enums\EstadoBrasileiro;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreUserRequest;
+use App\Http\Requests\UpdateUserRequest;
+use App\Models\PerfilIdentitario;
 use App\Models\Submissao\Endereco;
 use App\Models\Submissao\Evento;
 use App\Models\Users\Administrador;
@@ -11,6 +15,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Validator;
+use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\QueryBuilder;
+
+use function PHPUnit\Framework\callback;
 
 class AdministradorController extends Controller
 {
@@ -101,7 +109,7 @@ class AdministradorController extends Controller
 
     public function eventos()
     {
-        $eventos = Evento::all();
+        $eventos = Evento::latest()->get();
 
         return view('coordenador.index', ['eventos' => $eventos]);
     }
@@ -123,130 +131,70 @@ class AdministradorController extends Controller
     public function editUser($id)
     {
         $this->authorize('isAdmin', Administrador::class);
-        $user = User::find($id);
+        $user = User::with('perfilIdentitario')->find($id);
         $end = $user->endereco;
+        $estados = EstadoBrasileiro::options();
 
-        return view('administrador.editUser', ['user' => $user, 'end' => $end]);
+        return view('administrador.editUser', ['user' => $user, 'estados' => $estados, 'end' => $end]);
     }
 
-    public function updateUser(Request $request, $id)
+    public function updateUser(UpdateUserRequest $request, $id)
     {
-        // dd($request->all());
         $this->authorize('isAdmin', Administrador::class);
         $user = User::find($id);
-
-        if ($request->passaporte != null && $request->cpf != null) {
-            $request->merge(['passaporte' => null]);
-        }
-        if ($user->usuarioTemp == true) {
-            $validator = $request->validate([
-                'name' => 'bail|required|string|max:255',
-                'cpf' => ($request->passaporte == null ? ['bail', 'required', 'cpf'] : 'nullable'),
-                'passaporte' => ($request->cpf == null ? 'bail|required|max:10' : 'nullable'),
-                'celular' => 'required|string|max:16',
-                'instituicao' => 'required|string| max:255',
-                'especialidade' => 'nullable|string',
-                'rua' => 'required|string|max:255',
-                'numero' => 'required|string',
-                'bairro' => 'required|string|max:255',
-                'cidade' => 'required|string|max:255',
-                'complemento' => 'nullable|string|max:255',
-                'uf' => 'required|string',
-                'cep' => 'required|string',
-                'password' => 'required|string|min:8|confirmed',
-                // 'primeiraArea' => 'required|string',
-            ]);
-
-            // criar endereço
-            $end = new Endereco();
-            $end->rua = $request->input('rua');
-            $end->numero = $request->input('numero');
-            $end->bairro = $request->input('bairro');
-            $end->cidade = $request->input('cidade');
-            $end->complemento = $request->input('complemento');
-            $end->uf = $request->input('uf');
-            $end->cep = $request->input('cep');
-
-            $end->save();
-
-            // Atualizar dados não preenchidos de User
-
-            $user->name = $request->input('name');
-            $user->cpf = $request->input('cpf');
-            $user->passaporte = $request->input('passaporte');
-            $user->celular = $request->input('celular');
-            $user->instituicao = $request->input('instituicao');
-            $user->password = bcrypt($request->password);
-            if ($request->input('especialidade') != null) {
-                $user->especProfissional = $request->input('especialidade');
+        $payload = $request->payload();
+        if (!empty($payload['endereco'])) {
+            if ($user->endereco()->exists()) {
+                $endereco = Endereco::findOrFail($user->enderecoId);
+                $endereco->update($payload['endereco']);
+            }else{
+                $endereco_id = Endereco::create($payload['endereco'])->id;
             }
-            $user->usuarioTemp = null;
-            $user->enderecoId = $end->id;
-            $user->email_verified_at = now();
-            $user->save();
-
-            return redirect()->route('admin.users')->with(['message' => 'Cadastro completado com sucesso!']);
-        } else {
-            if ($request->passaporte != null && $request->cpf != null) {
-                $request->merge(['passaporte' => null]);
-            }
-            $validator = $request->validate([
-                'name' => 'required|string|max:255',
-                'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
-                'cpf' => ($request->passaporte == null ? ['bail', 'required', 'cpf', Rule::unique('users')->ignore($user->id)] : 'nullable'),
-                'passaporte' => ($request->cpf == null && $request->cpf == null ? ['bail', 'required', 'max:10', Rule::unique('users')->ignore($user->id)] : ['nullable']),
-                'celular' => 'required|string|max:16',
-                'instituicao' => 'required|string| max:255',
-                // 'especProfissional' => 'nullable|string',
-                'rua' => 'required|string|max:255',
-                'numero' => 'required|string',
-                'bairro' => 'required|string|max:255',
-                'complemento' => 'nullable|string|max:255',
-                'cidade' => 'required|string|max:255',
-                'uf' => 'required|string',
-                'cep' => 'required|string',
-            ]);
-
-            // User
-
-            $user->name = $request->input('name');
-            $user->email = $request->input('email');
-            $user->cpf = $request->input('cpf');
-            $user->passaporte = $request->input('passaporte');
-            $user->celular = $request->input('celular');
-            $user->instituicao = $request->input('instituicao');
-            if ($request->input('password') != null) {
-                $request->validate(['password' => 'string|min:8|confirmed',
-                ]);
-                $user->password = bcrypt($request->password);
-            }
-            // $user->especProfissional = $request->input('especProfissional');
-            $user->usuarioTemp = null;
-            $user->update();
-
-            // endereço
-            $end = Endereco::find($user->enderecoId);
-            $end->rua = $request->input('rua');
-            $end->numero = $request->input('numero');
-            $end->bairro = $request->input('bairro');
-            $end->cidade = $request->input('cidade');
-            $end->complemento = $request->input('complemento');
-            $end->uf = $request->input('uf');
-            $end->cep = $request->input('cep');
-
-            $end->update();
-            // dd([$user,$end]);
-            return redirect()->route('admin.users')->with(['message' => 'Usuário atualizado com sucesso!']);
         }
 
-        return redirect()->route('admin.users')->with(['message' => 'Atualizado com sucesso!']);
+        if (!empty($payload['perfilIdentitario'])) {
+            if ($user->perfilIdentitario()->exists()) {
+                $user->perfilIdentitario->update($payload['perfilIdentitario']);
+            } else {
+
+                $perfilIdentitario = PerfilIdentitario::create([...$payload['perfilIdentitario'], 'user_id' => $user->id]);
+            }
+        }
+        $data = [
+            ...$payload['user'],
+            'usuarioTemp' => null,
+        ];
+
+        if (isset($endereco_id)) {
+            $payload['enderecoId'] = $endereco_id;
+        }
+        if ($request->filled('especialidade')) {
+            $data['especProfissional'] = $request->input('especialidade');
+        }
+
+        $user->update($data);
+
+        return redirect()->route('admin.users')->with(['success' => 'Usuário atualizado com sucesso!']);
     }
 
     public function search(Request $request)
     {
         $this->authorize('isAdmin', Administrador::class);
-        $busca = strtolower($request->search);
-        $users = User::whereRaw('LOWER(email) like ?', ['%' . $busca . '%'])->orWhereRaw('LOWER(name) like ?', ['%' . $busca . '%'])->paginate(100);
+        $busca = $request->search;
+
+        try {
+            $users = User::whereRaw('unaccent(lower(email)) ILIKE unaccent(lower(?))', ['%' . $busca . '%'])
+                ->orWhereRaw('unaccent(lower(name)) ILIKE unaccent(lower(?))', ['%' . $busca . '%'])
+                ->orWhereRaw('unaccent(lower(cpf)) ILIKE unaccent(lower(?))', ['%' . $busca . '%'])
+                ->paginate(100);
+        } catch (\Exception $e) {
+            $busca = strtolower($busca);
+            $users = User::whereRaw('LOWER(email) like ?', ['%' . $busca . '%'])
+                ->orWhereRaw('LOWER(name) like ?', ['%' . $busca . '%'])
+                ->orWhereRaw('LOWER(cpf) like ?', ['%' . $busca . '%'])
+                ->paginate(100);
+        }
+
         if ($users->count() == 0) {
             return view('administrador.users', compact('users'))->with(['message' => 'Nenhum Resultado encontrado!']);
         }
@@ -254,72 +202,43 @@ class AdministradorController extends Controller
         return view('administrador.users', compact('users'));
     }
 
-    public function criarUsuario(Request $request)
+    public function createUser()
     {
+        $estados = EstadoBrasileiro::options();
 
-        $request->merge([
-            'email' => strtolower($request->email),
-        ]);
-
-        $this->authorize('isAdmin', Administrador::class);
-
-        $users = User::orderBy('updated_at', 'ASC')->paginate(100);
-
-        $validator = $this->validator($request);
-
-        if ($validator->fails())
-        {
-            return redirect()->back()->withErrors($validator)->withInput();
-        }
-
-        $user = new User();
-
-        $user->name = $request->input('name');
-        $user->email = $request->input('email');
-        $user->password = bcrypt($request->input('password'));
-        $user->cpf = $request->input('cpf');
-        $user->passaporte = $request->input('passaporte');
-        $user->celular = $request->input('full_number');
-        $user->instituicao = $request->input('instituicao');
-        $user->email_verified_at = now();
-
-        if ($request->input('rua') && $request->input('cep'))
-        {
-            $endereco = new Endereco($request->all());
-            $endereco->save();
-
-            $user->enderecoId = $endereco->id;
-        }
-        else
-        {
-            $user->enderecoId = null;
-        }
-
-        $user->save();
-
-        app()->setLocale('pt-BR');
-
-        return redirect(route('admin.users', compact('users')))->with(['message' => 'Usuário cadastrado com sucesso!']);
+        return view('administrador.cadastrarUsuario', ['estados' => $estados]);
     }
 
-    protected function validator(Request $request)
+    public function criarUsuario(StoreUserRequest $request)
     {
-        return Validator::make($request->all(), [
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'cpf' => ($request->input('passaporte') == null ? ['required', 'cpf'] : 'nullable'),
-            'passaporte' => ($request->input('cpf') == null ? 'required|max:10' : 'nullable'),
-            'celular' => ['required', 'string', 'max:20'],
-            'instituicao' => ['required', 'string', 'max:255'],
-            'pais' => ['required', 'string', 'max:255'],
-            'rua' => ['required', 'string', 'max:255'],
-            'numero' => ['required', 'string'],
-            'bairro' => ['required', 'string', 'max:255'],
-            'cidade' => ['required', 'string', 'max:255'],
-            'uf' => ['required', 'string'],
-            'cep' => ['required', 'string'],
-            'complemento' => ['nullable', 'string'],
-        ]);
+
+        $payload = $request->payload();
+
+        if (empty($payload['endereco'])) {
+            $endereco_id = Endereco::create($payload['endereco'])->id;
+        }
+
+        $data = [
+            ...$payload['user'],
+            'usuarioTemp' => null,
+        ];
+
+        if (isset($endereco_id)) {
+            $payload['enderecoId'] = $endereco_id;
+        }
+        if ($request->filled('especialidade')) {
+            $data['especProfissional'] = $request->input('especialidade');
+        }
+
+        $user = User::create($data);
+
+        if (empty($payload['perfilIdentitario'])) {
+            PerfilIdentitario::create([...$payload['perfilIdentitario'], 'user_id' => $user->id]);
+
+        }
+
+        app()->setLocale('pt-BR');
+        return redirect()->route('admin.users')->with(['success' => 'Usuário atualizado com sucesso!']);
+
     }
 }

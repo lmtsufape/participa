@@ -5,11 +5,11 @@
 
 
     <ul class="nav nav-tabs">
-        <li id="li_categoria_participante" class="aba aba-tab" onclick="ativarLink(this)"><a data-toggle="tab" href="#categoriaParticipante" style="text-decoration: none;">Catagorias de participantes</a></li>
-        <li id="li_promocoes" class="aba aba-tab" onclick="ativarLink(this)"><a data-toggle="tab" href="#promocoes" style="text-decoration: none;">Pacotes</a></li>
-        <li id="li_cuponsDeDesconto" class="aba aba-tab" onclick="ativarLink(this)"><a data-toggle="tab" href="#cuponsDeDesconto" style="text-decoration: none;">Cupons de desconto</a></li>
-        <li id="li_formulario_inscricao" class="aba aba-tab" onclick="ativarLink(this)"><a data-toggle="tab" href="#formularioInscricao" style="text-decoration: none;">Formulario de inscrição</a></li>
-        <li id="li_inscritos" class="aba aba-tab" onclick="ativarLink(this)"><a data-toggle="tab" href="#tabelaInscritos" style="text-decoration: none;">Listar inscritos</a></li>
+        <li id="li_categoria_participante" class="aba aba-tab" onclick="ativarLink(this)"><a data-bs-toggle="tab" href="#categoriaParticipante" style="text-decoration: none;">Catagorias de participantes</a></li>
+        <li id="li_promocoes" class="aba aba-tab" onclick="ativarLink(this)"><a data-bs-toggle="tab" href="#promocoes" style="text-decoration: none;">Pacotes</a></li>
+        <li id="li_cuponsDeDesconto" class="aba aba-tab" onclick="ativarLink(this)"><a data-bs-toggle="tab" href="#cuponsDeDesconto" style="text-decoration: none;">Cupons de desconto</a></li>
+        <li id="li_formulario_inscricao" class="aba aba-tab" onclick="ativarLink(this)"><a data-bs-toggle="tab" href="#formularioInscricao" style="text-decoration: none;">Formulario de inscrição</a></li>
+        <li id="li_inscritos" class="aba aba-tab" onclick="ativarLink(this)"><a data-bs-toggle="tab" href="#tabelaInscritos" style="text-decoration: none;">Listar inscritos</a></li>
     </ul>
     @if(session('excluirCampoExtra'))
         <div class="row">
@@ -36,7 +36,7 @@
                                             <small>Para editar clique em um pacote.</small>
                                         </div>
                                         <div class="col-sm-6">
-                                            <button id="criarPromocao" data-toggle="modal" data-target="#modalCriarPromocao" class="btn btn-primary float-md-right">+ Criar pacote</button>
+                                            <button id="criarPromocao" data-bs-toggle="modal" data-bs-target="#modalCriarPromocao" class="btn btn-primary float-md-right">+ Criar pacote</button>
                                         </div>
                                     </div>
                                 </div>
@@ -54,15 +54,15 @@
                                         @foreach ($promocoes as $promocao)
                                             <tbody>
                                                 <th>
-                                                    <td data-toggle="modal" data-target="#modalPromocaoEdit{{$promocao->id}}">{{$promocao->identificador}}</td>
-                                                    <td data-toggle="modal" data-target="#modalPromocaoEdit{{$promocao->id}}">Pendencia para programar</td>
+                                                    <td data-bs-toggle="modal" data-bs-target="#modalPromocaoEdit{{$promocao->id}}">{{$promocao->identificador}}</td>
+                                                    <td data-bs-toggle="modal" data-bs-target="#modalPromocaoEdit{{$promocao->id}}">Pendencia para programar</td>
                                                     @if ($promocao->valor == null || $promocao->valor <= 0)
-                                                        <td data-toggle="modal" data-target="#modalPromocaoEdit{{$promocao->id}}">Grátis</td>
+                                                        <td data-bs-toggle="modal" data-bs-target="#modalPromocaoEdit{{$promocao->id}}">Grátis</td>
                                                     @else
-                                                        <td data-toggle="modal" data-target="#modalPromocaoEdit{{$promocao->id}}">R$ {{number_format($promocao->valor, 2,',','.')}} / R$ {{number_format($promocao->valor - $promocao->valor * 0.10, 2,',','.')}}</td>
+                                                        <td data-bs-toggle="modal" data-bs-target="#modalPromocaoEdit{{$promocao->id}}">R$ {{number_format($promocao->valor, 2,',','.')}} / R$ {{number_format($promocao->valor - $promocao->valor * 0.10, 2,',','.')}}</td>
                                                     @endif
-                                                    <td style="text-align:center"><a href="#" data-toggle="modal" data-target="#modalPromocaoShow{{$promocao->id}}" ><img src="{{asset('img/icons/eye-regular.svg')}}" style="width:20px"></a></td>
-                                                    <td style="text-align:center"><a href="#" data-toggle="modal" data-target="#modalPromocaoDelete{{$promocao->id}}"><img src="{{asset('img/icons/trash-alt-regular.svg')}}" class="icon-card" alt=""></a></td>
+                                                    <td style="text-align:center"><a href="#" data-bs-toggle="modal" data-bs-target="#modalPromocaoShow{{$promocao->id}}" ><img src="{{asset('img/icons/eye-regular.svg')}}" style="width:20px"></a></td>
+                                                    <td style="text-align:center"><a href="#" data-bs-toggle="modal" data-bs-target="#modalPromocaoDelete{{$promocao->id}}"><img src="{{asset('img/icons/trash-alt-regular.svg')}}" class="icon-card" alt=""></a></td>
                                                 </th>
                                             </tbody>
                                         @endforeach
@@ -88,7 +88,7 @@
                                             <small>Para editar clique em um cupom.</small>
                                         </div>
                                         <div class="col-sm-6">
-                                            <button id="criarCupom" data-toggle="modal" data-target="#modalCriarCupom" class="btn btn-primary float-md-right">+ Criar cupom</button>
+                                            <button id="criarCupom" data-bs-toggle="modal" data-bs-target="#modalCriarCupom" class="btn btn-primary float-md-right">+ Criar cupom</button>
                                         </div>
                                     </div>
                                 </div>
@@ -107,16 +107,16 @@
                                     @foreach ($cupons as $cupom)
                                         <tbody>
                                             <th>
-                                                <td data-toggle="modal" data-target="#modalEditarCupom{{$cupom->id}}">{{$cupom->identificador}}</td>
+                                                <td data-bs-toggle="modal" data-bs-target="#modalEditarCupom{{$cupom->id}}">{{$cupom->identificador}}</td>
                                                 @if ($cupom->porcentagem)
-                                                    <td data-toggle="modal" data-target="#modalEditarCupom{{$cupom->id}}">{{$cupom->valor}}% do valor da inscrição</td>
+                                                    <td data-bs-toggle="modal" data-bs-target="#modalEditarCupom{{$cupom->id}}">{{$cupom->valor}}% do valor da inscrição</td>
                                                 @else
-                                                    <td data-toggle="modal" data-target="#modalEditarCupom{{$cupom->id}}">R$ {{number_format($cupom->valor, 2,',','.')}}</td>
+                                                    <td data-bs-toggle="modal" data-bs-target="#modalEditarCupom{{$cupom->id}}">R$ {{number_format($cupom->valor, 2,',','.')}}</td>
                                                 @endif
-                                                <td data-toggle="modal" data-target="#modalEditarCupom{{$cupom->id}}">@if($cupom->quantidade_aplicacao == -1) Ilimitado @else {{$cupom->quantidade_aplicacao}} @endif / precisa ser programada</td>
-                                                <td data-toggle="modal" data-target="#modalEditarCupom{{$cupom->id}}">{{date('d/m/Y',strtotime($cupom->inicio))}}</td>
-                                                <td data-toggle="modal" data-target="#modalEditarCupom{{$cupom->id}}">{{date('d/m/Y',strtotime($cupom->fim))}}</td>
-                                                <td style="text-align:center"><a href="#" data-toggle="modal" data-target="#modalExcluirCupom{{$cupom->id}}"><img src="{{asset('img/icons/trash-alt-regular.svg')}}" class="icon-card" alt=""></a></td>
+                                                <td data-bs-toggle="modal" data-bs-target="#modalEditarCupom{{$cupom->id}}">@if($cupom->quantidade_aplicacao == -1) Ilimitado @else {{$cupom->quantidade_aplicacao}} @endif / precisa ser programada</td>
+                                                <td data-bs-toggle="modal" data-bs-target="#modalEditarCupom{{$cupom->id}}">{{date('d/m/Y',strtotime($cupom->inicio))}}</td>
+                                                <td data-bs-toggle="modal" data-bs-target="#modalEditarCupom{{$cupom->id}}">{{date('d/m/Y',strtotime($cupom->fim))}}</td>
+                                                <td style="text-align:center"><a href="#" data-bs-toggle="modal" data-bs-target="#modalExcluirCupom{{$cupom->id}}"><img src="{{asset('img/icons/trash-alt-regular.svg')}}" class="icon-card" alt=""></a></td>
                                             </th>
                                         </tbody>
                                         {{-- Modal excluir cupom --}}
@@ -166,7 +166,7 @@
                                             <small>Para editar clique em uma categoria.</small>
                                         </div>
                                         <div class="col-sm-6">
-                                            <button id="criarCategoria" data-toggle="modal" data-target="#modalCriarCategoria" class="btn btn-primary float-md-right">+ Criar categoria</button>
+                                            <button id="criarCategoria" data-bs-toggle="modal" data-bs-target="#modalCriarCategoria" class="btn btn-primary float-md-right">+ Criar categoria</button>
                                         </div>
                                     </div>
                                 </div>
@@ -184,11 +184,11 @@
                                     @foreach ($categorias as $categoria)
                                         <tbody>
                                             <th>
-                                                <td data-toggle="modal" data-target="#modalEditarCategoria{{$categoria->id}}">{{$categoria->nome}}</td>
-                                                <td data-toggle="modal" data-target="#modalEditarCategoria{{$categoria->id}}">Falta implementar</td>
-                                                <td data-toggle="modal" data-target="#modalEditarCategoria{{$categoria->id}}">Falta implementar</td>
-                                                <td style="text-align:center"><a href="#" data-toggle="modal" data-target="#modalDetalhesCategoria{{$categoria->id}}" ><img src="{{asset('img/icons/eye-regular.svg')}}" style="width:20px"></a></td>
-                                                <td style="text-align:center"><a href="#" data-toggle="modal" data-target="#modalExcluirCategoria{{$categoria->id}}"><img src="{{asset('img/icons/trash-alt-regular.svg')}}" class="icon-card" alt=""></a></td>
+                                                <td data-bs-toggle="modal" data-bs-target="#modalEditarCategoria{{$categoria->id}}">{{$categoria->nome}}</td>
+                                                <td data-bs-toggle="modal" data-bs-target="#modalEditarCategoria{{$categoria->id}}">Falta implementar</td>
+                                                <td data-bs-toggle="modal" data-bs-target="#modalEditarCategoria{{$categoria->id}}">Falta implementar</td>
+                                                <td style="text-align:center"><a href="#" data-bs-toggle="modal" data-bs-target="#modalDetalhesCategoria{{$categoria->id}}" ><img src="{{asset('img/icons/eye-regular.svg')}}" style="width:20px"></a></td>
+                                                <td style="text-align:center"><a href="#" data-bs-toggle="modal" data-bs-target="#modalExcluirCategoria{{$categoria->id}}"><img src="{{asset('img/icons/trash-alt-regular.svg')}}" class="icon-card" alt=""></a></td>
                                             </th>
                                         </tbody>
 
@@ -301,7 +301,7 @@
                                             <h6 class="card-subtitle mb-2 text-muted">Campos que o formulário de inscrição vai ter.</h6>
                                         </div>
                                         <div class="col-sm-6">
-                                            <button id="criarCampo" data-toggle="modal" data-target="#modalCriarCampo" class="btn btn-primary float-md-right">+ Novo campo</button>
+                                            <button id="criarCampo" data-bs-toggle="modal" data-bs-target="#modalCriarCampo" class="btn btn-primary float-md-right">+ Novo campo</button>
                                         </div>
                                     </div>
                                 </div>
@@ -334,8 +334,8 @@
                                                             @elseif ($campo->tipo == "cpf")
                                                                 <h6 class="card-subtitle mb-2 text-muted">Campo de CPF</h6>
                                                             @endif
-                                                            <a href="#" class="card-link button-a btn-excluir" data-toggle="modal" data-target="#modalCampoDelete{{$campo->id}}">Excluir</a>
-                                                            <a href="#" class="card-link button-a btn-editar" data-toggle="modal" data-target="#modalCampoEdit{{$campo->id}}">Editar</a>
+                                                            <a href="#" class="card-link button-a btn-excluir" data-bs-toggle="modal" data-bs-target="#modalCampoDelete{{$campo->id}}">Excluir</a>
+                                                            <a href="#" class="card-link button-a btn-editar" data-bs-toggle="modal" data-bs-target="#modalCampoEdit{{$campo->id}}">Editar</a>
                                                             </div>
                                                         </div>
                                                     </div>

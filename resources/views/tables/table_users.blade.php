@@ -43,7 +43,7 @@
                 <td colspan="2">
                     <a href="{{ route('admin.editUser', ['id' => $user->id]) }}" class="btn btn-warning">Editar</a>
                     @include('components.delete_modal', ['route' => 'admin.user.destroy', 'param' => 'user_id', 'entity_id' => $user->id])
-                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal{{$user->id}}">
+                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{$user->id}}">
                         Excluir
                     </button>
                 </td>

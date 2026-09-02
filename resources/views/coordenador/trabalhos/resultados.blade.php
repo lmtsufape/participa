@@ -30,7 +30,7 @@
                                     <div id="accordion">
                                         @if ($i == 0)
                                             <div class="card">
-                                                <button class="btn" data-toggle="collapse" data-target="#collapse{{$trabalho->pareceres[$i]->id}}" aria-expanded="true" aria-controls="collapse{{$trabalho->pareceres[$i]->id}}">
+                                                <button class="btn" data-bs-toggle="collapse" data-bs-target="#collapse{{$trabalho->pareceres[$i]->id}}" aria-expanded="true" aria-controls="collapse{{$trabalho->pareceres[$i]->id}}">
                                                     <div class="card-header" id="heading{{$trabalho->pareceres[$i]->id}}">
                                                         <h5 class="mb-0">
                                                             @if ($trabalho->pareceres[$i]->revisor)
@@ -109,7 +109,7 @@
                                             </div>
                                         @else
                                             <div class="card">
-                                                <button class="btn" data-toggle="collapse" data-target="#collapse{{$trabalho->pareceres[$i]->id}}" aria-expanded="true" aria-controls="collapse{{$trabalho->pareceres[$i]->id}}">
+                                                <button class="btn" data-bs-toggle="collapse" data-bs-target="#collapse{{$trabalho->pareceres[$i]->id}}" aria-expanded="true" aria-controls="collapse{{$trabalho->pareceres[$i]->id}}">
                                                     <div class="card-header" id="heading{{$trabalho->pareceres[$i]->id}}">
                                                         <h5 class="mb-0">
                                                             @if ($trabalho->pareceres[$i]->revisor)
@@ -173,7 +173,7 @@
                         <p id="area">{{$trabalho->area->nome}}</p>
                         <label for="modalidade">Modalidade:</label>
                         <p id="modalidade">{{$trabalho->modalidade->nome}}</p>
-                        <a href="#" class="card-link" data-toggle="modal" data-target="#modalResultados{{$trabalho->id}}">Resultado</a>
+                        <a href="#" class="card-link" data-bs-toggle="modal" data-bs-target="#modalResultados{{$trabalho->id}}">Resultado</a>
                         @if (!(empty($trabalho->arquivo->nome)))
                             <a href="{{route('downloadTrabalho', ['id' => $trabalho->id])}}" class="card-link">Baixar</a>
                         @endif
@@ -254,29 +254,29 @@
                                                     <td>
                                                         @if ($trabalho->arquivo && count($trabalho->arquivo) > 0)
                                                             <a href="{{route('downloadTrabalho', ['id' => $trabalho->id])}}">
-                                                                <span class="d-inline-block text-truncate" class="d-inline-block" tabindex="0" data-toggle="tooltip" title="{{$trabalho->titulo}}" style="max-width: 150px;">
+                                                                <span class="d-inline-block text-truncate" class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" title="{{$trabalho->titulo}}" style="max-width: 150px;">
                                                                     {{$trabalho->titulo}}
                                                                 </span>
                                                             </a>
                                                         @else
-                                                            <span class="d-inline-block text-truncate" class="d-inline-block" tabindex="0" data-toggle="tooltip" title="{{$trabalho->titulo}}" style="max-width: 150px;">
+                                                            <span class="d-inline-block text-truncate" class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" title="{{$trabalho->titulo}}" style="max-width: 150px;">
                                                                 {{$trabalho->titulo}}
                                                             </span>
                                                         @endif
                                                     </td>
                                                     <td>
-                                                        <span class="d-inline-block text-truncate" class="d-inline-block" tabindex="0" data-toggle="tooltip" title="{{$trabalho->area->nome}}" style="max-width: 150px;">
+                                                        <span class="d-inline-block text-truncate" class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" title="{{$trabalho->area->nome}}" style="max-width: 150px;">
                                                         {{$trabalho->area->nome}}
                                                         </span>
                                                     </td>
                                                     <td>{{$trabalho->autor->name}}</td>
                                                     <td style="text-align:center">
-                                                        <a style="cursor: pointer" data-toggle="modal" data-target="#modalResultados{{$trabalho->id}}">
+                                                        <a style="cursor: pointer" data-bs-toggle="modal" data-bs-target="#modalResultados{{$trabalho->id}}">
                                                             <img src="{{asset('img/icons/eye-regular.svg')}}" style="width:20px">
                                                         </a>
                                                     </td>
                                                     <td style="text-align:center">
-                                                        <a onclick="mostrarParecerFinal({{$trabalho->id}})" style="cursor: pointer" data-toggle="modal" data-target="#modalParecerFinal">
+                                                        <a onclick="mostrarParecerFinal({{$trabalho->id}})" style="cursor: pointer" data-bs-toggle="modal" data-bs-target="#modalParecerFinal">
                                                             <img @if($trabalho->parecer_final == true) src="{{asset('img/icons/resultado-aprovado.svg')}}" @elseif(is_null($trabalho->parecer_final)) src="{{asset('img/icons/resultado-nulo.svg')}}" @else src="{{asset('img/icons/resultado-reprovado.svg')}}"  @endif  style="width:35px">
                                                         </a>
                                                     </td>

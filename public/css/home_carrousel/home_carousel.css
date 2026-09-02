@@ -1,0 +1,453 @@
+/* ================================================
+   HOME CAROUSEL - CSS RESPONSIVO
+   ================================================ */
+
+/* ===== BASE E DESKTOP (1024px+) - LAYOUT ORIGINAL MANTIDO ===== */
+/* Container do carrossel */
+.main-carousel {
+    overflow: visible; /* para que as setas fiquem para fora */
+}
+
+.carousel-cell-images {
+    width: 60%;
+    margin-right: 2%;
+    display: flex;
+    flex-direction: column;
+}
+
+.carousel-cell-images .img-wrapper {
+    width: 100%; /* Garante que o wrapper ocupe toda a largura do card */
+    height: 320px; /* Altura fixa do card */
+    overflow: hidden; /* Corta qualquer excesso */
+    border-radius: 8px;
+    background: #f0f0f0; /* Cor de fundo enquanto carrega */
+    position: relative;
+}
+
+.carousel-cell-images .img-wrapper .img-fixed {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Preenche o espaço, cortando o excesso */
+    object-position: center; /* Centraliza a imagem */
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+.carousel-cell-images .card-text {
+    margin-top: 0.75rem;
+}
+
+/* Título e legenda */
+.tit-carrossel-home {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #000; /* título sempre visível */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.sub-carrossel-home {
+    font-size: 0.9rem;
+    color: #555;
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+}
+
+/* Customização das setas */
+.flickity-prev-next-button {
+    width: 3rem;
+    height: 3rem;
+    background: #fff;
+    opacity: 0.9;
+    border-radius: 50%;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+.flickity-prev-next-button:hover {
+    background: #fff;
+    opacity: 1;
+}
+
+.flickity-prev-next-button.previous {
+    left: -1.5rem;
+}
+
+.flickity-prev-next-button.next {
+    right: -1.5rem;
+}
+
+.flickity-button-icon {
+    fill: #333;
+}
+
+/* Paginação (bolinhas) */
+.flickity-page-dots {
+    bottom: -2rem;
+}
+
+.flickity-page-dots .dot {
+    width: 0.75rem;
+    height: 0.75rem;
+    margin: 0 0.25rem;
+    opacity: 0.5;
+    background: #888;
+}
+
+.flickity-page-dots .dot.is-selected {
+    background: #337ab7;
+    opacity: 1;
+}
+
+/* ===== TABLET (768px - 1023px) - ADAPTAÇÕES GRADUAIS ===== */
+@media (min-width: 768px) and (max-width: 1023px) {
+    /* Container do carrossel */
+    .main-carousel {
+        overflow: visible;
+        padding: 0 1rem; /* Espaçamento nas laterais */
+    }
+
+    .carousel-cell-images {
+        width: 70%; /* Aumenta a largura do card no tablet */
+        margin-right: 1.5%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .carousel-cell-images .img-wrapper {
+        width: 100%;
+        height: 280px; /* Altura ligeiramente menor */
+        overflow: hidden;
+        border-radius: 12px; /* Bordas mais arredondadas */
+        background: #f0f0f0;
+        position: relative;
+    }
+
+    .carousel-cell-images .img-wrapper .img-fixed {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+        border-radius: 12px;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        transition: transform 0.3s ease; /* Adiciona animação */
+    }
+
+    .carousel-cell-images .img-wrapper:hover .img-fixed {
+        transform: scale(1.02); /* Leve zoom no hover */
+    }
+
+    .carousel-cell-images .card-text {
+        margin-top: 1rem;
+        padding: 0 0.5rem; /* Espaçamento lateral no texto */
+    }
+
+    /* Título e legenda adaptados */
+    .tit-carrossel-home {
+        font-size: 1.15rem; /* Fonte ligeiramente menor */
+        font-weight: 600;
+        color: #000;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        line-height: 1.3;
+    }
+
+    .sub-carrossel-home {
+        font-size: 0.85rem;
+        color: #666;
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        margin-top: 0.5rem;
+    }
+
+    /* Setas adaptadas para tablet */
+    .flickity-prev-next-button {
+        width: 2.5rem;
+        height: 2.5rem;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        opacity: 0.8;
+        border-radius: 50%;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        transition: all 0.3s ease;
+    }
+
+    .flickity-prev-next-button:hover {
+        background: #fff;
+        opacity: 1;
+        transform: scale(1.1);
+    }
+
+    .flickity-prev-next-button.previous {
+        left: -1.25rem;
+    }
+
+    .flickity-prev-next-button.next {
+        right: -1.25rem;
+    }
+
+    /* Paginação otimizada */
+    .flickity-page-dots {
+        bottom: -2.5rem;
+    }
+
+    .flickity-page-dots .dot {
+        width: 0.8rem;
+        height: 0.8rem;
+        margin: 0 0.3rem;
+        opacity: 0.4;
+        background: #999;
+        transition: all 0.3s ease;
+    }
+
+    .flickity-page-dots .dot.is-selected {
+        background: #337ab7;
+        opacity: 1;
+        transform: scale(1.2);
+    }
+}
+
+/* ===== MOBILE (até 767px) - LAYOUT OTIMIZADO ===== */
+@media (max-width: 767px) {
+    /* Container responsivo */
+    .main-carousel {
+        overflow: visible;
+        padding: 0 0.5rem;
+    }
+
+    .carousel-cell-images {
+        width: 85%; /* Card ocupa mais espaço no mobile */
+        margin-right: 1%;
+        display: flex;
+        flex-direction: column;
+        min-height: auto; /* Altura flexível */
+    }
+
+    .carousel-cell-images .img-wrapper {
+        width: 100%;
+        height: 220px; /* Altura otimizada para mobile */
+        overflow: hidden;
+        border-radius: 16px; /* Bordas bem arredondadas */
+        background: #f5f5f5;
+        position: relative;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    .carousel-cell-images .img-wrapper .img-fixed {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+        border-radius: 16px;
+        transition: transform 0.2s ease;
+    }
+
+    /* Efeito touch no mobile */
+    .carousel-cell-images .img-wrapper:active .img-fixed {
+        transform: scale(0.98);
+    }
+
+    .carousel-cell-images .card-text {
+        margin-top: 0.75rem;
+        padding: 0 0.75rem;
+        text-align: center; /* Centraliza texto no mobile */
+    }
+
+    /* Tipografia otimizada para mobile */
+    .tit-carrossel-home {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #000;
+        white-space: normal; /* Permite quebra de linha */
+        overflow: visible;
+        text-overflow: unset;
+        line-height: 1.4;
+        max-height: 2.8rem; /* Limita a 2 linhas */
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .sub-carrossel-home {
+        font-size: 0.8rem;
+        color: #777;
+        display: flex;
+        align-items: center;
+        justify-content: center; /* Centraliza no mobile */
+        gap: 0.3rem;
+        margin-top: 0.5rem;
+        flex-wrap: wrap; /* Permite quebra se necessário */
+    }
+
+    .sub-carrossel-home svg {
+        flex-shrink: 0; /* Impede que o ícone diminua */
+    }
+
+    /* Setas otimizadas para mobile */
+    .flickity-prev-next-button {
+        width: 2.25rem;
+        height: 2.25rem;
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(8px);
+        opacity: 0.7;
+        border-radius: 50%;
+        box-shadow: 0 3px 12px rgba(0,0,0,0.15);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .flickity-prev-next-button:hover,
+    .flickity-prev-next-button:focus {
+        background: rgba(255, 255, 255, 0.95);
+        opacity: 1;
+    }
+
+    .flickity-prev-next-button.previous {
+        left: -1rem;
+    }
+
+    .flickity-prev-next-button.next {
+        right: -1rem;
+    }
+
+    .flickity-button-icon {
+        fill: #444;
+    }
+
+    /* Paginação mobile */
+    .flickity-page-dots {
+        bottom: -3rem;
+        text-align: center;
+    }
+
+    .flickity-page-dots .dot {
+        width: 0.6rem;
+        height: 0.6rem;
+        margin: 0 0.2rem;
+        opacity: 0.3;
+        background: #aaa;
+        transition: all 0.3s ease;
+        border-radius: 50%;
+    }
+
+    .flickity-page-dots .dot.is-selected {
+        background: #337ab7;
+        opacity: 1;
+        transform: scale(1.3);
+    }
+
+    /* Melhoria no espaçamento geral */
+    .container.d-flex.flex-column.pb-5 {
+        padding-bottom: 2rem !important; /* Menos espaçamento no mobile */
+    }
+
+    /* Título da seção responsivo */
+    .text-my-primary {
+        font-size: 1.1rem !important;
+        text-align: center;
+        white-space: normal !important;
+        line-height: 1.3;
+        padding: 0 1rem;
+    }
+
+    .d-flex.align-items-center.mb-3.position-relative {
+        margin-bottom: 1rem !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        gap: 0.75rem;
+        position: static !important; /* Remove posicionamento relativo */
+    }
+
+    .text-my-primary.position-absolute.start-50.translate-middle-x {
+        position: static !important;
+        transform: none !important;
+        margin: 0 !important;
+        text-align: center;
+        width: 100%;
+    }
+
+    .btn-my-outline-primary.ms-auto {
+        margin: 0 !important;
+        position: static !important;
+    }
+
+    /* Botão "Ver todos" mobile */
+    .btn-my-outline-primary {
+        font-size: 0.85rem;
+        padding: 0.4rem 0.8rem;
+        white-space: nowrap;
+
+    }
+}
+
+/* ===== MOBILE PEQUENO (até 480px) - AJUSTES EXTRAS ===== */
+@media (max-width: 480px) {
+    .carousel-cell-images {
+        width: 90%; /* Card ainda maior em telas muito pequenas */
+    }
+
+    .carousel-cell-images .img-wrapper {
+        height: 200px; /* Altura menor para telas pequenas */
+    }
+
+    .tit-carrossel-home {
+        font-size: 0.95rem;
+    }
+
+    .sub-carrossel-home {
+        font-size: 0.75rem;
+    }
+
+    /* Setas menores em telas muito pequenas */
+    .flickity-prev-next-button {
+        width: 2rem;
+        height: 2rem;
+    }
+
+    .flickity-prev-next-button.previous {
+        left: -0.75rem;
+    }
+
+    .flickity-prev-next-button.next {
+        right: -0.75rem;
+    }
+}
+
+/* ===== MELHORIAS GERAIS ===== */
+
+/* Transição suave para mudanças de layout */
+.carousel-cell-images,
+.carousel-cell-images .img-wrapper,
+.carousel-cell-images .img-wrapper .img-fixed {
+    transition: all 0.3s ease;
+}
+
+/* Acessibilidade - foco visível */
+.flickity-prev-next-button:focus {
+    outline: 2px solid #337ab7;
+    outline-offset: 2px;
+}
+
+/* Carregamento da imagem - placeholder */
+.carousel-cell-images .img-wrapper .img-fixed[src=""] {
+    background: linear-gradient(45deg, #f0f0f0 25%, transparent 25%),
+                linear-gradient(-45deg, #f0f0f0 25%, transparent 25%),
+                linear-gradient(45deg, transparent 75%, #f0f0f0 75%),
+                linear-gradient(-45deg, transparent 75%, #f0f0f0 75%);
+    background-size: 20px 20px;
+    background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+}
+
+/* Performance - GPU acceleration */
+.main-carousel,
+.carousel-cell-images,
+.flickity-prev-next-button {
+    will-change: transform;
+    transform: translateZ(0);
+}

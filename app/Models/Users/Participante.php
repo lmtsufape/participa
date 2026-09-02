@@ -3,6 +3,8 @@
 namespace App\Models\Users;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Users\User;
+use App\Models\Submissao\Evento;
 
 class Participante extends Model
 {
@@ -12,11 +14,11 @@ class Participante extends Model
 
     public function user()
     {
-        return $this->belongsTo('App\Models\Users\User');
+        return $this->belongsTo(User::class);
     }
 
     public function eventos()
     {
-        return $this->belongsTo('App\Models\Submissao\Evento');
+        return $this->belongsTo(Evento::class);
     }
 }

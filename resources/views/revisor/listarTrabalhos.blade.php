@@ -34,7 +34,7 @@
                   <div class="card-body">
                     <h5 class="card-title">Trabalhos da área de {{$trabalhosDoRevisor[0]->area->nome}}</h5>
                     <h6 class="card-subtitle mb-2 text-muted">Que tem como modalidade {{$trabalhosDoRevisor[0]->modalidade->nome}}
-                      <a href="#" data-toggle="modal" data-target="#modalRegrasModalidade{{$trabalhosDoRevisor[0]->modalidade->id}}"><img src="{{asset('/img/icons/eye-regular.svg')}}" alt="Visualizar regras da modalidade" width="15px" title="Visualizar regras da modalidade"></a>
+                      <a href="#" data-bs-toggle="modal" data-bs-target="#modalRegrasModalidade{{$trabalhosDoRevisor[0]->modalidade->id}}"><img src="{{asset('/img/icons/eye-regular.svg')}}" alt="Visualizar regras da modalidade" width="15px" title="Visualizar regras da modalidade"></a>
                     </h6>
                     <p class="card-text">
                       <div class="col-sm-12">
@@ -61,7 +61,7 @@
                               @endif
                               <td>
                                 @if ($trabalho->resumo != null)
-                                  <a class="resumoTrabalho" href="#" data-toggle="modal" onclick="resumoModal({{$trabalho->id}})" data-target="#exampleModalLong"><img src="{{asset('img/icons/resumo.png')}}" style="width:20px"></a>
+                                  <a class="resumoTrabalho" href="#" data-bs-toggle="modal" onclick="resumoModal({{$trabalho->id}})" data-bs-target="#exampleModalLong"><img src="{{asset('img/icons/resumo.png')}}" style="width:20px"></a>
                                 @else
                                   Sem resumo
                                 @endif
@@ -74,12 +74,12 @@
                               @if ($trabalho->avaliado != "Avaliado")
                                 @if (now() >= $trabalho->modalidade->inicioRevisao && now() <= $trabalho->modalidade->fimRevisao)
                                   {{-- <td>
-                                    <a href="#"><img src="{{asset('img/icons/check-solid.svg')}}" style="width:20px" data-toggle="modal" data-target="#modalAvaliarTrabalho{{$trabalho->id}}"></a>
+                                    <a href="#"><img src="{{asset('img/icons/check-solid.svg')}}" style="width:20px" data-bs-toggle="modal" data-bs-target="#modalAvaliarTrabalho{{$trabalho->id}}"></a>
                                   </td> --}}
                                   <td>
                                     <form action="{{route('revisor.responde')}}" method="get">
                                       @csrf
-                                      <input type="hidden" name="revisor_id" value="{{$trabalho->atribuicoes()->where('user_id', auth()->user()->id)->first()->id}}">
+                                      <input type="hidden" name="revisor_id" value="{{$trabalho->revisores()->where('user_id', auth()->user()->id)->first()->id}}">
                                       <input type="hidden" name="trabalho_id" value="{{$trabalho->id}}">
                                       <input type="hidden" name="evento_id" value="{{$evento->id}}">
                                       <input type="hidden" name="modalidade_id" value="{{$trabalho->modalidade->id}}">
@@ -88,7 +88,7 @@
                                       </button>
                                     </form>
                                     {{--<h6 class="card-subtitle mb-2 text-muted">Avaliar trabalho
-                                        <a href="#" data-toggle="modal" data-target="#modalAvaliarTrabalho{{$trabalho->id}}"><img src="{{asset('/img/icons/eye-regular.svg')}}" alt="Avaliar trabalho final" width="15px" title="Avaliar trabalho final"></a>
+                                        <a href="#" data-bs-toggle="modal" data-bs-target="#modalAvaliarTrabalho{{$trabalho->id}}"><img src="{{asset('/img/icons/eye-regular.svg')}}" alt="Avaliar trabalho final" width="15px" title="Avaliar trabalho final"></a>
                                     </h6>--}}
                                   </td>
                                 @else
@@ -97,7 +97,7 @@
                                     <img src="{{asset('img/icons/check-solid.svg')}}" style="width:20px" title="Avaliação disponível em {{date('d/m/Y',strtotime($trabalho->modalidade->inicioRevisao))}} até {{date('d/m/Y',strtotime($trabalho->modalidade->fimRevisao))}}">
                                   </td>
                                 @endif
-                                {{-- {{$trabalho->atribuicoes()->where('user_id', auth()->user()->id)->first()->id}} --}}
+                                {{-- {{$trabalho->revisores()->where('user_id', auth()->user()->id)->first()->id}} --}}
                                 <td>
 
 

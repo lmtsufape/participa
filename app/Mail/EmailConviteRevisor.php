@@ -20,18 +20,21 @@ class EmailConviteRevisor extends Mailable
 
     public $email;
 
+    public $token;
+
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($user, $evento, $subject, $email = '', $informacoes = '')
+    public function __construct($user, $evento, $subject, $email = '', $informacoes = '', $token = null)
     {
         $this->user = $user;
         $this->subject = $subject;
         $this->evento = $evento;
         $this->email = $email;
         $this->informacoes = $informacoes;
+        $this->token = $token;
     }
 
     /**
@@ -62,6 +65,7 @@ class EmailConviteRevisor extends Mailable
                 'info' => $this->informacoes,
                 'evento' => $this->evento,
                 'email' => $this->email,
+                'token' => $this->token,
             ]);
     }
 }

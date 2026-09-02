@@ -5,11 +5,14 @@ namespace App\Http\Requests;
 use App\Models\Submissao\Evento;
 use App\Models\Submissao\MidiaExtra;
 use App\Models\Submissao\Modalidade;
+use App\Models\Users\User;
+use App\Rules\CoautorCadastrado;
 use App\Rules\CoautorInscritoNoEvento;
 use App\Rules\FileType;
 use App\Rules\MaxTrabalhosCoautor;
 use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
+use App\Rules\MaxCoautoresNaModalidade;
 
 class TrabalhoPostRequest extends FormRequest
 {
@@ -20,17 +23,7 @@ class TrabalhoPostRequest extends FormRequest
      */
     public function authorize()
     {
-        $modalidade = Modalidade::find($this->route('id'));
-        $mytime = Carbon::now('America/Recife');
-        $evento = Evento::find(request()->eventoId);
-        if (! $modalidade->estaEmPeriodoDeSubmissao()) {
-            return $this->user()->can('isCoordenadorOrCoordenadorDasComissoes', $evento);
-        }
-        if (! $modalidade->estaEmPeriodoDeSubmissao()) {
-            return redirect()->route('home');
-        }
-
-        return 1;
+        return true;
     }
 
     /**
@@ -40,19 +33,21 @@ class TrabalhoPostRequest extends FormRequest
      */
     public function rules()
     {
-        $evento = Evento::find(request()->eventoId);
-        $modalidade = Modalidade::find(request()->modalidadeId);
+        $modalidade = Modalidade::with('evento')->findOrFail($this->request->get('modalidade_id'));
         $validate_array = [
             'nomeTrabalho' => ['required', 'string'],
             'nomeTrabalho_en' => ['nullable', 'string'],
-            'areaId' => ['required', 'integer'],
-            'modalidadeId' => ['required', 'integer'],
-            'eventoId' => ['required', 'integer'],
+            'area_id'       => ['required', 'exists:areas,id'],
+            'modalidade_id' => ['required', 'exists:modalidades,id'],
+            'evento_id'     => ['required', 'exists:eventos,id'],
             'resumo' => ['nullable', 'string'],
             'resumo_en' => ['nullable', 'string'],
-            'nomeCoautor.*' => ['string'],
-            'emailCoautor.*' => ['string', new MaxTrabalhosCoautor($evento->numMaxCoautores), 'email', 'exists:users,email', new CoautorInscritoNoEvento($evento)],
-            'arquivo' => ['nullable', 'file', new FileType($modalidade, new MidiaExtra, request()->arquivo, true)],
+            'autor.email' => ['required', 'email'],
+            'autor.nome'  => ['required', 'string', 'max:255'],
+            'coautores' => ['array', new MaxCoautoresNaModalidade($modalidade)],
+            'coautores.*.nome'  => ['required','string','max:255'],
+            'coautores.*.email' => ['required','email:rfc', 'distinct', 'different:autor.email'],
+            'arquivo' => ['required', 'file', new FileType($modalidade, new MidiaExtra, request()->arquivo, true)],
             'campoextra1arquivo' => ['nullable', 'file', 'max:2048'],
             'campoextra2arquivo' => ['nullable', 'file', 'max:2048'],
             'campoextra3arquivo' => ['nullable', 'file', 'max:2048'],
@@ -81,7 +76,7 @@ class TrabalhoPostRequest extends FormRequest
         ];
 
         foreach ($modalidade->midiasExtra as $midia) {
-            $validate_array[$midia->hyphenizeNome()] = ['required', 'file', new FileType($modalidade, $midia, request()[$midia->hyphenizeNome()], false)];
+            $validate_array[$midia->hyphenizeNome] = ['required', 'file', new FileType($modalidade, $midia, request()[$midia->hyphenizeNome], false)];
         }
 
         return $validate_array;
@@ -91,8 +86,30 @@ class TrabalhoPostRequest extends FormRequest
     {
         return [
             'arquivo.max' => 'O tamanho máximo permitido é de 2mb',
-            'emailCoautor.*.exists' => 'O usuário com o e-mail :input precisa estar cadastrado no sistema.',
         ];
+    }
+
+    public function withValidator($validator)
+    {
+        $validator->after(function ($validator) {
+            $emails = (array) $this->input('emailCoautor', []);
+            $flags  = (array) $this->input('coautorCadastrado', []);
+
+            foreach ($emails as $index => $email) {
+                $flag = $flags[$index] ?? 'sim';
+                if ($index == 0) {
+                    continue;
+                }
+                if ($flag === 'nao' && $email) {
+                    if (User::where('email', $email)->exists()) {
+                        $validator->errors()->add(
+                            'emailCoautor.' . $index,
+                            'O email ' .$email. ' já está cadastrado no sistema. Use o botão "Adicionar coautor" para coautores já cadastrados.'
+                        );
+                    }
+                }
+            }
+        });
     }
 
     public function attributes()

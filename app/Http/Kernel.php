@@ -3,7 +3,7 @@
 namespace App\Http;
 
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
-
+use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
 class Kernel extends HttpKernel
 {
     /**
@@ -36,7 +36,7 @@ class Kernel extends HttpKernel
             \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
             \Illuminate\Session\Middleware\StartSession::class,
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
-            \App\Http\Middleware\VerifyCsrfToken::class,
+            PreventRequestForgery::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
 
@@ -67,6 +67,7 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'isTemp' => \App\Http\Middleware\IsTemp::class,
         'setLocale' => \App\Http\Middleware\SetLocale::class,
+        'apiInscricaoAba'  =>  \App\Http\Middleware\ApiInscricaoAba::class,
 
         'block.get.params' => \App\Http\Middleware\BlockGetParams::class,
     ];
