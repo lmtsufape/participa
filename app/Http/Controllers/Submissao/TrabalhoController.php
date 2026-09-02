@@ -1214,17 +1214,64 @@ class TrabalhoController extends Controller
 
     public function correcaoTrabalho(Request $request)
     {
-        $trabalho = Trabalho::find($request->trabalhoCorrecaoId);
+        $trabalho = Trabalho::findOrFail($request->trabalhoCorrecaoId);
         $evento = $trabalho->evento;
         $this->authorize('permissaoCorrecao', $trabalho);
 
-        // Atualiza o texto/resumo caso a modalidade seja de texto
-        if ($trabalho->modalidade->texto && $request->filled('resumoCorrecao')) {
-            $trabalho->resumo = $request->resumoCorrecao;
-            $trabalho->save();
+        if ($request->filled('tituloCorrecao')) {
+            $trabalho->titulo = $request->tituloCorrecao;
         }
 
-        // Processa o arquivo caso tenha sido enviado
+        if ($trabalho->modalidade->texto && $request->filled('resumoCorrecao')) {
+            $trabalho->resumo = $request->resumoCorrecao;
+        }
+
+        if ($request->has('emailCoautor_' . $trabalho->id)) {
+            $emails = $request->input('emailCoautor_' . $trabalho->id);
+            $nomes = $request->input('nomeCoautor_' . $trabalho->id);
+
+            $usuariosCoautoresAtuais = $trabalho->coautors->pluck('autorId')->toArray();
+            $novosIdsCoautores = [];
+
+            foreach ($emails as $i => $email) {
+                if (!$email) continue;
+
+                $userCoautor = User::firstOrCreate(
+                    ['email' => $email],
+                    [
+                        'name' => $nomes[$i] ?? 'Participante',
+                        'password' => bcrypt(Str::random(8)),
+                        'usuarioTemp' => true
+                    ]
+                );
+
+                if ($i === 0) {
+                    // Autor Principal
+                    $trabalho->autorId = $userCoautor->id;
+                    if ($userCoautor->coautor) {
+                        $trabalho->coautors()->detach($userCoautor->coautor->id);
+                    }
+                } else {
+                    // Coautor
+                    $coautorModel = Coautor::firstOrCreate(
+                        ['autorId' => $userCoautor->id, 'eventos_id' => $evento->id],
+                        ['ordem' => $i]
+                    );
+                    $coautorModel->update(['ordem' => $i]);
+
+                    if (!$trabalho->coautors->contains($coautorModel->id)) {
+                        $trabalho->coautors()->attach($coautorModel->id);
+                    }
+                    $novosIdsCoautores[] = $coautorModel->id;
+                }
+            }
+
+            $coautoresParaRemover = array_diff($usuariosCoautoresAtuais, $novosIdsCoautores);
+            if (!empty($coautoresParaRemover)) {
+                $trabalho->coautors()->detach($coautoresParaRemover);
+            }
+        }
+
         if ($request->hasFile('arquivoCorrecao')) {
             if ($this->validarTipoDoArquivo($request->arquivoCorrecao, $trabalho->modalidade)) {
                 return redirect()->back()->withErrors(['mensagem' => 'Extensão de arquivo enviado é diferente do permitido.']);
@@ -1249,9 +1296,10 @@ class TrabalhoController extends Controller
             ]);
         }
 
-        // Notifica os revisores atribuídos
-        $revisores = $trabalho->atribuicoes;
-        foreach ($revisores as $revisor) {
+        $trabalho->data_correcao_submetida = now();
+        $trabalho->save();
+
+        foreach ($trabalho->atribuicoes as $revisor) {
             if ($revisor->user && $revisor->user->email) {
                 Mail::to($revisor->user->email)->send(new EmailCorrecaoTrabalho($evento, $trabalho, $revisor));
             }

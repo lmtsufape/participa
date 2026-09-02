@@ -348,7 +348,9 @@
                         <hr>
                         <div class="d-flex align-items-center">
                             <h6 class="me-3 mb-0">Correção Enviada:</h6>
-                            @if ($trabalho->arquivoCorrecao)
+                            @if ($trabalho->modalidade->texto && $trabalho->data_correcao_submetida)
+                                <span class="badge bg-success">Correção de texto enviada em {{ $trabalho->data_correcao_submetida->format('d/m/Y H:i') }}</span>
+                            @elseif ($trabalho->arquivoCorrecao)
                                 <a href="{{ route('downloadCorrecao', ['id' => $trabalho->id]) }}" target="_new" class="btn btn-success btn-sm d-flex align-items-center" title="Baixar correção enviada">
                                     <img src="{{ asset('img/icons/file-download-solid.svg') }}" style="width:16px; filter: invert(1);" class="me-1">
                                     Baixar Correção
@@ -1190,11 +1192,14 @@
 
                                 <input type="hidden" name="trabalhoCorrecaoId" value="{{ $trabalho->id }}">
 
-                                {{-- Título (Apenas Leitura / Informativo) --}}
                                 <div class="row justify-content-center mb-3">
                                     <div class="col-sm-12">
-                                        <label class="col-form-label font-weight-bold">{{ $formSubTraba->etiquetatitulotrabalho ?? 'Título' }}:</label>
-                                        <input type="text" class="form-control" value="{{ $trabalho->titulo }}" disabled>
+                                        <label for="tituloCorrecao_{{ $trabalho->id }}" class="col-form-label font-weight-bold">
+                                            {{ $formSubTraba->etiquetatitulotrabalho ?? 'Título' }}: <span class="text-danger">*</span>
+                                        </label>
+                                        <input id="tituloCorrecao_{{ $trabalho->id }}" type="text" 
+                                            class="form-control" name="tituloCorrecao" 
+                                            value="{{ old('tituloCorrecao', $trabalho->titulo) }}" required>
                                     </div>
                                 </div>
 
@@ -1293,6 +1298,70 @@
                                         </div>
                                     </div>
                                 @endif
+
+                                <div class="card mb-3 p-3 bg-light">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <h6 class="mb-0 font-weight-bold">Autores e Coautores</h6>
+                                        <button type="button" class="btn btn-sm btn-outline-primary" 
+                                                onclick="montarLinhaInput(this, {{ $trabalho->id }}, event)">
+                                            + Adicionar Coautor
+                                        </button>
+                                    </div>
+
+                                    <div id="coautores{{ $trabalho->id }}" class="flexContainer">
+                                        {{-- Autor Principal --}}
+                                        <div class="item card mt-1">
+                                            <div class="row card-body p-2">
+                                                <div class="col-sm-5">
+                                                    <label class="small mb-1">E-mail do Autor</label>
+                                                    <input type="email" class="form-control form-control-sm" 
+                                                        name="emailCoautor_{{ $trabalho->id }}[]" 
+                                                        value="{{ $trabalho->autor->email }}" required>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <label class="small mb-1">Nome do Autor</label>
+                                                    <input type="text" class="form-control form-control-sm" 
+                                                        name="nomeCoautor_{{ $trabalho->id }}[]" 
+                                                        value="{{ $trabalho->autor->name }}" required>
+                                                </div>
+                                                <div class="col-sm-1 d-flex align-items-end">
+                                                    <span class="badge bg-primary mb-1">Autor</span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {{-- Lista de Coautores --}}
+                                        @foreach ($trabalho->coautors as $coautor)
+                                            <div class="item card mt-2">
+                                                <div class="row card-body p-2">
+                                                    <div class="col-sm-5">
+                                                        <label class="small mb-1">E-mail</label>
+                                                        <input type="email" class="form-control form-control-sm" 
+                                                            name="emailCoautor_{{ $trabalho->id }}[]" 
+                                                            value="{{ $coautor->user->email }}" required>
+                                                    </div>
+                                                    <div class="col-sm-5">
+                                                        <label class="small mb-1">Nome Completo</label>
+                                                        <input type="text" class="form-control form-control-sm" 
+                                                            name="nomeCoautor_{{ $trabalho->id }}[]" 
+                                                            value="{{ $coautor->user->name }}" required>
+                                                    </div>
+                                                    <div class="col-sm-2 d-flex align-items-center justify-content-around mt-3">
+                                                        <a href="#" style="color: #d30909;" onclick="deletarCoautor(this, {{ $trabalho->id }}, event)">
+                                                            <img src="{{ asset('img/icons/trash-alt-regular.svg') }}" width="18">
+                                                        </a>
+                                                        <a href="#" onclick="mover(this.parentElement.parentElement.parentElement, 1, {{ $trabalho->id }}, event)">
+                                                            <img src="{{ asset('img/icons/sobe.png') }}" width="18">
+                                                        </a>
+                                                        <a href="#" onclick="mover(this.parentElement.parentElement.parentElement, 0, {{ $trabalho->id }}, event)">
+                                                            <img src="{{ asset('img/icons/desce.png') }}" width="18">
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
 
                             </form>
                         </div>

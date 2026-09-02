@@ -254,7 +254,8 @@
                                                     </a>
                                                 @endif
 
-                                                @if (($trabalho->arquivoCorrecao()->exists() || $trabalho->modalidade->texto) && 
+                                                @if ($trabalho->avaliado(auth()->user()) &&
+                                                    $trabalho->temCorrecaoSubmetida() && 
                                                     !in_array($trabalho->avaliado, ['corrigido', 'corrigido_parcialmente', 'nao_corrigido']) && 
                                                     $trabalho->modalidade->emPeriodoDeValidacao())
                                                     <a type="button" data-bs-target="#validacaoCorrecaoModal{{ $trabalho->id }}" data-bs-toggle="modal" class="btn btn-sm btn-primary mt-2">
@@ -262,6 +263,8 @@
                                                     </a>
                                                 @elseif(in_array($trabalho->avaliado, ['corrigido', 'corrigido_parcialmente', 'nao_corrigido']))
                                                     <span class="badge bg-secondary mt-1">Validação Concluída</span>
+                                                @else
+                                                    <span class="text-muted small mt-1">-</span>
                                                 @endif
                                             </div>
                                         </td>

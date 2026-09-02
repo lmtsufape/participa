@@ -22,12 +22,13 @@ class Trabalho extends Model
         'titulo', 'autores', 'data', 'modalidadeId', 'areaId', 'autorId', 'eventoId', 'resumo', 'avaliado',
         'campoextra1simples', 'campoextra2simples', 'campoextra3simples', 'campoextra4simples',
         'campoextra5simples', 'campoextra1grande', 'campoextra2grande', 'campoextra3grande',
-        'campoextra4grande', 'campoextra5grande', 'status', 'aprovado', 'permite_correcao', 'apresentado'
+        'campoextra4grande', 'campoextra5grande', 'status', 'aprovado', 'permite_correcao', 'apresentado', 'data_correcao_submetida', 'justificativa_correcao'
     ];
 
     protected $casts = [
         'aprovacao_emitida_em' => 'datetime',
-        'permite_correcao' => 'boolean'
+        'permite_correcao' => 'boolean',
+        'data_correcao_submetida' => 'datetime'
     ];
 
     public static function gerarCodigo(){
@@ -158,5 +159,31 @@ class Trabalho extends Model
         return $this->atribuicoes->map(function ($revisor) {
             return $this->avaliado($revisor->user);
         })->filter()->count();
+    }
+
+    public function temCorrecaoSubmetida(): bool
+    {
+        // Se for modalidade de arquivo
+        if ($this->modalidade && $this->modalidade->arquivo && !$this->modalidade->texto) {
+            return $this->arquivoCorrecao()->exists();
+        }
+
+        // Se for modalidade de texto:
+        // 1. Caso o novo campo esteja preenchido
+        if (!is_null($this->data_correcao_submetida)) {
+            return true;
+        }
+
+        // 2. Fallback para os já submetidos no passado:
+        // Se já foi validado ou se foi liberado e sofreu update após a criação
+        if (in_array($this->avaliado, ['corrigido', 'corrigido_parcialmente', 'nao_corrigido'])) {
+            return true;
+        }
+
+        if ($this->permite_correcao && $this->updated_at && $this->updated_at->gt($this->created_at)) {
+            return true;
+        }
+
+        return false;
     }
 }
