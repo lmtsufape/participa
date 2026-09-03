@@ -1284,5 +1284,26 @@
             }
         });
     });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        // Sincroniza o CKEditor ao criar atividade
+        const formCriar = document.getElementById('formNovaAtividade');
+        if (formCriar) {
+            formCriar.addEventListener('submit', function () {
+                for (let instance in CKEDITOR.instances) {
+                    CKEDITOR.instances[instance].updateElement();
+                }
+            });
+        }
+
+        // Sincroniza o CKEditor ao editar atividade
+        document.querySelectorAll('form[id^="formEdidarAtividade"]').forEach(function(form) {
+            form.addEventListener('submit', function () {
+                for (let instance in CKEDITOR.instances) {
+                    CKEDITOR.instances[instance].updateElement();
+                }
+            });
+        });
+    });
 </script>
 @endsection
