@@ -573,10 +573,10 @@
                             </div>
 
                             <div class="row">
-                                {{-- Associado da ABA Agroecologia --}}
+                                {{-- Associado da Sociedade Brasileira de Etnobiologia e Etnoecologia (SBEE) --}}
                                 <div class="col-md-6">
                                     <div class="form-group mt-3">
-                                        <label class="col-form-label">Você é uma pessoa associada à Associação Brasileira de Agroecologia (ABA-Agroecologia)?</label>
+                                        <label class="col-form-label">Você é uma pessoa associada à Sociedade Brasileira de Etnobiologia e Etnoecologia (SBEE)?</label>
                                         <div>
                                             <div class="form-check">
                                                 <input class="form-check-input" type="radio" name="associadoAba" id="associado_sim" value="true"
@@ -592,10 +592,9 @@
                                     </div>
                                 </div>
 
-                                {{-- Gostaria de receber mais informações sobre ABA --}}
                                 <div class="col-md-6">
                                     <div class="form-group mt-3">
-                                        <label class="col-form-label ">Se não, gostaria de receber mais informações sobre a ABA-Agroecologia?</label>
+                                        <label class="col-form-label ">Se não, gostaria de receber mais informações sobre a Sociedade Brasileira de Etnobiologia e Etnoecologia (SBEE)?</label>
                                         <div>
                                             <div class="form-check">
                                                 <input class="form-check-input" type="radio" name="receberInfoAba" id="receber_info_sim" value="true"

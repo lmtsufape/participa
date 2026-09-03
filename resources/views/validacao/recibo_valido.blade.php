@@ -58,7 +58,7 @@
                     <div class="text-center mt-4">
                         <div class="alert alert-info">
                             <img src="{{ asset('img/icons/info-circle-solid.svg') }}" alt="Informação" style="width: 16px; height: 16px; margin-right: 5px;">
-                            <strong>Informação:</strong> Este documento foi emitido pela Associação Brasileira de Agroecologia (ABA) e é válido para fins de comprovação de pagamento.
+                            <strong>Informação:</strong> Este documento foi emitido pela Sociedade Brasileira de Etnobiologia e Etnoecologia (SBEE) e é válido para fins de comprovação de pagamento.
                         </div>
                     </div>
 

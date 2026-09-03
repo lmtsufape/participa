@@ -9,14 +9,14 @@
             <li>
                 <ul style="list-style-type: none;"> 
                     <li><h5>1. Introdução</h5></li>
-                    <li>Bem-vindo aos termos de uso da Plataforma de inscrições e submissão de trabalhos da Associação Brasileira de Agroecologia (ABA). Estes termos regem o uso do nosso aplicativo web.</li>
+                    <li>Bem-vindo aos termos de uso da Plataforma de inscrições e submissão de trabalhos da Sociedade Brasileira de Etnobiologia e Etnoecologia (SBEE). Estes termos regem o uso do nosso aplicativo web.</li>
                 </ul>
             </li>
             <br/>
             <li>
                 <ul style="list-style-type: none;"> 
                     <li><h5>2. Aceitação do Termo de Uso e Política de Privacidade</h5></li>
-                    <li>2.1 - Ao utilizar a Plataforma de inscrições e submissão de trabalhos da Associação Brasileira de Agroecologia (ABA), o usuário confirma que leu, compreendeu e que aceita os termos e políticas aplicáveis e fica a eles vinculado.</li>
+                    <li>2.1 - Ao utilizar a Plataforma de inscrições e submissão de trabalhos da Sociedade Brasileira de Etnobiologia e Etnoecologia (SBEE), o usuário confirma que leu, compreendeu e que aceita os termos e políticas aplicáveis e fica a eles vinculado.</li>
                     <li>2.2 - Caso não concorde com as regras presentes nestes Termos, o Usuário não poderá acessar e utilizar o sistema e dispor dos seus serviços. </li>
                 </ul style="list-style-type: none;">
             </li>
