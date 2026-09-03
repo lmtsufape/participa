@@ -40,7 +40,7 @@
                     <div class="text-center mt-4">
                         <div class="alert alert-warning">
                             <img src="{{ asset('img/icons/info-circle-solid.svg') }}" alt="Importante" style="width: 16px; height: 16px; margin-right: 5px;">
-                            <strong>Importante:</strong> Se você acredita que este é um erro, entre em contato com a Associação Brasileira de Agroecologia (ABA).
+                            <strong>Importante:</strong> Se você acredita que este é um erro, entre em contato com a Sociedade Brasileira de Etnobiologia e Etnoecologia (SBEE).
                         </div>
                     </div>
 
