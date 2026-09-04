@@ -1174,10 +1174,6 @@
                             </h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="filter: invert(1);"></button>
                         </div>
-                        
-                        <div class="alert alert-warning m-3" role="alert" style="border-radius: 5px;">
-                            <strong>⚠️ Não esqueça!</strong> Certifique-se de aplicar as alterações solicitadas no parecer dos avaliadores antes de submeter a correção.
-                        </div>
 
                         <div class="modal-body">
                             <form id="formCorrecaoTrabalho{{ $trabalho->id }}"

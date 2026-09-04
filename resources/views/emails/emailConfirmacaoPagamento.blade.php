@@ -85,7 +85,7 @@
                             Abraços,<br>
                                 Plataforma de inscrições e submissões de trabalhos <br>
                                 Participa (UFAPE/LMTS) <br>
-                                Associação Brasileira de Agroecologia (ABA) <br>
+                                Sociedade Brasileira de Etnobiologia e Etnoecologia (SBEE) <br>
                             </p>
                         </td>
                     </tr>
