@@ -1218,19 +1218,49 @@ class TrabalhoController extends Controller
         $evento = $trabalho->evento;
         $this->authorize('permissaoCorrecao', $trabalho);
 
+        $houveCorrecaoValida = false;
+
+        // Regra da modalidade: se for estritamente via arquivo (e não texto), exige arquivo prévio ou novo arquivo
+        if ($trabalho->modalidade->arquivo && !$trabalho->modalidade->texto) {
+            if (!$request->hasFile('arquivoCorrecao') && !$trabalho->arquivoCorrecao()->exists()) {
+                return redirect()->back()->withErrors(['mensagem' => 'O arquivo de correção é obrigatório.']);
+            }
+        }
+
+        // Validação preliminar do formato do arquivo caso tenha sido enviado
+        if ($request->hasFile('arquivoCorrecao')) {
+            if ($this->validarTipoDoArquivo($request->arquivoCorrecao, $trabalho->modalidade)) {
+                return redirect()->back()->withErrors(['mensagem' => 'Extensão de arquivo enviado é diferente do permitido.']);
+            }
+
+            $request->validate([
+                'arquivoCorrecao' => ['required', 'file', 'max:5120'],
+            ]);
+        }
+
+        // 1. Título
         if ($request->filled('tituloCorrecao')) {
-            $trabalho->titulo = $request->tituloCorrecao;
+            if ($trabalho->titulo !== $request->tituloCorrecao) {
+                $trabalho->titulo = $request->tituloCorrecao;
+                $houveCorrecaoValida = true;
+            }
         }
 
+        // 2. Resumo (Modalidade Texto)
         if ($trabalho->modalidade->texto && $request->filled('resumoCorrecao')) {
-            $trabalho->resumo = $request->resumoCorrecao;
+            if ($trabalho->resumo !== $request->resumoCorrecao) {
+                $trabalho->resumo = $request->resumoCorrecao;
+                $houveCorrecaoValida = true;
+            }
         }
 
+        // 3. Autor e Coautores
         if ($request->has('emailCoautor_' . $trabalho->id)) {
             $emails = $request->input('emailCoautor_' . $trabalho->id);
             $nomes = $request->input('nomeCoautor_' . $trabalho->id);
 
-            $usuariosCoautoresAtuais = $trabalho->coautors->pluck('autorId')->toArray();
+            // IDs dos modelos Coautor atualmente vinculados
+            $coautoresAtuaisIds = $trabalho->coautors->pluck('id')->toArray();
             $novosIdsCoautores = [];
 
             foreach ($emails as $i => $email) {
@@ -1246,41 +1276,47 @@ class TrabalhoController extends Controller
                 );
 
                 if ($i === 0) {
-                    // Autor Principal
-                    $trabalho->autorId = $userCoautor->id;
+                    // Se o autor principal foi alterado
+                    if ($trabalho->autorId != $userCoautor->id) {
+                        $trabalho->autorId = $userCoautor->id;
+                        $houveCorrecaoValida = true;
+                    }
+                    
                     if ($userCoautor->coautor) {
                         $trabalho->coautors()->detach($userCoautor->coautor->id);
                     }
                 } else {
-                    // Coautor
                     $coautorModel = Coautor::firstOrCreate(
                         ['autorId' => $userCoautor->id, 'eventos_id' => $evento->id],
                         ['ordem' => $i]
                     );
-                    $coautorModel->update(['ordem' => $i]);
 
+                    // Se mudou a ordem
+                    if ($coautorModel->ordem !== $i) {
+                        $coautorModel->update(['ordem' => $i]);
+                        $houveCorrecaoValida = true;
+                    }
+
+                    // Se é um novo coautor sendo vinculado
                     if (!$trabalho->coautors->contains($coautorModel->id)) {
                         $trabalho->coautors()->attach($coautorModel->id);
+                        $houveCorrecaoValida = true;
                     }
+
                     $novosIdsCoautores[] = $coautorModel->id;
                 }
             }
 
-            $coautoresParaRemover = array_diff($usuariosCoautoresAtuais, $novosIdsCoautores);
+            // Se coautores foram removidos
+            $coautoresParaRemover = array_diff($coautoresAtuaisIds, $novosIdsCoautores);
             if (!empty($coautoresParaRemover)) {
                 $trabalho->coautors()->detach($coautoresParaRemover);
+                $houveCorrecaoValida = true;
             }
         }
 
+        // 4. Arquivo de Correção
         if ($request->hasFile('arquivoCorrecao')) {
-            if ($this->validarTipoDoArquivo($request->arquivoCorrecao, $trabalho->modalidade)) {
-                return redirect()->back()->withErrors(['mensagem' => 'Extensão de arquivo enviado é diferente do permitido.']);
-            }
-
-            $request->validate([
-                'arquivoCorrecao' => ['required', 'file', 'max:5120'],
-            ]);
-
             $arquivoCorrecao = $trabalho->arquivoCorrecao()->first();
             if ($arquivoCorrecao != null) {
                 if (Storage::disk()->exists($arquivoCorrecao->caminho)) {
@@ -1294,18 +1330,26 @@ class TrabalhoController extends Controller
                 'caminho' => $path,
                 'trabalhoId' => $trabalho->id,
             ]);
+
+            $houveCorrecaoValida = true;
         }
 
-        $trabalho->data_correcao_submetida = now();
-        $trabalho->save();
+        // 5. Finalização e Notificação
+        if ($houveCorrecaoValida) {
+            $trabalho->data_correcao_submetida = now();
+            $trabalho->save();
 
-        foreach ($trabalho->atribuicoes as $revisor) {
-            if ($revisor->user && $revisor->user->email) {
-                Mail::to($revisor->user->email)->send(new EmailCorrecaoTrabalho($evento, $trabalho, $revisor));
+            // Envia o e-mail para todos os avaliadores atribuídos a este trabalho
+            foreach ($trabalho->atribuicoes as $revisor) {
+                if ($revisor->user && $revisor->user->email) {
+                    Mail::to($revisor->user->email)->send(new EmailCorrecaoTrabalho($evento, $trabalho, $revisor));
+                }
             }
+
+            return redirect()->back()->with(['success' => 'Correção de ' . $trabalho->titulo . ' enviada com sucesso!']);
         }
 
-        return redirect()->back()->with(['success' => 'Correção de ' . $trabalho->titulo . ' enviada com sucesso!']);
+        return redirect()->back()->with(['mensagem' => 'Nenhuma alteração detectada para submissão da correção.']);
     }
 
     public function downloadArquivoCorrecao(Request $request)
