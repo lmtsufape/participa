@@ -142,7 +142,7 @@
                                 <th style="text-align:center">Editar</th>
                                 <th style="text-align:center">Excluir</th>
                                 <th style="text-align:center">Pareceres</th>
-                                <th style="text-align:center">Correção</th>
+                                <th style="text-align:center">Envio de Correção</th>
                                 <th class="text-center">Resultado</th>
                             </tr>
                         </thead>
@@ -241,15 +241,34 @@
                                     </td>
 
                                     <td style="text-align:center">
-                                        @if(($trabalho->modalidade->inicioCorrecao <= $agora && $trabalho->modalidade->fimCorrecao >= $agora
-                                            || $trabalho->modalidade->estaEmPeriodoExtraDeCorrecao()) && ($trabalho->getOriginal('aprovado') === null && $trabalho->permite_correcao && !in_array($trabalho->avaliado, ['corrigido', 'corrigido_parcialmente', 'nao_corrigido'])))
-                                            <a href="#" data-bs-toggle="modal" data-bs-target="#modalCorrecaoTrabalho_{{$trabalho->id}}" style="color:#114048ff">
-                                                <img class="" src="{{asset('img/icons/file-upload-solid.svg')}}" style="width:20px">
+                                        @if ($trabalho->temCorrecaoSubmetida())
+                                            @php
+                                                $dataEnvio = $trabalho->data_correcao_submetida 
+                                                    ?? optional($trabalho->arquivoCorrecao)->created_at;
+                                            @endphp
+
+                                            <span class="badge bg-secondary text-wrap" style="font-size: 11px; line-height: 1.4;" title="Correção já enviada">
+                                                <i class="fas fa-lock me-1"></i> Enviada em:<br>
+                                                {{ $dataEnvio ? $dataEnvio->format('d/m/Y \à\s H:i') : 'Data não registrada' }}
+                                            </span>
+
+                                        @elseif (in_array($trabalho->avaliado, ['corrigido', 'corrigido_parcialmente', 'nao_corrigido']))
+                                            <a href="#" onclick="return false;" data-bs-toggle="popover" data-trigger="focus" data-placement="bottom" 
+                                            title="Correção validada" 
+                                            data-content="A correção deste trabalho já foi avaliada/validada. Não é possível enviar nova versão." 
+                                            style="color:#6c757d">
+                                                <img src="{{ asset('img/icons/file-upload-solid.svg') }}" style="width:20px; opacity: 0.5;">
                                             </a>
-                                        @elseif( in_array($trabalho->avaliado, ['corrigido', 'corrigido_parcialmente', 'nao_corrigido']))
-                                            <a href="#" onclick="return false;" data-bs-toggle="popover" data-trigger="focus" data-placement="bottom" title="O(A) avaliador(a) do trabalho já validou esta correção." data-content="O(A) avaliador(a) do trabalho já validou esta correção. Não é possível enviar nova versão." style="color:#6c757d">
-                                                <img class="" src="{{asset('img/icons/file-upload-solid.svg')}}" style="width:20px; opacity: 0.5;">
+
+                                        @elseif (($trabalho->modalidade->inicioCorrecao <= $agora && $trabalho->modalidade->fimCorrecao >= $agora
+                                                || $trabalho->modalidade->estaEmPeriodoExtraDeCorrecao()) 
+                                                && ($trabalho->getOriginal('aprovado') === null && $trabalho->permite_correcao))
+                                            <a href="#" data-bs-toggle="modal" data-bs-target="#modalCorrecaoTrabalho_{{ $trabalho->id }}" 
+                                            style="color:#114048ff" title="Enviar correção">
+                                                <img src="{{ asset('img/icons/file-upload-solid.svg') }}" style="width:20px">
                                             </a>
+                                        @else
+                                            <span class="text-muted">-</span>
                                         @endif
                                     </td>
                                     <td class="text-center">

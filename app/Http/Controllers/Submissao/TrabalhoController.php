@@ -1338,9 +1338,27 @@ class TrabalhoController extends Controller
         // 5. Finalização e Notificação
         if ($houveCorrecaoValida) {
             $trabalho->data_correcao_submetida = now();
+
+            // Se a validação NÃO estiver habilitada, aprova automaticamente e envia carta de aceite
+            if (!$trabalho->modalidade->validacaoHabilitada()) {
+                $codigo = Trabalho::gerarCodigo();
+
+                $trabalho->aprovado = true;
+                $trabalho->hash_codigo_aprovacao = hash('sha256', str_replace('-', '', $codigo));
+                $trabalho->aprovacao_emitida_em = now();
+                $trabalho->permite_correcao = false; // Bloqueia novas correções após o aceite
+                $trabalho->save();
+
+                Mail::to($trabalho->autor->email)->send(new CartaDeAceiteMail($trabalho, $codigo));
+
+                return redirect()->back()->with([
+                    'success' => 'Correção de ' . $trabalho->titulo . ' enviada e trabalho aprovado com sucesso!'
+                ]);
+            }
+
+            // Fluxo padrão: Validação ativa, mantém o status e notifica os avaliadores
             $trabalho->save();
 
-            // Envia o e-mail para todos os avaliadores atribuídos a este trabalho
             foreach ($trabalho->atribuicoes as $revisor) {
                 if ($revisor->user && $revisor->user->email) {
                     Mail::to($revisor->user->email)->send(new EmailCorrecaoTrabalho($evento, $trabalho, $revisor));
