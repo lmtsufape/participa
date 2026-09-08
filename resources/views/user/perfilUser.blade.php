@@ -77,13 +77,13 @@
                     <div class="form-group row">
                         <div class="col-md-6">
                                 <fieldset class="custom-control custom-radio custom-control-inline col-form-label">
-                                    <input type="radio" id="documento_cpf" name="documentos" class="custom-control-input" value="cpf" @checked(old('documentos') === 'cpf' || old('cpf', $user->cpf))>
+                                    <input type="radio" id="documento_cpf" name="documento_tipo" class="custom-control-input" value="cpf" @checked(old('documento_tipo', $user->cpf ? 'cpf' : ($user->cnpj ? 'cnpj' : ($user->passaporte ? 'passaporte' : null))) === 'cpf')>
                                     <label class="custom-control-label me-2" for="documento_cpf"><strong>CPF</strong></label>
 
-                                    <input type="radio" id="documento_cnpj" name="documentos" class="custom-control-input" value="cnpj" @checked(old('documentos') === 'cnpj' || old('cnpj', $user->cnpj))>
+                                    <input type="radio" id="documento_cnpj" name="documento_tipo" class="custom-control-input" value="cnpj" @checked(old('documento_tipo', $user->cpf ? 'cpf' : ($user->cnpj ? 'cnpj' : ($user->passaporte ? 'passaporte' : null))) === 'cnpj')>
                                     <label class="custom-control-label me-2" for="documento_cnpj"><strong>{{__('CNPJ')}}</strong></label>
 
-                                    <input type="radio" id="documento_passaporte" name="documentos" class="custom-control-input" value="passaporte" @checked(old('documentos') === 'passaporte' || old('passaporte', $user->passaporte))>
+                                    <input type="radio" id="documento_passaporte" name="documento_tipo" class="custom-control-input" value="passaporte" @checked(old('documento_tipo', $user->cpf ? 'cpf' : ($user->cnpj ? 'cnpj' : ($user->passaporte ? 'passaporte' : null))) === 'passaporte')>
                                     <label class="custom-control-label " for="documento_passaporte"><strong>{{__('Passaporte')}}</strong></label>
                                 </fieldset>
 
@@ -144,10 +144,10 @@
                         </div>
 
                         <div class="col-md-4">
-                            <label for="dataNascimento" class="col-form-label"><strong>{{ __('Data de nascimento') }}</strong></label>
-                            <input id="dataNascimento" type="date" class="form-control @error('dataNascimento') is-invalid @enderror" name="dataNascimento" @if(old('dataNascimento') != null)  value="{{ old('dataNascimento')}}" @else value="{{$perfilIdentitario?->dataNascimento}}" @endif autocomplete="dataNascimento" >
+                            <label for="data_nascimento" class="col-form-label"><strong>{{ __('Data de nascimento') }}</strong></label>
+                            <input id="data_nascimento" type="date" class="form-control @error('data_nascimento') is-invalid @enderror" name="data_nascimento" @if(old('data_nascimento') != null)  value="{{ old('data_nascimento')}}" @else value="{{$user->data_nascimento?->format('Y-m-d')}}" @endif autocomplete="data_nascimento" >
 
-                            @error('dataNascimento')
+                            @error('data_nascimento')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ __($message) }}</strong>
                                 </span>
@@ -723,7 +723,7 @@
                 $("#div_cnpj, #div_cpf").addClass('d-none').find("input").val('');
             });
 
-            $("input[name='documentos']:checked").trigger('change')
+            $("input[name='documento_tipo']:checked").trigger('change')
         });
 
         function proximaEtapa() {
