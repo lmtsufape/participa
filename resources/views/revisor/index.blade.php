@@ -151,7 +151,7 @@
 
                                 {{-- <th scope="col">Avaliar</th> --}}
                                 <th scope="col" style="text-align:center">Avaliação do trabalho</th>
-                                <th scope="col" style="text-align:center">Validação das correções</th>
+                                {{-- <th scope="col" style="text-align:center">Validação das correções</th> --}}
                                 <th scope="col" style="text-align:center">Atribuído em</th>
                                 <th scope="col" style="text-align:center">Prazo</th>
                                 </tr>
@@ -246,7 +246,7 @@
                                             </td>
                                         </div>
                                     @endif
-                                        <td>
+                                    {{--    <td>
                                             <div class="d-flex flex-column align-items-center">
                                                 @if ($trabalho->arquivoCorrecao()->exists())
                                                     <a href="{{ route('downloadCorrecao', ['id' => $trabalho->id]) }}" title="Baixar Arquivo Corrigido">
@@ -267,7 +267,7 @@
                                                     <span class="text-muted small mt-1">-</span>
                                                 @endif
                                             </div>
-                                        </td>
+                                        </td> --}}
                                         <td style="text-align:center">
                                             {{date('d/m/Y H:i',strtotime($trabalho->atribuicoes->first()->pivot->created_at))}}
                                         </td>

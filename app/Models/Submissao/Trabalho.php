@@ -163,24 +163,18 @@ class Trabalho extends Model
 
     public function temCorrecaoSubmetida(): bool
     {
-        // Se for modalidade de arquivo
-        if ($this->modalidade && $this->modalidade->arquivo && !$this->modalidade->texto) {
-            return $this->arquivoCorrecao()->exists();
+        // Se enviou arquivo de correção
+        if ($this->arquivoCorrecao()->exists()) {
+            return true;
         }
 
-        // Se for modalidade de texto:
-        // 1. Caso o novo campo esteja preenchido
+        // Se registrou explicitamente a data de submissão da correção (modalidade texto ou arquivo)
         if (!is_null($this->data_correcao_submetida)) {
             return true;
         }
 
-        // 2. Fallback para os já submetidos no passado:
-        // Se já foi validado ou se foi liberado e sofreu update após a criação
+        // Se já passou por validação posterior
         if (in_array($this->avaliado, ['corrigido', 'corrigido_parcialmente', 'nao_corrigido'])) {
-            return true;
-        }
-
-        if ($this->permite_correcao && $this->updated_at && $this->updated_at->gt($this->created_at)) {
             return true;
         }
 
