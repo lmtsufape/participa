@@ -1215,6 +1215,7 @@ class TrabalhoController extends Controller
     public function correcaoTrabalho(Request $request)
     {
         $trabalho = Trabalho::findOrFail($request->trabalhoCorrecaoId);
+        abort_unless($trabalho->modalidade->correcaoHabilitada(), 403, 'A correção está desativada para esta modalidade.');
         $evento = $trabalho->evento;
         $this->authorize('permissaoCorrecao', $trabalho);
 
@@ -1507,6 +1508,7 @@ class TrabalhoController extends Controller
 
     public function avaliarTrabalho(Request $request, $trabalho_id)
     {
+        abort_unless(Trabalho::findOrFail($trabalho_id)->modalidade->avaliacaoHabilitada(), 403, 'A avaliação está desativada para esta modalidade.');
         // dd($request);
         $exibirValidacao = $request->validate([
             'avaliar_trabalho_id' => 'required',

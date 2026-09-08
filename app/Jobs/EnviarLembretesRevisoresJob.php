@@ -36,7 +36,9 @@ class EnviarLembretesRevisoresJob implements ShouldQueue
     {
         Log::info('Job EnviarLembretesRevisoresJob iniciado.');
 
-        $trabalhosPendentes = Trabalho::whereHas('atribuicoes', function ($q) {
+        $trabalhosPendentes = Trabalho::whereHas('modalidade', function ($query) {
+            $query->whereNotNull('inicioRevisao')->whereNotNull('fimRevisao');
+        })->whereHas('atribuicoes', function ($q) {
             $q->where('parecer', 'processando')
               ->whereNotNull('prazo_correcao')
               ->where('prazo_correcao', '>', now());
@@ -71,6 +73,9 @@ class EnviarLembretesRevisoresJob implements ShouldQueue
                     $dataLimite = '';
 
                     $trabalhosPendentesRevisor = $trabalho->evento->trabalhos()
+                        ->whereHas('modalidade', function ($query) {
+                            $query->whereNotNull('inicioRevisao')->whereNotNull('fimRevisao');
+                        })
                         ->whereHas('atribuicoes', function ($query) use ($revisor) {
                             $query->where('revisor_id', $revisor->id)
                                   ->where('parecer', 'processando')

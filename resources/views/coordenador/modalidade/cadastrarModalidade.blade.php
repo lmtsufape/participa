@@ -63,69 +63,9 @@
                                     @enderror
                                 </div>
                             </div>
-                            <div class="form-row">
-                                <div class="form-group col-sm-6">
-                                    <label for="inicioRevisao" class="col-form-label font-weight-bold">{{ __('Início da Avaliação') }}</label>
-                                    <input id="inicioRevisao" type="datetime-local" class="form-control @error('inicioRevisao') is-invalid @enderror" name="inicioRevisao" value="{{ old('inicioRevisao') }}" autocomplete="inicioRevisao" autofocus>
-                                    @error('inicioRevisao')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                    @enderror
-                                </div>
-                                <div class="form-group col-sm-6">
-                                    <label for="fimRevisao" class="col-form-label font-weight-bold">{{ __('Fim da Avaliação') }}</label>
-                                    <input id="fimRevisao" type="datetime-local" class="form-control @error('fimRevisao') is-invalid @enderror" name="fimRevisao" value="{{ old('fimRevisao') }}" autocomplete="fimRevisao" autofocus>
-                                    @error('fimRevisao')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="form-row">
-                                <div class="form-group col-sm-6">
-                                    <label for="inicioCorrecao" class="col-form-label font-weight-bold">{{ __('Início da Correção') }} <i data-bs-toggle="tooltip" data-placement="top" title="Opcional" class="fas fa-exclamation-circle"></i></label>
-                                    <input id="inicioCorrecao" type="datetime-local" class="form-control @error('inicioCorrecao') is-invalid @enderror" name="inicioCorrecao" value="{{ old('inicioCorrecao') }}" autocomplete="inicioCorrecao" autofocus>
-                                    @error('inicioCorrecao')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                    @enderror
-                                </div>
-                                <div class="form-group col-sm-6">
-                                    <label for="fimCorrecao" class="col-form-label font-weight-bold">{{ __('Fim da Correção') }} <i data-bs-toggle="tooltip" data-placement="top" title="Opcional" class="fas fa-exclamation-circle"></i></label>
-                                    <input id="fimCorrecao" type="datetime-local" class="form-control @error('fimCorrecao') is-invalid @enderror" name="fimCorrecao" value="{{ old('fimCorrecao') }}" autocomplete="fimCorrecao" autofocus>
-                                    @error('fimCorrecao')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="form-row">
-                                <div class="form-group col-sm-6">
-                                    <label for="inicioValidacao" class="col-form-label font-weight-bold">
-                                        {{ __('Início da Validação') }}
-                                        <i data-bs-toggle="tooltip" data-placement="top" title="Opcional" class="fas fa-exclamation-circle"></i>
-                                    </label>
-                                    <input id="inicioValidacao" type="datetime-local" class="form-control @error('inicioValidacao') is-invalid @enderror" name="inicioValidacao" value="{{ old('inicioValidacao') }}" autocomplete="inicioValidacao" autofocus>
-                                    @error('inicioValidacao')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                    @enderror
-                                </div>
-                                <div class="form-group col-sm-6">
-                                    <label for="fimValidacao" class="col-form-label font-weight-bold">{{ __('Fim da Validação') }} <i data-bs-toggle="tooltip" data-placement="top" title="Opcional" class="fas fa-exclamation-circle"></i></label>
-                                    <input id="fimValidacao" type="datetime-local" class="form-control @error('fimValidacao') is-invalid @enderror" name="fimValidacao" value="{{ old('fimValidacao') }}" autocomplete="fimValidacao" autofocus>
-                                    @error('fimValidacao')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                    @enderror
-                                </div>
-                            </div>
+                            @include('coordenador.modalidade.etapa-datas', ['etapa' => 'avaliacao'])
+                            @include('coordenador.modalidade.etapa-datas', ['etapa' => 'correcao'])
+                            @include('coordenador.modalidade.etapa-datas', ['etapa' => 'validacao'])
                             <div class="form-row">
                                 <div class="form-group col-sm-6">
                                     <label for="inicioResultado" class="col-form-label font-weight-bold">{{ __('Resultado') }}</label>

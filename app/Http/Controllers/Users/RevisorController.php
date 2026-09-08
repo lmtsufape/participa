@@ -481,6 +481,8 @@ class RevisorController extends Controller
 
     public function salvarRespostas(Request $request)
     {
+        $modalidade = Trabalho::findOrFail($request->trabalho_id)->modalidade;
+        abort_unless($modalidade->avaliacaoHabilitada(), 403, 'A avaliação está desativada para esta modalidade.');
         // dd($request);
         $data = $request->all();
 
@@ -683,6 +685,7 @@ class RevisorController extends Controller
 
     public function verificarCorrecao(Request $request, $trabalho_id){
         $trabalho = Trabalho::find($trabalho_id);
+        abort_unless($trabalho->modalidade->validacaoHabilitada(), 403, 'A validação está desativada para esta modalidade.');
         $user = auth()->user();
         $revisorDaAtribuicao = $trabalho->atribuicoes()->where('user_id', $user->id)->exists();
 

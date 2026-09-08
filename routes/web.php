@@ -439,6 +439,7 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
         Route::get('/encontrarModalidade', [ModalidadeController::class, 'find'])->name('findModalidade');
         // Ajax para encontrar modalidade especifica e enviar para o modal de edição
         Route::post('/atualizarModalidade', [ModalidadeController::class, 'update'])->name('modalidade.update');
+        Route::get('/modalidade/{modalidade}/impacto-desativacao', [ModalidadeController::class, 'impactoDesativacao'])->name('modalidade.impacto-desativacao');
         //
 
         Route::get('/evento/{evento}/downloadResumos', [EventoController::class, 'resumosToPdf'])->name('evento.downloadResumos');
