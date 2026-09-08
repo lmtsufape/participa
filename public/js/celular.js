@@ -34,21 +34,37 @@ function process(event) {
     }
 }
 
-$(phoneInputField).on("countrychange", function(event) {
-    var selectedCountryData = phoneInput.getSelectedCountryData();
-    newPlaceholder = intlTelInputUtils.getExampleNumber(selectedCountryData.iso2, true, intlTelInputUtils.numberFormat.INTERNATIONAL),
-    mask = newPlaceholder.replace(/[1-9]/g, "0");
+function applyPhoneMask() {
+    const country = phoneInput.getSelectedCountryData();
+    const field = $(phoneInputField);
 
-    $(this).mask(mask);
+    field.unmask();
 
-    if(phoneInputField.value == ""){
-        phoneInput.setNumber("");
-    }else{
-        $(phoneInputField).val(phoneInputField.value);
-        phoneInput.setNumber(phoneInputField.value);
+    if (country.iso2 === 'br') {
+        const brazilianMask = function(value) {
+            return value.replace(/\D/g, '').length > 10
+                ? '(00) 00000-0000'
+                : '(00) 0000-00009';
+        };
+
+        field.mask(brazilianMask, {
+            onKeyPress: function(value, event, input, options) {
+                input.mask(brazilianMask(value), options);
+            }
+        });
+    } else if (window.intlTelInputUtils) {
+        const placeholder = intlTelInputUtils.getExampleNumber(
+            country.iso2, true, intlTelInputUtils.numberFormat.NATIONAL
+        );
+        if (placeholder) {
+            field.mask(placeholder.replace(/[1-9]/g, '0'));
+        }
     }
-});
+}
+
+$(phoneInputField).on('countrychange', applyPhoneMask);
+applyPhoneMask();
 
 phoneInput.promise.then(function() {
-    $(phoneInputField).trigger("countrychange");
+    applyPhoneMask();
 });
