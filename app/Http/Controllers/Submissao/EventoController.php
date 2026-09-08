@@ -3104,6 +3104,7 @@ class EventoController extends Controller
     public function validarCorrecaoCoordenador(Request $request, Trabalho $trabalho)
     {
         $this->authorize('isCoordenadorOrCoordCientificaOrCoordEixo', $trabalho->evento);
+        abort_unless($trabalho->modalidade->validacaoHabilitada(), 403, 'A validação está desativada para esta modalidade.');
 
         $request->validate([
             'status_validacao' => 'required|in:corrigido,corrigido_parcialmente,nao_corrigido',

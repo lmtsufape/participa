@@ -201,7 +201,7 @@
                                                             </button>
                                                         @endif
 
-                                                        @if($trabalho->temCorrecaoSubmetida())
+                                                        @if($trabalho->modalidade->validacaoHabilitada() && $trabalho->temCorrecaoSubmetida())
                                                             <button type="button" class="btn btn-outline-info btn-sm" data-bs-toggle="modal" data-bs-target="#modalAvaliarCorrecaoCoord_{{ $trabalho->id }}" title="Validar Correção">
                                                                 Validar
                                                             </button>

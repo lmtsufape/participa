@@ -7,6 +7,20 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Modalidade extends Model
 {
+    public function avaliacaoHabilitada(): bool
+    {
+        return $this->inicioRevisao !== null && $this->fimRevisao !== null;
+    }
+
+    public function validacaoHabilitada(): bool
+    {
+        return $this->inicioValidacao !== null && $this->fimValidacao !== null;
+    }
+
+    public function correcaoHabilitada(): bool
+    {
+        return $this->inicioCorrecao !== null && $this->fimCorrecao !== null;
+    }
     /**
      * The attributes that are mass assignable.
      *
@@ -83,6 +97,9 @@ class Modalidade extends Model
 
     public function estaEmPeriodoExtraDeCorrecao()
     {
+        if (!$this->correcaoHabilitada()) {
+            return false;
+        }
         $agora = now();
 
         return $this->datasExtrasComSubmissao()->where('inicio', '<=', $agora)->where('fim', '>=', $agora)->exists();
@@ -90,7 +107,7 @@ class Modalidade extends Model
 
     public function estaEmPeriodoDeCorrecao()
     {
-        return $this->inicioCorrecao <= now() && now() <= $this->fimCorrecao;
+        return $this->correcaoHabilitada() && $this->inicioCorrecao <= now() && now() <= $this->fimCorrecao;
     }
 
     public function getUltimaDataAttribute()
@@ -105,7 +122,7 @@ class Modalidade extends Model
     }
 
     public function emPeriodoDeValidacao(){
-        return $this->inicioValidacao <= now() && now() <= $this->fimValidacao;
+        return $this->validacaoHabilitada() && $this->inicioValidacao <= now() && now() <= $this->fimValidacao;
     }
 
     public function midiasExtra()

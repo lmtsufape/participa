@@ -32,6 +32,9 @@ class TrabalhoPolicy
 
     public function permissaoCorrecao(User $user, Trabalho $trabalho)
     {
+        if (!$trabalho->modalidade->correcaoHabilitada()) {
+            return false;
+        }
         $membro = $trabalho->evento->usuariosDaComissao()->where([['user_id', $user->id], ['evento_id', $trabalho->evento->id]])->first();
         $resultado = false;
         if ($user->id == $trabalho->evento->coordenadorId || ! (is_null($membro))) {

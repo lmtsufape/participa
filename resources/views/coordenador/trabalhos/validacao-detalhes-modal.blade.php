@@ -9,6 +9,10 @@
                 <form class="mt-1" id="validacao-correcao-coordenador-{{$trabalho->id}}" action="{{route('revisor.verificarCorrecao', ['trabalho_id' => $trabalho->id])}}" method="POST">
                     @csrf
                     @method('PUT')
+                    @unless($trabalho->modalidade->validacaoHabilitada())
+                        <p class="alert alert-info">A validação está desativada nesta modalidade. O resultado registrado permanece disponível para consulta.</p>
+                    @endunless
+                    <fieldset @disabled(!$trabalho->modalidade->validacaoHabilitada())>
                     <fieldset class="mb-3">
                         <legend class="form-label pt-0 h5">Status da correção:</legend>
 
@@ -42,6 +46,7 @@
                                   name="justificativa_correcao"
                                   rows="5">{{ $trabalho->justificativa_correcao }}</textarea>
                     </div>
+                    </fieldset>
                 </form>
             </div>
             <div class="modal-footer">
@@ -58,7 +63,7 @@
                 </div>
                 <div>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-primary" form="validacao-correcao-coordenador-{{$trabalho->id}}">
+                    <button type="submit" class="btn btn-primary" form="validacao-correcao-coordenador-{{$trabalho->id}}" @disabled(!$trabalho->modalidade->validacaoHabilitada())>
                         Salvar Alterações
                     </button>
                 </div>
