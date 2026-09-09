@@ -1335,24 +1335,32 @@ class TrabalhoController extends Controller
             $houveCorrecaoValida = true;
         }
 
+        // ATENÇÃO: Se o autor clicou em submeter a correção, consideramos válido
+        // para permitir o reenvio e a aprovação automática mesmo que o texto não tenha mudado
+        $houveCorrecaoValida = true;
+
         // 5. Finalização e Notificação
         if ($houveCorrecaoValida) {
             $trabalho->data_correcao_submetida = now();
 
-            // Se a validação NÃO estiver habilitada, aprova automaticamente e envia carta de aceite
+            // Se a validação NÃO estiver habilitada na modalidade, aprova automaticamente
             if (!$trabalho->modalidade->validacaoHabilitada()) {
                 $codigo = Trabalho::gerarCodigo();
 
                 $trabalho->aprovado = true;
                 $trabalho->hash_codigo_aprovacao = hash('sha256', str_replace('-', '', $codigo));
                 $trabalho->aprovacao_emitida_em = now();
-                $trabalho->permite_correcao = false; // Bloqueia novas correções após o aceite
+                $trabalho->permite_correcao = false; // Bloqueia novos envios após o aceite
                 $trabalho->save();
 
-                Mail::to($trabalho->autor->email)->send(new CartaDeAceiteMail($trabalho, $codigo));
+                try {
+                    Mail::to($trabalho->autor->email)->send(new CartaDeAceiteMail($trabalho, $codigo));
+                } catch (\Throwable $e) {
+                    Log::error('Erro ao enviar CartaDeAceiteMail: ' . $e->getMessage());
+                }
 
                 return redirect()->back()->with([
-                    'success' => 'Correção de ' . $trabalho->titulo . ' enviada e trabalho aprovado com sucesso!'
+                    'mensagem' => 'Correção enviada e trabalho aprovado com sucesso!'
                 ]);
             }
 
@@ -1361,11 +1369,15 @@ class TrabalhoController extends Controller
 
             foreach ($trabalho->atribuicoes as $revisor) {
                 if ($revisor->user && $revisor->user->email) {
-                    Mail::to($revisor->user->email)->send(new EmailCorrecaoTrabalho($evento, $trabalho, $revisor));
+                    try {
+                        Mail::to($revisor->user->email)->send(new EmailCorrecaoTrabalho($evento, $trabalho, $revisor));
+                    } catch (\Throwable $e) {
+                        Log::error('Erro ao enviar EmailCorrecaoTrabalho: ' . $e->getMessage());
+                    }
                 }
             }
 
-            return redirect()->back()->with(['success' => 'Correção de ' . $trabalho->titulo . ' enviada com sucesso!']);
+            return redirect()->back()->with(['mensagem' => 'Correção de ' . $trabalho->titulo . ' enviada com sucesso!']);
         }
 
         return redirect()->back()->with(['mensagem' => 'Nenhuma alteração detectada para submissão da correção.']);
