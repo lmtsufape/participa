@@ -17,9 +17,9 @@ class Modalidade extends Model
     protected $fillable = [
         'nome', 'inicioSubmissao', 'fimSubmissao', 'inicioRevisao', 'fimRevisao', 'inicioCorrecao', 'fimCorrecao', 'inicioValidacao', 'fimValidacao', 'inicioResultado',
         'eventoId', 'texto', 'arquivo', 'caracteres', 'mincaracteres', 'evento_id',
-        'maxcaracteres', 'palavras', 'minpalavras', 'maxpalavras',
+        'maxcaracteres', 'palavras', 'minpalavras', 'maxpalavras', 'apresentacao',
         'pdf', 'jpg', 'jpeg', 'png', 'docx', 'odt', 'zip', 'svg', 'mp4', 'mp3', 'ogg', 'wav', 'ogv', 'mpg', 'mpeg', 'mkv', 'avi', 'odp', 'pptx', 'csv', 'ods', 'xlsx',
-        'regra', 'template', 'modelo_apresentacao', 'instrucoes','numMaxCoautores', 'nome_en', 'nome_es','ordem'
+        'regra', 'template', 'modelo_apresentacao', 'instrucoes', 'submissaoUnica', 'avaliacaoDuranteSubmissao', 'numMaxCoautores', 'nome_en', 'nome_es','ordem'
     ];
 
 
@@ -33,6 +33,31 @@ class Modalidade extends Model
         'inicioValidacao' => 'datetime',
         'fimValidacao' => 'datetime',
         'inicioResultado' => 'datetime',
+        'pdf' => 'boolean',
+        'docx' => 'boolean',
+        'odt' => 'boolean',
+        'odp' => 'boolean',
+        'pptx' => 'boolean',
+        'ods' => 'boolean',
+        'xlsx' => 'boolean',
+        'csv' => 'boolean',
+        'zip' => 'boolean',
+
+        'mp3' => 'boolean',
+        'ogg' => 'boolean',
+        'wav' => 'boolean',
+
+        'mp4' => 'boolean',
+        'ogv' => 'boolean',
+        'mpg' => 'boolean',
+        'mpeg' => 'boolean',
+        'mkv' => 'boolean',
+        'avi' => 'boolean',
+
+        'jpg' => 'boolean',
+        'jpeg' => 'boolean',
+        'png' => 'boolean',
+        'svg' => 'boolean',
     ];
 
     public function trabalho()
@@ -57,7 +82,7 @@ class Modalidade extends Model
 
     public function formAtual()
     {
-        return $this->hasOne(Form::class, 'modalidadeId')->where('status', StatusForm::Publicado)->latestOfMany('versao');
+        return $this->hasOne(Form::class, 'modalidadeId')->where('status', StatusForm::Publicado);
     }
 
     public function evento()

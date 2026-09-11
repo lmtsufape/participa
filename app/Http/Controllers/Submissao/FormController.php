@@ -695,6 +695,50 @@ class FormController extends Controller
         ]);
     }
 
+    public function publicar(Form $form)
+    {
+
+        $publicado = DB::transaction(function () use ($form) {
+
+            $form = Form::query()
+                ->whereKey($form->id)
+                ->lockForUpdate()
+                ->firstOrFail();
+
+            if ($form->status !== StatusForm::Rascunho) {
+                return false;
+            }
+
+            $formPublicado = $form->modalidade
+                ->formAtual()
+                ->lockForUpdate()
+                ->first();
+
+            $formPublicado?->update([
+                'status' => StatusForm::Substituido,
+            ]);
+
+            $form->update([
+                'status' => StatusForm::Publicado,
+                'publicado_em' => now(),
+            ]);
+
+            return true;
+        });
+
+        if (! $publicado) {
+            return back()->with(
+                'error',
+                'Esta versão já foi publicada ou não está mais disponível para publicação.'
+            );
+        }
+
+        return back()->with(
+            'success',
+            "Versão {$form->versao} publicada com sucesso."
+        );
+    }
+
 
     public function respostasToPdf(Modalidade $modalidade)
     {

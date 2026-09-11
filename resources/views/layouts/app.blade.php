@@ -111,6 +111,8 @@
 
     @endif
 
+    @stack('modals')
+
     @include('componentes.footer')
 
     <!-- Scripts -->

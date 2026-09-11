@@ -79,6 +79,20 @@
                                 </td>
                                 <td class="text-end pe-4">
                                     <div class="d-inline-flex gap-2">
+                                        @if ($form->status === \App\Enums\StatusForm::Rascunho)
+                                            <button
+                                                type="button"
+                                                class="btn btn-my-primary btn-sm d-inline-flex align-items-center gap-2 px-3"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#modalPublicarForm{{ $form->id }}"
+                                            >
+                                                <i class="bi bi-send"></i>
+                                                Publicar
+                                            </button>
+                                            @push('modals')
+                                                @include('coordenador.modalidade.forms.publicar_form-modal')
+                                            @endpush
+                                        @endif
                                         <form action="{{ route('coord.visualizar.form') }}" method="get">
                                             <input type="hidden" name="form_id" value="{{ $form->id }}">
                                             <input type="hidden" name="modalidade_id" value="{{ $form->modalidade->id }}">

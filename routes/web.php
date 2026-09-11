@@ -305,6 +305,8 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
             Route::delete('certificados/emissoes/deletar', [CertificadoController::class, 'deletarEmissao'])->name('deletar.emissao');
 
             Route::get('modalidade/create', [ModalidadeController::class, 'create'])->name('modalidade.create');
+
+            Route::post('/formularios/{form}/publicar', [FormController::class, 'publicar'])->name('forms.publicar');
             Route::get('modalidade/', [ModalidadeController::class, 'index'])->name('modalidade.index');
             Route::get('modalidade/cadastrarCriterio', [EventoController::class, 'cadastrarCriterio'])->name('cadastrarCriterio');
             Route::get('modalidade/listarCriterios', [EventoController::class, 'listarCriterios'])->name('listarCriterios');
