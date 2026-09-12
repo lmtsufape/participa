@@ -83,16 +83,54 @@
                 </p>
                 
                 <p style="text-align: justify; line-height: 1.6;">
-                    Os trabalhos poderão contar com coautoria, sendo obrigatório o registro de todas as pessoas autoras no momento da submissão.    
+                    Os trabalhos poderão contar com coautoria, sendo obrigatório o registro de todas as pessoas autoras no momento da submissão.
                 </p>
 
                 <p style="text-align: justify; line-height: 1.6;">
                     O título da proposta deverá conter até 200 caracteres com espaços, e o resumo até 3000 caracteres com espaços.
                 </p>
 
-                <p style="text-align: justify; line-height: 1.6;">
-                    As normas para formatação e confecção dos banners devem ser consultadas no documento específico disponibilizado pelo evento.
+                <p class="fw-bold" style="text-align: justify; line-height: 1.6;">
+                    Dicas para a elaboração do seu banner no XV Congresso Brasileiro de Etnobiologia e Etnoecologia
                 </p>
+
+                <p style="text-align: justify; line-height: 1.6;">
+                    Atenção ao design! Lembre-se de que o pôster é uma síntese visual da sua pesquisa. Por isso, invista em uma organização harmoniosa, atrativa e de fácil compreensão.
+                </p>
+
+                <p style="text-align: justify; line-height: 1.6;">
+                    Garanta a legibilidade: Todas as informações devem estar visíveis e ser facilmente lidas a uma distância aproximada de um metro.
+                </p>
+
+                <p style="text-align: justify; line-height: 1.6;">
+                    Tenha estratégia e estimule a criatividade! Gráficos, tabelas, fotografias, ilustrações e mapas tornam a apresentação mais dinâmica e facilitam a compreensão das informações. Sempre que possível, substitua longos parágrafos por elementos visuais. Prefira textos curtos e objetivos. Procure utilizar cores com contraste que garantam a acessibilidade visual, especialmente para pessoas com daltonismo.
+                </p>
+
+                <p style="text-align: justify; line-height: 1.6;">
+                    Estruturação: Organize as informações em colunas e utilize títulos explicativos para identificar cada parte do trabalho, como introdução, objetivos, metodologia, resultados e conclusões e/ou recomendações. Preferencialmente não se estenda muito na parte metodológica e sim nos resultados e discussões. 
+                </p>
+
+                <p style="text-align: justify; line-height: 1.6;">
+                    E não se esqueça: Antes da impressão, revise cuidadosamente a ortografia, formatação, qualidade das imagens e disposição dos elementos na página.
+                </p>
+
+                <p style="text-align: justify; line-height: 1.6;">
+                    Dimensões recomendadas: <br>
+                    📏 Largura: 90 cm <br>
+                    📏 Altura: 120 cm
+                </p>
+
+                <div class="my-3">
+                    <a href="{{ asset('documentos/Modelo_banner_cbee_final.pptx') }}" 
+                    download="Modelo_banner_cbee_final.pptx" 
+                    class="btn btn-primary d-inline-flex align-items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-file-earmark-slides" viewBox="0 0 16 16">
+                            <path d="M7 5.5a1 1 0 0 1 1-1h1a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1z"/>
+                            <path d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5z"/>
+                        </svg>
+                        Baixar Modelo de Banner (.pptx)
+                    </a>
+                </div>
                 
                 <hr>
 
