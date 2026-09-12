@@ -891,7 +891,7 @@ class CertificadoController extends Controller
 
     public function validar(Request $request)
     {
-        // 1. Validação específica de Carta de Aceite (via formulário)
+        // Carta de Aceite Validação
         if ($request->tipo == 'aceite') {
             $request->validate([
                 'hash' => ['required', 'string', 'max:128'],
@@ -901,14 +901,21 @@ class CertificadoController extends Controller
             $codigo = trim((string) $request->input('hash'));
             $norm = strtoupper(str_replace(['-', ' '], '', $codigo));
 
-            if (!preg_match('/^[A-F0-9]{32}$/', $norm)) {
+            if (!preg_match('/^[A-F0-9]{32,64}$/', $norm)) {
                 return back()->withErrors(['hash' => 'Formato de código inválido.'])->withInput();
             }
 
-            $digest = hash('sha256', $norm);
-            $trabalho = Trabalho::where('hash_codigo_aprovacao', $digest)->first();
+            // 1. Tenta buscar caso seja o código do PDF (prefixo de 32 chars do hash ou hash completo de 64 chars)
+            $trabalho = Trabalho::whereRaw('UPPER(hash_codigo_aprovacao) LIKE ?', [$norm . '%'])
+                ->first();
 
+            // 2. Se não encontrou, pode ser o código gerado no e-mail (onde o hash sha256 dele resulta no hash_codigo_aprovacao)
             if (!$trabalho) {
+                $digest = hash('sha256', $norm);
+                $trabalho = Trabalho::where('hash_codigo_aprovacao', $digest)->first();
+            }
+
+            if (!$trabalho || $trabalho->aprovado !== true) {
                 return back()->withErrors(['hash' => 'Carta de aceite não encontrada para o código informado.'])->withInput();
             }
 
@@ -917,7 +924,7 @@ class CertificadoController extends Controller
                 'trabalho' => $trabalho,
             ]);
         }
-
+    
         // 2. Validações por CPF ou Nome
         if ($request->tipo == 'cpf_evento') {
             return $this->validarCertificadoPorCpf($request);
@@ -1184,16 +1191,35 @@ class CertificadoController extends Controller
 
     public function downloadCartaAceitePdf($codigo)
     {
-        $norm = strtoupper(str_replace(['-', ' '], '', trim($codigo)));
+        $codigoLimpo = trim((string) $codigo);
 
-        if (!preg_match('/^[A-F0-9]{32}$/', $norm)) {
-            abort(404, 'Código inválido.');
+        // 1. Se já for o hash SHA-256 de 64 caracteres (ou busca direta pelo hash no banco)
+        $trabalho = Trabalho::with(['autor', 'coautors.user', 'modalidade'])
+            ->where('hash_codigo_aprovacao', $codigoLimpo)
+            ->first();
+
+        // 2. Se não encontrou, pode ser o código com hífens (32 caracteres hexadecimais)
+        if (!$trabalho) {
+            $norm = strtoupper(str_replace(['-', ' '], '', $codigoLimpo));
+            $digest = hash('sha256', $norm);
+            $trabalho = Trabalho::with(['autor', 'coautors.user', 'modalidade'])
+                ->where('hash_codigo_aprovacao', $digest)
+                ->first();
         }
 
-        $digest = hash('sha256', $norm);
-        $trabalho = Trabalho::where('hash_codigo_aprovacao', $digest)->firstOrFail();
+        // 3. Fallback: se for numérico (ID do trabalho) e o usuário tiver permissão
+        if (!$trabalho && is_numeric($codigoLimpo)) {
+            $trabalho = Trabalho::with(['autor', 'coautors.user', 'modalidade'])
+                ->where('id', $codigoLimpo)
+                ->where('aprovado', true)
+                ->first();
+        }
 
-        // Converte as imagens para base64 para o DomPDF renderizar perfeitamente
+        if (!$trabalho || $trabalho->aprovado !== true) {
+            abort(404, 'Carta de aceite não encontrada ou trabalho não aprovado.');
+        }
+
+        // Converte as imagens para base64 para o DomPDF renderizar sem erros
         $bannerBase64 = null;
         if (file_exists(public_path('img/banner-site-cbee.jpg'))) {
             $bannerBase64 = 'data:image/jpeg;base64,' . base64_encode(file_get_contents(public_path('img/banner-site-cbee.jpg')));
@@ -1209,15 +1235,25 @@ class CertificadoController extends Controller
             $logoBase64 = 'data:image/png;base64,' . base64_encode(file_get_contents(public_path('img/logo-sbee.png')));
         }
 
+        if (strlen($codigoLimpo) <= 36 && str_contains($codigoLimpo, '-')) {
+            // Código original formatado (ex: E0D0-8623-5747-...)
+            $codigoExibicao = strtoupper($codigoLimpo);
+        } else {
+            // Formata o hash SHA-256 do trabalho em blocos legíveis
+            $hashOriginal = strtoupper($trabalho->hash_codigo_aprovacao);
+            $codigoExibicao = chunk_split(substr($hashOriginal, 0, 32), 8, '-');
+            $codigoExibicao = rtrim($codigoExibicao, '-');
+        }
+
         $pdf = Pdf::loadView('pdf.carta_de_aceite_pdf', [
             'trabalho' => $trabalho,
-            'codigo' => $codigo,
+            'codigo' => $codigoExibicao,
             'bannerBase64' => $bannerBase64,
             'assinaturaBase64' => $assinaturaBase64,
             'logoBase64' => $logoBase64,
         ])->setPaper('a4', 'portrait');
 
-        $nomeArquivo = 'carta-de-aceite-' . Str::slug(substr($trabalho->titulo, 0, 40)) . '.pdf';
+        $nomeArquivo = 'carta-de-aceite-' . \Illuminate\Support\Str::slug(substr($trabalho->titulo, 0, 40)) . '.pdf';
 
         return $pdf->download($nomeArquivo);
     }

@@ -151,7 +151,15 @@
                                 <tr>
                                     <td>{{ $trabalho->evento->nome }}</td>
                                     <td>{{ $trabalho->id }}</td>
-                                    <td>{{ $trabalho->titulo }}</td>
+                                    <td>
+                                        @if ($trabalho->modalidade->texto)
+                                            <a href="#" data-bs-toggle="modal" data-bs-target="#modalVisualizarResumo_{{ $trabalho->id }}" class="text-dark fw-bold text-decoration-none" title="Clique para ver o resumo completo">
+                                                {{ $trabalho->titulo }}
+                                            </a>
+                                        @else
+                                            {{ $trabalho->titulo }}
+                                        @endif
+                                    </td>
                                     <td style="text-align:center">
                                         <a data-bs-toggle="modal"
                                             data-bs-target="#modalCoautoresTrabalho_{{ $trabalho->id }}"
@@ -346,39 +354,59 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <p class="mb-3">Selecione o arquivo que deseja baixar:</p>
+                        <p class="mb-3">Selecione o documento que deseja acessar ou baixar:</p>
                         
                         @php
-                            $arquivoOriginal = $trabalho->arquivo()->where('versaoFinal', true)->first();
+                            $arquivoOriginal = $trabalho->arquivo()->where('versaoFinal', true)->first() ?? $trabalho->arquivo()->first();
                             $temArquivoOriginal = $arquivoOriginal != null && Storage::disk()->exists($arquivoOriginal->nome);
+                            $temCorrecaoArquivo = $trabalho->arquivoCorrecao && Storage::disk()->exists($trabalho->arquivoCorrecao->caminho);
                         @endphp
-                        <div class="d-flex align-items-center mb-3">
+
+                        {{-- 1. TRABALHO ORIGINAL OU RESUMO --}}
+                        <div class="d-flex align-items-center justify-content-between mb-2 p-2 border rounded bg-light">
                             <h6 class="me-3 mb-0">Trabalho Original:</h6>
-                            @if ($temArquivoOriginal)
-                                <a href="{{ route('downloadTrabalho', ['id' => $trabalho->id]) }}" target="_new" class="btn btn-primary btn-sm d-flex align-items-center" title="Baixar primeiro envio">
-                                    <img src="{{ asset('img/icons/file-download-solid.svg') }}" style="width:16px; filter: invert(1);" class="me-1">
-                                    Baixar
-                                </a>
-                            @else
-                                <span class="text-danger">Arquivo não encontrado.</span>
-                            @endif
+                            <div>
+                                @if ($temArquivoOriginal)
+                                    <a href="{{ route('downloadTrabalho', ['id' => $trabalho->id]) }}" target="_blank" class="btn btn-primary btn-sm d-flex align-items-center" title="Baixar primeiro envio">
+                                        <img src="{{ asset('img/icons/file-download-solid.svg') }}" style="width:16px; filter: invert(1);" class="me-1"> Baixar
+                                    </a>
+                                @elseif ($trabalho->modalidade->texto)
+                                    <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalVisualizarResumo_{{ $trabalho->id }}">
+                                        Ver Resumo
+                                    </button>
+                                @else
+                                    <span class="text-danger small">Arquivo não encontrado.</span>
+                                @endif
+                            </div>
                         </div>
 
-                        <hr>
-                        <div class="d-flex align-items-center">
-                            <h6 class="me-3 mb-0">Correção Enviada:</h6>
-                            @if ($trabalho->modalidade->texto && $trabalho->data_correcao_submetida)
-                                <span class="badge bg-success">Correção de texto enviada em {{ $trabalho->data_correcao_submetida->format('d/m/Y H:i') }}</span>
-                            @elseif ($trabalho->arquivoCorrecao)
-                                <a href="{{ route('downloadCorrecao', ['id' => $trabalho->id]) }}" target="_new" class="btn btn-success btn-sm d-flex align-items-center" title="Baixar correção enviada">
-                                    <img src="{{ asset('img/icons/file-download-solid.svg') }}" style="width:16px; filter: invert(1);" class="me-1">
-                                    Baixar Correção
-                                </a>
-                            @else
-                                <span class="text-warning">Correção ainda não submetida.</span>
-                            @endif
-                        </div>
-                        
+                        {{-- 2. CORREÇÃO ENVIADA (APENAS SE A MODALIDADE FOR ARQUIVO) --}}
+                        @if ($trabalho->modalidade->arquivo)
+                            <div class="d-flex align-items-center justify-content-between mb-2 p-2 border rounded bg-light">
+                                <h6 class="me-3 mb-0">Correção Enviada:</h6>
+                                <div>
+                                    @if ($temCorrecaoArquivo)
+                                        <a href="{{ route('downloadCorrecao', ['id' => $trabalho->id]) }}" target="_blank" class="btn btn-success btn-sm d-flex align-items-center" title="Baixar correção enviada">
+                                            <img src="{{ asset('img/icons/file-download-solid.svg') }}" style="width:16px; filter: invert(1);" class="me-1"> Baixar Correção
+                                        </a>
+                                    @else
+                                        <span class="text-warning small">Correção ainda não submetida.</span>
+                                    @endif
+                                </div>
+                            </div>
+                        @endif
+
+                        {{-- 3. CARTA DE ACEITE (QUANDO O TRABALHO ESTIVER APROVADO) --}}
+                        @if ($trabalho->aprovado === true)
+                            <div class="d-flex align-items-center justify-content-between p-2 border rounded border-success bg-light">
+                                <h6 class="me-3 mb-0 text-success font-weight-bold">Carta de Aceite:</h6>
+                                <div>
+                                    <a href="{{ route('cartaAceite.downloadPdf', ['codigo' => $trabalho->hash_codigo_aprovacao ?? $trabalho->id]) }}" target="_blank" class="btn btn-success">
+                                        Baixar Carta de Aceite (PDF)
+                                    </a>
+                                </div>
+                            </div>
+                        @endif
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
@@ -1316,44 +1344,45 @@
 
                                 <div class="card mb-3 p-3 bg-light">
                                     <div class="d-flex justify-content-between align-items-center mb-2">
-                                        <h6 class="mb-0 font-weight-bold">Autores e Coautores</h6>
+                                        <h6 class="mb-0 font-weight-bold">Autores e Coautores (use as setas para ordenar):</h6>
                                         <button type="button" class="btn btn-sm btn-outline-primary" 
-                                                onclick="montarLinhaInput(this, {{ $trabalho->id }}, event)">
+                                                onclick="montarLinhaInputCorrecao({{ $trabalho->id }}, event)">
                                             + Adicionar Coautor
                                         </button>
                                     </div>
 
-                                    <div id="coautores{{ $trabalho->id }}" class="flexContainer">
-                                        {{-- Autor Principal --}}
+                                    {{-- ID exclusivo para a correcao: coautoresCorrecao_ID --}}
+                                    <div id="coautoresCorrecao_{{ $trabalho->id }}" class="flexContainer">
+                                        {{-- Autor Principal (Posição 0 fixa) --}}
                                         <div class="item card mt-1">
-                                            <div class="row card-body p-2">
+                                            <div class="row card-body p-2 align-items-center">
                                                 <div class="col-sm-5">
                                                     <label class="small mb-1">E-mail do Autor</label>
                                                     <input type="email" class="form-control form-control-sm" 
                                                         name="emailCoautor_{{ $trabalho->id }}[]" 
                                                         value="{{ $trabalho->autor->email }}" required>
                                                 </div>
-                                                <div class="col-sm-6">
+                                                <div class="col-sm-5">
                                                     <label class="small mb-1">Nome do Autor</label>
                                                     <input type="text" class="form-control form-control-sm" 
                                                         name="nomeCoautor_{{ $trabalho->id }}[]" 
                                                         value="{{ $trabalho->autor->name }}" required>
                                                 </div>
-                                                <div class="col-sm-1 d-flex align-items-end">
-                                                    <span class="badge bg-primary mb-1">Autor</span>
+                                                <div class="col-sm-2 text-center mt-3">
+                                                    <span class="badge bg-primary">Autor(a)</span>
                                                 </div>
                                             </div>
                                         </div>
 
-                                        {{-- Lista de Coautores --}}
-                                        @foreach ($trabalho->coautors as $coautor)
+                                        {{-- Lista de Coautores ordenados --}}
+                                        @foreach ($trabalho->coautors->sortBy('ordem') as $coautor)
                                             <div class="item card mt-2">
-                                                <div class="row card-body p-2">
+                                                <div class="row card-body p-2 align-items-center">
                                                     <div class="col-sm-5">
                                                         <label class="small mb-1">E-mail</label>
-                                                        <input type="email" class="form-control form-control-sm" 
+                                                        <input type="email" class="form-control form-control-sm emailCoautor" 
                                                             name="emailCoautor_{{ $trabalho->id }}[]" 
-                                                            value="{{ $coautor->user->email }}" required>
+                                                            value="{{ $coautor->user->email }}" oninput="buscarEmail(this)" required>
                                                     </div>
                                                     <div class="col-sm-5">
                                                         <label class="small mb-1">Nome Completo</label>
@@ -1362,13 +1391,13 @@
                                                             value="{{ $coautor->user->name }}" required>
                                                     </div>
                                                     <div class="col-sm-2 d-flex align-items-center justify-content-around mt-3">
-                                                        <a href="#" style="color: #d30909;" onclick="deletarCoautor(this, {{ $trabalho->id }}, event)">
+                                                        <a href="#" style="color: #d30909;" onclick="deletarCoautor(this, event)" title="Remover">
                                                             <img src="{{ asset('img/icons/trash-alt-regular.svg') }}" width="18">
                                                         </a>
-                                                        <a href="#" onclick="mover(this.parentElement.parentElement.parentElement, 1, {{ $trabalho->id }}, event)">
+                                                        <a href="#" onclick="moverCoautor(this, 1, event)" title="Subir">
                                                             <img src="{{ asset('img/icons/sobe.png') }}" width="18">
                                                         </a>
-                                                        <a href="#" onclick="mover(this.parentElement.parentElement.parentElement, 0, {{ $trabalho->id }}, event)">
+                                                        <a href="#" onclick="moverCoautor(this, 0, event)" title="Descer">
                                                             <img src="{{ asset('img/icons/desce.png') }}" width="18">
                                                         </a>
                                                     </div>
@@ -1393,6 +1422,57 @@
         @endif
     @endforeach
 
+    {{-- MODAL PARA VISUALIZAR O RESUMO COMPLETO E SEUS COAUTORES --}}
+    @foreach ($trabalhos as $trabalho)
+        @if ($trabalho->modalidade->texto || !empty($trabalho->resumo))
+            <div class="modal fade" id="modalVisualizarResumo_{{ $trabalho->id }}" tabindex="-1" aria-labelledby="modalVisualizarResumoLabel{{ $trabalho->id }}" aria-hidden="true">
+                <div class="modal-dialog modal-lg modal-dialog-scrollable">
+                    <div class="modal-content">
+                        <div class="modal-header" style="background-color: #114048ff; color: white;">
+                            <h5 class="modal-title" id="modalVisualizarResumoLabel{{ $trabalho->id }}">{{ $trabalho->titulo }}</h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body text-start">
+                            <div class="mb-3 p-3 bg-light border rounded">
+                                <p class="mb-1"><strong>Autor(a) Principal:</strong> {{ $trabalho->autor->name }} <span class="text-muted">({{ $trabalho->autor->email }})</span></p>
+                                @if ($trabalho->orientador)
+                                    <p class="mb-1"><strong>Orientador(a):</strong> {{ $trabalho->orientador->name }} <span class="text-muted">({{ $trabalho->orientador->email }})</span></p>
+                                @endif
+                                <p class="mb-1"><strong>Coautores(as):</strong></p>
+                                @if ($trabalho->coautors->isNotEmpty())
+                                    <ol class="mb-0 ps-3">
+                                        @foreach ($trabalho->coautors->sortBy('ordem') as $coautor)
+                                            <li>{{ $coautor->user->name ?? 'Sem nome' }} <span class="text-muted">({{ $coautor->user->email ?? 'Sem e-mail' }})</span></li>
+                                        @endforeach
+                                    </ol>
+                                @else
+                                    <span class="text-muted">Nenhum coautor cadastrado.</span>
+                                @endif
+                            </div>
+
+                            <h6 class="fw-bold text-dark">Resumo:</h6>
+                            <div class="p-3 bg-white border rounded shadow-sm" style="white-space: pre-wrap; font-size: 14px; line-height: 1.6;">{{ $trabalho->resumo }}</div>
+
+                            @if ($trabalho->data_correcao_submetida)
+                                <div class="mt-2 text-end text-muted small">
+                                    <em>Última correção submetida em: {{ $trabalho->data_correcao_submetida->format('d/m/Y \à\s H:i') }}</em>
+                                </div>
+                            @endif
+                        </div>
+                        <div class="modal-footer">
+                            @if ($trabalho->aprovado === true)
+                                <a href="{{ route('cartaAceite.downloadPdf', ['codigo' => $trabalho->hash_codigo_aprovacao ?? $trabalho->id]) }}" target="_blank" class="btn btn-success">
+                                    Baixar Carta de Aceite (PDF)
+                                </a>
+                            @endif
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endif
+    @endforeach
+
 @endsection
 
 @section('javascript')
@@ -1407,51 +1487,44 @@
 
     @if (isset($trabalho))
         <script>
-            function montarLinhaInput(div, id, event) {
-                var coautores = document.getElementById("coautores" + id);
-                var html = "";
-                if (coautores.children.length == 1) {
-                    html =
-                        `<label id="title-coautores${id}" style="margin-top:20px"><b>{{ $trabalho->evento->formSubTrab->etiquetacoautortrabalho }}</b></label>`;
-                }
+            function montarLinhaInputCorrecao(id, event) {
                 event.preventDefault();
-                html += `
-            <div class="item card mt-0">
-                <div class="row card-body">
-                    <div class="col-sm-4">
-                        <label>E-mail</label>
-                        <input type="email" style="margin-bottom:10px" class="form-control emailCoautor" name="emailCoautor_${id}[]" placeholder="E-mail">
+                var coautores = document.getElementById("coautoresCorrecao_" + id);
+                var html = `
+                    <div class="item card mt-2">
+                        <div class="row card-body p-2 align-items-center">
+                            <div class="col-sm-5">
+                                <label class="small mb-1">E-mail</label>
+                                <input type="email" class="form-control form-control-sm emailCoautor" 
+                                    name="emailCoautor_${id}[]" placeholder="E-mail" oninput="buscarEmail(this)" required>
+                            </div>
+                            <div class="col-sm-5">
+                                <label class="small mb-1">Nome Completo</label>
+                                <input type="text" class="form-control form-control-sm" 
+                                    name="nomeCoautor_${id}[]" placeholder="Nome completo" required>
+                            </div>
+                            <div class="col-sm-2 d-flex align-items-center justify-content-around mt-3">
+                                <a href="#" style="color: #d30909;" onclick="deletarCoautor(this, event)" title="Remover">
+                                    <img src="{{ asset('img/icons/trash-alt-regular.svg') }}" width="18">
+                                </a>
+                                <a href="#" onclick="moverCoautor(this, 1, event)" title="Subir">
+                                    <img src="{{ asset('img/icons/sobe.png') }}" width="18">
+                                </a>
+                                <a href="#" onclick="moverCoautor(this, 0, event)" title="Descer">
+                                    <img src="{{ asset('img/icons/desce.png') }}" width="18">
+                                </a>
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-sm-5">
-                        <label>Nome Completo</label>
-                        <input type="text" style="margin-bottom:10px" class="form-control emailCoautor" name="nomeCoautor_${id}[]" placeholder="Nome">
-                    </div>
-                    <div class="col-sm-3">
-                        <a style="color: #d30909;" href="#" onclick="deletarCoautor(this, ${id}, event)" class="delete pr-2">
-                            <img class="" src="{{ asset('img/icons/trash-alt-regular.svg') }}" style="width:20px">
-                        </a>
-                        <a href="#" onclick="mover(this.parentElement.parentElement.parentElement, 1, ${id}, event)">
-                            <img src="{{ asset('img/icons/sobe.png') }}" class="icon-card" width="24" alt="Subir">
-                        </a>
-                        <a href="#" onclick="mover(this.parentElement.parentElement.parentElement, 0, ${id}, event)">
-                            <img src="{{ asset('img/icons/desce.png') }}" class="icon-card" width="24" alt="Descer">
-                        </a>
-                    </div>
-                </div>
-            </div>
-            `;
-
-                $('#coautores' + id).append(html);
+                `;
+                $(coautores).append(html);
             }
 
-            function deletarCoautor(div, id, event) {
+            function deletarCoautor(btn, event) {
                 event.preventDefault();
-                var titulo = document.getElementById("title-coautores" + id);
-                var coautores = document.getElementById("coautores" + id);
-                $('#title-coautores' + id).remove();
-                div.parentElement.parentElement.parentElement.remove();
-                if (coautores.children.length >= 2) {
-                    coautores.insertBefore(titulo, coautores.children[1]);
+                var card = btn.closest('.item');
+                if (card) {
+                    card.remove();
                 }
             }
 
@@ -1486,64 +1559,40 @@
             });
 
 
-            function mover(div, direcao, id, event) {
+            function moverCoautor(btn, direcao, event) {
                 event.preventDefault();
-                var coautores = document.getElementById("coautores" + id);
+                var card = btn.closest('.item');
+                var container = card.parentElement;
 
-                var hcoautores;
-                if (coautores.children.length > 2) {
-                    hcoautores = coautores.children[1];
-                    coautores.children[1].remove();
-                }
-                if (direcao == 0) {
-                    for (var i = 0; i < coautores.children.length; i++) {
-                        if (coautores.children[i] == div && coautores.children[i + 1] != null) {
-                            var baixo = coautores.children[i + 1];
-                            var cima = coautores.children[i];
-                            coautores.children[i + 1].remove();
-                            coautores.insertBefore(baixo, cima);
-                            break;
-                        }
+                if (direcao === 1) { // SUBIR
+                    var anterior = card.previousElementSibling;
+                    // Impede de subir antes do primeiro elemento (que é o Autor Principal)
+                    if (anterior && anterior !== container.firstElementChild) {
+                        container.insertBefore(card, anterior);
                     }
-                } else if (direcao == 1) {
-                    for (var i = 0; i < coautores.children.length; i++) {
-                        if (coautores.children[i] == div && coautores.firstChild != div) {
-                            var baixo = coautores.children[i];
-                            var cima = coautores.children[i - 1];
-                            coautores.children[i].remove();
-                            coautores.insertBefore(baixo, cima);
-                            break;
-                        }
+                } else if (direcao === 0) { // DESCER
+                    var proximo = card.nextElementSibling;
+                    if (proximo) {
+                        container.insertBefore(proximo, card);
                     }
-                }
-                if (coautores.children.length >= 2) {
-                    coautores.insertBefore(hcoautores, coautores.children[1]);
-                    console.log('');
                 }
             }
 
             function buscarEmail(input) {
-                var emailBuscado = input.value;
-                var inputName = input.parentElement.parentElement.children[1].children[1];
+                var emailBuscado = input.value.trim();
+                var card = input.closest('.row');
+                var inputName = card.querySelector('input[type="text"]');
 
-                let data = {
-                    email: emailBuscado,
-                };
-
-                if (!(emailBuscado == "" || emailBuscado.indexOf('@') == -1 || emailBuscado.indexOf('.') == -1)) {
+                if (emailBuscado && emailBuscado.indexOf('@') !== -1 && emailBuscado.indexOf('.') !== -1) {
                     $.ajax({
                         type: 'GET',
                         url: '{{ route('search.user') }}',
-                        data: data,
+                        data: { email: emailBuscado },
                         dataType: 'json',
                         success: function(res) {
-                            if (res.user[0] != null) {
+                            if (res.user && res.user[0] != null) {
                                 inputName.value = res.user[0]['name'];
                             }
-                        },
-                        error: function(err) {
-                            // console.log('err')
-                            // console.log(err)
                         }
                     });
                 }
