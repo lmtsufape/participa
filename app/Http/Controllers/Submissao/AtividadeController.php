@@ -273,7 +273,7 @@ class AtividadeController extends Controller
             'idAtividade' => ['required', 'integer'],
             'titulo' => ['required', 'max:512'],
             'tipo' => ['required', 'string'],
-            'descricao' => ['required', 'max:10000'],
+            'descricao' => ['required', 'max:50000'],
             'carga_horaria' => ['nullable', 'string'],
             'vagas' => ['nullable', 'string'],
             'valor' => ['nullable', 'string'],
