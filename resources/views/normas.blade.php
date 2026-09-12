@@ -71,8 +71,20 @@
                 </p>
 
                 <p style="text-align: justify; line-height: 1.6;">
-                    Caso o resumo seja aprovado, a submissão do trabalho completo é fortemente recomendada. As normas de formatação para trabalhos completos devem ser consultadas no documento específico disponibilizado pelo evento.    
+                    Caso o resumo seja aprovado, a submissão do trabalho completo é fortemente recomendada. As normas de formatação para trabalhos completos seguem no link abaixo:
                 </p>
+
+                <div class="my-3">
+                    <a href="{{ asset('documentos/Modelo-Trabalho_Completo_XV_CBEE_2026.doc') }}" 
+                    download="Modelo-Trabalho_Completo_XV_CBEE_2026.doc" 
+                    class="btn btn-primary d-inline-flex align-items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-file-earmark-slides" viewBox="0 0 16 16">
+                            <path d="M7 5.5a1 1 0 0 1 1-1h1a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1z"/>
+                            <path d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5z"/>
+                        </svg>
+                        Baixar Modelo Trabalho Completo (.doc)
+                    </a>
+                </div>
 
                 <hr>
 
