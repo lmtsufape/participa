@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Submissao;
 
+use App\Enums\StatusForm;
 use App\Exports\AvaliacoesExport;
 use App\Exports\InscritosExport;
 use App\Exports\ParticipantesExportXLSX;
@@ -1862,237 +1863,6 @@ class EventoController extends Controller
         ]);
     }
 
-    public function forms(Request $request)
-    {
-        $evento = Evento::find($request->eventoId);
-        $this->authorize('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento);
-
-        $modalidades = Modalidade::where('evento_id', $evento->id)->orderBy('nome')->get();
-
-        return view('coordenador.modalidade.formulario', compact(
-            'evento',
-            'modalidades'
-        ));
-    }
-
-    public function atribuirForm(Request $request)
-    {
-        $evento = Evento::find($request->evento_id);
-        $this->authorize('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento);
-
-        $modalidade = Modalidade::find($request->modalidade_id);
-
-        return view('coordenador.modalidade.atribuirFormulario', compact('evento', 'modalidade'));
-    }
-
-    public function salvarForm(StoreFormRequest $request)
-    {
-        $evento = Evento::find($request->evento_id);
-        $this->authorize('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento);
-
-        $modalidade = Modalidade::find($request->modalidade_id);
-        $dados = $request->all();
-
-        DB::transaction(function () use ($modalidade, $dados) {
-            $form = $modalidade->forms()->create([
-                'titulo' => $dados['titulo'],
-                'instrucoes' => $dados['instrucoes'],
-            ]);
-            foreach ($dados['perguntas'] as $index => $value) {
-                $pergunta = $form->perguntas()->create([
-                    'pergunta' => $value,
-                    'visibilidade' => array_key_exists($index, $dados['visibilidades'] ?? []),
-                ]);
-
-                $resposta = new Resposta();
-                $resposta->pergunta_id = $pergunta->id;
-                $resposta->save();
-
-                if ($dados['tipos'][$index] == 'paragrafo') {
-                    $paragrafo = new Paragrafo();
-                    $resposta->paragrafo()->save($paragrafo);
-                } elseif ($dados['tipos'][$index] == 'radio') {
-                    foreach ($dados['opcoes'][$index] as $titulo) {
-                        $resposta->opcoes()->create([
-                            'titulo' => $titulo,
-                            'tipo' => 'radio',
-                        ]);
-                    }
-                }
-            }
-
-        });
-
-        return redirect()->route('coord.forms', ['modalidade_id' => $modalidade->id])->with('success', 'Formulário cadastrado com sucesso');
-    }
-
-    public function modalidadeFormUpdate(UpdateFormModalidadeRequest $request, $form_id)
-    {
-        $form = Form::find($request->form_id);
-        $evento = $form->modalidade->evento;
-        $this->authorize('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento);
-
-        $data = $request->all();
-        dd($data);
-        $perguntasMantidas = [];
-
-        if (now() > $form->modalidade->inicioRevisao) {
-            return redirect()->back()->with(['error' => 'Não é permitida a editação após o início do período de avaliação']);
-        }
-
-        if (isset($request->pergunta_id)) {
-            foreach ($request->pergunta_id as $key => $pergunta_id) {
-                $pergunta = Pergunta::find($pergunta_id);
-                $pergunta->pergunta = $request->pergunta[$key];
-
-                $opcoes = $pergunta->respostas->first()->opcoes->sortBy('id');
-
-                if (isset($data['checkboxVisibilidade_' . $pergunta->id])) {
-                    $pergunta->visibilidade = true;
-                } else {
-                    $pergunta->visibilidade = false;
-                }
-
-                //Verificação de alteração em múltipla escolha já existente
-                if ($data['tipo'][$key] == 'radio') {
-                    //dd($request->tituloRadio);
-                    $rowKey = 'row' . $key;
-                    if (isset($request->tituloRadio[$rowKey])) {
-                        foreach ($request->tituloRadio[$rowKey] as $i => $titulo) {
-                            if ($opcoes->count() > 0) {
-                                $opcoes->first()->titulo = $titulo;
-                                //Verificação de marcação da resposta da múltipla escolha
-                                if (isset($request->checkbox[$opcoes->first()->id])) {
-                                    $opcoes->first()->check = true;
-                                } else {
-                                    $opcoes->first()->check = false;
-                                }
-
-                                $opcoes->first()->update();
-                                $opcoes->shift();
-                            }
-                        }
-                    }
-                }
-
-                $pergunta->update();
-
-                array_push($perguntasMantidas, $pergunta->id);
-            }
-        }
-
-        $perguntas = Pergunta::where('form_id', $data['formEditId'])->get();
-
-        foreach ($perguntas as $pergunta) {
-            if (!in_array($pergunta->id, $perguntasMantidas)) {
-                $pergunta->delete();
-            }
-        }
-
-        $perguntasView = $request->pergunta;
-        $perguntasIdView = $request->pergunta_id;
-        if (isset($perguntasView) && isset($perguntasIdView)) {
-            if (count($perguntasView) > count($perguntasIdView)) {
-                for ($i = count($perguntasIdView); $i < count($perguntasView); $i++) {
-                    $pergunta = new Pergunta();
-                    $pergunta->form_id = $data['formEditId'];
-                    $pergunta->pergunta = $request->pergunta[$i];
-                    $pergunta->visibilidade = false;
-                    $pergunta->save();
-
-                    $resposta = new Resposta();
-                    $resposta->pergunta_id = $pergunta->id;
-                    $resposta->save();
-
-                    if ($data['tipo'][$i] == 'paragrafo') {
-                        $paragrafo = new Paragrafo();
-                        $resposta->paragrafo()->save($paragrafo);
-                    } elseif ($data['tipo'][$i] == 'checkbox') {
-                        $listResposta = (isset($data['tituloCheckoxMarc']) && is_array($data['tituloCheckoxMarc'])) ? array_shift($data['tituloCheckoxMarc']) : [];
-                        $opcoesArray = (isset($data['tituloCheckox']) && is_array($data['tituloCheckox'])) ? array_shift($data['tituloCheckox']) : [];
-                        if (is_array($opcoesArray)) {
-                            foreach ($opcoesArray as $key => $titulo) {
-                                if (!empty($titulo)) {
-                                    $resposta->opcoes()->create([
-                                        'titulo' => $titulo,
-                                        'tipo' => 'radio',
-                                        'check' => $listResposta[$key] ?? false,
-                                    ]);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        $form->titulo = $data['titulo' . $form->id];
-        $form->instrucoes = $data['instrucoes' . $form->id];
-        $form->update();
-
-        return redirect()->back()->with(['success' => 'Formulário editado com sucesso!']);
-    }
-
-    public function destroyForm($id)
-    {
-        $form = Form::find($id);
-        $evento = $form->modalidade->evento;
-        $this->authorize('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento);
-
-        $temRespostas = false;
-        foreach ($form->perguntas as $pergunta) {
-            $primeira = $pergunta->respostas->first();
-            if ($primeira && $primeira->opcoes && $primeira->opcoes->count()) {
-                //Resposta com Múltipla escolha:
-            } elseif ($primeira && $primeira->paragrafo && $primeira->paragrafo->count()) {
-                foreach ($pergunta->respostas as $resposta) {
-                    if ($resposta->revisor != null || $resposta->trabalho != null) {
-                        $temRespostas = true;
-                        break;
-                    }
-                }
-            } elseif ($temRespostas) {
-                break;
-            }
-        }
-        //dd($temRespostas);
-
-        if (!$temRespostas) {
-            $form->delete();
-
-            return redirect()->back()->with(['success' => 'Formulário excluído com sucesso!']);
-        } else {
-            return redirect()->back()->withErrors(['excluirFormulario' => 'Não é possível excluir. Existem respostas submetidas ligadas a este formulário.']);
-        }
-    }
-
-    public function visualizarForm(Request $request)
-    {
-        $evento = Evento::find($request->evento_id);
-        $this->authorize('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento);
-
-        $modalidade = Modalidade::find($request->modalidade_id)->load('forms.perguntas.respostas');
-        // $form = $modalidade->forms;
-        $data = $request->all();
-
-        return view('coordenador.modalidade.visualizarFormulario', compact('evento', 'modalidade'));
-    }
-
-    public function modalidadeFormEdit(Evento $evento, Form $form)
-    {
-        $this->authorize('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento);
-        $form = $form->load([
-            'perguntas' => function ($query) {
-                $query->orderBy('id');
-            },
-            'perguntas.respostaPadrao.opcoes',
-            'perguntas.respostaPadrao.paragrafo',
-        ]);
-        $modalidade = $form->modalidade;
-
-        return view('coordenador.modalidade.forms.edit', compact('form', 'evento', 'modalidade'));
-    }
-
     public function respostas(Request $request)
     {
         $evento = Evento::find($request->evento_id);
@@ -2101,15 +1871,6 @@ class EventoController extends Controller
         $data = $request->all();
 
         return view('coordenador.modalidade.visualizarRespostas', compact('evento', 'modalidade'));
-    }
-
-    public function respostasToPdf(Modalidade $modalidade)
-    {
-        $evento = $modalidade->evento;
-        $this->authorize('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento);
-        $pdf = Pdf::loadView('coordenador.modalidade.respostasPdf', ['modalidade' => $modalidade])->setOptions(['defaultFont' => 'sans-serif']);
-
-        return $pdf->stream("respostas-{$modalidade->nome}.pdf");
     }
 
     public function resumosToPdf(Evento $evento, Request $request, $column = 'titulo', $direction = 'asc', $status = 'rascunho')
@@ -2258,13 +2019,29 @@ class EventoController extends Controller
             $arquivoAvaliacao = $trabalho->arquivoAvaliacao()->whereIn('revisorId', $permissoes_revisao)->first();
         }
 
-        foreach ($modalidade->forms as $form) {
-            foreach ($form->perguntas as $pergunta) {
-                $respostas[$pergunta->id] = $pergunta->respostas->where('trabalho_id', $trabalho->id)->where('revisor_id', $revisor->id)->first();
-            }
-        }
+        $form = Form::whereHas(
+                    'perguntas.respostasRevisores',
+                    function ($query) use ($revisor, $trabalho) {
+                        $query->where('trabalho_id', $trabalho->id)
+                            ->where('revisor_id', $revisor->id);
+                    }
+                )
+                ->with([
+                    'perguntas.respostasPadrao.opcoes',
+                    'perguntas.respostasPadrao.paragrafo',
 
-        return view('coordenador.trabalhos.visualizarRespostaFormulario', compact('evento', 'modalidade', 'trabalho', 'revisorUser', 'revisor', 'respostas', 'arquivoAvaliacao', 'avaliacao'));
+                    'perguntas.respostasRevisores' => function ($query) use ($revisor, $trabalho) {
+                        $query->where('trabalho_id', $trabalho->id)
+                            ->where('revisor_id', $revisor->id)
+                            ->with([
+                                'opcoes',
+                                'paragrafo'
+                            ]);
+                    }
+                ])
+                ->firstOrFail();
+
+        return view('avaliacoes.review', compact('evento', 'form', 'modalidade', 'trabalho', 'revisorUser', 'revisor', 'arquivoAvaliacao', 'avaliacao'));
     }
 
     public function editarEtiqueta(Request $request)

@@ -10,6 +10,6 @@ class Paragrafo extends Model
 
     public function respostaModel()
     {
-        return $this->belongsTo('App\Models\Submissao\Resposta');
+        return $this->belongsTo(Resposta::class);
     }
 }

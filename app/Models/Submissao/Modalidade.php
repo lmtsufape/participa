@@ -2,6 +2,8 @@
 
 namespace App\Models\Submissao;
 
+use App\Enums\StatusForm;
+use App\Models\Users\Revisor;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -14,45 +16,88 @@ class Modalidade extends Model
      */
     protected $fillable = [
         'nome', 'inicioSubmissao', 'fimSubmissao', 'inicioRevisao', 'fimRevisao', 'inicioCorrecao', 'fimCorrecao', 'inicioValidacao', 'fimValidacao', 'inicioResultado',
-        'eventoId', 'texto', 'arquivo', 'caracteres', 'mincaracteres',
-        'maxcaracteres', 'palavras', 'minpalavras', 'maxpalavras',
+        'eventoId', 'texto', 'arquivo', 'caracteres', 'mincaracteres', 'evento_id',
+        'maxcaracteres', 'palavras', 'minpalavras', 'maxpalavras', 'apresentacao',
         'pdf', 'jpg', 'jpeg', 'png', 'docx', 'odt', 'zip', 'svg', 'mp4', 'mp3', 'ogg', 'wav', 'ogv', 'mpg', 'mpeg', 'mkv', 'avi', 'odp', 'pptx', 'csv', 'ods', 'xlsx',
-        'regra', 'template', 'modelo_apresentacao', 'instrucoes','numMaxCoautores', 'nome_en', 'nome_es','ordem'
+        'regra', 'template', 'modelo_apresentacao', 'instrucoes', 'submissaoUnica', 'avaliacaoDuranteSubmissao', 'numMaxCoautores', 'nome_en', 'nome_es','ordem'
+    ];
+
+
+    protected $casts = [
+        'inicioSubmissao' => 'datetime',
+        'fimSubmissao' => 'datetime',
+        'inicioRevisao' => 'datetime',
+        'fimRevisao' => 'datetime',
+        'inicioCorrecao' => 'datetime',
+        'fimCorrecao' => 'datetime',
+        'inicioValidacao' => 'datetime',
+        'fimValidacao' => 'datetime',
+        'inicioResultado' => 'datetime',
+        'pdf' => 'boolean',
+        'docx' => 'boolean',
+        'odt' => 'boolean',
+        'odp' => 'boolean',
+        'pptx' => 'boolean',
+        'ods' => 'boolean',
+        'xlsx' => 'boolean',
+        'csv' => 'boolean',
+        'zip' => 'boolean',
+
+        'mp3' => 'boolean',
+        'ogg' => 'boolean',
+        'wav' => 'boolean',
+
+        'mp4' => 'boolean',
+        'ogv' => 'boolean',
+        'mpg' => 'boolean',
+        'mpeg' => 'boolean',
+        'mkv' => 'boolean',
+        'avi' => 'boolean',
+
+        'jpg' => 'boolean',
+        'jpeg' => 'boolean',
+        'png' => 'boolean',
+        'svg' => 'boolean',
     ];
 
     public function trabalho()
     {
-        return $this->hasMany('App\Models\Submissao\Trabalho', 'modalidadeId');
+        return $this->hasMany(Trabalho::class, 'modalidadeId');
     }
 
     public function criterios()
     {
-        return $this->hasMany('App\Models\Submissao\Criterio', 'modalidadeId');
+        return $this->hasMany(Criterio::class, 'modalidadeId');
     }
 
     public function revisores()
     {
-        return $this->hasMany('App\Models\Users\Revisor', 'modalidadeId');
+        return $this->hasMany(Revisor::class, 'modalidadeId');
     }
 
     public function forms()
     {
-        return $this->hasMany('App\Models\Submissao\Form', 'modalidadeId');
+        return $this->hasMany(Form::class, 'modalidadeId');
+    }
+
+    public function formAtual()
+    {
+        return $this->hasOne(Form::class, 'modalidadeId')->where('status', StatusForm::Publicado);
     }
 
     public function evento()
     {
-        return $this->belongsTo('App\Models\Submissao\Evento', 'evento_id');
+        return $this->belongsTo(Evento::class, 'evento_id');
     }
 
     public function mensagensParecer()
     {
-        return $this->hasMany('App\Models\Submissao\MensagemParecer');
+        return $this->hasMany(MensagemParecer::class);
     }
 
     public function tiposApresentacao()
     {
-        return $this->hasMany('App\Models\Submissao\TipoApresentacao');
+        return $this->hasMany(TipoApresentacao::class);
     }
 
     /**
@@ -110,7 +155,7 @@ class Modalidade extends Model
 
     public function midiasExtra()
     {
-        return $this->hasMany('App\Models\Submissao\MidiaExtra');
+        return $this->hasMany(MidiaExtra::class);
     }
 
     public function tiposAceitos()

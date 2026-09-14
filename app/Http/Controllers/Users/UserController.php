@@ -12,6 +12,7 @@ use App\Models\Submissao\Area;
 use App\Models\Submissao\Certificado;
 use App\Models\Submissao\Endereco;
 use App\Models\Submissao\Evento;
+use App\Models\Submissao\Form;
 use App\Models\Submissao\Modalidade;
 use App\Models\Submissao\Palestra;
 use App\Models\Submissao\TipoComissao;
@@ -42,43 +43,57 @@ class UserController extends Controller
 
     public function editarPerfil(UpdateUserRequest $request)
     {
+        DB::beginTransaction();
+        
         try {
             $user = Auth::user();
             $payload = $request->payload();
-            if (!empty($payload['endereco'])) {
-                if ($user->endereco()->exists()) {
-                    $endereco = Endereco::findOrFail($user->enderecoId);
-                    $endereco->update($payload['endereco']);
-                }else{
-                    $endereco_id = Endereco::create($payload['endereco'])->id;
-                }
+
+            $enderecoData = $payload['endereco'] ?? [];
+
+            $possuiDadosEndereco = collect($enderecoData)
+                ->contains(fn ($valor) => $valor !== null && $valor !== '');
+
+            if ($user->endereco) {
+                $user->endereco->update($enderecoData);
+            } elseif ($possuiDadosEndereco) {
+                $endereco = Endereco::create($enderecoData);
+                $user->enderecoId = $endereco->id;
             }
 
-            if (!empty($payload['perfilIdentitario'])) {
-                if ($user->perfilIdentitario()->exists()) {
-                    $user->perfilIdentitario->update($payload['perfilIdentitario']);
+            $perfilIdentitarioData = $payload['perfilIdentitario'] ?? [];
+
+            if (!empty($perfilIdentitarioData)) {
+                if ($user->perfilIdentitario) {
+                    $user->perfilIdentitario->update($perfilIdentitarioData);
                 } else {
-
-                    $perfilIdentitario = PerfilIdentitario::create([...$payload['perfilIdentitario'], 'user_id' => $user->id]);
+                    PerfilIdentitario::create([
+                        ...$perfilIdentitarioData,
+                        'user_id' => $user->id,
+                    ]);
                 }
             }
+
             $data = [
                 ...$payload['user'],
-                'usuarioTemp' => null,
+                'usuarioTemp' => false,
             ];
 
-            if (isset($endereco_id)) {
-                $payload['enderecoId'] = $endereco_id;
-            }
             if ($request->filled('especialidade')) {
                 $data['especProfissional'] = $request->input('especialidade');
             }
 
-            $user->update($data);
+            $user->fill($data);
+            $user->save();
+
+            DB::commit();
 
             return back()->with('success', 'Perfil atualizado com sucesso! Todas as suas informações foram salvas corretamente.');
 
         } catch (\Exception $e) {
+            DB::rollBack();
+            report($e);
+
             return redirect()->back()
                 ->withInput()
                 ->with('error', 'Ocorreu um erro ao atualizar o perfil. Por favor, tente novamente. Se o problema persistir, entre em contato com o suporte.');
@@ -183,12 +198,27 @@ class UserController extends Controller
         $modalidade = Modalidade::find($request->modalidadeId);
         $revisorUser = User::find($revisor->user_id);
         $respostas = collect();
-        foreach ($modalidade->forms as $form) {
-            foreach ($form->perguntas as $pergunta) {
-                $respostas->push($pergunta->respostas->where('trabalho_id', $trabalho->id)->where('revisor_id', $revisor->id)->first());
-            }
-        }
+        $form = Form::whereHas(
+                'perguntas.respostasRevisores',
+                function ($query) use ($revisor, $trabalho) {
+                    $query->where('trabalho_id', $trabalho->id)
+                        ->where('revisor_id', $revisor->id);
+                }
+            )
+            ->with([
+                'perguntas.respostasPadrao.opcoes',
+                'perguntas.respostasPadrao.paragrafo',
 
+                'perguntas.respostasRevisores' => function ($query) use ($revisor, $trabalho) {
+                    $query->where('trabalho_id', $trabalho->id)
+                        ->where('revisor_id', $revisor->id)
+                        ->with([
+                            'opcoes',
+                            'paragrafo'
+                        ]);
+                }
+            ])
+            ->firstOrFail();
         $arquivoAvaliacao = $trabalho->arquivoAvaliacao()->where('revisorId', $revisor->id)->first();
         if ($arquivoAvaliacao == null) {
             $permissoes_revisao = Revisor::where([['user_id', $revisor->user_id], ['evento_id', $evento->id]])->get()->map->only(['id']);
@@ -196,7 +226,7 @@ class UserController extends Controller
         }
 
 
-        return view('user.visualizarParecer', compact('evento', 'modalidade', 'trabalho', 'revisorUser', 'respostas', 'revisor', 'arquivoAvaliacao'));
+        return view('avaliacoes.show', compact('evento', 'modalidade', 'trabalho', 'revisorUser', 'respostas', 'form', 'revisor', 'arquivoAvaliacao'));
     }
 
     public function searchUser(Request $request)

@@ -58,9 +58,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\PreRegistroController;
-
-
-
+use App\Http\Controllers\Submissao\FormController;
 
 Route::middleware(Setlocale::class)->group(function () {
     Route::get('/idioma/{lang}/{url?}', function (string $lang, $url = null) {
@@ -145,6 +143,8 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
             Route::get('/areas', [AdministradorController::class, 'areas'])->name('areas');
             Route::get('/users', [AdministradorController::class, 'users'])->name('users');
             Route::get('/edit/user/{id}', [AdministradorController::class, 'editUser'])->name('editUser');
+            Route::patch('/usuarios/{user}/senha', [AdministradorController::class, 'resetPassword'])->name('users.password.reset');
+
             Route::post('/update/user/{id}', [AdministradorController::class, 'updateUser'])->name('updateUser');
             Route::delete('/delete/user/{user_id}', [UserController::class, 'destroy'])->name('user.destroy');
             Route::post('/delete/search', [AdministradorController::class, 'search'])->name('search');
@@ -306,17 +306,21 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
             Route::delete('certificados/emissoes/deletar', [CertificadoController::class, 'deletarEmissao'])->name('deletar.emissao');
 
             Route::get('modalidade/create', [ModalidadeController::class, 'create'])->name('modalidade.create');
+
+            Route::post('/formularios/{form}/publicar', [FormController::class, 'publicar'])->name('forms.publicar');
             Route::get('modalidade/', [ModalidadeController::class, 'index'])->name('modalidade.index');
             Route::get('modalidade/cadastrarCriterio', [EventoController::class, 'cadastrarCriterio'])->name('cadastrarCriterio');
             Route::get('modalidade/listarCriterios', [EventoController::class, 'listarCriterios'])->name('listarCriterios');
-            Route::get('modalidade/forms', [EventoController::class, 'forms'])->name('forms');
-            Route::get('modalidade/atribuir/form', [EventoController::class, 'atribuirForm'])->name('atribuir.form');
-            Route::post('modalidade/form/salvar', [EventoController::class, 'salvarForm'])->name('salvar.form');
-            Route::put('modalidade/form/update', [EventoController::class, 'updateForm'])->name('update.form');
-            Route::get('modalidade/form/visualizar', [EventoController::class, 'visualizarForm'])->name('visualizar.form');
+            Route::get('modalidade/{modalidade_id}/forms', [FormController::class, 'forms'])->name('forms');
+            Route::get('modalidade/atribuir/form', [FormController::class, 'create'])->name('atribuir.form');
+            Route::post('modalidade/form/salvar', [FormController::class, 'salvarForm'])->name('salvar.form');
+            Route::put('modalidade/form/{form_id}/update', [FormController::class, 'modalidadeFormUpdate'])->name('update.form');
+            Route::get('modalidade/form/visualizar', [FormController::class, 'visualizarForm'])->name('visualizar.form');
+            Route::get('{evento}/modalidade/form/edit/{form}', [FormController::class, 'modalidadeFormEdit'])->name('modalidades.form.edit');
+
             Route::get('modalidade/form/respostas', [EventoController::class, 'respostas'])->name('respostas');
-            Route::get('modalidade/form/respostasToPdf/{modalidade}', [EventoController::class, 'respostasToPdf'])->name('respostasToPdf');
-            Route::get('modalidade/form/{id}/excluir', [EventoController::class, 'destroyForm'])->name('deletar.form');
+            Route::get('modalidade/form/respostasToPdf/{modalidade}', [FormController::class, 'respostasToPdf'])->name('respostasToPdf');
+            Route::get('modalidade/form/{id}/excluir', [FormController::class, 'destroyForm'])->name('deletar.form');
 
             Route::post('/evento/{evento}/avisoCorrecao', [EventoController::class, 'avisoCorrecao'])->name('evento.avisoCorrecao');
 
