@@ -1351,7 +1351,6 @@
                                         </button>
                                     </div>
 
-                                    {{-- ID exclusivo para a correcao: coautoresCorrecao_ID --}}
                                     <div id="coautoresCorrecao_{{ $trabalho->id }}" class="flexContainer">
                                         {{-- Autor Principal (Posição 0 fixa) --}}
                                         <div class="item card mt-1">
@@ -1374,32 +1373,33 @@
                                             </div>
                                         </div>
 
-                                        {{-- Lista de Coautores ordenados --}}
+                                        {{-- Lista de Coautores --}}
                                         @foreach ($trabalho->coautors->sortBy('ordem') as $coautor)
                                             <div class="item card mt-2">
                                                 <div class="row card-body p-2 align-items-center">
                                                     <div class="col-sm-5">
-                                                        <label class="small mb-1">E-mail</label>
-                                                        <input type="email" class="form-control form-control-sm emailCoautor" 
+                                                        <label class="small mb-1">E-mail (Opcional)</label>
+                                                        <input type="email" class="form-control form-control-sm" 
                                                             name="emailCoautor_{{ $trabalho->id }}[]" 
-                                                            value="{{ $coautor->user->email }}" oninput="buscarEmail(this)" required>
+                                                            value="{{ str_contains($coautor->user->email, '@participa.local') ? '' : $coautor->user->email }}" 
+                                                            placeholder="E-mail (opcional)">
                                                     </div>
                                                     <div class="col-sm-5">
                                                         <label class="small mb-1">Nome Completo</label>
                                                         <input type="text" class="form-control form-control-sm" 
                                                             name="nomeCoautor_{{ $trabalho->id }}[]" 
-                                                            value="{{ $coautor->user->name }}" required>
+                                                            value="{{ $coautor->user->name }}" placeholder="Nome do coautor" required>
                                                     </div>
                                                     <div class="col-sm-2 d-flex align-items-center justify-content-around mt-3">
-                                                        <a href="#" style="color: #d30909;" onclick="deletarCoautor(this, event)" title="Remover">
+                                                        <button type="button" class="btn btn-link p-0 text-danger" onclick="deletarCoautor(this, event)" title="Remover">
                                                             <img src="{{ asset('img/icons/trash-alt-regular.svg') }}" width="18">
-                                                        </a>
-                                                        <a href="#" onclick="moverCoautor(this, 1, event)" title="Subir">
+                                                        </button>
+                                                        <button type="button" class="btn btn-link p-0" onclick="moverCoautor(this, 1, event)" title="Subir">
                                                             <img src="{{ asset('img/icons/sobe.png') }}" width="18">
-                                                        </a>
-                                                        <a href="#" onclick="moverCoautor(this, 0, event)" title="Descer">
+                                                        </button>
+                                                        <button type="button" class="btn btn-link p-0" onclick="moverCoautor(this, 0, event)" title="Descer">
                                                             <img src="{{ asset('img/icons/desce.png') }}" width="18">
-                                                        </a>
+                                                        </button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -1488,15 +1488,17 @@
     @if (isset($trabalho))
         <script>
             function montarLinhaInputCorrecao(id, event) {
-                event.preventDefault();
+                if (event) event.preventDefault();
                 var coautores = document.getElementById("coautoresCorrecao_" + id);
+                if (!coautores) return;
+
                 var html = `
                     <div class="item card mt-2">
                         <div class="row card-body p-2 align-items-center">
                             <div class="col-sm-5">
-                                <label class="small mb-1">E-mail</label>
-                                <input type="email" class="form-control form-control-sm emailCoautor" 
-                                    name="emailCoautor_${id}[]" placeholder="E-mail" oninput="buscarEmail(this)" required>
+                                <label class="small mb-1">E-mail (Opcional)</label>
+                                <input type="email" class="form-control form-control-sm" 
+                                    name="emailCoautor_${id}[]" placeholder="E-mail (opcional)" oninput="buscarEmail(this)">
                             </div>
                             <div class="col-sm-5">
                                 <label class="small mb-1">Nome Completo</label>
@@ -1504,20 +1506,20 @@
                                     name="nomeCoautor_${id}[]" placeholder="Nome completo" required>
                             </div>
                             <div class="col-sm-2 d-flex align-items-center justify-content-around mt-3">
-                                <a href="#" style="color: #d30909;" onclick="deletarCoautor(this, event)" title="Remover">
+                                <button type="button" class="btn btn-link p-0 text-danger" onclick="deletarCoautor(this, event)" title="Remover">
                                     <img src="{{ asset('img/icons/trash-alt-regular.svg') }}" width="18">
-                                </a>
-                                <a href="#" onclick="moverCoautor(this, 1, event)" title="Subir">
+                                </button>
+                                <button type="button" class="btn btn-link p-0" onclick="moverCoautor(this, 1, event)" title="Subir">
                                     <img src="{{ asset('img/icons/sobe.png') }}" width="18">
-                                </a>
-                                <a href="#" onclick="moverCoautor(this, 0, event)" title="Descer">
+                                </button>
+                                <button type="button" class="btn btn-link p-0" onclick="moverCoautor(this, 0, event)" title="Descer">
                                     <img src="{{ asset('img/icons/desce.png') }}" width="18">
-                                </a>
+                                </button>
                             </div>
                         </div>
                     </div>
                 `;
-                $(coautores).append(html);
+                coautores.insertAdjacentHTML('beforeend', html);
             }
 
             function deletarCoautor(btn, event) {
