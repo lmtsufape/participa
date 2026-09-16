@@ -3,6 +3,7 @@
 namespace App\Models\Users;
 
 use App\Models\CandidatoAvaliador;
+use App\Models\EmissaoCertificado;
 use App\Models\PerfilIdentitario;
 use App\Models\Submissao\Area;
 use App\Models\Submissao\Atividade;
@@ -223,6 +224,11 @@ class User extends Authenticatable
     public function certificados()
     {
         return $this->belongsToMany(Certificado::class, 'certificado_user')->withTrashed()->withPivot('id', 'valido', 'validacao', 'trabalho_id', 'palestra_id', 'comissao_id', 'path')->withTimestamps();
+    }
+
+    public function emissoesCertificados()
+    {
+        return $this->hasMany(EmissaoCertificado::class, 'user_id');
     }
 
     public function atividades()

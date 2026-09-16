@@ -1,155 +1,107 @@
 @extends('layouts.app')
 
+@use('App\Enums\TipoCertificado')
+
 @section('content')
 
-    <div class="container  position-relative">
-        <div class="row justify-content-center titulo-detalhes">
-            <div class="col-sm-12">
-                <div class="row">
-                    <div class="col-sm-12">
-                        <h1 class="">{{ __('Certificados') }}</h1>
+    <div class="container">
+        <x-admin.content-header
+            title="{{ __('Certificados') }}"
+            description="Consulte e acesse os certificados disponíveis para sua participação nos eventos."
+        />
+
+
+        @foreach ($certificadosPorTipo as $tipo => $emissoes)
+
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title pt-2">Tipo do certificado: <span
+                        class="text-muted fw-normal">{{ $emissoes->first()->certificado->tipo->label() }}</span></h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-sm table-striped">
+                            <thead>
+                                <tr>
+                                    <th scope="col">
+                                        Evento
+                                    </th>
+                                    @if (in_array($emissoes->first()->certificado->tipo, [
+                                        TipoCertificado::Apresentador,
+                                        TipoCertificado::Palestrante,
+                                        TipoCertificado::OutrasComissoes,
+                                    ]))
+                                        <th>
+                                            {{ match ($emissoes->first()->certificado->tipo) {
+                                                TipoCertificado::Apresentador => 'Trabalho',
+                                                TipoCertificado::Palestrante => 'Palestra',
+                                                TipoCertificado::OutrasComissoes => 'Comissão',
+                                            } }}
+                                        </th>
+                                    @endif
+                                    <th scope="col">
+                                        Data
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($emissoes as $emissao)
+                                    <tr>
+                                        <td>
+                                            {{ $emissao->certificado->evento->nome }}
+                                        </td>
+                                        @if (in_array($emissoes->first()->certificado->tipo, [
+                                            TipoCertificado::Apresentador,
+                                            TipoCertificado::Palestrante,
+                                            TipoCertificado::OutrasComissoes,
+                                        ], true))
+                                            <td>
+                                                {{ match ($emissao->certificado->tipo) {
+                                                    TipoCertificado::Apresentador => $emissao->trabalho?->titulo,
+                                                    TipoCertificado::Palestrante => $emissao->palestra?->nome,
+                                                    TipoCertificado::OutrasComissoes => $emissao->tipoComissao?->nome,
+                                                } }}
+                                            </td>
+                                        @endif
+                                        <td>
+                                            {{ $emissao->created_at?->format('d/m/Y H:i') }}
+
+                                        </td>
+                                        @php
+                                            $referencia_id = match ($emissao->certificado->tipo) {
+                                                TipoCertificado::Apresentador => $emissao->trabalho_id,
+                                                TipoCertificado::Palestrante => $emissao->palestra_id,
+                                                TipoCertificado::OutrasComissoes => $emissao->comissao_id,
+                                                default => 0,
+                                            };
+                                        @endphp
+
+                                        <td>
+                                            <a
+                                                class="text-reset d-flex justify-content-center"
+                                                href="{{ route('verCertificado', [
+                                                    $emissao->certificado->id,
+                                                    $usuario->id,
+                                                    $referencia_id
+                                                ]) }}"
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                            >
+                                                <i class="bi bi-file-earmark-text text-my-primary"></i>
+                                            </a>
+
+                                            @error('certificado')
+                                                {{ $message }}
+                                            @enderror
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
-        </div>
-        <div id="divListarTrabalhos"
-            style="display: block">
-            @foreach ($certificadosPorTipo as $certificados)
-                <div class="row justify-content-center"
-                    style="width: 100%;">
-                    <div class="col-sm-12">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title">Tipo do certificado: <span
-                                        class="card-subtitle mb-2 text-muted">{{ $tiposView[$certificados[0]->tipo-1] }}</span>
-                                    <div class="row table-trabalhos">
-                                        <div class="col-sm-12">
-                                            <form action="#"
-                                                method="post">
-                                                @csrf
-                                                <div class="row">
-                                                    <div class="col-sm-12">
-                                                        @if ($errors->any())
-                                                            <div class="alert alert-danger">
-                                                                <ul>
-                                                                    @foreach ($errors->all() as $error)
-                                                                        <li>{{ $error }}</li>
-                                                                    @endforeach
-                                                                </ul>
-                                                            </div>
-                                                        @endif
-                                                    </div>
-                                                </div>
-                                                <br>
-                                                <table class="table table-hover table-responsive-lg table-sm table-striped">
-                                                    <thead>
-                                                        <tr>
-                                                            <th scope="col">
-                                                                Evento
-                                                            </th>
-                                                            <th>
-                                                                @if (in_array($certificados[0]->tipo, [1, 6, 8]))
-                                                                    @switch($certificados[0]->tipo)
-                                                                        @case(1)
-                                                                            Trabalho
-                                                                        @break
 
-                                                                        @case(6)
-                                                                            Palestra
-                                                                        @break
+        @endforeach
 
-                                                                        @case(8)
-                                                                            Comissão
-                                                                        @break
-
-                                                                        @default
-                                                                        @break
-                                                                    @endswitch
-                                                                @endif
-                                                            </th>
-                                                            <th scope="col">
-                                                                Data
-                                                            </th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        @foreach ($certificados as $certificado)
-                                                            <tr>
-                                                                <td>
-                                                                    {{ $certificado->evento->nome }}
-                                                                </td>
-                                                                <td>
-                                                                    @switch($certificado->tipo)
-                                                                        @case(1)
-                                                                            {{ $trabalhos->find($certificado->pivot->trabalho_id)->titulo }}
-                                                                        @break
-
-                                                                        @case(6)
-                                                                            {{ $palestras->find($certificado->pivot->palestra_id)->nome }}
-                                                                        @break
-
-                                                                        @case(8)
-                                                                            {{ $comissoes->find($certificado->pivot->comissao_id)->nome }}
-                                                                        @break
-
-                                                                        @default
-                                                                    @endswitch
-                                                                </td>
-                                                                <td>
-                                                                    {{ date('d/m/Y H:i', strtotime($certificado->pivot->created_at)) }}
-
-                                                                </td>
-                                                                <td>
-                                                                    @switch($certificado->tipo)
-                                                                        @case(1)
-                                                                            <a class="text-reset d-flex justify-content-center"
-                                                                                href="{{ route('verCertificado', [$certificado->id, $usuario->id, $certificado->pivot->trabalho_id]) }}"
-                                                                                target="_blank"
-                                                                                rel="noopener noreferrer">
-                                                                                <i class="far fa-eye"></i>
-                                                                            </a>
-                                                                        @break
-
-                                                                        @case(6)
-                                                                            <a class="text-reset d-flex justify-content-center"
-                                                                                href="{{ route('verCertificado', [$certificado->id, $usuario->id, $certificado->pivot->palestra_id]) }}"
-                                                                                target="_blank"
-                                                                                rel="noopener noreferrer">
-                                                                                <i class="far fa-eye"></i>
-                                                                            </a>
-                                                                        @break
-
-                                                                        @case(8)
-                                                                            <a class="text-reset d-flex justify-content-center"
-                                                                                href="{{ route('verCertificado', [$certificado->id, $usuario->id, $certificado->pivot->comissao_id]) }}"
-                                                                                target="_blank"
-                                                                                rel="noopener noreferrer">
-                                                                                <i class="far fa-eye"></i>
-                                                                            </a>
-                                                                        @break
-
-                                                                        @default
-                                                                            <a class="text-reset d-flex justify-content-center"
-                                                                                href="{{ route('verCertificado', [$certificado->id, $usuario->id, 0]) }}"
-                                                                                target="_blank"
-                                                                                rel="noopener noreferrer">
-                                                                                <i class="far fa-eye"></i>
-                                                                            </a>
-                                                                    @endswitch
-                                                                    @error('certificado')
-                                                                        {{$message}}
-                                                                    @enderror
-                                                                </td>
-                                                            </tr>
-                                                        @endforeach
-                                                    </tbody>
-                                                </table>
-                                            </form>
-                                        </div>
-                                    </div>
-                            </div>
-                        </div>
-                    </div>
-            @endforeach
-        </div>
-    @endsection
+@endsection

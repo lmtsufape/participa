@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdatePasswordRequest;
 use App\Http\Requests\UpdateUserRequest;
+use App\Models\EmissaoCertificado;
 use App\Models\Submissao\Area;
 use App\Models\Submissao\Certificado;
 use App\Models\Submissao\Endereco;
@@ -44,7 +45,7 @@ class UserController extends Controller
     public function editarPerfil(UpdateUserRequest $request)
     {
         DB::beginTransaction();
-        
+
         try {
             $user = Auth::user();
             $payload = $request->payload();
@@ -151,14 +152,17 @@ class UserController extends Controller
     public function meusCertificados()
     {
         $usuario = auth()->user();
-        $tiposView = ['Apresentador', 'Comissão científica', 'Comissão organizadora', 'Revisor', 'Participante', 'Palestrante', 'Coordenador da comissao científica', 'Outras comissoes', 'Inscrito em uma atividade', 'Inscrito em evento'];
-        $certificadosPorTipo = $usuario->certificados->groupBy('tipo');
-        $tipos = array_flip(Certificado::TIPO_ENUM);
-        $comissoes = TipoComissao::find($usuario->certificados->pluck('pivot.comissao_id'));
-        $palestras = Palestra::find($usuario->certificados->pluck('pivot.palestra_id'));
-        $trabalhos = Trabalho::find($usuario->certificados->pluck('pivot.trabalho_id'));
+        $certificadosPorTipo = $usuario->emissoesCertificados()
+            ->with([
+                'certificado',
+                'trabalho',
+                'palestra',
+                'tipoComissao',
+            ])
+            ->get()
+            ->groupBy(fn ($emissao) => $emissao->certificado->tipo->value);
 
-        return view('user.meusCertificados', compact('tiposView', 'usuario', 'certificadosPorTipo', 'tipos', 'comissoes', 'palestras', 'trabalhos'));
+        return view('user.meusCertificados', compact('usuario', 'certificadosPorTipo'));
     }
 
     public function meusTrabalhos()
