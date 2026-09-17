@@ -1226,8 +1226,8 @@ class CertificadoController extends Controller
         }
 
         $assinaturaBase64 = null;
-        if (file_exists(public_path('img/assinatura_presidente_cbee.jpeg'))) {
-            $assinaturaBase64 = 'data:image/jpeg;base64,' . base64_encode(file_get_contents(public_path('img/assinatura_presidente_cbee.jpeg')));
+        if (file_exists(public_path('img/assinatura_presidente_cbee.png'))) {
+            $assinaturaBase64 = 'data:image/png;base64,' . base64_encode(file_get_contents(public_path('img/assinatura_presidente_cbee.png')));
         }
 
         $logoBase64 = null;

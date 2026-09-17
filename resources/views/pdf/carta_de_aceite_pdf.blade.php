@@ -121,7 +121,7 @@
         de autoria de <strong>{{ $trabalho->autor->name }}</strong>@if ($trabalho->coautors->count()), com os coautores/as <strong>{{ $trabalho->coautors->sortBy('ordem')->pluck('user.name')->join(', ', ' e ') }}</strong>@endif,
         foi <strong>aprovado</strong> na modalidade <strong>{{ $trabalho->modalidade->nome }}</strong> para apresentação no evento 
         <strong>XV CONGRESSO BRASILEIRO DE ETNOBIOLOGIA E ETNOECOLOGIA (CBEE)</strong>, 
-        Convivência com os Territórios Brasileiros e Justiça Climática. O evento ocorrerá entre os dias 16 a 19 de novembro de 2026 na Universidade Federal de Minas Gerais (UFMG), cidade de Belo Horizonte, estado de Minas Gerais, Brasil.
+        O evento ocorrerá entre os dias 16 a 19 de novembro de 2026 na Universidade Federal de Minas Gerais (UFMG), cidade de Belo Horizonte, estado de Minas Gerais, Brasil.
     </div>
 
     <div class="data-emissao">
