@@ -61,13 +61,13 @@
                                 <strong>{{$trabalho->modalidade->nome}}</strong> para apresentação no
                                 evento
                                 <strong>XV CONGRESSO BRASILEIRO DE ETNOBIOLOGIA E ETNOECOLOGIA (CBEE)</strong>,
-                                Convivência com os Territórios Brasileiros e Justiça Climática. O evento ocorrerá entre os dias 16 a 19 de novembro de 2026 na Universidade Federal de Minas Gerais (UFMG), cidade de Belo Horizonte, estado de Minas Gerais, Brasil.
+                                 O evento ocorrerá entre os dias 16 a 19 de novembro de 2026 na Universidade Federal de Minas Gerais (UFMG), cidade de Belo Horizonte, estado de Minas Gerais, Brasil.
                             </p>
                             <div class="receipt-date">
                                 Belo Horizonte, {{ \Carbon\Carbon::parse($trabalho->aprovacao_emitida_em ?? now())->locale('pt_BR')->isoFormat('D [de] MMMM [de] YYYY') }}.
                             </div>
                             <div class="signature-section" style="text-align: center; margin-top: 30px;">
-                                <img src="{{ $message->embed(public_path('img/assinatura_presidente_cbee.jpeg')) }}" alt="Assinatura Presidente" style="width: 200px; height: auto; margin-bottom: 10px; display: block; margin-left: auto; margin-right: auto;">
+                                <img src="{{ $message->embed(public_path('img/assinatura_presidente_cbee.png')) }}" alt="Assinatura Presidente" style="width: 200px; height: auto; margin-bottom: 10px; display: block; margin-left: auto; margin-right: auto;">
                                 <div class="signature-line" style="width: 200px; height: 1px; background-color: #333; margin: 10px auto; display: block;"></div>
                                 <div class="signature-name" style="font-weight: bold;">Emmanuel Duarte Almada</div>
                                 <div class="signature-title" style="font-size: 14px; color: #555;">Presidente da comissão organizadora</div>

@@ -119,7 +119,7 @@
       </div>
 
       <div class="signature-section">
-        <img src="img/assinatura_presidente_cbee.jpeg" alt="Assinatura Presidente" style="width: 200px; height: auto; margin-bottom: 10px; display: block; margin-left: auto; margin-right: auto;">
+        <img src="img/assinatura_presidente_cbee.png" alt="Assinatura Presidente" style="width: 200px; height: auto; margin-bottom: 10px; display: block; margin-left: auto; margin-right: auto;">
         <div class="signature-line" style="width: 200px; height: 1px; background-color: #333; margin: 10px auto; display: block;"></div>
         <div class="signature-name">Emmanuel Duarte Almada</div>
         <div class="signature-title">Presidente da comissão organizadora</div>
