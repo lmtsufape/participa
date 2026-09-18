@@ -20,20 +20,6 @@ class Certificado extends Model
         'tipo' => TipoCertificado::class,
     ];
 
-    public const TIPO_ENUM = [
-        'apresentador' => 1,
-        'comissao_cientifica' => 2,
-        'comissao_organizadora' => 3,
-        'revisor' => 4,
-        'participante' => 5,
-        'expositor' => 6,
-        'coordenador_comissao_cientifica' => 7,
-        'outras_comissoes' => 8,
-        'inscrito_atividade' => 9,
-        'inscrito' => 10,
-        'credenciado' => 11,
-    ];
-
     public function assinaturas()
     {
         return $this->belongsToMany(Assinatura::class, 'assinatura_certificado', 'certificado_id', 'assinatura_id')->orderBy('nome');

@@ -163,7 +163,7 @@
     </div>
 @endsection
 @php
-    $TIPO_CREDENCIADO = \App\Models\Submissao\Certificado::TIPO_ENUM['credenciado'];
+    $TIPO_CREDENCIADO = TipoCertificado::Credenciado;
 @endphp
 <script src="{{ asset('js/checkbox_marcar_todos.js') }}" defer></script>
 <script>

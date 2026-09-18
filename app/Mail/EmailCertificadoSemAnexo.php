@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Enums\TipoCertificado;
 use App\Models\Submissao\Atividade;
 use App\Models\Submissao\Certificado;
 use App\Models\Submissao\Palestra;
@@ -50,43 +51,43 @@ class EmailCertificadoSemAnexo extends Mailable implements ShouldQueue
         $this->link = route('certificado.view', urlencode($hash));
 
         switch ($this->request_destinatario) {
-            case Certificado::TIPO_ENUM['apresentador']:
+            case TipoCertificado::Apresentador:
                 $this->certificado->usuarios()->attach($this->user->id, ['validacao' => $hash, 'trabalho_id' => $this->trabalho->id]);
 
                 break;
-            case Certificado::TIPO_ENUM['comissao_cientifica']:
+            case TipoCertificado::ComissaoCientifica:
                 $this->certificado->usuarios()->attach($this->user->id, ['validacao' => $hash]);
 
                 break;
-            case Certificado::TIPO_ENUM['comissao_organizadora']:
+            case TipoCertificado::ComissaoOrganizadora:
                 $this->certificado->usuarios()->attach($this->user->id, ['validacao' => $hash]);
 
                 break;
-            case Certificado::TIPO_ENUM['revisor']:
+            case TipoCertificado::Revisor:
                 $this->certificado->usuarios()->attach($this->user->id, ['validacao' => $hash]);
 
                 break;
-            case Certificado::TIPO_ENUM['participante']:
+            case TipoCertificado::Participante:
                 $this->certificado->usuarios()->attach($this->user->id, ['validacao' => $hash]);
 
                 break;
-            case Certificado::TIPO_ENUM['inscrito']:
+            case TipoCertificado::Inscrito:
                 $this->certificado->usuarios()->attach($this->user->id, ['validacao' => $hash]);
 
                 break;
-            case Certificado::TIPO_ENUM['expositor']:
+            case TipoCertificado::Palestrante:
                 $this->certificado->usuarios()->attach($this->user->id, ['validacao' => $hash, 'palestra_id' => $this->request_palestra_id]);
 
                 break;
-            case Certificado::TIPO_ENUM['coordenador_comissao_cientifica']:
+            case TipoCertificado::CoordenadorComissaoCientifica:
                 $this->certificado->usuarios()->attach($this->user->id, ['validacao' => $hash]);
 
                 break;
-            case Certificado::TIPO_ENUM['outras_comissoes']:
+            case TipoCertificado::OutrasComissoes:
                 $this->certificado->usuarios()->attach($this->user->id, ['validacao' => $hash, 'comissao_id' => $this->request_tipo_comissao_id]);
 
                 break;
-            case Certificado::TIPO_ENUM['inscrito_atividade']:
+            case TipoCertificado::InscritoAtividade:
                 $this->certificado->usuarios()->attach($this->user->id, ['validacao' => $hash, 'atividade_id' => $this->request_atividade_id]);
 
                 break;
