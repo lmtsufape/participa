@@ -71,90 +71,91 @@
                             <label><b>{{$evento->formSubTrab->etiquetaautortrabalho}}</b></label>
                         </div>
                     </div>
-                        <div id="coautores{{$trabalho->id}}" class="flexContainer " >
+                        <div id="coautores{{$trabalho->id}}" class="flexContainer">
                           @if (old('nomeCoautor_'.$trabalho->id) != null)
                             @foreach (old('nomeCoautor_'.$trabalho->id) as $i => $nomeCoautor)
                                 @if($i == 1)
-                                    <label id="title-coautores{{$trabalho->id}}" style="margin-top:20px"><b>{{$evento->formSubTrab->etiquetacoautortrabalho}}</b></label>
+                                    <div class="d-flex justify-content-between align-items-center mt-2">
+                                        <label id="title-coautores{{$trabalho->id}}"><b>{{$evento->formSubTrab->etiquetacoautortrabalho}}</b></label>
+                                        <a href="#" style="color: #196572ff;text-decoration: none;" title="Adicionar coautor" onclick="montarLinhaInput(this, {{$trabalho->id}}, event)" id="addCoautor_{{$trabalho->id}}">
+                                            <i class="bi bi-plus-circle fs-4"></i>
+                                        </a>
+                                    </div>
                                 @endif
-                                <div class="item card mt-0">
-                                    <div class="row card-body">
+                                <div class="item card mt-1">
+                                    <div class="row card-body p-2 align-items-center">
                                         <div class="col-sm-4">
-                                            <label>E-mail</label>
-                                            <input type="email" style="margin-bottom:10px" value="{{old('emailCoautor_'.$trabalho->id)[$i]}}" class="form-control emailCoautor" name="emailCoautor_{{$trabalho->id}}[]" required placeholder="E-mail">
+                                            <label class="small mb-1">E-mail</label>
+                                            <input type="email" value="{{old('emailCoautor_'.$trabalho->id)[$i]}}" class="form-control form-control-sm emailCoautor" name="emailCoautor_{{$trabalho->id}}[]" placeholder="E-mail">
                                         </div>
                                         <div class="col-sm-5">
-                                            <label>Nome Completo</label>
-                                            <input type="text" style="margin-bottom:10px" value="{{$nomeCoautor}}" class="form-control emailCoautor" name="nomeCoautor_{{$trabalho->id}}[]" required placeholder="Nome">
+                                            <label class="small mb-1">Nome Completo</label>
+                                            <input type="text" value="{{$nomeCoautor}}" class="form-control form-control-sm" name="nomeCoautor_{{$trabalho->id}}[]" required placeholder="Nome">
                                         </div>
-                                        <div class="col-sm-3 d-flex align-items-center gap-3">
-                                            <a style="color: #d30909;" href="#" onclick="deletarCoautor(this, {{$trabalho->id}}, event)" class="delete text-decoration-none pr-2">
-                                                <i class="bi bi-trash3 fs-4 icon-card"></i>
-                                            </a>
-                                            <a href="#" class="text-decoration-none text-success" onclick="mover(this.parentElement.parentElement.parentElement, 1, {{$trabalho->id}}, event)">
-                                                <i class="bi bi-arrow-up-circle fs-4"></i>
-                                            </a>
-                                            <a href="#" class="text-decoration-none text-success" onclick="mover(this.parentElement.parentElement.parentElement, 0, {{$trabalho->id}}, event)">
-                                                <i class="bi bi-arrow-down-circle fs-4"></i>
-                                            </a>
+                                        <div class="col-sm-3 d-flex align-items-center justify-content-around mt-3">
+                                            @if($i > 0)
+                                                <a style="color: #d30909;" href="#" onclick="deletarCoautor(this, {{$trabalho->id}}, event)" class="delete text-decoration-none">
+                                                    <i class="bi bi-trash3 fs-5 icon-card"></i>
+                                                </a>
+                                                <a href="#" class="text-decoration-none text-success" onclick="mover(this, 1, {{$trabalho->id}}, event)">
+                                                    <i class="bi bi-arrow-up-circle fs-5"></i>
+                                                </a>
+                                                <a href="#" class="text-decoration-none text-success" onclick="mover(this, 0, {{$trabalho->id}}, event)">
+                                                    <i class="bi bi-arrow-down-circle fs-5"></i>
+                                                </a>
+                                            @else
+                                                <span class="badge bg-primary">Autor(a)</span>
+                                            @endif
                                         </div>
                                     </div>
                                 </div>
                             @endforeach
                           @else
+                            {{-- Autor Principal --}}
                             <div class="item card mt-0">
-                                <div class="row card-body">
+                                <div class="row card-body p-2 align-items-center">
                                     <div class="col-sm-4">
-                                        <label>E-mail</label>
-                                        <input type="email" style="margin-bottom:10px" value="{{$trabalho->autor->email}}" oninput="buscarEmail(this)" class="form-control emailCoautor" name="emailCoautor_{{$trabalho->id}}[]" placeholder="E-mail" required>
+                                        <label class="small mb-1">E-mail do Autor</label>
+                                        <input type="email" value="{{$trabalho->autor->email}}" oninput="buscarEmail(this)" class="form-control form-control-sm emailCoautor" name="emailCoautor_{{$trabalho->id}}[]" placeholder="E-mail" required>
                                     </div>
                                     <div class="col-sm-5">
-                                        <label>Nome Completo</label>
-                                        <input type="text" style="margin-bottom:10px" value="{{$trabalho->autor->name}}" class="form-control emailCoautor" name="nomeCoautor_{{$trabalho->id}}[]" placeholder="Nome" required>
+                                        <label class="small mb-1">Nome do Autor</label>
+                                        <input type="text" value="{{$trabalho->autor->name}}" class="form-control form-control-sm" name="nomeCoautor_{{$trabalho->id}}[]" placeholder="Nome" required>
                                     </div>
-                                    <div class="col-sm-3 d-flex align-items-center gap-3">
-                                        <a style="color: #d30909;" href="#" onclick="deletarCoautor(this, {{$trabalho->id}}, event)" class="delete text-decoration-none pr-2">
-                                            <i class="bi bi-trash3 fs-4 icon-card"></i>
-                                        </a>
-                                        <a href="#" class="text-decoration-none text-success" onclick="mover(this.parentElement.parentElement.parentElement, 1, {{$trabalho->id}}, event)">
-                                            <i class="bi bi-arrow-up-circle fs-4"></i>
-                                        </a>
-                                        <a href="#" class="text-decoration-none text-success" onclick="mover(this.parentElement.parentElement.parentElement, 0, {{$trabalho->id}}, event)">
-                                            <i class="bi bi-arrow-down-circle fs-4"></i>
-                                        </a>
+                                    <div class="col-sm-3 text-center mt-3">
+                                        <span class="badge bg-primary">Autor(a)</span>
                                     </div>
                                 </div>
                             </div>
-                            @if(! $trabalho->coautors->isEmpty())
-                                <div class="d-flex justify-content-between align-items-center mt-2">
-                                    <label id="title-coautores{{$trabalho->id}}"><b>{{$evento->formSubTrab->etiquetacoautortrabalho}}</b></label>
-                                    <div>
-                                        <a href="#" style="color: #196572ff;text-decoration: none;" title="Clique aqui para adicionar {{$evento->formSubTrab->etiquetacoautortrabalho}}, se houver" onclick="montarLinhaInput(this, {{$trabalho->id}}, event)" id="addCoautor_{{$trabalho->id}}">
-                                            <i class="bi bi-plus-circle fs-4"></i>
-                                        </a>
-                                    </div>
-                                </div>
-                            @endif
-                            @foreach ($trabalho->coautors as $i => $coautor)
-                                <div class="item card mt-0">
-                                    <div class="row card-body">
+
+                            <div class="d-flex justify-content-between align-items-center mt-3">
+                                <label id="title-coautores{{$trabalho->id}}" class="mb-0"><b>{{$evento->formSubTrab->etiquetacoautortrabalho}}</b></label>
+                                <a href="#" style="color: #196572ff;text-decoration: none;" title="Adicionar coautor" onclick="montarLinhaInput(this, {{$trabalho->id}}, event)" id="addCoautor_{{$trabalho->id}}">
+                                    <i class="bi bi-plus-circle fs-4"></i> Adicionar
+                                </a>
+                            </div>
+
+                            {{-- Coautores ordenados pelo campo 'ordem' --}}
+                            @foreach ($trabalho->coautors->sortBy('ordem') as $i => $coautor)
+                                <div class="item card mt-2">
+                                    <div class="row card-body p-2 align-items-center">
                                         <div class="col-sm-4">
-                                            <label>E-mail</label>
-                                            <input type="email" style="margin-bottom:10px" value="{{$coautor->user->email}}" oninput="buscarEmail(this)" class="form-control emailCoautor" name="emailCoautor_{{$trabalho->id}}[]" placeholder="E-mail" required>
+                                            <label class="small mb-1">E-mail (Opcional)</label>
+                                            <input type="email" value="{{ str_contains($coautor->user->email, '@participa.local') ? '' : $coautor->user->email }}" oninput="buscarEmail(this)" class="form-control form-control-sm emailCoautor" name="emailCoautor_{{$trabalho->id}}[]" placeholder="E-mail">
                                         </div>
                                         <div class="col-sm-5">
-                                            <label>Nome Completo</label>
-                                            <input type="text" style="margin-bottom:10px" value="{{$coautor->user->name}}" class="form-control emailCoautor" name="nomeCoautor_{{$trabalho->id}}[]" placeholder="Nome" required>
+                                            <label class="small mb-1">Nome Completo</label>
+                                            <input type="text" value="{{$coautor->user->name}}" class="form-control form-control-sm" name="nomeCoautor_{{$trabalho->id}}[]" placeholder="Nome" required>
                                         </div>
-                                        <div class="col-sm-3 d-flex align-items-center gap-3">
-                                            <a h style="color: #d30909;" class="text-decoration-none" href="#" onclick="deletarCoautor(this, {{$trabalho->id}}, event)" class="delete pr-2">
-                                                <i class="bi bi-trash3 fs-4 icon-card"></i>
+                                        <div class="col-sm-3 d-flex align-items-center justify-content-around mt-3">
+                                            <a style="color: #d30909;" href="#" onclick="deletarCoautor(this, {{$trabalho->id}}, event)" class="delete text-decoration-none">
+                                                <i class="bi bi-trash3 fs-5 icon-card"></i>
                                             </a>
-                                            <a href="#" class="text-decoration-none text-success" onclick="mover(this.parentElement.parentElement.parentElement, 1, {{$trabalho->id}}, event)">
-                                                <i class="bi bi-arrow-up-circle fs-4"></i>
+                                            <a href="#" class="text-decoration-none text-success" onclick="mover(this, 1, {{$trabalho->id}}, event)">
+                                                <i class="bi bi-arrow-up-circle fs-5"></i>
                                             </a>
-                                            <a href="#" class="text-decoration-none text-success" onclick="mover(this.parentElement.parentElement.parentElement, 0, {{$trabalho->id}}, event)">
-                                                <i class="bi bi-arrow-down-circle fs-4"></i>
+                                            <a href="#" class="text-decoration-none text-success" onclick="mover(this, 0, {{$trabalho->id}}, event)">
+                                                <i class="bi bi-arrow-down-circle fs-5"></i>
                                             </a>
                                         </div>
                                     </div>
@@ -621,51 +622,41 @@
 @endif
 
 <script>
-  function montarLinhaInput(div, id, event){
-    var coautores = document.getElementById("coautores"+id);
-    var html = "";
-    if (coautores.children.length==1){
-        html = `<label id="title-coautores{{$trabalho->id}}" style="margin-top:20px"><b>${@json($evento->formSubTrab->etiquetacoautortrabalho)}</b></label>`;
-    }
-    event.preventDefault();
-    html += `
-    <div class="item card mt-0">
-        <div class="row card-body">
+  function montarLinhaInput(btn, id, event){
+    if (event) event.preventDefault();
+    var coautores = document.getElementById("coautores" + id);
+    var html = `
+    <div class="item card mt-2">
+        <div class="row card-body p-2 align-items-center">
             <div class="col-sm-4">
-                <label>E-mail</label>
-                <input type="email" style="margin-bottom:10px" class="form-control emailCoautor" name="emailCoautor_{{$trabalho->id}}[]" required placeholder="E-mail">
+                <label class="small mb-1">E-mail (Opcional)</label>
+                <input type="email" class="form-control form-control-sm emailCoautor" name="emailCoautor_${id}[]" placeholder="E-mail" oninput="buscarEmail(this)">
             </div>
             <div class="col-sm-5">
-                <label>Nome Completo</label>
-                <input type="text" style="margin-bottom:10px" class="form-control emailCoautor" name="nomeCoautor_{{$trabalho->id}}[]" required placeholder="Nome">
+                <label class="small mb-1">Nome Completo</label>
+                <input type="text" class="form-control form-control-sm" name="nomeCoautor_${id}[]" required placeholder="Nome">
             </div>
-            <div class="col-sm-3 d-flex align-items-center gap-3">
-                <a style="color: #d30909;" href="#" onclick="deletarCoautor(this, {{$trabalho->id}}, event)" class="delete text-decoration-none pr-2">
-                    <i class="bi bi-trash3 fs-4 icon-card"></i>
+            <div class="col-sm-3 d-flex align-items-center justify-content-around mt-3">
+                <a style="color: #d30909;" href="#" onclick="deletarCoautor(this, ${id}, event)" class="delete text-decoration-none">
+                    <i class="bi bi-trash3 fs-5 icon-card"></i>
                 </a>
-                <a href="#" class="text-decoration-none text-success" onclick="mover(this.parentElement.parentElement.parentElement, 1, {{$trabalho->id}}, event)">
-                    <i class="bi bi-arrow-up-circle fs-4"></i>
+                <a href="#" class="text-decoration-none text-success" onclick="mover(this, 1, ${id}, event)">
+                    <i class="bi bi-arrow-up-circle fs-5"></i>
                 </a>
-                <a href="#" class="text-decoration-none text-success" onclick="mover(this.parentElement.parentElement.parentElement, 0, {{$trabalho->id}}, event)">
-                    <i class="bi bi-arrow-down-circle fs-4"></i>
+                <a href="#" class="text-decoration-none text-success" onclick="mover(this, 0, ${id}, event)">
+                    <i class="bi bi-arrow-down-circle fs-5"></i>
                 </a>
             </div>
         </div>
     </div>
     `;
-
-    $('#coautores'+id).append(html);
+    $(coautores).append(html);
   }
 
-  function deletarCoautor(div, id, event) {
-    event.preventDefault();
-    var titulo = document.getElementById("title-coautores"+id);
-    var coautores = document.getElementById("coautores"+id);
-    $('#title-coautores'+id).remove();
-    div.parentElement.parentElement.parentElement.remove();
-    if(coautores.children.length >= 2) {
-        coautores.insertBefore(titulo, coautores.children[1]);
-    }
+  function deletarCoautor(btn, id, event) {
+    if (event) event.preventDefault();
+    var card = btn.closest('.item');
+    if (card) card.remove();
   }
 
   $(document).ready(function(){
@@ -698,39 +689,23 @@
   });
 
 
-  function mover(div, direcao, id, event) {
-    event.preventDefault();
-    var coautores = document.getElementById("coautores"+id);
+  function mover(btn, direcao, id, event) {
+    if (event) event.preventDefault();
+    var card = btn.closest('.item');
+    if (!card) return;
+    var container = card.parentElement;
 
-    var hcoautores;
-    if(coautores.children.length > 2) {
-        hcoautores = coautores.children[1];
-        coautores.children[1].remove();
-    }
-    if(direcao == 0) {
-      for(var i = 0; i < coautores.children.length; i++) {
-        if (coautores.children[i] == div && coautores.children[i+1] != null) {
-          var baixo = coautores.children[i+1];
-          var cima = coautores.children[i];
-          coautores.children[i+1].remove();
-          coautores.insertBefore(baixo, cima);
-          break;
-        }
+    if (direcao === 1) { // Subir
+      var anterior = card.previousElementSibling;
+      // Impede de subir antes do primeiro elemento (Autor Principal)
+      if (anterior && anterior !== container.firstElementChild) {
+        container.insertBefore(card, anterior);
       }
-    } else if (direcao == 1) {
-      for(var i = 0; i < coautores.children.length; i++) {
-        if (coautores.children[i] == div && coautores.firstChild != div) {
-          var baixo = coautores.children[i];
-          var cima = coautores.children[i-1];
-          coautores.children[i].remove();
-          coautores.insertBefore(baixo, cima);
-          break;
-        }
+    } else if (direcao === 0) { // Descer
+      var proximo = card.nextElementSibling;
+      if (proximo) {
+        container.insertBefore(proximo, card);
       }
-    }
-    if(coautores.children.length >= 2){
-        coautores.insertBefore(hcoautores, coautores.children[1]);
-        console.log('');
     }
   }
 
