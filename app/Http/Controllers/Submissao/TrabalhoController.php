@@ -584,15 +584,15 @@ class TrabalhoController extends Controller
         }
 
         // =========================================================================
-        // SINCRONIZAÇÃO E ORDENAÇÃO DE AUTOR E COAUTORES (COM OU SEM E-MAIL)
+        // SINCRONIZAÇÃO E ORDENAÇÃO DE AUTOR E COAUTORES (SEM DUPLICATAS)
         // =========================================================================
         if ($request->has('nomeCoautor_' . $id)) {
             $emails = $request->input('emailCoautor_' . $id, []);
             $nomes  = $request->input('nomeCoautor_' . $id, []);
 
-            // Coautores atualmente vinculados
             $coautoresAtuais = $trabalho->coautors()->with('user')->get();
             $novosIdsCoautores = [];
+            $processadosChaves = []; // Bloqueia repetições do mesmo coautor na mesma lista
 
             foreach ($nomes as $i => $nome) {
                 $nome = trim((string) $nome);
@@ -602,29 +602,35 @@ class TrabalhoController extends Controller
 
                 $email = isset($emails[$i]) ? trim((string) $emails[$i]) : null;
 
+                // Evita processar a mesma pessoa duas vezes se vier repetida no POST
+                $chaveIdentificadora = !empty($email) ? strtolower($email) : 'nome:' . mb_strtolower($nome);
+                if (in_array($chaveIdentificadora, $processadosChaves)) {
+                    continue;
+                }
+                $processadosChaves[] = $chaveIdentificadora;
+
                 if ($i === 0) {
                     // Posição 0: Autor Principal
                     if ($email) {
-                        $autorUser = User::where('email', $email)->first();
-                        if (!$autorUser) {
-                            $autorUser = User::create([
+                        $autorUser = User::firstOrCreate(
+                            ['email' => $email],
+                            [
                                 'name'        => $nome,
-                                'email'       => $email,
                                 'password'    => bcrypt(Str::random(12)),
                                 'usuarioTemp' => true,
-                            ]);
-                        } else {
-                            if ($autorUser->name !== $nome) {
-                                $autorUser->name = $nome;
-                                $autorUser->save();
-                            }
+                            ]
+                        );
+
+                        if ($autorUser->name !== $nome) {
+                            $autorUser->name = $nome;
+                            $autorUser->save();
                         }
 
                         if ($trabalho->autorId != $autorUser->id) {
                             $trabalho->autorId = $autorUser->id;
                         }
 
-                        // Se o autor antes era coautor deste trabalho, remove da tabela pivot
+                        // Se o autor antes estava vinculado como coautor, desvincula da pivot
                         if ($autorUser->coautor) {
                             $trabalho->coautors()->detach($autorUser->coautor->id);
                         }
@@ -634,28 +640,26 @@ class TrabalhoController extends Controller
                     $coautorModel = null;
 
                     if (!empty($email)) {
-                        // 1. Coautor com e-mail informado
-                        $userCoautor = User::where('email', $email)->first();
-                        if (!$userCoautor) {
-                            $userCoautor = User::create([
+                        // Coautor com e-mail
+                        $userCoautor = User::firstOrCreate(
+                            ['email' => $email],
+                            [
                                 'name'        => $nome,
-                                'email'       => $email,
                                 'password'    => bcrypt(Str::random(12)),
                                 'usuarioTemp' => true,
-                            ]);
-                        } else {
-                            if ($userCoautor->name !== $nome) {
-                                $userCoautor->name = $nome;
-                                $userCoautor->save();
-                            }
+                            ]
+                        );
+
+                        if ($userCoautor->name !== $nome) {
+                            $userCoautor->name = $nome;
+                            $userCoautor->save();
                         }
 
                         $coautorModel = Coautor::firstOrCreate(
                             ['autorId' => $userCoautor->id, 'eventos_id' => $evento->id]
                         );
                     } else {
-                        // 2. Coautor SEM e-mail informado
-                        // Procura se esse coautor sem e-mail já existia nesse trabalho com o mesmo nome para reaproveitar
+                        // Coautor sem e-mail: reaproveita se já existia nesse trabalho
                         $coautorExistente = $coautoresAtuais->first(function ($c) use ($nome, $novosIdsCoautores) {
                             return !in_array($c->id, $novosIdsCoautores) &&
                                    $c->user &&
@@ -666,7 +670,6 @@ class TrabalhoController extends Controller
                         if ($coautorExistente) {
                             $coautorModel = $coautorExistente;
                         } else {
-                            // Cria novo usuário temporário interno
                             $userCoautor = User::create([
                                 'name'        => $nome,
                                 'email'       => 'sem_email_' . uniqid() . '_' . Str::random(6) . '@participa.local',
@@ -677,31 +680,25 @@ class TrabalhoController extends Controller
                             $coautorModel = Coautor::create([
                                 'autorId'    => $userCoautor->id,
                                 'eventos_id' => $evento->id,
-                                'ordem'      => $i,
+                                'ordem'      => count($novosIdsCoautores) + 1,
                             ]);
                         }
                     }
 
-                    // Atualiza a coluna de ordenação conforme a ordem visual enviada
-                    if ($coautorModel->ordem !== $i) {
-                        $coautorModel->ordem = $i;
+                    // Define a ordem sequencial correta (1, 2, 3...)
+                    $posicaoOrdem = count($novosIdsCoautores) + 1;
+                    if ($coautorModel->ordem !== $posicaoOrdem) {
+                        $coautorModel->ordem = $posicaoOrdem;
                         $coautorModel->save();
-                    }
-
-                    // Garante o vínculo do coautor ao trabalho
-                    if (!$trabalho->coautors->contains($coautorModel->id)) {
-                        $trabalho->coautors()->attach($coautorModel->id);
                     }
 
                     $novosIdsCoautores[] = $coautorModel->id;
                 }
             }
 
-            // Remove coautores que foram excluídos pelo coordenador
-            $coautoresParaRemover = array_diff($coautoresAtuais->pluck('id')->toArray(), $novosIdsCoautores);
-            if (!empty($coautoresParaRemover)) {
-                $trabalho->coautors()->detach($coautoresParaRemover);
-            }
+            // O sync() sincroniza a lista exata na tabela pivot,
+            // removendo as duplicatas e mantendo apenas 1 registro por coautor!
+            $trabalho->coautors()->sync($novosIdsCoautores);
         }
 
         // =========================================================================
