@@ -55,7 +55,7 @@ class UpdateModalidadeUseCase
 
         $arquivos = [
             [
-                'input' => "arquivoRegras{$id}",
+                'input' => "arquivoRegras",
                 'delete' => 'deleteregra',
                 'atributo' => 'regra',
                 'diretorio' => 'regras',
@@ -63,7 +63,7 @@ class UpdateModalidadeUseCase
             ],
 
             [
-                'input' => "arquivoInstrucoes{$id}",
+                'input' => "arquivoInstrucoes",
                 'delete' => 'deleteinstrucoes',
                 'atributo' => 'instrucoes',
                 'diretorio' => 'instrucoes',
@@ -71,7 +71,7 @@ class UpdateModalidadeUseCase
             ],
 
             [
-                'input' => "arquivoTemplates{$id}",
+                'input' => "arquivoTemplates",
                 'delete' => 'deletetemplate',
                 'atributo' => 'template',
                 'diretorio' => 'templates',
@@ -79,7 +79,7 @@ class UpdateModalidadeUseCase
             ],
 
             [
-                'input' => "arquivoModelos{$id}",
+                'input' => "arquivoModelos",
                 'delete' => 'deleteapresentacao',
                 'atributo' => 'modelo_apresentacao',
                 'diretorio' => 'modelos',
