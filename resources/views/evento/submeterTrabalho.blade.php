@@ -94,14 +94,14 @@
                                             <label for="area" class="form-label required-field"><strong>Área temática</strong></label>
                                             <select class="form-control custom-select @error('area_id') is-invalid @enderror" id="area"
                                                     name="area_id"
-                                                    >
-                                                <option value="" disabled selected hidden>
+                                                    required>
+                                                <option value="" disabled selected>
                                                     Selecione a área temática
                                                 </option>
                                                 {{-- Apenas um teste abaixo --}}
                                                 @foreach($areas as $area)
                                                     <option value="{{$area->id}}"
-                                                            @selected(old('area_id') == $area->id)>{{$area->nome}}</option>
+                                                        @selected(old('area_id') == $area->id)>{{$area->nome}}</option>
                                                 @endforeach
                                             </select>
                                             @error('area_id')
@@ -216,7 +216,7 @@
                                                 <div class="row justify-content-center">
                                                 <div class="col-sm-12">
                                                     <label for="resumo"
-                                                        class="col-form-label">{{$formSubTraba->etiquetaresumotrabalho}}</label>
+                                                        class="form-label required-field"><strong>{{$formSubTraba->etiquetaresumotrabalho}}</strong></label>
                                                     <textarea id="resumo"
                                                             class="char-count form-control @error('resumo') is-invalid @enderror"
                                                             data-ls-module="charCounter"

@@ -306,6 +306,7 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
             Route::delete('certificados/emissoes/deletar', [CertificadoController::class, 'deletarEmissao'])->name('deletar.emissao');
 
             Route::get('modalidade/create', [ModalidadeController::class, 'create'])->name('modalidade.create');
+            Route::get('modalidade/edit/{modalidade_id}', [ModalidadeController::class, 'edit'])->name('modalidade.edit');
 
             Route::post('/formularios/{form}/publicar', [FormController::class, 'publicar'])->name('forms.publicar');
             Route::get('modalidade/', [ModalidadeController::class, 'index'])->name('modalidade.index');
@@ -359,7 +360,7 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
         //Sub-Evento
         Route::get('/subevento/criar/{id}', [EventoController::class, 'createSubEvento'])->name('subevento.criar');
         //Modalidade
-        Route::post('/modalidade/criar', [ModalidadeController::class, 'store'])->name('modalidade.store');
+        Route::post('/modalidade/criar/{evento_id}', [ModalidadeController::class, 'store'])->name('modalidade.store');
         Route::post('/modalidade/{id}/delete', [ModalidadeController::class, 'destroy'])->name('modalidade.destroy');
         Route::post('modalidades/reorder', [ModalidadeController::class, 'reorder'])->name('modalidades.reorder');
         //Area
@@ -413,7 +414,7 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
         // Ajax para encontrar modalidade especifica e enviar para o modal de edição
         Route::get('/encontrarModalidade', [ModalidadeController::class, 'find'])->name('findModalidade');
         // Ajax para encontrar modalidade especifica e enviar para o modal de edição
-        Route::post('/atualizarModalidade', [ModalidadeController::class, 'update'])->name('modalidade.update');
+        Route::post('/atualizarModalidade/{modalidade_id}', [ModalidadeController::class, 'update'])->name('modalidade.update');
         //
 
         Route::get('/evento/{evento}/downloadResumos', [EventoController::class, 'resumosToPdf'])->name('evento.downloadResumos');

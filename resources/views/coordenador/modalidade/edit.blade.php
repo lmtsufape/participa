@@ -1,0 +1,31 @@
+@extends('layouts.app')
+@section('sidebar')
+
+@endsection
+@section('content')
+
+    <div class="container">
+        <x-admin.content-header
+            title="Editar Modalidade"
+            description="Configure as informações, prazos, regras de submissão e documentos da modalidade."
+        />
+
+        <form method="POST" action="{{route('modalidade.update', ['modalidade_id' => $modalidade->id])}}" enctype="multipart/form-data" x-data="handler({{$modalidade->datasExtras}})">
+            @csrf
+            <input type="hidden" name="modalidadeEditId" value="{{$modalidade->id}}">
+            <input type="hidden" name="eventoId" value="{{$evento->id}}">
+
+
+            @include('coordenador.modalidade._form')
+
+            <div class="row justify-content-center">
+                <div class="col-md-12">
+                    <button type="submit" class="btn btn-primary" style="width:100%">
+                        {{ __('Finalizar') }}
+                    </button>
+                </div>
+            </div>
+        </form>
+
+    </div>
+@endsection

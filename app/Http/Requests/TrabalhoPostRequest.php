@@ -47,7 +47,7 @@ class TrabalhoPostRequest extends FormRequest
             'coautores' => ['array', new MaxCoautoresNaModalidade($modalidade)],
             'coautores.*.nome'  => ['required','string','max:255'],
             'coautores.*.email' => ['required','email:rfc', 'distinct', 'different:autor.email'],
-            'arquivo' => ['required', 'file', new FileType($modalidade, new MidiaExtra, request()->arquivo, true)],
+            'arquivo' => [$modalidade->arquivo ? 'required' : 'nullable', 'file', new FileType($modalidade, new MidiaExtra, request()->arquivo, true)],
             'campoextra1arquivo' => ['nullable', 'file', 'max:2048'],
             'campoextra2arquivo' => ['nullable', 'file', 'max:2048'],
             'campoextra3arquivo' => ['nullable', 'file', 'max:2048'],
