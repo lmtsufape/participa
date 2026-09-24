@@ -1,7 +1,7 @@
 <?php
     return [
         'inicio' => 'Início',
-        'meusEventos' => 'Meus Eventos',
+        'minhasInscricoes' => 'Minhas Inscrições',
         'meusCertificados' => 'Meus Certificados',
         'validarCertificado' => 'Validar Certificado',
         'perfis' => 'Perfis',

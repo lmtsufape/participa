@@ -144,7 +144,7 @@
                     @else
                         <li class="nav-item">
                             <a class="nav-link text-white fw-semibold" href="{{ route('home') }}" style="margin-right: 5px; margin-left: 5px">
-                                @lang('public.meusEventos')
+                                @lang('public.minhasInscricoes')
                             </a>
                         </li>
                         <li class="nav-item">

@@ -1,16 +1,12 @@
 @extends('layouts.app')
 @section('main-classes', 'p-0')
 @section('content')
-    <br><br>
 
-    <div class="position-relative mb-5">
-        <h1 class="position-absolute top-50 start-50 translate-middle fw-semibold"
-            style="font-size: 2rem; color: #034652;">
-            {{ __('Meus Eventos') }}
-        </h1>
-    </div>
-
-    <div class="container mb-5">
+    <div class="container mt-3 mb-5">
+        <x-admin.content-header
+            title="Minhas Inscrições"
+            description="Acompanhe suas inscrições e consulte os detalhes de cada participação."
+        />
         <form method="GET" class="row mb-4 align-items-center">
             <div class="col-md-4">
                 <div class="input-group">
@@ -51,7 +47,7 @@
                     />
                 </div>
             @endforeach
-            @else 
+            @else
             <div class="d-flex justify-content-center align-items-center flex-column py-5">
                 <div class="d-flex justify-content-center align-items-center flex-column card text-center shadow-sm border-0 p-4" style="max-width: 600px;">
                     <img src="{{asset('img/iconeCalendario.png')}}" style="width: 100px; margin-bottom: 10px;"/>
@@ -66,7 +62,7 @@
         <div class="mt-5 d-flex justify-content-center">
             {{ $eventos->appends(request()->query())->links('pagination::bootstrap-5') }}
         </div>
-        
+
     </div>
 
 @endsection

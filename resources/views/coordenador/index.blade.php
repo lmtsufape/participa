@@ -14,15 +14,13 @@
     <div class="container">
 
         {{-- titulo da página --}}
-        <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-5">
-            <div>
-                <h1>{{__('Meus Eventos')}}</h1>
-            </div>
-            <a href="{{ route('evento.criar') }}" class="btn btn-primary d-inline-flex align-items-center gap-2">
-                <i class="bi bi-plus-lg" aria-hidden="true"></i>
-                {{ __('Novo Evento') }}
-            </a>
-        </div>
+        <x-admin.content-header
+            title="{{__('Meus Eventos')}}"
+            description="Visualize e gerencie os eventos que você criou."
+            :href="route('evento.criar')"
+            button-text="{{ __('Novo Evento') }}"
+        />
+        
         <div class="row">
             @php
                 use Illuminate\Support\Str;

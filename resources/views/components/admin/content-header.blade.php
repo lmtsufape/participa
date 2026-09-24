@@ -9,7 +9,7 @@
 
 <div {{ $attributes->merge(['class' => 'row align-items-start mb-4']) }}>
     <div class="col-12 col-lg-8">
-        <h1 class="display-6 fw-bold text-dark mb-2">
+        <h1 class="display-6 fw-bold text-my-primary mb-2">
             {{ $title }}
         </h1>
 
