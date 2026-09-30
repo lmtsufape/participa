@@ -18,7 +18,7 @@ class ModalidadeController extends Controller
     public function impactoDesativacao(Request $request, Modalidade $modalidade)
     {
         $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $modalidade->evento);
-        $request->validate(['etapa' => 'required|in:avaliacao,correcao,validacao']);
+        $request->validate(['etapa' => 'required|in:avaliacao,correcao,validacao,versao_final']);
 
         return response()->json(app(EtapasModalidadeService::class)->impacto($modalidade, $request->etapa));
     }
@@ -258,6 +258,8 @@ class ModalidadeController extends Controller
         }
 
         $id = $modalidadeEdit->id;
+        $rules['inicio_versao_final' . $id] = [$request->boolean('habilitar_versao_final') ? 'required' : 'nullable', 'date'];
+        $rules['fim_versao_final' . $id] = [$request->boolean('habilitar_versao_final') ? 'required' : 'nullable', 'date', 'after:inicio_versao_final' . $id];
         $avaliacao = $request->boolean('habilitar_avaliacao');
         $validacao = $request->boolean('habilitar_validacao');
         $rules['inícioRevisão' . $id] = $avaliacao
@@ -394,6 +396,8 @@ class ModalidadeController extends Controller
         $modalidadeEdit->fimCorrecao = $request->input('fimCorreção' . $request->modalidadeEditId);
         $modalidadeEdit->inicioValidacao = $request->input('inícioValidação' . $request->modalidadeEditId);
         $modalidadeEdit->fimValidacao = $request->input('fimValidação' . $request->modalidadeEditId);
+        $modalidadeEdit->fim_versao_final = $request->input('fim_versao_final' . $request->modalidadeEditId);
+        $modalidadeEdit->inicio_versao_final = $request->input('inicio_versao_final' . $request->modalidadeEditId);
         $modalidadeEdit->inicioResultado = $request->input('resultado' . $request->modalidadeEditId);
         $modalidadeEdit->numMaxCoautores = $request->input('numMaxCoautores' . $request->modalidadeEditId);
         $modalidadeEdit->texto = $request->input('texto' . $request->modalidadeEditId);

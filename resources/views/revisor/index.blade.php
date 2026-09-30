@@ -159,7 +159,7 @@
                             @foreach($trabalhosDoRevisor as $trabalho)
                                 <tr>
                                     <td style="text-align:center">{{$trabalho->id}}</td>
-                                    <td style="text-align:center">{{$trabalho->titulo}}</td>
+                                    <td style="text-align:center">{{$trabalho->titulo}}<br>@include('trabalho.link-versao-final')</td>
                                     @if ($trabalho->avaliado(auth()->user())){{--avaliacao do revisor aqui--}}
                                         <td style="text-align:center">Avaliado</td>
                                     @else

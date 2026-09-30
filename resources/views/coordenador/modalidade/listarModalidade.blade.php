@@ -237,6 +237,7 @@
 
 
                                     @include('coordenador.modalidade.etapa-datas', ['etapa' => 'validacao', 'modalidade' => $modalidade])
+                                    @include('coordenador.modalidade.etapa-datas', ['etapa' => 'versao_final', 'modalidade' => $modalidade])
 
                                     {{-- Data: resultado --}}
                                     <div class="row">

@@ -13,7 +13,9 @@ class EtapasModalidadeService
     public function impacto(Modalidade $modalidade, string $etapa): array
     {
         $query = $modalidade->trabalho()->where(function ($query) use ($etapa, $modalidade) {
-            if ($etapa === 'correcao') {
+            if ($etapa === 'versao_final') {
+                $query->whereHas('versoesFinais');
+            } elseif ($etapa === 'correcao') {
                 // Mesmos critérios de Trabalho::temCorrecaoSubmetida, incluindo o histórico textual.
                 if ($modalidade->arquivo && ! $modalidade->texto) {
                     $query->whereHas('arquivoCorrecao');
@@ -55,14 +57,14 @@ class EtapasModalidadeService
 
     public function confirmarDesativacao(Request $request, Modalidade $modalidade): void
     {
-        foreach (['avaliacao' => ['inicioRevisao', 'fimRevisao'], 'correcao' => ['inicioCorrecao', 'fimCorrecao'], 'validacao' => ['inicioValidacao', 'fimValidacao']] as $etapa => $datas) {
+        foreach (['versao_final' => ['inicio_versao_final', 'fim_versao_final'], 'avaliacao' => ['inicioRevisao', 'fimRevisao'], 'correcao' => ['inicioCorrecao', 'fimCorrecao'], 'validacao' => ['inicioValidacao', 'fimValidacao']] as $etapa => $datas) {
             if ($request->boolean('habilitar_'.$etapa) || (! $modalidade->{$datas[0]} && ! $modalidade->{$datas[1]})) {
                 continue;
             }
             $impacto = $this->impacto($modalidade, $etapa);
             if ($impacto['quantidade'] && ! hash_equals($impacto['confirmacao'], (string) $request->input('confirmar_'.$etapa, ''))) {
                 throw ValidationException::withMessages([
-                    'habilitar_'.$etapa => 'Confira os '.$impacto['quantidade'].' trabalhos com '.(['avaliacao' => 'avaliação', 'correcao' => 'correção', 'validacao' => 'validação'][$etapa]).' registrada e confirme a desativação. A lista pode ter sido atualizada.',
+                    'habilitar_'.$etapa => 'Confira os '.$impacto['quantidade'].' trabalhos com '.(['versao_final' => 'versão final', 'avaliacao' => 'avaliação', 'correcao' => 'correção', 'validacao' => 'validação'][$etapa]).' registrada e confirme a desativação. A lista pode ter sido atualizada.',
                 ]);
             }
         }
@@ -70,6 +72,14 @@ class EtapasModalidadeService
 
     public function normalizar(Request $request, ?string $id = null): void
     {
+        $campo = 'fim_versao_final'.($id ?? '');
+        $inicio = 'inicio_versao_final'.($id ?? '');
+        $habilitada = $request->has('habilitar_versao_final')
+            ? $request->boolean('habilitar_versao_final') : ($request->filled($campo) || $request->filled($inicio));
+        $request->merge(['habilitar_versao_final' => (int) $habilitada]);
+        if (! $habilitada) {
+            $request->merge([$inicio => null, $campo => null]);
+        }
         foreach (['avaliacao' => ['inicioRevisao', 'fimRevisao', 'inícioRevisão', 'fimRevisão'], 'correcao' => ['inicioCorrecao', 'fimCorrecao', 'inícioCorreção', 'fimCorreção'], 'validacao' => ['inicioValidacao', 'fimValidacao', 'inícioValidação', 'fimValidação']] as $etapa => $datas) {
             $inicio = $id === null ? $datas[0] : $datas[2].$id;
             $fim = $id === null ? $datas[1] : $datas[3].$id;

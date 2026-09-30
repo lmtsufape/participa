@@ -7,6 +7,20 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Modalidade extends Model
 {
+    protected $casts = ['inicio_versao_final' => 'datetime', 'fim_versao_final' => 'datetime'];
+
+    public function versaoFinalHabilitada(): bool
+    {
+        return $this->inicio_versao_final !== null && $this->fim_versao_final !== null;
+    }
+
+    public function estaEmPeriodoDeVersaoFinal(): bool
+    {
+        $agora = now();
+        return $this->versaoFinalHabilitada()
+            && $agora->gte($this->inicio_versao_final) && $agora->lte($this->fim_versao_final);
+    }
+
     public function avaliacaoHabilitada(): bool
     {
         return $this->inicioRevisao !== null && $this->fimRevisao !== null;
@@ -27,6 +41,7 @@ class Modalidade extends Model
      * @var array
      */
     protected $fillable = [
+        'inicio_versao_final', 'fim_versao_final',
         'nome', 'inicioSubmissao', 'fimSubmissao', 'inicioRevisao', 'fimRevisao', 'inicioCorrecao', 'fimCorrecao', 'inicioValidacao', 'fimValidacao', 'inicioResultado',
         'eventoId', 'texto', 'arquivo', 'caracteres', 'mincaracteres',
         'maxcaracteres', 'palavras', 'minpalavras', 'maxpalavras',

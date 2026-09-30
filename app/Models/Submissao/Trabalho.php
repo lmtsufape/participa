@@ -12,6 +12,11 @@ class Trabalho extends Model
 {
     use SoftDeletes;
 
+    public function versoesFinais()
+    {
+        return $this->hasMany(VersaoFinal::class)->latest('id');
+    }
+
     /**
      * The attributes that are mass assignable.
      *

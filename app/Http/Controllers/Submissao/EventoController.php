@@ -193,7 +193,7 @@ class EventoController extends Controller
         $query = Trabalho::where('eventoId', $evento->id)
             ->with([
                 'area:id,nome',
-                'modalidade:id,nome',
+                'modalidade:id,nome,inicio_versao_final,fim_versao_final',
                 'autor:id,name,email',
                 'coautors:id,trabalhoId,autorId',
                 'coautors.user:id,name,cpf,email',
@@ -300,7 +300,7 @@ class EventoController extends Controller
         $query = Trabalho::where('eventoId', $evento->id)
             ->where('areaId', $eixoSelecionado)
             ->with([
-                'area:id,nome', 'modalidade:id,nome', 'autor:id,name,email',
+                'area:id,nome', 'modalidade:id,nome,inicio_versao_final,fim_versao_final', 'autor:id,name,email',
                 'coautors:id,trabalhoId,autorId',
                 'coautors.user:id,name,cpf,email',
                 'arquivo:id,trabalhoId',

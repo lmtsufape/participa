@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     return;
                 }
                 token = data.confirmacao;
-                const label = { avaliacao: 'avaliação', correcao: 'correção', validacao: 'validação da correção' }[section.dataset.etapa];
+                const label = { versao_final: 'versão final', avaliacao: 'avaliação', correcao: 'correção', validacao: 'validação da correção' }[section.dataset.etapa];
                 message.textContent = `${data.quantidade} trabalho(s) com ${label} registrada. Confira antes de desativar:`;
                 const table = document.createElement('table');
                 table.className = 'table table-sm';

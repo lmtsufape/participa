@@ -66,6 +66,7 @@
                             @include('coordenador.modalidade.etapa-datas', ['etapa' => 'avaliacao'])
                             @include('coordenador.modalidade.etapa-datas', ['etapa' => 'correcao'])
                             @include('coordenador.modalidade.etapa-datas', ['etapa' => 'validacao'])
+                            @include('coordenador.modalidade.etapa-datas', ['etapa' => 'versao_final'])
                             <div class="form-row">
                                 <div class="form-group col-sm-6">
                                     <label for="inicioResultado" class="col-form-label font-weight-bold">{{ __('Resultado') }}</label>

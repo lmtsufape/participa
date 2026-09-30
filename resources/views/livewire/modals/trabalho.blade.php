@@ -4,6 +4,7 @@
     <div>
         <h5>Título</h5>
         <p>{{ $trabalho->titulo }}</p>
+        @include('trabalho.link-versao-final')
     </div>
     @if ($trabalho->resumo)
         <div class="col-12">

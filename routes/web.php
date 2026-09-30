@@ -38,6 +38,7 @@ use App\Http\Controllers\Submissao\PalestranteController;
 use App\Http\Controllers\Submissao\TipoAtividadeController;
 use App\Http\Controllers\Submissao\TipoComissaoController;
 use App\Http\Controllers\Submissao\TrabalhoController;
+use App\Http\Controllers\Submissao\VersaoFinalController;
 use App\Http\Controllers\Users\AdministradorController;
 use App\Http\Controllers\Users\CoautorController;
 use App\Http\Controllers\Users\ComissaoController;
@@ -208,6 +209,7 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
         Route::post('/evento/{evento}/inscricao-pcd', [InscricaoPCDController::class, 'store'])->name('inscricao.pcd.store');
         // Rotas para o coordenador gerir as solicitações
         Route::prefix('/coord/evento/')->name('coord.')->group(function () {
+            Route::get('{evento}/versoes-finais', [VersaoFinalController::class, 'listar'])->name('listarVersoesFinais');
             Route::get('inscricoes-pcd', [InscricaoPCDController::class, 'listar'])->name('inscricoes.pcd.listar');
             Route::post('/inscricao-pcd/{solicitacao}/aprovar', [InscricaoPCDController::class, 'aprovar'])->name('inscricao.pcd.aprovar');
             Route::post('/inscricao-pcd/{solicitacao}/rejeitar', [InscricaoPCDController::class, 'rejeitar'])->name('inscricao.pcd.rejeitar');
@@ -408,6 +410,9 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
         Route::get('/trabalho/encaminhar/{id}/{revisor}', [TrabalhoController::class, 'encaminharTrabalho'])->name('trabalho.encaminhar');
         Route::post('/trabalho/{id}/aprovar-reprovar', [TrabalhoController::class, 'aprovacaoTrabalho'])->name('trabalho.aprovacao');
         Route::post('/trabalho/{id}/correcao', [TrabalhoController::class, 'correcaoTrabalho'])->name('trabalho.correcao');
+        Route::get('/trabalho/{trabalho}/versao-final', [VersaoFinalController::class, 'index'])->name('trabalho.versao-final.index');
+        Route::post('/trabalho/{trabalho}/versao-final', [VersaoFinalController::class, 'store'])->name('trabalho.versao-final.store');
+        Route::get('/trabalho/{trabalho}/versao-final/{versaoFinal}/download', [VersaoFinalController::class, 'download'])->name('trabalho.versao-final.download');
         Route::post('/trabalho/importar-apresentacoes/{eventoId}', [TrabalhoController::class, 'importarApresentacoes'])->name('trabalho.importar.apresentacoes');
         //Atribuição
         Route::get('/atribuir', [AtribuicaoController::class, 'distribuicaoAutomatica'])->name('distribuicao');
