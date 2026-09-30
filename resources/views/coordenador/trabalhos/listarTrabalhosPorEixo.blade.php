@@ -136,6 +136,7 @@
                                                             @else
                                                                 {{$trabalho->titulo}}
                                                             @endif
+                                                            <div>@include('trabalho.link-versao-final')</div>
                                                         </td>
                                                         <td>{{ $trabalho->autor->name }}</td>
                                                         @foreach ($modalidade->midiasExtra as $midia)

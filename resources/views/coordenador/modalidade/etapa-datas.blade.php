@@ -2,6 +2,7 @@
     $editando = isset($modalidade);
     $idEtapa = $etapa . '-' . ($editando ? $modalidade->id : 'nova');
     [$inicioColuna, $fimColuna, $inicioEdit, $fimEdit, $rotulo, $rotuloCheckbox] = [
+        'versao_final' => ['inicio_versao_final', 'fim_versao_final', 'inicio_versao_final', 'fim_versao_final', 'Versão final', 'Habilitar versão final'],
         'avaliacao' => ['inicioRevisao', 'fimRevisao', 'inícioRevisão', 'fimRevisão', 'Avaliação', 'Habilitar avaliação'],
         'correcao' => ['inicioCorrecao', 'fimCorrecao', 'inícioCorreção', 'fimCorreção', 'Correção', 'Habilitar correção'],
         'validacao' => ['inicioValidacao', 'fimValidacao', 'inícioValidação', 'fimValidação', 'Validação', 'Habilitar validação da correção'],

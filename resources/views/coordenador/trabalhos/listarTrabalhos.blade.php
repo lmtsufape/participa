@@ -131,6 +131,7 @@
                                                         @else
                                                             {{ $trabalho->titulo }}
                                                         @endif
+                                                        <div>@include('trabalho.link-versao-final')</div>
                                                     </td>
                                                     <td>{{ $trabalho->area->nome }}</td>
                                                     <td>{{ $trabalho->autor->name }}</td>

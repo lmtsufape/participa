@@ -143,6 +143,7 @@
                                 <th style="text-align:center">Excluir</th>
                                 <th style="text-align:center">Pareceres</th>
                                 <th style="text-align:center">Correção</th>
+                                <th class="text-center">Versão final</th>
                                 <th class="text-center">Resultado</th>
                             </tr>
                         </thead>
@@ -253,6 +254,9 @@
                                         @endif
                                     </td>
                                     <td class="text-center">
+                                        @include('trabalho.link-versao-final')
+                                    </td>
+                                    <td class="text-center">
                                         @if($trabalho->aprovado === true)
                                             <p class="py-2 px-2 bg-success text-white rounded-pill shadow">Aprovado</p>
                                         @elseif($trabalho->aprovado === false)
@@ -296,7 +300,12 @@
                             @foreach ($trabalhosCoautor as $trabalho)
                                 <tr>
                                     <td>{{ $trabalho->evento->nome }}</td>
-                                    <td>{{ $trabalho->titulo }}</td>
+                                    <td>
+                                        {{ $trabalho->titulo }}
+                                        @if($trabalho->versoesFinais()->exists())
+                                            <br>@include('trabalho.link-versao-final')
+                                        @endif
+                                    </td>
                                     <td>{{ $trabalho->autor->name }}</td>
                                     <td style="text-align:center">
                                         <a href="#" data-bs-toggle="modal" data-bs-target="#modalDownloadTrabalho_{{ $trabalho->id }}" style="font-size: 20px; color: #114048ff;">

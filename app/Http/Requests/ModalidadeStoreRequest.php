@@ -92,6 +92,9 @@ class ModalidadeStoreRequest extends FormRequest
         ];
 
         $rules['habilitar_avaliacao'] = ['required', 'boolean'];
+        $rules['habilitar_versao_final'] = ['required', 'boolean'];
+        $rules['inicio_versao_final'] = [$this->boolean('habilitar_versao_final') ? 'required' : 'nullable', 'date'];
+        $rules['fim_versao_final'] = [$this->boolean('habilitar_versao_final') ? 'required' : 'nullable', 'date', 'after:inicio_versao_final'];
         $rules['habilitar_validacao'] = ['required', 'boolean'];
         $rules['inicioValidacao'] = [$this->boolean('habilitar_validacao') ? 'required' : 'nullable', 'date'];
         $rules['fimValidacao'] = [$this->boolean('habilitar_validacao') ? 'required' : 'nullable', 'date', 'after:inicioValidacao'];
