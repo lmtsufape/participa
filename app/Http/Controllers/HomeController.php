@@ -41,7 +41,7 @@ class HomeController extends Controller
                   ->orWhereHas('coordComissaoOrganizadora', fn($r) => $r->where('user_id', $user->id))
                   ->orWhere('coordenadorId', $user->id);
             })
-            ->allowedFilters([
+            ->allowedFilters(
                 AllowedFilter::callback('q', function ($query, $value) {
                     $term = trim((string) $value);
                     if ($term === '') return;
@@ -53,7 +53,7 @@ class HomeController extends Controller
                         ->orWhere('descricao', 'ILIKE', "%{$term}%");
                     });
                 }),
-            ])
+            )
             ->distinct()
             ->paginate(request('per_page', 15))
             ->withQueryString();
