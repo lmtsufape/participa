@@ -97,7 +97,7 @@
 @endsection
 
 @section('content')
-    {{--<div class="modal fade" id="infoModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
+    <div class="modal fade" id="infoModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
@@ -105,17 +105,18 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
                 </div>
                 <div class="modal-body">
-                    Caro/a participante! <br><br>
-                    Os certificados de participação foram emitidos e estão sendo enviados. <br>
-                    Esclarecemos que não é necessário qualquer validação do certificado, bastando utilizá-lo como ele foi recebido. A validação serve para que terceiros, em bancas de concursos, processos seletivos, e similares, atestem que de fato esse certificado foi emitido pelo evento. <br>
-                    Quaisquer dúvidas, favor entrar em contato pelo e-mail: secretaria13cba@gmail.com 
+                    Prezado(a) autor(a),<br><br>
+                    Informamos que a nossa plataforma passou por uma atualização no fluxo de processamento de trabalhos.<br><br>
+                    Caso você tenha pendências ou correções a realizar em sua submissão, solicitamos que <strong>acesse a opção de correção e reenvie seu trabalho</strong>.<br><br>
+                    Com a nova atualização, assim que o envio da correção for concluído, <strong>o trabalho será aprovado automaticamente e a Carta de Aceite será gerada e enviada de imediato</strong> para o seu e-mail cadastrado.<br><br>
+                    Agradecemos pela compreensão e colaboração. Em caso de dúvidas, estamos à disposição.
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
                 </div>
             </div>
         </div>
-    </div>--}}
+    </div>
     @if($eventos_destaques->isNotEmpty())
         <div class="container d-flex flex-column pb-5">
             <div class="container d-flex align-items-center mb-3 position-relative">

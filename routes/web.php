@@ -145,6 +145,7 @@ Route::namespace('Submissao')->group(function () {
 });
 
 Route::get('/validarDocumentos', [CertificadoController::class, 'validarCertificadoForm'])->name('validarCertificado');
+Route::get('/validar-documentos/carta-aceite/download/{codigo}', [CertificadoController::class, 'downloadCartaAceitePdf'])->name('cartaAceite.downloadPdf');
 
 Route::get('/{id}/atividades', [AtividadeController::class, 'atividadesJson'])->name('atividades.json');
 

@@ -895,39 +895,51 @@ class InscricaoController extends Controller
 
     public function recibo(Inscricao $inscricao)
     {
-        try{
+        try {
+            if (! $inscricao->finalizada) {
+                return redirect()->back()->with(['error_message' => 'Recibo disponível apenas para inscrições finalizadas.']);
+            }
 
+            if (!$inscricao->codigo_validacao) {
+                $inscricao->codigo_validacao = $this->gerarCodigoValidacaoUnico();
+                $inscricao->save();
+            }
 
-        if (! $inscricao->finalizada) {
-            return redirect()->back()->with(['error_message' => 'Recibo disponível apenas para inscrições finalizadas.']);
+            // Calcula o valor correto considerando se é associado e tem desconto
+            $valorFinal = 0;
+            if ($inscricao->categoria) {
+                $valorFinal = $inscricao->categoria->valor_total;
+                
+                // Verifica se o usuário é associado e se a categoria tem desconto para associado
+                if ($inscricao->user && method_exists($inscricao->user, 'ehAssociado') && 
+                    $inscricao->user->ehAssociado() && 
+                    $inscricao->categoria->porcentagem_desconto_associado > 0) {
+                    
+                    $desconto = ($valorFinal * $inscricao->categoria->porcentagem_desconto_associado) / 100;
+                    $valorFinal = $valorFinal - $desconto;
+                }
+            }
+
+            $data = [
+                'nome' => $inscricao->user->name,
+                'valor' => $valorFinal,
+                'data' => now(),
+                'codigo_validacao' => $inscricao->codigo_validacao,
+            ];
+
+            $pdf = Pdf::loadView('inscricao.recibo_pdf', $data)
+                ->setPaper('a4', 'portrait');
+
+            return $pdf->download("recibo-{$inscricao->id}.pdf");
+
+        } catch (\Throwable $e) {
+            \Log::error('Erro ao gerar recibo', [
+                'inscricao_id' => $inscricao->id ?? null,
+                'exception' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+            return redirect()->back()->with(['error_message' => 'Erro ao gerar recibo.']);
         }
-
-        if (!$inscricao->codigo_validacao) {
-            $inscricao->codigo_validacao = $this->gerarCodigoValidacaoUnico();
-            $inscricao->save();
-
-        }
-
-        $data = [
-            'nome' => $inscricao->user->name,
-            'valor' => $inscricao->categoria ? $inscricao->categoria->valor_total : 0,
-            'data' => now(),
-            'codigo_validacao' => $inscricao->codigo_validacao,
-        ];
-
-
-        $pdf = Pdf::loadView('inscricao.recibo_pdf', $data)
-            ->setPaper('a4', 'portrait');
-
-        return $pdf->download("recibo-{$inscricao->id}.pdf");
-    } catch (\Throwable $e) {
-        \Log::error('Erro ao gerar recibo', [
-            'inscricao_id' => $inscricao->id ?? null,
-            'exception' => $e->getMessage(),
-            'trace' => $e->getTraceAsString(),
-        ]);
-        return redirect()->back()->with(['error_message' => 'Erro ao gerar recibo.']);
-    }
     }
 
     private function gerarCodigoValidacaoUnico(): string

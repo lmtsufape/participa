@@ -529,27 +529,25 @@ class TrabalhoController extends Controller
      */
     public function update(TrabalhoUpdateRequest $request, $id)
     {
-        // dd($request->all());
         $validatedData = $request->validated();
 
-        $trabalho = Trabalho::find($id);
+        $trabalho = Trabalho::findOrFail($id);
         $evento = $trabalho->evento;
 
         $arquivo = $request->file('arquivo' . $id);
 
         if ($arquivo != null && $this->validarTipoDoArquivo($arquivo, $trabalho->modalidade)) {
-            return redirect()->back()->withErrors(['arquivo' . $id => 'Extensão de arquivo enviado é diferente do permitido.
-                                                                  Verifique no formulário, quais os tipos permitidos.'])->withInput($validatedData);
+            return redirect()->back()->withErrors([
+                'arquivo' . $id => 'Extensão de arquivo enviado é diferente do permitido. Verifique no formulário quais os tipos permitidos.'
+            ])->withInput($validatedData);
         }
 
         $trabalho->titulo = $request->input('nomeTrabalho' . $id);
         $trabalho->resumo = $request->input('resumo' . $id);
         $trabalho->modalidadeId = $request->input('modalidade' . $id);
 
-        if ($request->input('area'.$id) != $trabalho->area->id && $trabalho->atribuicoes()->exists())
-        {
+        if ($request->input('area' . $id) != $trabalho->area->id && $trabalho->atribuicoes()->exists()) {
             $novaAreaId = $request->input('area' . $id);
-
             $revisoresAtribuidos = $trabalho->atribuicoes;
             $revisoresIncompatíveis = collect();
 
@@ -571,107 +569,141 @@ class TrabalhoController extends Controller
                     ? '1 avaliador não faz parte da área selecionada.'
                     : $quantidade . ' avaliadores não fazem parte da área selecionada.';
 
-                return redirect()->back()->withErrors(['area' . $id => 'Não é possível alterar '.$evento->formSubTrab->etiquetaareatrabalho.': ' . $mensagem])->withInput($validatedData);
+                return redirect()->back()->withErrors([
+                    'area' . $id => 'Não é possível alterar ' . $evento->formSubTrab->etiquetaareatrabalho . ': ' . $mensagem
+                ])->withInput($validatedData);
             }
         }
 
         $trabalho->areaId = $request->input('area' . $id);
 
         if ($trabalho->modalidade->apresentacao && !$request->tipo_apresentacao) {
-            return redirect()->back()->withErrors(['tipo_apresentacao' => 'Selecione a forma de apresentação do trabalho.'])->withInput($validatedData);
+            return redirect()->back()->withErrors([
+                'tipo_apresentacao' => 'Selecione a forma de apresentação do trabalho.'
+            ])->withInput($validatedData);
         }
 
-        $usuarios_dos_coautores = collect();
-        foreach ($trabalho->coautors as $coautor_id) {
-            $usuarios_dos_coautores->push(User::find($coautor_id->autorId));
-        }
+        // =========================================================================
+        // SINCRONIZAÇÃO E ORDENAÇÃO DE AUTOR E COAUTORES (SEM DUPLICATAS)
+        // =========================================================================
+        if ($request->has('nomeCoautor_' . $id)) {
+            $emails = $request->input('emailCoautor_' . $id, []);
+            $nomes  = $request->input('nomeCoautor_' . $id, []);
 
-        // TODO Checando a mudança do autor do trabalho, a inclusão e exclusão de coautores
-        foreach ($request->input('emailCoautor_' . $id) as $i => $email) {
-            $usuario_do_coautor = User::where('email', $email)->first();
-            // Chegando se existe do usuário cadastrado no sistema
-            // Se existir é checado se o usario já é coautor do trabalho e adicionado nos coautores
-            // excluidos para diff futuro. Se o usuário é existente no sistema mas não é coautor do trabalho
-            // é checado se ele é coautor de algum trabalho, se for coautor o trabalho é adicionado no relacionamento,
-            // se não é criado um coautor com o id do user e o trabalho é adicionado
+            $coautoresAtuais = $trabalho->coautors()->with('user')->get();
+            $novosIdsCoautores = [];
+            $processadosChaves = []; // Bloqueia repetições do mesmo coautor na mesma lista
 
-            if ($usuario_do_coautor != null) {
-                if (! $usuarios_dos_coautores->contains($usuario_do_coautor)) {
-                    $coautorExistente = $usuario_do_coautor->coautor;
-                    if ($coautorExistente != null && $i != 0) {
-                        $coautorExistente->trabalhos()->attach($trabalho);
-                    } elseif ($i != 0) {
-                        $coauntorAdicional = Coautor::create([
-                            'ordem' => $i,
-                            'autorId' => $usuario_do_coautor->id,
-                            'eventos_id' => $evento->id,
-                        ]);
-                        $coauntorAdicional->trabalhos()->attach($trabalho);
+            foreach ($nomes as $i => $nome) {
+                $nome = trim((string) $nome);
+                if (empty($nome)) {
+                    continue;
+                }
+
+                $email = isset($emails[$i]) ? trim((string) $emails[$i]) : null;
+
+                // Evita processar a mesma pessoa duas vezes se vier repetida no POST
+                $chaveIdentificadora = !empty($email) ? strtolower($email) : 'nome:' . mb_strtolower($nome);
+                if (in_array($chaveIdentificadora, $processadosChaves)) {
+                    continue;
+                }
+                $processadosChaves[] = $chaveIdentificadora;
+
+                if ($i === 0) {
+                    // Posição 0: Autor Principal
+                    if ($email) {
+                        $autorUser = User::firstOrCreate(
+                            ['email' => $email],
+                            [
+                                'name'        => $nome,
+                                'password'    => bcrypt(Str::random(12)),
+                                'usuarioTemp' => true,
+                            ]
+                        );
+
+                        if ($autorUser->name !== $nome) {
+                            $autorUser->name = $nome;
+                            $autorUser->save();
+                        }
+
+                        if ($trabalho->autorId != $autorUser->id) {
+                            $trabalho->autorId = $autorUser->id;
+                        }
+
+                        // Se o autor antes estava vinculado como coautor, desvincula da pivot
+                        if ($autorUser->coautor) {
+                            $trabalho->coautors()->detach($autorUser->coautor->id);
+                        }
                     }
-                }
-            } elseif ($usuario_do_coautor == null) {
-                // Se o usuário não existir eu crio um usuário temporário um coautor para o usuário criado
-                // e relaciono o trabalho a ele
+                } else {
+                    // Posições > 0: Coautores
+                    $coautorModel = null;
 
-                $passwordTemporario = Str::random(8);
-                $coord = User::find($evento->coordenadorId);
-                Mail::to($email)->send(new EmailParaUsuarioNaoCadastrado(Auth()->user()->name, '  ', 'Coautor', $evento->nome, $passwordTemporario, $email, $coord));
-                $usuario = User::create([
-                    'email' => $email,
-                    'password' => bcrypt($passwordTemporario),
-                    'usuarioTemp' => true,
-                    'name' => $request->input('nomeCoautor_' . $id)[$i],
-                ]);
+                    if (!empty($email)) {
+                        // Coautor com e-mail
+                        $userCoautor = User::firstOrCreate(
+                            ['email' => $email],
+                            [
+                                'name'        => $nome,
+                                'password'    => bcrypt(Str::random(12)),
+                                'usuarioTemp' => true,
+                            ]
+                        );
 
-                if ($i != 0) {
-                    $coauntorAdicional = $usuario->coautor;
-                    if ($coauntorAdicional == null) {
-                        $coauntorAdicional = Coautor::create([
-                            'ordem' => $i,
-                            'autorId' => $usuario->id,
-                            'eventos_id' => $evento->id,
-                        ]);
+                        if ($userCoautor->name !== $nome) {
+                            $userCoautor->name = $nome;
+                            $userCoautor->save();
+                        }
+
+                        $coautorModel = Coautor::firstOrCreate(
+                            ['autorId' => $userCoautor->id, 'eventos_id' => $evento->id]
+                        );
+                    } else {
+                        // Coautor sem e-mail: reaproveita se já existia nesse trabalho
+                        $coautorExistente = $coautoresAtuais->first(function ($c) use ($nome, $novosIdsCoautores) {
+                            return !in_array($c->id, $novosIdsCoautores) &&
+                                   $c->user &&
+                                   str_contains($c->user->email, '@participa.local') &&
+                                   $c->user->name === $nome;
+                        });
+
+                        if ($coautorExistente) {
+                            $coautorModel = $coautorExistente;
+                        } else {
+                            $userCoautor = User::create([
+                                'name'        => $nome,
+                                'email'       => 'sem_email_' . uniqid() . '_' . Str::random(6) . '@participa.local',
+                                'password'    => bcrypt(Str::random(12)),
+                                'usuarioTemp' => true,
+                            ]);
+
+                            $coautorModel = Coautor::create([
+                                'autorId'    => $userCoautor->id,
+                                'eventos_id' => $evento->id,
+                                'ordem'      => count($novosIdsCoautores) + 1,
+                            ]);
+                        }
                     }
-                    $coauntorAdicional->trabalhos()->attach($trabalho);
-                }
-            }
 
-            if ($i == 0) {
-                // checando se o autor foi alterado
-                if ($trabalho->autor->email != $email) {
-                    $autor = User::where('email', $email)->first();
-                    $trabalho->autorId = $autor->id;
-                    // checa se o usuário passou de coautor para autor
-                    if ($autor->coautor != null && $trabalho->coautors->contains($autor->coautor->id)) {
-                        $trabalho->coautors()->detach($autor->coautor->id);
+                    // Define a ordem sequencial correta (1, 2, 3...)
+                    $posicaoOrdem = count($novosIdsCoautores) + 1;
+                    if ($coautorModel->ordem !== $posicaoOrdem) {
+                        $coautorModel->ordem = $posicaoOrdem;
+                        $coautorModel->save();
                     }
+
+                    $novosIdsCoautores[] = $coautorModel->id;
                 }
             }
+
+            // O sync() sincroniza a lista exata na tabela pivot,
+            // removendo as duplicatas e mantendo apenas 1 registro por coautor!
+            $trabalho->coautors()->sync($novosIdsCoautores);
         }
 
-        // TODO comparando os autores existentes com os excluidos
-        // os que restarem são os excluidos do trabalho
-
-        foreach ($usuarios_dos_coautores as $usuario_do_coautor) {
-            if (!(in_array($usuario_do_coautor->email, $request->input('emailCoautor_' . $id)))) {
-                $usuario_do_coautor->coautor->trabalhos()->detach($id);
-            }
-        }
-
-        // atualizando a ordem dos coautores
-        $email_dos_coautores = $validatedData['emailCoautor_' . $id];
-        unset($email_dos_coautores[0]);
-        foreach ($email_dos_coautores as $ordem => $email) {
-            $id_autor = User::where('email', $email)->get()->first()->id;
-            $coautor = $trabalho->coautors()->where('autorId', $id_autor)->get()->first();
-            if ($coautor != null) {
-                $coautor->ordem = $ordem;
-                if ($coautor->isDirty()) {
-                    $coautor->save();
-                }
-            }
-        }
-
+        // =========================================================================
+        // CAMPOS EXTRAS
+        // =========================================================================
         if (isset($request->campoextra1simples)) {
             $trabalho->campoextra1simples = $request->campoextra1simples;
         }
@@ -706,12 +738,14 @@ class TrabalhoController extends Controller
             $trabalho->tipo_apresentacao = $request->tipo_apresentacao;
         }
 
+        // =========================================================================
+        // ARQUIVO PRINCIPAL DO TRABALHO
+        // =========================================================================
         if ($request->file('arquivo' . $id) != null) {
             if ($trabalho->modalidade->submissaoUnica == false || $request->user()->can('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento)) {
-
                 $file = $request->file('arquivo' . $id);
                 $nome = now()->format('Ymd_His') . '-' . $file->hashName();
-                $novoPath = $file->storeAs("trabalhos/{$evento->id}/{$trabalho->id}",$nome );
+                $novoPath = $file->storeAs("trabalhos/{$evento->id}/{$trabalho->id}", $nome);
 
                 $arquivosTrabalho = $trabalho->arquivo()->where('versaoFinal', true)->get();
                 foreach ($arquivosTrabalho as $arquivoTrabalho) {
@@ -721,20 +755,17 @@ class TrabalhoController extends Controller
                     $arquivoTrabalho->delete();
                 }
 
-                $arquivo = Arquivo::create([
+                Arquivo::create([
                     'nome' => $novoPath,
                     'trabalhoId' => $trabalho->id,
                     'versaoFinal' => true,
                 ]);
-
-                /*$arquivoAtual = $trabalho->arquivo()->where('versaoFinal', true)->first();
-                if (Storage::disk()->exists($arquivoAtual->nome)) {
-                  Storage::delete($arquivoAtual->nome);
-                  $arquivoAtual->delete();
-                }*/
             }
         }
 
+        // =========================================================================
+        // MÍDIAS EXTRAS
+        // =========================================================================
         if ($trabalho->modalidade->midiasExtra) {
             foreach ($trabalho->modalidade->midiasExtra as $midia) {
                 if ($request[$midia->hyphenizeNome()]) {
@@ -749,9 +780,12 @@ class TrabalhoController extends Controller
             }
         }
 
+        // =========================================================================
+        // ARQUIVOS EXTRAS
+        // =========================================================================
         if (isset($request->campoextra1arquivo)) {
             $path = $request->campoextra1arquivo->store("arquivosextra/{$evento->id}/{$trabalho->id}");
-            $arquivoExtra1 = Arquivoextra::create([
+            Arquivoextra::create([
                 'nome' => $path,
                 'trabalhoId' => $trabalho->id,
             ]);
@@ -759,7 +793,7 @@ class TrabalhoController extends Controller
 
         if (isset($request->campoextra2arquivo)) {
             $path = $request->campoextra2arquivo->store("arquivosextra/{$evento->id}/{$trabalho->id}");
-            $arquivoExtra2 = Arquivoextra::create([
+            Arquivoextra::create([
                 'nome' => $path,
                 'trabalhoId' => $trabalho->id,
             ]);
@@ -767,7 +801,7 @@ class TrabalhoController extends Controller
 
         if (isset($request->campoextra3arquivo)) {
             $path = $request->campoextra3arquivo->store("arquivosextra/{$evento->id}/{$trabalho->id}");
-            $arquivoExtra3 = Arquivoextra::create([
+            Arquivoextra::create([
                 'nome' => $path,
                 'trabalhoId' => $trabalho->id,
             ]);
@@ -775,7 +809,7 @@ class TrabalhoController extends Controller
 
         if (isset($request->campoextra4arquivo)) {
             $path = $request->campoextra4arquivo->store("arquivosextra/{$evento->id}/{$trabalho->id}");
-            $arquivoExtra4 = Arquivoextra::create([
+            Arquivoextra::create([
                 'nome' => $path,
                 'trabalhoId' => $trabalho->id,
             ]);
@@ -783,7 +817,7 @@ class TrabalhoController extends Controller
 
         if (isset($request->campoextra5arquivo)) {
             $path = $request->campoextra5arquivo->store("arquivosextra/{$evento->id}/{$trabalho->id}");
-            $arquivoExtra5 = Arquivoextra::create([
+            Arquivoextra::create([
                 'nome' => $path,
                 'trabalhoId' => $trabalho->id,
             ]);
@@ -1255,50 +1289,77 @@ class TrabalhoController extends Controller
             }
         }
 
-        // 3. Autor e Coautores
-        if ($request->has('emailCoautor_' . $trabalho->id)) {
-            $emails = $request->input('emailCoautor_' . $trabalho->id);
-            $nomes = $request->input('nomeCoautor_' . $trabalho->id);
+        // 3. Autor e Coautores (Suporta coautores COM ou SEM e-mail)
+        if ($request->has('nomeCoautor_' . $trabalho->id)) {
+            $emails = $request->input('emailCoautor_' . $trabalho->id, []);
+            $nomes  = $request->input('nomeCoautor_' . $trabalho->id, []);
 
-            // IDs dos modelos Coautor atualmente vinculados
             $coautoresAtuaisIds = $trabalho->coautors->pluck('id')->toArray();
-            $novosIdsCoautores = [];
+            $novosIdsCoautores  = [];
 
-            foreach ($emails as $i => $email) {
-                if (!$email) continue;
+            foreach ($nomes as $i => $nome) {
+                $nome = trim((string)$nome);
+                if (empty($nome)) continue;
 
-                $userCoautor = User::firstOrCreate(
-                    ['email' => $email],
-                    [
-                        'name' => $nomes[$i] ?? 'Participante',
-                        'password' => bcrypt(Str::random(8)),
-                        'usuarioTemp' => true
-                    ]
-                );
+                $email = isset($emails[$i]) ? trim((string)$emails[$i]) : null;
 
                 if ($i === 0) {
-                    // Se o autor principal foi alterado
-                    if ($trabalho->autorId != $userCoautor->id) {
-                        $trabalho->autorId = $userCoautor->id;
-                        $houveCorrecaoValida = true;
-                    }
-                    
-                    if ($userCoautor->coautor) {
-                        $trabalho->coautors()->detach($userCoautor->coautor->id);
+                    // Autor Principal: mantém a regra de identificação por e-mail se fornecido
+                    if ($email) {
+                        $userAutor = User::where('email', $email)->first();
+                        if (!$userAutor) {
+                            $userAutor = User::create([
+                                'name'        => $nome,
+                                'email'       => $email,
+                                'password'    => bcrypt(Str::random(12)),
+                                'usuarioTemp' => true,
+                            ]);
+                        }
+                        if ($trabalho->autorId != $userAutor->id) {
+                            $trabalho->autorId = $userAutor->id;
+                            $houveCorrecaoValida = true;
+                        }
+                        if ($userAutor->coautor) {
+                            $trabalho->coautors()->detach($userAutor->coautor->id);
+                        }
                     }
                 } else {
+                    // Coautores (posição > 0)
+                    $userCoautor = null;
+
+                    if (!empty($email)) {
+                        $userCoautor = User::where('email', $email)->first();
+                        if (!$userCoautor) {
+                            $userCoautor = User::create([
+                                'name'        => $nome,
+                                'email'       => $email,
+                                'password'    => bcrypt(Str::random(12)),
+                                'usuarioTemp' => true,
+                            ]);
+                        }
+                    } else {
+                        // Coautor SEM e-mail informado
+                        // Cria um usuário temporário para manter o vínculo com o nome
+                        $userCoautor = User::create([
+                            'name'        => $nome,
+                            'email'       => 'sem_email_' . Str::random(16) . '@participa.local',
+                            'password'    => bcrypt(Str::random(12)),
+                            'usuarioTemp' => true,
+                        ]);
+                    }
+
                     $coautorModel = Coautor::firstOrCreate(
-                        ['autorId' => $userCoautor->id, 'eventos_id' => $evento->id],
-                        ['ordem' => $i]
+                        ['autorId' => $userCoautor->id, 'eventos_id' => $evento->id]
                     );
 
-                    // Se mudou a ordem
+                    // Atualiza a ordem do coautor se alterou
                     if ($coautorModel->ordem !== $i) {
-                        $coautorModel->update(['ordem' => $i]);
+                        $coautorModel->ordem = $i;
+                        $coautorModel->save();
                         $houveCorrecaoValida = true;
                     }
 
-                    // Se é um novo coautor sendo vinculado
+                    // Se ainda não está vinculado ao trabalho
                     if (!$trabalho->coautors->contains($coautorModel->id)) {
                         $trabalho->coautors()->attach($coautorModel->id);
                         $houveCorrecaoValida = true;
@@ -1308,7 +1369,7 @@ class TrabalhoController extends Controller
                 }
             }
 
-            // Se coautores foram removidos
+            // Desvincula coautores removidos
             $coautoresParaRemover = array_diff($coautoresAtuaisIds, $novosIdsCoautores);
             if (!empty($coautoresParaRemover)) {
                 $trabalho->coautors()->detach($coautoresParaRemover);
@@ -1335,19 +1396,49 @@ class TrabalhoController extends Controller
             $houveCorrecaoValida = true;
         }
 
+        // ATENÇÃO: Se o autor clicou em submeter a correção, consideramos válido
+        // para permitir o reenvio e a aprovação automática mesmo que o texto não tenha mudado
+        $houveCorrecaoValida = true;
+
         // 5. Finalização e Notificação
         if ($houveCorrecaoValida) {
             $trabalho->data_correcao_submetida = now();
+
+            // Se a validação NÃO estiver habilitada na modalidade, aprova automaticamente
+            if (!$trabalho->modalidade->validacaoHabilitada()) {
+                $codigo = Trabalho::gerarCodigo();
+
+                $trabalho->aprovado = true;
+                $trabalho->hash_codigo_aprovacao = hash('sha256', str_replace('-', '', $codigo));
+                $trabalho->aprovacao_emitida_em = now();
+                $trabalho->permite_correcao = false; // Bloqueia novos envios após o aceite
+                $trabalho->save();
+
+                try {
+                    Mail::to($trabalho->autor->email)->send(new CartaDeAceiteMail($trabalho, $codigo));
+                } catch (\Throwable $e) {
+                    Log::error('Erro ao enviar CartaDeAceiteMail: ' . $e->getMessage());
+                }
+
+                return redirect()->back()->with([
+                    'mensagem' => 'Correção enviada e trabalho aprovado com sucesso!'
+                ]);
+            }
+
+            // Fluxo padrão: Validação ativa, mantém o status e notifica os avaliadores
             $trabalho->save();
 
-            // Envia o e-mail para todos os avaliadores atribuídos a este trabalho
             foreach ($trabalho->atribuicoes as $revisor) {
                 if ($revisor->user && $revisor->user->email) {
-                    Mail::to($revisor->user->email)->send(new EmailCorrecaoTrabalho($evento, $trabalho, $revisor));
+                    try {
+                        Mail::to($revisor->user->email)->send(new EmailCorrecaoTrabalho($evento, $trabalho, $revisor));
+                    } catch (\Throwable $e) {
+                        Log::error('Erro ao enviar EmailCorrecaoTrabalho: ' . $e->getMessage());
+                    }
                 }
             }
 
-            return redirect()->back()->with(['success' => 'Correção de ' . $trabalho->titulo . ' enviada com sucesso!']);
+            return redirect()->back()->with(['mensagem' => 'Correção de ' . $trabalho->titulo . ' enviada com sucesso!']);
         }
 
         return redirect()->back()->with(['mensagem' => 'Nenhuma alteração detectada para submissão da correção.']);

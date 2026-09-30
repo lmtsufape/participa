@@ -49,10 +49,21 @@ class TrabalhoUpdateRequest extends FormRequest
             'area'.$id => ['required', 'integer'],
             'modalidade'.$id => ['required', 'integer'],
             'resumo'.$id => ['nullable', 'string'],
+            
+            'nomeCoautor_'.$id => ['required', 'array', 'min:1'],
+            'nomeCoautor_'.$id.'.*' => ['required', 'string', 'max:255'],
             'emailCoautor_'.$id => ['required', 'array', 'min:1'],
-            'nomeCoautor_'.$id.'.*' => ['string'],
-            'emailCoautor_'.$id.'.0' => ['string', new MaxTrabalhosAutorUpdate($evento->numMaxTrabalhos)],
-            'emailCoautor_'.$id.'.*' => ['string', new MaxTrabalhosCoautorUpdate($evento->numMaxCoautores), 'exists:users,email', new CoautorInscritoNoEvento($evento), new CoautorCadastrado($evento)],
+            
+            'emailCoautor_'.$id.'.0' => ['required', 'email', new MaxTrabalhosAutorUpdate($evento->numMaxTrabalhos)],
+            
+            'emailCoautor_'.$id.'.*' => [
+                'nullable',
+                'email',
+                new MaxTrabalhosCoautorUpdate($evento->numMaxCoautores),
+                new CoautorInscritoNoEvento($evento),
+                new CoautorCadastrado($evento)
+            ],
+
             'arquivo'.$id => ['nullable', 'file', new FileType($modalidade, new MidiaExtra, $request['arquivo'.$id], true)],
             'campoextra1arquivo' => ['nullable', 'file', 'max:2048'],
             'campoextra2arquivo' => ['nullable', 'file', 'max:2048'],
