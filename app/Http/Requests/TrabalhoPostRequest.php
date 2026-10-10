@@ -2,17 +2,12 @@
 
 namespace App\Http\Requests;
 
-use App\Models\Submissao\Evento;
 use App\Models\Submissao\MidiaExtra;
 use App\Models\Submissao\Modalidade;
-use App\Models\Users\User;
-use App\Rules\CoautorCadastrado;
-use App\Rules\CoautorInscritoNoEvento;
 use App\Rules\FileType;
-use App\Rules\MaxTrabalhosCoautor;
-use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Rules\MaxCoautoresNaModalidade;
+use Illuminate\Validation\Rule;
 
 class TrabalhoPostRequest extends FormRequest
 {
@@ -46,7 +41,7 @@ class TrabalhoPostRequest extends FormRequest
             'autor.nome'  => ['required', 'string', 'max:255'],
             'coautores' => ['array', new MaxCoautoresNaModalidade($modalidade)],
             'coautores.*.nome'  => ['required','string','max:255'],
-            'coautores.*.email' => ['required','email:rfc', 'distinct', 'different:autor.email'],
+            'coautores.*.email' => ['required','email:rfc', 'distinct', 'different:autor.email', Rule::when($modalidade->evento->formEvento->modinscritonaplataforma, Rule::exists('users', 'email'))],
             'arquivo' => [$modalidade->arquivo ? 'required' : 'nullable', 'file', new FileType($modalidade, new MidiaExtra, request()->arquivo, true)],
             'campoextra1arquivo' => ['nullable', 'file', 'max:2048'],
             'campoextra2arquivo' => ['nullable', 'file', 'max:2048'],
@@ -86,30 +81,8 @@ class TrabalhoPostRequest extends FormRequest
     {
         return [
             'arquivo.max' => 'O tamanho máximo permitido é de 2mb',
+            'coautores.*.email.exists' => 'O e-mail :input não está cadastrado. Este evento exige que os coautores possuam cadastro prévio na plataforma.',
         ];
-    }
-
-    public function withValidator($validator)
-    {
-        $validator->after(function ($validator) {
-            $emails = (array) $this->input('emailCoautor', []);
-            $flags  = (array) $this->input('coautorCadastrado', []);
-
-            foreach ($emails as $index => $email) {
-                $flag = $flags[$index] ?? 'sim';
-                if ($index == 0) {
-                    continue;
-                }
-                if ($flag === 'nao' && $email) {
-                    if (User::where('email', $email)->exists()) {
-                        $validator->errors()->add(
-                            'emailCoautor.' . $index,
-                            'O email ' .$email. ' já está cadastrado no sistema. Use o botão "Adicionar coautor" para coautores já cadastrados.'
-                        );
-                    }
-                }
-            }
-        });
     }
 
     public function attributes()
