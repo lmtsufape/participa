@@ -303,7 +303,7 @@
                                 <strong>{{ __('Data de nascimento') }}</strong>
                             </label>
 
-                            <input id="data_nascimento" type="date"
+                            <input id="data_nascimento" type="date" max="{{ now()->toDateString() }}"
                                 class="form-control @error('data_nascimento') is-invalid @enderror" name="data_nascimento"
                                 value="{{ old('data_nascimento') }}" autocomplete="data_nascimento" required>
 

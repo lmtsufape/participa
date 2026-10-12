@@ -26,7 +26,7 @@ class StoreUserRequest extends FormRequest
             'name' => ['bail', 'required', 'string', 'max:255'],
             'nomeSocial' => 'nullable|string|max:255',
             'email' => ['required', 'email'],
-            'data_nascimento' => ['required', 'date'],
+            'data_nascimento' => ['required', 'date', 'before:today'],
             'documento_tipo' => ['required', 'in:cpf,cnpj,passaporte'],
             'cpf' => ['nullable','required_if:documento_tipo,cpf', 'cpf'],
             'cnpj' => ['nullable','required_if:documento_tipo,cnpj', 'cnpj'],
@@ -54,7 +54,7 @@ class StoreUserRequest extends FormRequest
             'nomeOrganizacao' => ['nullable'],
             'necessidadesEspeciais' => ['nullable'],
             'outraNecessidadeEspecial' => ['nullable'],
-            'vinculoInstitucional' => ['nullable'],
+            'vinculoInstitucional' => ['nullable', 'string', 'max:255'],
         ];
     }
 
