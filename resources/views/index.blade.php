@@ -218,7 +218,7 @@
 
     <div class="bg-white">
         <div class="container py-5 bg-white">
-            <img src="{{ asset('/img/Barra_revisada.png') }}" alt="Banner de Apoiadores" class="img-fluid rounded-3"/>
+            <img src="{{ asset('/img/Barra_revisada_v2.png') }}" alt="Banner de Apoiadores" class="img-fluid rounded-3"/>
         </div>
     </div>
 
