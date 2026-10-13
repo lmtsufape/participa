@@ -34,6 +34,13 @@
                                    target="_blank">
                                    <i class="bi bi-file-earmark-text me-2"></i> Baixar Regulamento
                                 </a>
+
+                                <!-- Link Lista Preliminar -->
+                                <a href="{{ asset('documentos/premios/Lista_Preliminar_Premio_Darrel_Posey.pdf') }}" 
+                                   class="btn btn-outline-info d-flex align-items-center" 
+                                   target="_blank">
+                                   <i class="bi bi-file-earmark-text me-2"></i> Lista Preliminar Prêmio Darrel Posey
+                                </a>
                             </div>
                         </div>
                         <div class="card-body p-4 border-start border-4" style="border-color: #f2a440 !important;">
