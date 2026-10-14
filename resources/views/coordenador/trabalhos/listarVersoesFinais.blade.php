@@ -3,7 +3,7 @@
 @endsection
 @section('content')
 <div class="container">
-    <h1>Versões finais enviadas</h1>
+    <h1>Trabalhos completos enviados</h1>
     <div class="card mb-3"><div class="card-body">
         <form method="GET" action="{{ route('coord.listarVersoesFinais', $evento) }}">
             <div class="row g-3">
@@ -27,7 +27,7 @@
             </div>
         </form>
     </div></div>
-    <p>{{ $trabalhos->total() }} trabalho(s) com versão final enviada.</p>
+    <p>{{ $trabalhos->total() }} trabalho(s) com trabalho completo enviado.</p>
     <div class="table-responsive"><table class="table table-hover">
         <thead><tr><th>ID</th><th>Título</th><th>Autor</th><th>Modalidade</th><th>Eixo</th><th>Enviado em</th><th>Arquivo</th></tr></thead>
         <tbody>
@@ -36,11 +36,11 @@
                 <tr>
                     <td>{{ $trabalho->id }}</td><td>{{ $trabalho->titulo }}</td><td>{{ $trabalho->autor?->name ?? 'Autor não disponível' }}</td>
                     <td>{{ $trabalho->modalidade?->nome }}</td><td>{{ $trabalho->area?->nome }}</td><td>{{ $versao->created_at->format('d/m/Y H:i') }}</td>
-                    <td><a class="btn btn-sm btn-outline-primary" href="{{ route('trabalho.versao-final.download', [$trabalho, $versao]) }}">Baixar versão final</a>
+                    <td><a class="btn btn-sm btn-outline-primary" href="{{ route('trabalho.versao-final.download', [$trabalho, $versao]) }}">Baixar trabalho completo</a>
                     <a href="{{ route('trabalho.versao-final.index', $trabalho) }}">Consultar envio</a></td>
                 </tr>
             @empty
-                <tr><td colspan="7">Nenhuma versão final enviada para os filtros selecionados.</td></tr>
+                <tr><td colspan="7">Nenhum trabalho completo enviado para os filtros selecionados.</td></tr>
             @endforelse
         </tbody>
     </table></div>

@@ -143,7 +143,7 @@
                                 <th style="text-align:center">Excluir</th>
                                 <th style="text-align:center">Pareceres</th>
                                 <th style="text-align:center">Envio de Correção</th>
-                                <th class="text-center">Versão final</th>
+                                <th class="text-center">Trabalho completo</th>
                                 <th class="text-center">Resultado</th>
                             </tr>
                         </thead>

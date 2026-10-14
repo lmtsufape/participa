@@ -83,7 +83,15 @@
                 </p>
 
                 <p style="text-align: justify; line-height: 1.6;">
-                    Caso o resumo seja aprovado, a submissão do trabalho completo é fortemente recomendada. As normas de formatação para trabalhos completos seguem no link abaixo:
+                    Caso o resumo da apresentação oral seja aprovado, você pode enviar o trabalho na sua versão completa. A submissão do trabalho completo é opcinal, mas fortemente recomendada.
+                </p>
+
+                <p style="text-align: justify; line-height: 1.6;">
+                    Você pode submeter o trabalho completo na aba das suas submissões, onde está submetido o seu trabalho em comunicação oral. Basta clicar no botão "Enviar trabalho completo (opcional)".
+                </p>
+
+                <p style="text-align: justify; line-height: 1.6;">
+                    As normas de formatação para trabalhos completos seguem no link abaixo:
                 </p>
 
                 <div class="my-3">

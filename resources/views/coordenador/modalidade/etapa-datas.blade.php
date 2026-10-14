@@ -2,7 +2,7 @@
     $editando = isset($modalidade);
     $idEtapa = $etapa . '-' . ($editando ? $modalidade->id : 'nova');
     [$inicioColuna, $fimColuna, $inicioEdit, $fimEdit, $rotulo, $rotuloCheckbox] = [
-        'versao_final' => ['inicio_versao_final', 'fim_versao_final', 'inicio_versao_final', 'fim_versao_final', 'Versão final', 'Habilitar versão final'],
+        'versao_final' => ['inicio_versao_final', 'fim_versao_final', 'inicio_versao_final', 'fim_versao_final', 'Trabalho completo', 'Habilitar trabalho completo'],
         'avaliacao' => ['inicioRevisao', 'fimRevisao', 'inícioRevisão', 'fimRevisão', 'Avaliação', 'Habilitar avaliação'],
         'correcao' => ['inicioCorrecao', 'fimCorrecao', 'inícioCorreção', 'fimCorreção', 'Correção', 'Habilitar correção'],
         'validacao' => ['inicioValidacao', 'fimValidacao', 'inícioValidação', 'fimValidação', 'Validação', 'Habilitar validação da correção'],
@@ -33,7 +33,7 @@
     <div id="datas-{{ $idEtapa }}" class="row" data-etapa-datas @if(!$habilitada) hidden @endif>
         @foreach([[$inicioNome, $inicioValor, 'Início'], [$fimNome, $fimValor, 'Fim']] as [$nomeData, $valorData, $rotuloData])
             <div class="col-sm-6">
-                <label class="col-form-label" for="{{ $idEtapa }}-{{ $loop->index }}">{{ $rotuloData }} da {{ $rotulo }}</label>
+                <label class="col-form-label" for="{{ $idEtapa }}-{{ $loop->index }}">{{ $rotuloData }} {{ $etapa === 'versao_final' ? 'do' : 'da' }} {{ $rotulo }}</label>
                 <input type="datetime-local" class="form-control" id="{{ $idEtapa }}-{{ $loop->index }}"
                        name="{{ $nomeData }}" value="{{ $restaurar ? old($nomeData, $valorData) : $valorData }}" data-original="{{ $valorData }}"
                        @if($habilitada) required @else disabled @endif>
