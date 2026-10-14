@@ -10,7 +10,7 @@
 
     @if (session('success'))
         <div class="alert alert-success d-flex justify-content-between">
-            {{ session('success') }}
+            {{ session('success') === 'Versão final enviada com sucesso!' ? 'Trabalho completo enviado com sucesso!' : session('success') }}
             <button type="button" class="btn-close text-end" data-bs-dismiss="alert" aria-label="Fechar"></button>
         </div>
     @endif

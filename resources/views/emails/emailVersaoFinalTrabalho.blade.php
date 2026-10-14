@@ -1,14 +1,14 @@
 @component('mail::message')
-# Versão final de trabalho enviada
+# Trabalho completo enviado
 
 Olá **{{ $nomeDestinatario }}**,
 
-A versão final do trabalho **"{{ $trabalho->titulo }}"** foi recebida com sucesso para o evento **{{ $trabalho->evento->nome }}**.
+O trabalho completo **"{{ $trabalho->titulo }}"** foi recebido com sucesso para o evento **{{ $trabalho->evento->nome }}**.
 
 O arquivo está disponível para consulta no sistema. Os arquivos anteriores foram preservados.
 
 @component('mail::button', ['url' => route('trabalho.versao-final.index', $trabalho)])
-Consultar versão final
+Consultar trabalho completo
 @endcomponent
 
 Atenciosamente,

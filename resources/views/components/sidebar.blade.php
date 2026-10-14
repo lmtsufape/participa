@@ -498,11 +498,11 @@
                                 <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" id="versoesFinaisDropdown"
                                     href="#collapseVersoesFinais" role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="collapseVersoesFinais">
                                     <img src="{{ asset('img/icons/list.svg') }}" alt="" width="20px">
-                                    <span>{{ __('Listar versões finais') }}</span>
+                                    <span>{{ __('Listar trabalhos completos') }}</span>
                                 </a>
                                 <ul class="collapse" id="collapseVersoesFinais">
-                                    <li class="nav-item"><a class="nav-link d-flex align-items-center gap-2" href="{{ route('coord.listarVersoesFinais', $evento) }}">{{ __('Todas as versões finais') }}</a></li>
-                                    <li class="nav-item"><a class="nav-link d-flex align-items-center gap-2" href="{{ route('coord.listarVersoesFinais', $evento) }}#filtro-eixo">{{ __('Filtrar versões finais por eixo') }}</a></li>
+                                    <li class="nav-item"><a class="nav-link d-flex align-items-center gap-2" href="{{ route('coord.listarVersoesFinais', $evento) }}">{{ __('Todos os trabalhos completos') }}</a></li>
+                                    <li class="nav-item"><a class="nav-link d-flex align-items-center gap-2" href="{{ route('coord.listarVersoesFinais', $evento) }}#filtro-eixo">{{ __('Filtrar trabalhos completos por eixo') }}</a></li>
                                     @foreach ($evento->modalidades()->get() as $modalidade)
                                         <li class="nav-item"><a class="nav-link d-flex align-items-center gap-2" href="{{ route('coord.listarVersoesFinais', ['evento' => $evento->id, 'modalidade_id' => $modalidade->id]) }}">{{ __('Modalidade') }}: {{ $modalidade->nome }}</a></li>
                                     @endforeach
