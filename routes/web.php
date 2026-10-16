@@ -234,7 +234,13 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
             Route::get('trabalhos/listarValidacoesPorEixo', [EventoController::class, 'listarValidacoesPorEixo'])->name('listarValidacoesPorEixo');
             Route::post('/coordenador/trabalho/{trabalho}/resetar-validacao', [EventoController::class, 'resetarValidacao'])->name('trabalho.resetarValidacao');
 
-            Route::get('areas/listarAreas', [AreaController::class, 'index'])->name('listarAreas');
+            Route::get('{eventoId}/areas', [AreaController::class, 'index'])->name('areas.index');
+            Route::get('{evento_id}/areas/create', [AreaController::class, 'create'])->name('areas.create');
+            Route::post('{evento_id}/areas/', [AreaController::class, 'store'])->name('areas.store');
+            Route::get('areas/{area_id}/edit', [AreaController::class, 'edit'])->name('areas.edit');
+            Route::put('areas/{area_id}/', [AreaController::class, 'update'])->name('areas.update');
+            Route::delete('areas/deletar/{id}', [AreaController::class, 'destroy'])->name('areas.destroy');
+            Route::post('areas/reorder', [AreaController::class, 'reorder'])->name('areas.reorder');
 
             Route::get('revisores/listarRevisores', [EventoController::class, 'listarRevisores'])->name('listarRevisores');
             Route::get('/evento/{evento}/exportar-revisores', [EventoController::class, 'exportarRevisoresXLSX'])->name('evento.exportarRevisores');
@@ -363,13 +369,6 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
         Route::post('/modalidade/criar/{evento_id}', [ModalidadeController::class, 'store'])->name('modalidade.store');
         Route::post('/modalidade/{id}/delete', [ModalidadeController::class, 'destroy'])->name('modalidade.destroy');
         Route::post('modalidades/reorder', [ModalidadeController::class, 'reorder'])->name('modalidades.reorder');
-        //Area
-        Route::post('/area/criar', [AreaController::class, 'store'])->name('area.store');
-        Route::delete('/area/deletar/{id}', [AreaController::class, 'destroy'])->name('area.destroy');
-        Route::post('/area/editar/{id}', [AreaController::class, 'update'])->name('area.update');
-        Route::post('areas/reorder', [AreaController::class, 'reorder'])->name('areas.reorder');
-        //AreaModalidade
-        // Route::post(  '/areaModalidade/criar',  [AreaModalidadeController::class, 'store']             )->name('areaModalidade.store');
 
         //Trabalho
         Route::get('/trabalho/submeter/{modalidade_id}', [TrabalhoController::class, 'create'])->name('trabalho.create');

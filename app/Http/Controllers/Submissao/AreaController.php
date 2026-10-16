@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Submissao;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreAreaRequest;
+use App\Http\Requests\UpdateAreaRequest;
 use App\Models\Submissao\Area;
 use App\Models\Submissao\Evento;
 use Illuminate\Http\Request;
@@ -20,7 +22,7 @@ class AreaController extends Controller
         $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
         $areas = Area::where('eventoId', $evento->id)->orderBy('ordem')->get();
 
-        return view('coordenador.areas.listarAreas', [
+        return view('coordenador.areas.index', [
             'evento' => $evento,
             'areas' => $areas,
         ]);
@@ -30,9 +32,11 @@ class AreaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($evento_id)
     {
-        //
+        $evento = Evento::findOrFail($evento_id);
+
+        return view('coordenador.areas.create', compact('evento'));
     }
 
     /**
@@ -40,42 +44,14 @@ class AreaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreAreaRequest $request, $evento_id)
     {
-        $evento = Evento::find($request->eventoId);
+        $evento = Evento::findOrFail($evento_id);
         $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
 
-        $validatedData = $request->validate([
-            'nome' => 'required|string',
-            'resumo' => 'nullable|string',
-            'nome_en' => 'nullable|string',
-            'resumo_en' => 'nullable|string',
-            'nome_es' => 'nullable|string',
-            'resumo_es' => 'nullable|string',
-        ]);
+        $evento->areas()->create($request->validated());
 
-        Area::create([
-            'nome' => $request->nome,
-            'resumo' => $request->resumo,
-            'nome_en' => $request->nome_en,
-            'resumo_en' => $request->resumo_en,
-            'nome_es' => $request->nome_es,
-            'resumo_es' => $request->resumo_es,
-            'eventoId' => $request->eventoId,
-        ]);
-
-        return redirect()->back()->with(['success' => 'Área cadastrada com sucesso!']);
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Area  $area
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Area $area)
-    {
-        //
+        return redirect()->route('coord.areas.index', $evento->id)->with(['success' => 'Área cadastrada com sucesso!']);
     }
 
     /**
@@ -84,9 +60,14 @@ class AreaController extends Controller
      * @param  \App\Area  $area
      * @return \Illuminate\Http\Response
      */
-    public function edit(Area $area)
+    public function edit($area_id)
     {
-        //
+        $area = Area::with('evento')->findOrFail($area_id);
+        $evento = $area->evento;
+
+        $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
+
+        return view('coordenador.areas.edit', compact('area', 'evento'));
     }
 
     /**
@@ -95,30 +76,16 @@ class AreaController extends Controller
      * @param  \App\Area  $area
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UpdateAreaRequest $request, $area_id)
     {
-        $validatedData = $request->validate([
-            'nome_da_área' => 'required',
-            'resumo' => 'nullable|string',
-            'nome_en' => 'nullable|string',
-            'resumo_en' => 'nullable|string',
-            'nome_es' => 'nullable|string',
-            'resumo_es' => 'nullable|string',
-        ]);
-
-        $area = Area::find($id);
+        $area = Area::with('evento')->findOrFail($area_id);
         $evento = $area->evento;
+        
         $this->authorize('isCoordenadorOrCoordenadorDasComissoes', $evento);
 
-        $area->nome = $request->input('nome_da_área');
-        $area->resumo = $request->input('resumo', null);
-        $area->nome_en = $request->input('nome_da_área_en', null);
-        $area->resumo_en = $request->input('resumo_en', null);
-        $area->nome_es = $request->input('nome_da_área_es', null);
-        $area->resumo_es = $request->input('resumo_es', null);
-        $area->update();
+        $area->update($request->validated());
 
-        return redirect()->back()->with(['success' => 'Área atualizada com sucesso!']);
+        return redirect()->route('coord.areas.index', $evento->id)->with(['success' => 'Área atualizada com sucesso!']);
     }
 
     /**

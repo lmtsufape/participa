@@ -104,23 +104,12 @@
                 </li>
             @endcan
             <li id="areas" class="nav-item">
-                <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" data-bs-toggle="collapse"
-                    href="#collapseAreas" role="button" aria-expanded="false" aria-controls="collapseAreas">
+                <a class="nav-link d-flex align-items-center gap-2" @if (request()->is('coord/evento/areas*'))
+                    style='display: block;' @endif
+                    href="{{ route('coord.areas.index', ['eventoId' => $evento->id]) }}" role="button">
                     <img src="{{ asset('img/icons/area.svg') }}" alt="" width="20px">
                     <span>{{ __('Áreas') }}</span>
                 </a>
-                <div class="collapse" id="collapseAreas" @if (request()->is('coord/evento/areas*')) style='display: block;'
-                @endif>
-                    <ul class="nav flex-column">
-                        <li class="nav-item">
-                            <a class="nav-link d-flex align-items-center gap-2" id="listarAreas"
-                                href="{{ route('coord.listarAreas', ['eventoId' => $evento->id]) }}">
-                                <img src="{{ asset('img/icons/list.svg') }}" width="20px" alt="">
-                                <span>{{ __('Listar áreas') }}</span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
             </li>
             <li id="modalidades" class="nav-item">
                 <a class="nav-link d-flex align-items-center gap-2" @if (request()->is('coord/evento/modalidade*'))

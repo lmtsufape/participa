@@ -5,7 +5,7 @@
 @section('content')
 
     <div class="container">
-        <x-admin.content-header
+        <x-ui.content-header
             title="Editar Modalidade"
             description="Configure as informações, prazos, regras de submissão e documentos da modalidade."
         />

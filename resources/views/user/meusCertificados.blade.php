@@ -5,7 +5,7 @@
 @section('content')
 
     <div class="container">
-        <x-admin.content-header
+        <x-ui.content-header
             title="{{ __('Certificados') }}"
             description="Consulte e acesse os certificados disponíveis para sua participação nos eventos."
         />

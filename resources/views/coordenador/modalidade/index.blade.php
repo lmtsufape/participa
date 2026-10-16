@@ -424,7 +424,7 @@
 
 <div class="modalidades container">
 
-    <x-admin.content-header
+    <x-ui.content-header
         title="Listar Modalidades"
         description="Gerencie as modalidades do evento e acompanhe seus prazos e configurações."
         :href="route('coord.modalidade.create', [

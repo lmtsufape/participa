@@ -14,13 +14,13 @@
     <div class="container">
 
         {{-- titulo da página --}}
-        <x-admin.content-header
+        <x-ui.content-header
             title="{{__('Meus Eventos')}}"
             description="Visualize e gerencie os eventos que você criou."
             :href="route('evento.criar')"
             button-text="{{ __('Novo Evento') }}"
         />
-        
+
         <div class="row">
             @php
                 use Illuminate\Support\Str;

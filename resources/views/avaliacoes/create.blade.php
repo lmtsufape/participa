@@ -3,7 +3,7 @@
 @section('content')
 
 <div class="container mb-4 position-relative">
-    <x-admin.content-header title="Formulário de avaliação"
+    <x-ui.content-header title="Formulário de avaliação"
         description="Preencha o formulário abaixo com atenção e responsabilidade."
     />
     <div class="card mb-4">

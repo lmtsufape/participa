@@ -3,7 +3,7 @@
 @section('content')
 
     <div class="container mt-3 mb-5">
-        <x-admin.content-header
+        <x-ui.content-header
             title="Minhas Inscrições"
             description="Acompanhe suas inscrições e consulte os detalhes de cada participação."
         />

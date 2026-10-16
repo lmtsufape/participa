@@ -4,7 +4,7 @@
 
 <div class="container mb-4 position-relative">
 
-    <x-admin.content-header
+    <x-ui.content-header
         title="Visualizar avaliação"
         description="Consulte as respostas que você enviou nesta avaliação."
     />

@@ -28,7 +28,7 @@
 }
 </style>
 <div class="container">
-    <x-admin.content-header
+    <x-ui.content-header
         title="Listar Formulários"
         description="Gerencie os formulários utilizados na avaliação dos trabalhos desta modalidade."
         :href="route('coord.atribuir.form', [
