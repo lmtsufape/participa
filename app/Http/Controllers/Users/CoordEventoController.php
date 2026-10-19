@@ -12,7 +12,12 @@ class CoordEventoController extends Controller
 {
     public function index()
     {
-        $eventos = Evento::where('coordenadorId', Auth::user()->id)->latest()->get();
+        $eventos = Evento::where('coordenadorId', Auth::user()->id)->latest()->withCount([
+                'inscricaos as inscricoes_finalizadas_count' => function ($query) {
+                        $query->where('finalizada', true);
+                    },
+                'modalidades'
+            ])->paginate(15);
 
         return view('coordenador.index', ['eventos' => $eventos]);
     }

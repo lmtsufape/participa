@@ -39,6 +39,8 @@ class Evento extends Model
         'exibir_calendario_programacao' => 'boolean',
         'exibir_pdf' => 'boolean',
         'modarquivo' => 'boolean',
+        'dataInicio' => 'date',
+        'dataFim' => 'date',
     ];
 
     public function endereco()

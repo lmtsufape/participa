@@ -111,7 +111,12 @@ class AdministradorController extends Controller
 
     public function eventos()
     {
-        $eventos = Evento::latest()->get();
+        $eventos = Evento::latest()->withCount([
+                'inscricaos as inscricoes_finalizadas_count' => function ($query) {
+                        $query->where('finalizada', true);
+                    },
+                'modalidades'
+            ])->paginate(15);
 
         return view('coordenador.index', ['eventos' => $eventos]);
     }

@@ -31,32 +31,22 @@ class HomeController extends Controller
         $user = Auth::user();
         $eventos = collect();
         if ($user->administrador()->exists()) {
-            $eventos = $eventos->concat(Evento::all());
 
-            return view('administrador.index', ['eventos' => $eventos]);
+            return view('administrador.index');
         }else if ($user->coordComissaoCientifica()->exists() || $user->coordComissaoOrganizadora()->exists()) {
-            $eventos = QueryBuilder::for(Evento::class)
-            ->where(function($q) use ($user) {
-                $q->whereHas('coordComissaoCientifica', fn($r) => $r->where('user_id', $user->id))
-                  ->orWhereHas('coordComissaoOrganizadora', fn($r) => $r->where('user_id', $user->id))
-                  ->orWhere('coordenadorId', $user->id);
-            })
-            ->allowedFilters(
-                AllowedFilter::callback('q', function ($query, $value) {
-                    $term = trim((string) $value);
-                    if ($term === '') return;
-                    $query->where(function ($w) use ($term) {
-                        if (ctype_digit($term)) {
-                            $w->orWhere('id', (int) $term);
-                        }
-                        $w->orWhere('nome', 'ILIKE', "%{$term}%")
-                        ->orWhere('descricao', 'ILIKE', "%{$term}%");
-                    });
-                }),
-            )
-            ->distinct()
-            ->paginate(request('per_page', 15))
-            ->withQueryString();
+            $eventos = Evento::where(function($q) use ($user) {
+                    $q->whereHas('coordComissaoCientifica', fn($r) => $r->where('user_id', $user->id))
+                        ->orWhereHas('coordComissaoOrganizadora', fn($r) => $r->where('user_id', $user->id))
+                        ->orWhere('coordenadorId', $user->id);})
+                ->latest()
+                ->withCount([
+                    'inscricaos as inscricoes_finalizadas_count' => function ($query) {
+                            $query->where('finalizada', true);
+                        },
+                    'modalidades'])
+                ->paginate(15);
+
+            return view('coordenador.index', ['eventos' => $eventos]);
         }else{
             $eventos = Evento::whereHas('inscricaos', function($query) use ($user) {
                 $query->where('user_id', $user->id);
@@ -84,8 +74,6 @@ class HomeController extends Controller
 
             return view('user.areaParticipante', ['eventos' => $eventos]);
         }
-
-        return view('coordenador.index', ['eventos' => $eventos]);
     }
 
     public function index()
