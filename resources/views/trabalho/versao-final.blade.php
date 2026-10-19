@@ -19,8 +19,9 @@
                 <form action="{{ route('trabalho.versao-final.store', $trabalho) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <label for="arquivo-versao-final" class="form-label">Arquivo do trabalho completo</label>
-                    <input type="file" name="arquivo_versao_final" id="arquivo-versao-final" class="form-control" accept=".pdf,.docx,.odt,.rtf" required aria-describedby="formatos-versao-final">
+                    <input type="file" name="arquivo_versao_final" id="arquivo-versao-final" class="form-control" accept=".pdf,.docx,.odt,.rtf" required aria-describedby="formatos-versao-final erro-tamanho-versao-final">
                     <small id="formatos-versao-final" class="form-text text-muted">PDF, DOCX, ODT ou RTF. Tamanho máximo: 5 MB.</small>
+                    <div id="erro-tamanho-versao-final" class="text-danger mt-2" role="alert" hidden>O arquivo excede o tamanho máximo de 5 MB. Selecione um arquivo menor para continuar.</div>
                     <div class="mt-3"><button type="submit" class="btn btn-primary">Enviar trabalho completo (opcional)</button></div>
                 </form>
             @else
@@ -57,4 +58,24 @@
     </div>
     {{ $versoes->links() }}
 </div>
+<div class="modal fade" id="modal-limite-trabalho-completo" tabindex="-1" aria-labelledby="titulo-limite-trabalho-completo" aria-describedby="descricao-limite-trabalho-completo" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="titulo-limite-trabalho-completo" style="color: #114048;">Arquivo maior que o permitido</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <div class="modal-body" id="descricao-limite-trabalho-completo">
+                O tamanho máximo permitido é <strong>5 MB</strong>. O arquivo selecionado ultrapassa esse limite e não será enviado. Selecione um arquivo menor para continuar.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Entendi</button>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
+
+@push('scripts')
+    <script src="{{ asset('js/trabalho-completo-upload.js') }}" defer></script>
+@endpush
