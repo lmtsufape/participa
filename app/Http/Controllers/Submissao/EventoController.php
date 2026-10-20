@@ -864,7 +864,7 @@ class EventoController extends Controller
         }]);
 
         $revisores = $query->orderBy('name')->simplePaginate(15)->withQueryString();
-        
+
         $areas = $evento->areas;
         $modalidades = $evento->modalidades;
 

@@ -336,7 +336,6 @@ class RevisorController extends Controller
 
         $revisores = json_decode($request->input('revisores'));
         foreach ($revisores->data as $revisor) {
-            //dd($revisor);
             $user = User::find($revisor->id);
             //dd($user->revisor[0]->correcoesEmAndamento);
             $revisorTemp = $user->revisor[0];
