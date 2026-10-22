@@ -6,12 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreUserRequest;
 use App\Models\Submissao\Endereco;
 use App\Models\Users\User;
-use App\Providers\RouteServiceProvider;
-use App\Rules\UniqueCaseInsensitive;
 use Illuminate\Foundation\Auth\RegistersUsers;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Mail;
-use App\Mail\EmailConfirmacaoCadastro;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
@@ -107,9 +102,6 @@ class RegisterController extends Controller
         event(new Registered($user));
 
         $this->guard()->login($user);
-
-        Mail::to($user->email)
-            ->send(new EmailConfirmacaoCadastro($user));
 
         if ($response = $this->registered($request, $user)) {
             return $response;

@@ -31,6 +31,6 @@ class Coautor extends Model
 
     public function eventos()
     {
-        return $this->belongsTo(Evento::class); 
+        return $this->belongsTo(Evento::class);
     }
 }

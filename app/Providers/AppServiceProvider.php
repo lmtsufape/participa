@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Auth\Notifications\VerifyEmail;
+use Illuminate\Notifications\Messages\MailMessage;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -24,6 +26,14 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        VerifyEmail::toMailUsing(
+            fn ($usuario, $url) => (new MailMessage)
+                ->subject('Participa - Confirme seu e-mail')
+                ->view('emails.verify-email', [
+                    'usuario' => $usuario,
+                    'url' => $url,
+                ])
+        );
         Paginator::useBootstrapFive();
         Validator::extend('telefone', '\App\Utils\TelefoneValidation@validate', 'Celular inválido');
         Validator::extend('time', '\App\Utils\TimeValidation@validate', 'Hora inválida');

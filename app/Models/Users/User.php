@@ -27,7 +27,7 @@ use App\Models\Submissao\Endereco;
 use App\Models\Inscricao\Inscricao;
 use App\Models\Submissao\TipoComissao;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     use Notifiable;
     use HasFactory;

@@ -98,7 +98,7 @@
                 <!-- Link para cadastro -->
                 <div class="text-center pt-4">
                     <span>{{ __('Não possui conta?') }}</span>
-                    <a class="link-my-secondary fw-bold" href="{{ route('preRegistro') }}">
+                    <a class="link-my-secondary fw-bold" href="{{ route('register', app()->getLocale()) }}">
                         {{ __('Crie agora') }}
                     </a>
                 </div>

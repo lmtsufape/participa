@@ -327,7 +327,7 @@
                     </li>
 
                     <li class="nav-item dropdown">
-                        <a class="nav-link text-white border-end border-1 px-4 py-0 my-2 fw-semibold" href="{{ route('preRegistro') }}">{{ __('Cadastre-se') }}</a>
+                        <a class="nav-link text-white border-end border-1 px-4 py-0 my-2 fw-semibold" href="{{ route('register', app()->getLocale()) }}">{{ __('Cadastre-se') }}</a>
                     </li>
                 @endauth
 

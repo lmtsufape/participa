@@ -57,7 +57,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Session;
-use App\Http\Controllers\PreRegistroController;
 use App\Http\Controllers\Submissao\FormController;
 
 Route::middleware(Setlocale::class)->group(function () {
@@ -83,492 +82,481 @@ Route::middleware(Setlocale::class)->group(function () {
     })->name('cancelarCadastro');
 
 
-Route::get('/index', [HomeController::class, 'index'])->name('index');
-Route::get('/eventospassados',[EventoController::class, 'eventosPassados'])->name('eventos.passados');
-Route::get('/eventosproximos',[EventoController::class, 'eventosProximos'])->name('eventos.proximos');
+    Route::get('/index', [HomeController::class, 'index'])->name('index');
+    Route::get('/eventospassados',[EventoController::class, 'eventosPassados'])->name('eventos.passados');
+    Route::get('/eventosproximos',[EventoController::class, 'eventosProximos'])->name('eventos.proximos');
 
-Route::view('/termos-de-uso', 'termosdeuso')->name('termos.de.uso');
-Route::view('/aviso-de-privacidade', 'avisodeprivacidade')->name('aviso.de.privacidade');
-Route::get('/evento/busca', [EventoController::class, 'buscaLivre'])->name('busca.eventos');
-Route::get('/evento/buscar-livre', [EventoController::class, 'buscaLivreAjax'])->name('busca.livre.ajax');
-Route::get('certificados/{certificadoId}/ver-destinatario/{destinatarioId}/trabalho/{trabalhoId}', [CertificadoController::class, 'visualizar_certificado_emitido'])->name('verCertificado');
+    Route::view('/termos-de-uso', 'termosdeuso')->name('termos.de.uso');
+    Route::view('/aviso-de-privacidade', 'avisodeprivacidade')->name('aviso.de.privacidade');
+    Route::get('/evento/busca', [EventoController::class, 'buscaLivre'])->name('busca.eventos');
+    Route::get('/evento/buscar-livre', [EventoController::class, 'buscaLivreAjax'])->name('busca.livre.ajax');
+    Route::get('certificados/{certificadoId}/ver-destinatario/{destinatarioId}/trabalho/{trabalhoId}', [CertificadoController::class, 'visualizar_certificado_emitido'])->name('verCertificado');
 
-Auth::routes(['verify' => true, 'register' => false]);
+    Auth::routes(['verify' => true, 'register' => false]);
 
 
-        Route::group(['prefix' => '{locale}', 'middleware' => 'setLocale'], function () {
-            Route::get('/register/{pais?}', function ($locale, $pais = null) {
-                $estados = EstadoBrasileiro::options();
-                return view('auth.register', compact('pais', 'estados'));
-            });
-            Route::post('/register', [RegisterController::class, 'register'])->name('register');
+    Route::group(['prefix' => '{locale}', 'middleware' => 'setLocale'], function () {
+        Route::get('/register/{pais?}', function ($locale, $pais = null) {
+            $estados = EstadoBrasileiro::options();
+            return view('auth.register', compact('pais', 'estados'));
         });
-
-
-
-Route::namespace('Submissao')->group(function () {
-    Route::get('/evento/{id}', [EventoController::class, 'show'])->name('evento.visualizar');
-    Route::get('/evento/visualizar/{id}', function ($id) {
-        return redirect()->route('evento.visualizar', $id);
+        Route::post('/register', [RegisterController::class, 'register'])->name('register');
     });
-    Route::match(['get', 'post'], '/validarDocumentos', [CertificadoController::class, 'validar'])->name('validarCertificado');
-    Route::get('certificado/{hash}', [CertificadoController::class, 'validar'])->name('certificado.view')->where('hash', '.*');
-    Route::get('certificados/{user_id}/{evento_id}', [CertificadoController::class, 'certificadosDisponiveis'])->name('certificado.disponiveis');
-    Route::post('validarDocumentos', [CertificadoController::class, 'validar'])->name('validarCertificadoPost');
-    Route::get('/home', [CertificadoController::class, 'validar'])->name('home')->middleware('verified', 'isTemp');
-});
 
-Route::get('/validarDocumentos', [CertificadoController::class, 'validarCertificadoForm'])->name('validarCertificado');
 
-Route::get('/{id}/atividades', [AtividadeController::class, 'atividadesJson'])->name('atividades.json');
 
-Route::get('/perfil/{pais?}', [UserController::class, 'perfil'])->name('perfil')->middleware('auth');
-Route::post('/perfil/editar', [UserController::class, 'editarPerfil'])->name('perfil.update')->middleware('auth');
-Route::put('/perfil/password/update', [UserController::class, 'updatePassword'])->name('perfil.password.update');
+    Route::namespace('Submissao')->group(function () {
+        Route::get('/evento/{id}', [EventoController::class, 'show'])->name('evento.visualizar');
+        Route::get('/evento/visualizar/{id}', function ($id) {
+            return redirect()->route('evento.visualizar', $id);
+        });
+        Route::match(['get', 'post'], '/validarDocumentos', [CertificadoController::class, 'validar'])->name('validarCertificado');
+        Route::get('certificado/{hash}', [CertificadoController::class, 'validar'])->name('certificado.view')->where('hash', '.*');
+        Route::get('certificados/{user_id}/{evento_id}', [CertificadoController::class, 'certificadosDisponiveis'])->name('certificado.disponiveis');
+        Route::post('validarDocumentos', [CertificadoController::class, 'validar'])->name('validarCertificadoPost');
+        Route::get('/home', [CertificadoController::class, 'validar'])->name('home')->middleware('verified', 'isTemp');
+    });
 
-Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
-    Route::get('meusCertificados', [CertificadoController::class, 'listarCertificados'])->name('meusCertificados');
-    Route::get('/home-user', [HomeController::class, 'index'])->name('home.user');
-    Route::get('/participante',[UserController::class, 'areaParticipante'])->name('participante');
-    Route::get('/comprovantes',[UserController::class, 'meusComprovantes'])->name('comprovantes');
-    Route::namespace('Users')->group(function () {
+    Route::get('/validarDocumentos', [CertificadoController::class, 'validarCertificadoForm'])->name('validarCertificado');
 
-        Route::get('meusCertificados', [UserController::class, 'meusCertificados'])->name('meusCertificados');
+    Route::get('/{id}/atividades', [AtividadeController::class, 'atividadesJson'])->name('atividades.json');
 
-        // rotas do administrador
-        Route::prefix('/admin')->name('admin.')->group(function () {
-            Route::get('/home', [AdministradorController::class, 'index'])->name('home');
-            Route::get('/editais', [AdministradorController::class, 'editais'])->name('editais');
-            Route::get('/eventos', [AdministradorController::class, 'eventos'])->name('eventos');
-            Route::get('/areas', [AdministradorController::class, 'areas'])->name('areas');
-            Route::get('/users', [AdministradorController::class, 'users'])->name('users');
-            Route::get('/edit/user/{id}', [AdministradorController::class, 'editUser'])->name('editUser');
-            Route::patch('/usuarios/{user}/senha', [AdministradorController::class, 'resetPassword'])->name('users.password.reset');
 
-            Route::post('/update/user/{id}', [AdministradorController::class, 'updateUser'])->name('updateUser');
-            Route::delete('/delete/user/{user_id}', [UserController::class, 'destroy'])->name('user.destroy');
-            Route::post('/delete/search', [AdministradorController::class, 'search'])->name('search');
+    Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
+        Route::get('/perfil/{pais?}', [UserController::class, 'perfil'])->name('perfil');
+        Route::post('/perfil/editar', [UserController::class, 'editarPerfil'])->name('perfil.update');
+        Route::put('/perfil/password/update', [UserController::class, 'updatePassword'])->name('perfil.password.update');
+        Route::get('meusCertificados', [CertificadoController::class, 'listarCertificados'])->name('meusCertificados');
+        Route::get('/home-user', [HomeController::class, 'index'])->name('home.user');
+        Route::get('/participante',[UserController::class, 'areaParticipante'])->name('participante');
+        Route::get('/comprovantes',[UserController::class, 'meusComprovantes'])->name('comprovantes');
+        Route::namespace('Users')->group(function () {
+
+            Route::get('meusCertificados', [UserController::class, 'meusCertificados'])->name('meusCertificados');
+
+            // rotas do administrador
+            Route::prefix('/admin')->name('admin.')->group(function () {
+                Route::get('/home', [AdministradorController::class, 'index'])->name('home');
+                Route::get('/editais', [AdministradorController::class, 'editais'])->name('editais');
+                Route::get('/eventos', [AdministradorController::class, 'eventos'])->name('eventos');
+                Route::get('/areas', [AdministradorController::class, 'areas'])->name('areas');
+                Route::get('/users', [AdministradorController::class, 'users'])->name('users');
+                Route::get('/edit/user/{id}', [AdministradorController::class, 'editUser'])->name('editUser');
+                Route::patch('/usuarios/{user}/senha', [AdministradorController::class, 'resetPassword'])->name('users.password.reset');
+
+                Route::post('/update/user/{id}', [AdministradorController::class, 'updateUser'])->name('updateUser');
+                Route::delete('/delete/user/{user_id}', [UserController::class, 'destroy'])->name('user.destroy');
+                Route::post('/delete/search', [AdministradorController::class, 'search'])->name('search');
+                Route::get('/cadastro-automatica', [CadastroUsuarioAutomaticaController::class, 'index'])->name('cadastro-automatica.index');
+                Route::post('/cadastro-automatica/processar', [CadastroUsuarioAutomaticaController::class, 'processar'])->name('cadastro-automatica.processar');
+
+                Route::view('/relatorio-inscricoes', 'administrador.confirmar_status_inscricao')->name('relatorio.form');
+
+                Route::post('/relatorio-inscricoes', [InscricaoController::class, 'processarRelatorioInscricoesJSON'])->name('relatorio.processar');
+            });
+            // rotas da Comissao Cientifica
+            Route::get('comissao', [MembroComissaoController::class, 'index'])->name('home.membro');
+            Route::get('coordenador/eixos', [ComissaoController::class, 'indexCoordEixo'])->name('coord.eixo.index');
+            Route::get('comissaoCientifica/home', [CoordComissaoCientificaController::class, 'index'])->name('cientifica.home');
+            Route::get('comissaoCientifica/editais', [CoordComissaoCientificaController::class, 'index'])->name('cientifica.editais');
+            Route::get('comissaoCientifica/areas', [CoordComissaoCientificaController::class, 'index'])->name('cientifica.areas');
+            Route::post('comissaoCientifica/permissoes', [CoordComissaoCientificaController::class, 'permissoes'])->name('cientifica.permissoes');
+            Route::post('comissaoCientifica/novoUsuario', [CoordComissaoCientificaController::class, 'novoUsuario'])->name('cientifica.novoUsuario');
+
+            // Rotas de cadastro de usuários para coordenadores e comissão científica
             Route::get('/cadastro-automatica', [CadastroUsuarioAutomaticaController::class, 'index'])->name('cadastro-automatica.index');
             Route::post('/cadastro-automatica/processar', [CadastroUsuarioAutomaticaController::class, 'processar'])->name('cadastro-automatica.processar');
-
-            Route::view('/relatorio-inscricoes', 'administrador.confirmar_status_inscricao')->name('relatorio.form');
-
-            Route::post('/relatorio-inscricoes', [InscricaoController::class, 'processarRelatorioInscricoesJSON'])->name('relatorio.processar');
-        });
-        // rotas da Comissao Cientifica
-        Route::get('comissao', [MembroComissaoController::class, 'index'])->name('home.membro');
-        Route::get('coordenador/eixos', [ComissaoController::class, 'indexCoordEixo'])->name('coord.eixo.index');
-        Route::get('comissaoCientifica/home', [CoordComissaoCientificaController::class, 'index'])->name('cientifica.home');
-        Route::get('comissaoCientifica/editais', [CoordComissaoCientificaController::class, 'index'])->name('cientifica.editais');
-        Route::get('comissaoCientifica/areas', [CoordComissaoCientificaController::class, 'index'])->name('cientifica.areas');
-        Route::post('comissaoCientifica/permissoes', [CoordComissaoCientificaController::class, 'permissoes'])->name('cientifica.permissoes');
-        Route::post('comissaoCientifica/novoUsuario', [CoordComissaoCientificaController::class, 'novoUsuario'])->name('cientifica.novoUsuario');
-
-        // Rotas de cadastro de usuários para coordenadores e comissão científica
-        Route::get('/cadastro-automatica', [CadastroUsuarioAutomaticaController::class, 'index'])->name('cadastro-automatica.index');
-        Route::post('/cadastro-automatica/processar', [CadastroUsuarioAutomaticaController::class, 'processar'])->name('cadastro-automatica.processar');
-        Route::get('/admin/cadastrar-usuario', [AdministradorController::class, 'createUser'])->name('admin.cadastrarUsuario');
-        Route::post('/criarUsuario', [AdministradorController::class, 'criarUsuario'])->name('administrador.criarUsuario');
-        // rotas do Comissao Organizadora
-        Route::get('/home/comissaoOrganizadora', [CoordComissaoOrganizadoraController::class, 'index'])->name('home.organizadora');
-        Route::post('comissaoOrganizadora/novoUsuario', [ComissaoOrganizadoraController::class, 'store'])->name('cadastrar.comissaoOrganizadora');
-        Route::post('comissaoOrganizadora/salvar-coordenador', [ComissaoOrganizadoraController::class, 'salvarCoordenador'])->name('comissaoOrganizadora.salvaCoordenador');
-        // rotas do Coordenador de evento
-        Route::get('/home/coord', [CoordEventoController::class, 'index'])->name('coord.index');
-        Route::get('/home/coord/eventos', [CoordEventoController::class, 'listaEventos'])->name('coord.eventos');
-        // Rota para o usuário enviar a solicitação
-        Route::post('/evento/{evento}/inscricao-pcd', [InscricaoPCDController::class, 'store'])->name('inscricao.pcd.store');
-        // Rotas para o coordenador gerir as solicitações
-        Route::prefix('/coord/evento/')->name('coord.')->group(function () {
-            Route::get('inscricoes-pcd', [InscricaoPCDController::class, 'listar'])->name('inscricoes.pcd.listar');
-            Route::post('/inscricao-pcd/{solicitacao}/aprovar', [InscricaoPCDController::class, 'aprovar'])->name('inscricao.pcd.aprovar');
-            Route::post('/inscricao-pcd/{solicitacao}/rejeitar', [InscricaoPCDController::class, 'rejeitar'])->name('inscricao.pcd.rejeitar');
-            Route::get('/inscricao-pcd/{solicitacao}/download', [InscricaoPCDController::class, 'downloadComprovante'])->name('inscricao.pcd.download');
-        });
-        //Coautor
-        Route::get('coautor/index', [CoautorController::class, 'index'])->name('coautor.index');
-        Route::get('coautor/listarTrabalhos', [CoautorController::class, 'listarTrabalhos'])->name('coautor.listarTrabalhos');
-    });
-
-    Route::get('search/user', [UserController::class, 'searchUser'])->name('search.user');
-    Route::get('search/userInscricao', [UserController::class, 'searchUserInscricao'])->name('search.userInscricao');
-
-    // rotas de teste
-    Route::get('/downloadArquivo', [HomeController::class, 'downloadArquivo'])->name('download');
-    Route::namespace('Submissao')->group(function () {
-        // Controllers Within The "App\Http\Controllers\Admin" Namespace
-        Route::get('/coordenador/home', [EventoController::class, 'index'])->name('coord.home');
-
-        //Inscrição em atividade
-        Route::post('atividades/{id}/inscrever', [AtividadeController::class, 'inscrever'])->name('atividades.inscricao');
-        Route::post('atividades/{id}/{user}/cancelarInscricao', [AtividadeController::class, 'cancelarInscricao'])->name('atividades.cancelarInscricao');
-        Route::post('atividades/{id}/{user}/cancelarUmaInscricao', [AtividadeController::class, 'cancelarUmaInscricao'])->name('atividades.cancelarUmaInscricao');
-        Route::get('atividades/{id}/exportar', [AtividadeController::class, 'exportInscritos'])->name('atividades.exportar');
-        Route::get('atividades/{id}/inscritos', [AtividadeController::class, 'listarInscritos'])->name('atividades.inscritos');
-
-        Route::prefix('/coord/evento/')->name('coord.')->group(function () {
-            Route::get('detalhes', [EventoController::class, 'informacoes'])->name('detalhesEvento');
-            Route::get('informacoes', [EventoController::class, 'informacoes'])->name('informacoes');
-            Route::get('trabalhos/definirSubmissoes', [EventoController::class, 'definirSubmissoes'])->name('definirSubmissoes');
-            Route::get('trabalhos/listarTrabalhos/{column?}/{direction?}/{status?}', [EventoController::class, 'listarTrabalhos'])->name('listarTrabalhos');
-            Route::get('trabalhos/listarTrabalhosPorEixo/{column?}/{direction?}/{status?}', [EventoController::class, 'listarTrabalhosPorEixo'])->name('listarTrabalhosPorEixo');
-            Route::get('trabalhos/downloadTrabalhosEixo', [EventoController::class, 'downloadTrabalhosEixo'])->name('downloadTrabalhosEixo');
-            Route::get('trabalhos/download-aprovados-eixo', [EventoController::class, 'downloadTrabalhosAprovadosEixo'])->name('downloadTrabalhosAprovadosEixo');
-            Route::get('trabalhos/listarTrabalhosModalidades/{column?}/{direction?}/{status?}', [EventoController::class, 'listarTrabalhosModalidades'])->name('listarTrabalhosModalidades');
-            Route::get('trabalhos/{id}/resultados/{column?}/{direction?}/{status?}', [TrabalhoController::class, 'resultados'])->name('resultados');
-            Route::post('trabalhos/parecer_final', [TrabalhoController::class, 'parecerFinalTrabalho'])->name('parecer.final');
-            Route::get('/trabalhos/parecer_final/info', [TrabalhoController::class, 'infoParecerTrabalho'])->name('parecer.final.info.ajax');
-
-            Route::get('trabalhos/edit/{id}', [TrabalhoController::class, 'edit'])->name('trabalho.edit');
-
-            Route::get('trabalhos/listarAvaliacoes/{column?}/{direction?}/{status?}', [EventoController::class, 'listarAvaliacoes'])->name('listarAvaliacoes');
-            Route::get('trabalhos/listarAvaliacoesPorEixo/{column?}/{direction?}/{status?}', [EventoController::class, 'listarAvaliacoesPorEixo'])->name('listarAvaliacoesPorEixo');
-            Route::delete('avaliacao/trabalho/{trabalho_id}', [TrabalhoController::class, 'destroyAvaliacao'])->name('avaliacao.destroy');
-            Route::get('trabalhos/form/listarRepostasTrabalhos/{column?}/{direction?}/{status?}', [EventoController::class, 'listarRespostasTrabalhos'])->name('respostasTrabalhos');
-            Route::get('trabalhos/form/visualizarRespostaFormulario', [EventoController::class, 'visualizarRespostaFormulario'])->name('visualizarRespostaFormulario');
-            Route::get('trabalhos/listarCorrecoes/{eventoId}/{column?}/{direction?}', [EventoController::class, 'listarCorrecoes'])->name('listarCorrecoes');
-            Route::get('trabalhos/listarCorrecoesPorEixo', [EventoController::class, 'listarCorrecoesPorEixo'])->name('listarCorrecoesPorEixo');
-            Route::get('trabalhos/listarCorrecoesPorModalidade/{column?}/{direction?}', [EventoController::class, 'listarCorrecoesPorModalidade'])->name('listarCorrecoesPorModalidade');
-            Route::get('trabalhos/listarValidacoes/{eventoId}/{column?}/{direction?}', [EventoController::class, 'listarValidacoes'])->name('listarValidacoes');
-            Route::get('/evento/{eventoId}/validacoes/modalidade/{modalidadeId}', [EventoController::class, 'listarValidacoesPorModalidade'])->name('listarValidacoesPorModalidade');
-            Route::get('trabalhos/listarValidacoesPorEixo', [EventoController::class, 'listarValidacoesPorEixo'])->name('listarValidacoesPorEixo');
-            Route::post('/coordenador/trabalho/{trabalho}/resetar-validacao', [EventoController::class, 'resetarValidacao'])->name('trabalho.resetarValidacao');
-
-            Route::get('{eventoId}/areas', [AreaController::class, 'index'])->name('areas.index');
-            Route::get('{evento_id}/areas/create', [AreaController::class, 'create'])->name('areas.create');
-            Route::post('{evento_id}/areas/', [AreaController::class, 'store'])->name('areas.store');
-            Route::get('areas/{area_id}/edit', [AreaController::class, 'edit'])->name('areas.edit');
-            Route::put('areas/{area_id}/', [AreaController::class, 'update'])->name('areas.update');
-            Route::delete('areas/deletar/{id}', [AreaController::class, 'destroy'])->name('areas.destroy');
-            Route::post('areas/reorder', [AreaController::class, 'reorder'])->name('areas.reorder');
-
-            Route::get('revisores/listarRevisores', [EventoController::class, 'listarRevisores'])->name('listarRevisores');
-            Route::get('/evento/{evento}/exportar-revisores', [EventoController::class, 'exportarRevisoresXLSX'])->name('evento.exportarRevisores');
-            Route::get('revisores/listarUsuarios', [EventoController::class, 'listarUsuarios'])->name('listarUsuarios');
-            Route::post('/evento/candidatos-avaliadores', [CandidatoAvaliadorController::class, 'store'])->name('candidatoAvaliador.store');
-            Route::get('revisores/listarCandidatos/{evento}', [CandidatoAvaliadorController::class, 'listarCandidatos'])->name('candidatoAvaliador.listarCandidatos');
-            Route::put('candidaturas/{candidato}/aprovar', [CandidatoAvaliadorController::class, 'aprovar'])->name('candidaturas.aprovar');
-            Route::post('candidaturas/{candidato}/rejeitar', [CandidatoAvaliadorController::class, 'rejeitar'])->name('candidaturas.rejeitar');
-            Route::get('/{evento}/candidatos/exportar', [CandidatoAvaliadorController::class, 'exportar'])->name('candidatos.exportar');
-
-            // Regristros de memória
-            Route::get('/{evento}/memoria/create', [MemoriaController::class, 'create'])->name('memoria.create');
-            Route::get('/{evento}/memoria', [MemoriaController::class, 'index'])->name('memoria.index');
-            Route::post('/{evento}/memoria', [MemoriaController::class, 'store'])->name('memoria.store');
-            Route::put('/{evento}/memoria/{memoria}', [MemoriaController::class, 'update'])->name('memoria.update');
-            Route::delete('/memoria', [MemoriaController::class, 'destroy'])->name('memoria.destroy');
-            Route::post('memoria/reorder', [MemoriaController::class, 'reorder'])->name('memoria.reorder');
-
-            // Route::get('revisores/{id}/disponiveis', [RevisorController::class, 'listarRevisores'])->name('adicionarRevisores');
-
-            Route::get('comissaoCientifica/cadastrarComissao', [EventoController::class, 'cadastrarComissao'])->name('cadastrarComissao');
-            Route::get('comissaoCientifica/definirCoordComissao', [EventoController::class, 'definirCoordComissao'])->name('definirCoordComissao');
-            Route::get('comissaoCientifica/definirCoordEixo', [EventoController::class, 'definirCoordEixo'])->name('definirCoordEixo');
-            Route::get('comissaoCientifica/listarComissao', [EventoController::class, 'listarComissao'])->name('listarComissao');
-            Route::get('/evento/{evento}/exportar-comissao-cientifica', [EventoController::class, 'exportarComissaoCientificaXLSX'])->name('evento.exportarComissaoCientifica');
-            //Outras comissoes
-            Route::get('/{evento}/tipocomissao/{comissao}', [TipoComissaoController::class, 'show'])->name('tipocomissao.show');
-            Route::get('/{evento}/tipocomissao', [TipoComissaoController::class, 'create'])->name('tipocomissao.create');
-            Route::post('/{evento}/tipocomissao', [TipoComissaoController::class, 'store'])->name('tipocomissao.store');
-            Route::put('/{evento}/tipocomissao/{comissao}', [TipoComissaoController::class, 'update'])->name('tipocomissao.update');
-            Route::delete('/{evento}/tipocomissao/{comissao}', [TipoComissaoController::class, 'destroy'])->name('tipocomissao.destroy');
-            Route::post('/{evento}/tipocomissao/{comissao}/addmembro', [TipoComissaoController::class, 'adicionarMembro'])->name('tipocomissao.addmembro');
-            Route::put('/{evento}/tipocomissao/{comissao}/editmembro/{membro}', [TipoComissaoController::class, 'editarMembro'])->name('tipocomissao.editmembro');
-            Route::delete('/{evento}/tipocomissao/{comissao}/removermembro', [TipoComissaoController::class, 'removerMembro'])->name('tipocomissao.removermembro');
-            Route::get('comissao', [TipoComissaoController::class, 'membroIndex'])->name('membroOutrasComissoes');
-            //Mensangens de parecer
-            Route::get('/{evento}/mensagem/parecer', [MensagemParecerController::class, 'create'])->name('mensagem.parecer.create');
-            Route::post('/{evento}/mensagem/parecer', [MensagemParecerController::class, 'store'])->name('mensagem.parecer.store');
-            Route::put('/{evento}/mensagem/parecer', [MensagemParecerController::class, 'update'])->name('mensagem.parecer.update');
-            //Palestrantes
-            Route::get('palestrantes/listarPalestrantes', [PalestranteController::class, 'index'])->name('palestrantes.index');
-            Route::get('palestrantes/cadastrarPalestrante', [PalestranteController::class, 'create'])->name('palestrantes.create');
-            Route::post('palestrantes/cadastrarPalestrante', [PalestranteController::class, 'store'])->name('palestrantes.store');
-            Route::post('palestrantes/exportar/{evento}', [PalestranteController::class, 'exportar'])->name('palestrantes.exportar');
-            Route::put('palestrantes/cadastrarPalestrante', [PalestranteController::class, 'update'])->name('palestrantes.update');
-            Route::delete('palestrantes/{palestra}/deletePalestra', [PalestranteController::class, 'destroy'])->name('palestrantes.destroy');
-            //Assinaturas
-            Route::get('certificados/cadastrarAssinatura', [AssinaturaController::class, 'create'])->name('cadastrarAssinatura');
-            Route::get('certificados/listarAssinatura', [AssinaturaController::class, 'index'])->name('listarAssinaturas');
-            Route::get('certificados/{id}/editarAssinatura', [AssinaturaController::class, 'edit'])->name('editarAssinatura');
-            Route::post('certificados/cadastrarAssinatura', [AssinaturaController::class, 'store'])->name('assinatura.store');
-            Route::post('certificados/{id}/deleteAssinatura', [AssinaturaController::class, 'destroy'])->name('assinatura.destroy');
-            Route::post('certificados/{id}/editAssinatura', [AssinaturaController::class, 'update'])->name('assinatura.update');
-            //Certificados
-            Route::post('certificados/cadastrarmedida', [CertificadoController::class, 'salvarMedida'])->name('cadastrarmedida');
-            Route::get('certificados/cadastrarCertificado', [CertificadoController::class, 'create'])->name('cadastrarCertificado');
-            Route::get('certificados/listarEmissoes/{certificado}', [CertificadoController::class, 'listarEmissoes'])->name('listarEmissoes');
-            Route::get('certificados/{id}/modelo', [CertificadoController::class, 'modelo'])->name('modeloCertificado');
-            Route::get('certificados/{id}/editarCertificado', [CertificadoController::class, 'edit'])->name('editarCertificado');
-            Route::get('certificados/emitir', [CertificadoController::class, 'emitir'])->name('emitirCertificado');
-            Route::post('certificados/enviar-certificado', [CertificadoController::class, 'enviarCertificacao'])->name('enviarCertificado')->middleware('throttle:1,1');;
-            Route::get('certificados/listarCertificado', [CertificadoController::class, 'index'])->name('listarCertificados');
-            Route::post('certificados/cadastrarCertificado', [CertificadoController::class, 'store'])->name('certificado.store');
-            Route::post('certificados/{id}/deleteCertificado', [CertificadoController::class, 'destroy'])->name('certificado.destroy');
-            Route::post('certificados/{certificado}/duplicar', [CertificadoController::class, 'duplicar'])->name('certificado.duplicar');
-            Route::post('certificados/{id}/editCertificado', [CertificadoController::class, 'update'])->name('certificado.update');
-            Route::get('certificados/ajax-listar-destinatarios', [CertificadoController::class, 'ajaxDestinatarios'])->name('ajax.listar.destinatarios');
-            Route::get('certificados/{certificadoId}/preview-destinatario/{destinatarioId}/trabalho/{trabalhoId}', [CertificadoController::class, 'previewCertificado'])->name('previewCertificado');
-            Route::delete('certificados/emissoes/deletar', [CertificadoController::class, 'deletarEmissao'])->name('deletar.emissao');
-
-            Route::get('modalidade/create', [ModalidadeController::class, 'create'])->name('modalidade.create');
-            Route::get('modalidade/edit/{modalidade_id}', [ModalidadeController::class, 'edit'])->name('modalidade.edit');
-
-            Route::post('/formularios/{form}/publicar', [FormController::class, 'publicar'])->name('forms.publicar');
-            Route::get('modalidade/', [ModalidadeController::class, 'index'])->name('modalidade.index');
-            Route::get('modalidade/cadastrarCriterio', [EventoController::class, 'cadastrarCriterio'])->name('cadastrarCriterio');
-            Route::get('modalidade/listarCriterios', [EventoController::class, 'listarCriterios'])->name('listarCriterios');
-            Route::get('modalidade/{modalidade_id}/forms', [FormController::class, 'forms'])->name('forms');
-            Route::get('modalidade/atribuir/form', [FormController::class, 'create'])->name('atribuir.form');
-            Route::post('modalidade/form/salvar', [FormController::class, 'salvarForm'])->name('salvar.form');
-            Route::put('modalidade/form/{form_id}/update', [FormController::class, 'modalidadeFormUpdate'])->name('update.form');
-            Route::get('modalidade/form/visualizar', [FormController::class, 'visualizarForm'])->name('visualizar.form');
-            Route::get('{evento}/modalidade/form/edit/{form}', [FormController::class, 'modalidadeFormEdit'])->name('modalidades.form.edit');
-
-            Route::get('modalidade/form/respostas', [EventoController::class, 'respostas'])->name('respostas');
-            Route::get('modalidade/form/respostasToPdf/{modalidade}', [FormController::class, 'respostasToPdf'])->name('respostasToPdf');
-            Route::get('modalidade/form/{id}/excluir', [FormController::class, 'destroyForm'])->name('deletar.form');
-
-            Route::post('/evento/{evento}/avisoCorrecao', [EventoController::class, 'avisoCorrecao'])->name('evento.avisoCorrecao');
-
-            Route::get('atividades/{id}', [AtividadeController::class, 'index'])->name('atividades');
-            // Atenção se mudar url da rota abaixo mudar função setVisibilidadeAtv na view detalhesEvento.blade.php
-            Route::post('atividades/{id}/visibilidade', [AtividadeController::class, 'setVisibilidadeAjax'])->name('atividades.visibilidade');
-            Route::post('atividade/nova', [AtividadeController::class, 'store'])->name('atividades.store');
-            Route::post('atividade/{id}/editar', [AtividadeController::class, 'update'])->name('atividades.update');
-            Route::post('atividade/{id}/excluir', [AtividadeController::class, 'destroy'])->name('atividade.destroy');
-            Route::post('{id}/atividade/salvar-pdf-programacao', [EventoController::class, 'pdfProgramacao'])->name('evento.pdf.programacao');
-            Route::post('{id}/atividade/salvar-pdf-adicional', [EventoController::class, 'pdfAdicional'])->name('evento.pdf.adicional');
-            Route::get('tipo-de-atividade/new', [AtividadeController::class, 'storeAjax'])->name('tipo.store.ajax');
-            Route::get('eventos/editarEtiqueta', [EventoController::class, 'editarEtiqueta'])->name('editarEtiqueta');
-            Route::get('eventos/etiquetasTrabalhos', [EventoController::class, 'etiquetasTrabalhos'])->name('etiquetasTrabalhos');
-            Route::get('{id}/modulos', [FormEventoController::class, 'indexModulo'])->name('modulos');
-            Route::get('{evento}/arquivos', [ArquivoInfoController::class, 'index'])->name('arquivos-adicionais');
-            Route::post('{evento}/arquivos', [ArquivoInfoController::class, 'store'])->name('arquivos-adicionais.store');
-            Route::delete('{arquivoInfo}/arquivos', [ArquivoInfoController::class, 'delete'])->name('arquivos-adicionais.delete');
-            Route::put('{arquivoInfo}/arquivos', [ArquivoInfoController::class, 'update'])->name('arquivos-adicionais.update');
-            Route::post('arquivoInfo/reorder', [ArquivoInfoController::class, 'reorder'])->name('arquivos-adicionais.reorder');
-
-        });
-        //Evento
-        Route::get('/criar/evento', [EventoController::class, 'create'])->name('evento.criar');
-        Route::post('/evento/criar', [EventoController::class, 'store'])->name('evento.store');
-        Route::delete('/evento/excluir/{evento}', [EventoController::class, 'destroy'])->name('evento.deletar');
-        Route::get('/evento/editar/{id}', [EventoController::class, 'edit'])->name('evento.editar');
-        Route::post('/evento/editar/{id}', [EventoController::class, 'update'])->name('evento.update');
-        Route::post('/evento/setResumo', [EventoController::class, 'setResumo'])->name('evento.setResumo');
-        Route::post('/evento/setFoto', [EventoController::class, 'setFotoEvento'])->name('evento.setFotoEvento');
-        Route::post('/evento/numTrabalhos', [EventoController::class, 'numTrabalhos'])->name('trabalho.numTrabalhos');
-        Route::get('/evento/habilitar/{id}', [EventoController::class, 'habilitar'])->name('evento.habilitar');
-        Route::get('/evento/desabilitar/{id}', [EventoController::class, 'desabilitar'])->name('evento.desabilitar');
-
-
-        //Sub-Evento
-        Route::get('/subevento/criar/{id}', [EventoController::class, 'createSubEvento'])->name('subevento.criar');
-        //Modalidade
-        Route::post('/modalidade/criar/{evento_id}', [ModalidadeController::class, 'store'])->name('modalidade.store');
-        Route::post('/modalidade/{id}/delete', [ModalidadeController::class, 'destroy'])->name('modalidade.destroy');
-        Route::post('modalidades/reorder', [ModalidadeController::class, 'reorder'])->name('modalidades.reorder');
-
-        //Trabalho
-        Route::get('/trabalho/submeter/{modalidade_id}', [TrabalhoController::class, 'create'])->name('trabalho.create');
-        Route::post('/trabalho/novaVersao', [TrabalhoController::class, 'novaVersao'])->name('trabalho.novaVersao');
-        Route::post('/trabalho/criar', [TrabalhoController::class, 'store'])->name('trabalho.store');
-        Route::get('/trabalho/pesquisa', [TrabalhoController::class, 'pesquisaAjax'])->name('trabalho.pesquisa.ajax');
-        Route::post('/trabalho/{id}/avaliar', [TrabalhoController::class, 'avaliarTrabalho'])->name('trabalho.avaliacao.revisor');
-        Route::post('/trabalho/{id}/excluir', [TrabalhoController::class, 'destroy'])->name('excluir.trabalho');
-        Route::post('/trabalho/{id}/editar', [TrabalhoController::class, 'update'])->name('editar.trabalho');
-        Route::get('/trabalho/status/{id}/{status}', [TrabalhoController::class, 'statusTrabalho'])->name('trabalho.status');
-        Route::get('/trabalho/encaminhar/{id}/{revisor}', [TrabalhoController::class, 'encaminharTrabalho'])->name('trabalho.encaminhar');
-        Route::post('/trabalho/{id}/aprovar-reprovar', [TrabalhoController::class, 'aprovacaoTrabalho'])->name('trabalho.aprovacao');
-        Route::post('/trabalho/{id}/correcao', [TrabalhoController::class, 'correcaoTrabalho'])->name('trabalho.correcao');
-        Route::post('/trabalho/importar-apresentacoes/{eventoId}', [TrabalhoController::class, 'importarApresentacoes'])->name('trabalho.importar.apresentacoes');
-        //Atribuição
-        Route::get('/atribuir', [AtribuicaoController::class, 'distribuicaoAutomatica'])->name('distribuicao');
-        Route::get('/atribuirPorArea', [AtribuicaoController::class, 'distribuicaoPorArea'])->name('distribuicaoAutomaticaPorArea');
-        Route::post('/distribuicaoManual', [AtribuicaoController::class, 'distribuicaoManual'])->name('distribuicaoManual');
-        Route::post('{id}/removerAtribuicao', [AtribuicaoController::class, 'deletePorRevisores'])->name('atribuicao.delete');
-        Route::post('/atribuir/check', [AtribuicaoController::class, 'atribuirCheck'])->name('atribuicao.check');
-        Route::post('/atribuir/revisor/lote', [AtribuicaoController::class, 'atribuirRevisorLote'])->name('atribuir.revisor.lote');
-        // rota downloadArquivo
-
-        // rota download do arquivo do trabalho
-        Route::get('/download-trabalho/{id}', [TrabalhoController::class, 'downloadArquivo'])->name('downloadTrabalho');
-        Route::get('/download-trabalho/{trabalhoId}/arquivo-extra/{arquivoExtraId}', [TrabalhoController::class, 'downloadArquivoExtra'])->name('downloadArquivoExtra');
-        Route::get('/download-trabalho/{id}/midia-extra/{id_midia}', [TrabalhoController::class, 'downloadMidiaExtra'])->name('downloadMidiaExtra');
-        //rota download do arquivo do trabalho
-        Route::get('/download-avaliacao', [TrabalhoController::class, 'downloadArquivoAvaliacao'])->name('downloadAvaliacao');
-        Route::get('/trabalho/{id}/download-correcao', [TrabalhoController::class, 'downloadArquivoCorrecao'])->name('downloadCorrecao');
-        // rota download da foto do evento
-        Route::get('/download-logo-evento/{id}', [EventoController::class, 'downloadFotoEvento'])->name('download.foto.evento');
-
-        // atualizar etiquetas do form de eventos
-        Route::post('/etiquetas/editar/{id}', [FormEventoController::class, 'update'])->name('etiquetas.update');
-        // atualizar etiquetas do form de submissão de trabalhos
-        Route::post('/etiquetas/submissao_trabalhos/editar/{id}', [FormSubmTrabaController::class, 'update'])->name('etiquetas_sub_trabalho.update');
-        // Inserir novos campos para o form de submissão de trabalhos
-        Route::post('/adicionarnovocampo/{id}', [FormSubmTrabaController::class, 'store'])->name('novocampo.store');
-        // Exibir ou ocultar modulos do card de eventos
-        Route::post('/modulos/{id}', [FormEventoController::class, 'exibirModulo'])->name('exibir.modulo');
-        // Ajax para encontrar modalidade especifica e enviar para o modal de edição
-        Route::get('/encontrarModalidade', [ModalidadeController::class, 'find'])->name('findModalidade');
-        // Ajax para encontrar modalidade especifica e enviar para o modal de edição
-        Route::post('/atualizarModalidade/{modalidade_id}', [ModalidadeController::class, 'update'])->name('modalidade.update');
-        //
-
-        Route::get('/evento/{evento}/downloadResumos', [EventoController::class, 'resumosToPdf'])->name('evento.downloadResumos');
-        Route::get('/evento/{evento}/exportar-relatorio-geral', [EventoController::class, 'exportarRelatorioGeral'])->name('evento.exportarRelatorioGeral');
-        Route::get('/evento/{evento}/downloadInscritos', [EventoController::class, 'exportInscritos'])->name('evento.downloadInscritos');
-        Route::get('/evento/{evento}/exportar-inscritos-xlsx', [EventoController::class, 'exportarInscritosXLSX'])->name('evento.exportarInscritosXLSX');
-        Route::get('/evento/{evento}/downloadInscritosCertifica', [EventoController::class, 'exportInscritosCertifica'])->name('evento.downloadInscritosCertifica');
-        Route::get('/evento/{evento}/downloadTrabalhos', [EventoController::class, 'exportTrabalhos'])->name('evento.downloadTrabalhos');
-        Route::get('/evento/{evento}/downloadTrabalhosAprovadosPDF', [EventoController::class, 'downloadTrabalhosAprovadosPDF'])->name('evento.downloadTrabalhosAprovadosPDF');
-        Route::post('/evento/{evento}/downloadTrabalhosCertifica', [EventoController::class, 'exportTrabalhosCertifica'])->name('evento.downloadTrabalhosCertifica');
-        Route::get('/evento/{evento}/downloadAvaliacoes/{modalidade}/form/{form}', [EventoController::class, 'exportAvaliacoes'])->name('evento.downloadAvaliacoes');
-        Route::get('/evento/{evento}/exportar-avaliadores-eixos/{eixo}', [EventoController::class, 'exportarAvaliadoresXLSX'])->name('evento.exportarAvaliadoresEixos');
-        Route::get('/evento/{evento}/import/listaPresenca', [EventoController::class, 'importListaPresenca'])->name('evento.importListaPresenca');
-        Route::post('/evento/import/listaPresenca', [EventoController::class, 'processarListaPresenca'])->name('evento.processarListaPresenca');
-
-
-
-        // Encontrar resumo especifico para trabalhos
-        Route::get('/encontrarResumo', [TrabalhoController::class, 'findResumo'])->name('trabalhoResumo');
-        // Critérios
-        Route::post('/criterio/', [CriteriosController::class, 'store'])->name('cadastrar.criterio');
-        Route::post('/criterio/{id}/atualizar', [CriteriosController::class, 'update'])->name('atualizar.criterio');
-        Route::get('/{evento_id}/criterio/{id}/deletar', [CriteriosController::class, 'destroy'])->name('criterio.destroy');
-        Route::get('/encontrarCriterio', [CriteriosController::class, 'findCriterio'])->name('encontrar.criterio');
-    });
-
-    Route::namespace('Users')->group(function () {
-        // Controllers Within The "App\Http\Controllers\Admin" Namespace
-        Route::prefix('/comissao/cientifica/evento/')->name('comissao.cientifica.')->group(function () {
-            Route::get('detalhes', [ComissaoController::class, 'informacoes'])->name('detalhesEvento');
+            Route::get('/admin/cadastrar-usuario', [AdministradorController::class, 'createUser'])->name('admin.cadastrarUsuario');
+            Route::post('/criarUsuario', [AdministradorController::class, 'criarUsuario'])->name('administrador.criarUsuario');
+            // rotas do Comissao Organizadora
+            Route::get('/home/comissaoOrganizadora', [CoordComissaoOrganizadoraController::class, 'index'])->name('home.organizadora');
+            Route::post('comissaoOrganizadora/novoUsuario', [ComissaoOrganizadoraController::class, 'store'])->name('cadastrar.comissaoOrganizadora');
+            Route::post('comissaoOrganizadora/salvar-coordenador', [ComissaoOrganizadoraController::class, 'salvarCoordenador'])->name('comissaoOrganizadora.salvaCoordenador');
+            // rotas do Coordenador de evento
+            Route::get('/home/coord', [CoordEventoController::class, 'index'])->name('coord.index');
+            Route::get('/home/coord/eventos', [CoordEventoController::class, 'listaEventos'])->name('coord.eventos');
+            // Rota para o usuário enviar a solicitação
+            Route::post('/evento/{evento}/inscricao-pcd', [InscricaoPCDController::class, 'store'])->name('inscricao.pcd.store');
+            // Rotas para o coordenador gerir as solicitações
+            Route::prefix('/coord/evento/')->name('coord.')->group(function () {
+                Route::get('inscricoes-pcd', [InscricaoPCDController::class, 'listar'])->name('inscricoes.pcd.listar');
+                Route::post('/inscricao-pcd/{solicitacao}/aprovar', [InscricaoPCDController::class, 'aprovar'])->name('inscricao.pcd.aprovar');
+                Route::post('/inscricao-pcd/{solicitacao}/rejeitar', [InscricaoPCDController::class, 'rejeitar'])->name('inscricao.pcd.rejeitar');
+                Route::get('/inscricao-pcd/{solicitacao}/download', [InscricaoPCDController::class, 'downloadComprovante'])->name('inscricao.pcd.download');
+            });
+            //Coautor
+            Route::get('coautor/index', [CoautorController::class, 'index'])->name('coautor.index');
+            Route::get('coautor/listarTrabalhos', [CoautorController::class, 'listarTrabalhos'])->name('coautor.listarTrabalhos');
         });
 
-        //Revisores
-        Route::post('/revisor/criar', [RevisorController::class, 'store'])->name('revisor.store');
-        Route::post('revisores/editarRevisor', [RevisorController::class, 'update'])->name('revisor.update');
-        Route::get('/revisor/listarTrabalhos', [RevisorController::class, 'indexListarTrabalhos'])->name('revisor.listarTrabalhos');
-        Route::post('/revisor/email', [RevisorController::class, 'enviarEmailRevisor'])->name('revisor.email');
-        Route::get('{id}/revisor/convite', [RevisorController::class, 'conviteParaEvento'])->name('revisor.convite.evento');
-        Route::post('/revisor/emailTodos', [RevisorController::class, 'enviarEmailTodosRevisores'])->name('revisor.emailTodos');
-        Route::post('{evento}/revisor/emailCadastroTodos', [RevisorController::class, 'enviarEmailCadastroTodosRevisores'])->name('revisor.emailCadastroTodos');
-        Route::get('/revisores-por-area/{id}', [RevisorController::class, 'revisoresPorAreaAjax'])->name('revisores.area');
-        Route::post('/remover/revisor/{id}/{evento_id}', [RevisorController::class, 'destroy'])->name('remover.revisor');
-        Route::get('/area/revisores/trabalhos/area/{area_id}/modalidade/{modalidade_id}', [RevisorController::class, 'indexListarTrabalhos'])->name('avaliar.listar.trabalhos.filtro');
-        Route::get('/area/revisores/{id}/trabalhos', [RevisorController::class, 'trabalhosDoEvento'])->name('revisor.trabalhos.evento');
-        Route::get('/area/revisores', [RevisorController::class, 'index'])->name('revisor.index');
-        Route::get('revisores/responde', [RevisorController::class, 'responde'])->name('revisor.responde');
-        Route::post('revisores/resposta/salvar', [RevisorController::class, 'salvarRespostas'])->name('revisor.salvar.respostas');
-        Route::post('revisores/resposta/editar', [RevisorController::class, 'editarRespostasFormulario'])->name('revisor.editar.respostas');
-        Route::post('/reenviaremail/revisor/{id}/{evento_id}', [RevisorController::class, 'reenviarEmailRevisor'])->name('revisor.reenviarEmail');
-        Route::put('revisores/correcao/{trabalho_id}', [RevisorController::class, 'verificarCorrecao'])->name('revisor.verificarCorrecao');
+        Route::get('search/user', [UserController::class, 'searchUser'])->name('search.user');
+        Route::get('search/userInscricao', [UserController::class, 'searchUserInscricao'])->name('search.userInscricao');
 
+        // rotas de teste
+        Route::get('/downloadArquivo', [HomeController::class, 'downloadArquivo'])->name('download');
+        Route::namespace('Submissao')->group(function () {
+            // Controllers Within The "App\Http\Controllers\Admin" Namespace
+            Route::get('/coordenador/home', [EventoController::class, 'index'])->name('coord.home');
+
+            //Inscrição em atividade
+            Route::post('atividades/{id}/inscrever', [AtividadeController::class, 'inscrever'])->name('atividades.inscricao');
+            Route::post('atividades/{id}/{user}/cancelarInscricao', [AtividadeController::class, 'cancelarInscricao'])->name('atividades.cancelarInscricao');
+            Route::post('atividades/{id}/{user}/cancelarUmaInscricao', [AtividadeController::class, 'cancelarUmaInscricao'])->name('atividades.cancelarUmaInscricao');
+            Route::get('atividades/{id}/exportar', [AtividadeController::class, 'exportInscritos'])->name('atividades.exportar');
+            Route::get('atividades/{id}/inscritos', [AtividadeController::class, 'listarInscritos'])->name('atividades.inscritos');
+
+            Route::prefix('/coord/evento/')->name('coord.')->group(function () {
+                Route::get('detalhes', [EventoController::class, 'informacoes'])->name('detalhesEvento');
+                Route::get('informacoes', [EventoController::class, 'informacoes'])->name('informacoes');
+                Route::get('trabalhos/definirSubmissoes', [EventoController::class, 'definirSubmissoes'])->name('definirSubmissoes');
+                Route::get('trabalhos/listarTrabalhos/{column?}/{direction?}/{status?}', [EventoController::class, 'listarTrabalhos'])->name('listarTrabalhos');
+                Route::get('trabalhos/listarTrabalhosPorEixo/{column?}/{direction?}/{status?}', [EventoController::class, 'listarTrabalhosPorEixo'])->name('listarTrabalhosPorEixo');
+                Route::get('trabalhos/downloadTrabalhosEixo', [EventoController::class, 'downloadTrabalhosEixo'])->name('downloadTrabalhosEixo');
+                Route::get('trabalhos/download-aprovados-eixo', [EventoController::class, 'downloadTrabalhosAprovadosEixo'])->name('downloadTrabalhosAprovadosEixo');
+                Route::get('trabalhos/listarTrabalhosModalidades/{column?}/{direction?}/{status?}', [EventoController::class, 'listarTrabalhosModalidades'])->name('listarTrabalhosModalidades');
+                Route::get('trabalhos/{id}/resultados/{column?}/{direction?}/{status?}', [TrabalhoController::class, 'resultados'])->name('resultados');
+                Route::post('trabalhos/parecer_final', [TrabalhoController::class, 'parecerFinalTrabalho'])->name('parecer.final');
+                Route::get('/trabalhos/parecer_final/info', [TrabalhoController::class, 'infoParecerTrabalho'])->name('parecer.final.info.ajax');
+
+                Route::get('trabalhos/edit/{id}', [TrabalhoController::class, 'edit'])->name('trabalho.edit');
+
+                Route::get('trabalhos/listarAvaliacoes/{column?}/{direction?}/{status?}', [EventoController::class, 'listarAvaliacoes'])->name('listarAvaliacoes');
+                Route::get('trabalhos/listarAvaliacoesPorEixo/{column?}/{direction?}/{status?}', [EventoController::class, 'listarAvaliacoesPorEixo'])->name('listarAvaliacoesPorEixo');
+                Route::delete('avaliacao/trabalho/{trabalho_id}', [TrabalhoController::class, 'destroyAvaliacao'])->name('avaliacao.destroy');
+                Route::get('trabalhos/form/listarRepostasTrabalhos/{column?}/{direction?}/{status?}', [EventoController::class, 'listarRespostasTrabalhos'])->name('respostasTrabalhos');
+                Route::get('trabalhos/form/visualizarRespostaFormulario', [EventoController::class, 'visualizarRespostaFormulario'])->name('visualizarRespostaFormulario');
+                Route::get('trabalhos/listarCorrecoes/{eventoId}/{column?}/{direction?}', [EventoController::class, 'listarCorrecoes'])->name('listarCorrecoes');
+                Route::get('trabalhos/listarCorrecoesPorEixo', [EventoController::class, 'listarCorrecoesPorEixo'])->name('listarCorrecoesPorEixo');
+                Route::get('trabalhos/listarCorrecoesPorModalidade/{column?}/{direction?}', [EventoController::class, 'listarCorrecoesPorModalidade'])->name('listarCorrecoesPorModalidade');
+                Route::get('trabalhos/listarValidacoes/{eventoId}/{column?}/{direction?}', [EventoController::class, 'listarValidacoes'])->name('listarValidacoes');
+                Route::get('/evento/{eventoId}/validacoes/modalidade/{modalidadeId}', [EventoController::class, 'listarValidacoesPorModalidade'])->name('listarValidacoesPorModalidade');
+                Route::get('trabalhos/listarValidacoesPorEixo', [EventoController::class, 'listarValidacoesPorEixo'])->name('listarValidacoesPorEixo');
+                Route::post('/coordenador/trabalho/{trabalho}/resetar-validacao', [EventoController::class, 'resetarValidacao'])->name('trabalho.resetarValidacao');
+
+                Route::get('{eventoId}/areas', [AreaController::class, 'index'])->name('areas.index');
+                Route::get('{evento_id}/areas/create', [AreaController::class, 'create'])->name('areas.create');
+                Route::post('{evento_id}/areas/', [AreaController::class, 'store'])->name('areas.store');
+                Route::get('areas/{area_id}/edit', [AreaController::class, 'edit'])->name('areas.edit');
+                Route::put('areas/{area_id}/', [AreaController::class, 'update'])->name('areas.update');
+                Route::delete('areas/deletar/{id}', [AreaController::class, 'destroy'])->name('areas.destroy');
+                Route::post('areas/reorder', [AreaController::class, 'reorder'])->name('areas.reorder');
+
+                Route::get('revisores/listarRevisores', [EventoController::class, 'listarRevisores'])->name('listarRevisores');
+                Route::get('/evento/{evento}/exportar-revisores', [EventoController::class, 'exportarRevisoresXLSX'])->name('evento.exportarRevisores');
+                Route::get('revisores/listarUsuarios', [EventoController::class, 'listarUsuarios'])->name('listarUsuarios');
+                Route::post('/evento/candidatos-avaliadores', [CandidatoAvaliadorController::class, 'store'])->name('candidatoAvaliador.store');
+                Route::get('revisores/listarCandidatos/{evento}', [CandidatoAvaliadorController::class, 'listarCandidatos'])->name('candidatoAvaliador.listarCandidatos');
+                Route::put('candidaturas/{candidato}/aprovar', [CandidatoAvaliadorController::class, 'aprovar'])->name('candidaturas.aprovar');
+                Route::post('candidaturas/{candidato}/rejeitar', [CandidatoAvaliadorController::class, 'rejeitar'])->name('candidaturas.rejeitar');
+                Route::get('/{evento}/candidatos/exportar', [CandidatoAvaliadorController::class, 'exportar'])->name('candidatos.exportar');
+
+                // Regristros de memória
+                Route::get('/{evento}/memoria/create', [MemoriaController::class, 'create'])->name('memoria.create');
+                Route::get('/{evento}/memoria', [MemoriaController::class, 'index'])->name('memoria.index');
+                Route::post('/{evento}/memoria', [MemoriaController::class, 'store'])->name('memoria.store');
+                Route::put('/{evento}/memoria/{memoria}', [MemoriaController::class, 'update'])->name('memoria.update');
+                Route::delete('/memoria', [MemoriaController::class, 'destroy'])->name('memoria.destroy');
+                Route::post('memoria/reorder', [MemoriaController::class, 'reorder'])->name('memoria.reorder');
+
+                // Route::get('revisores/{id}/disponiveis', [RevisorController::class, 'listarRevisores'])->name('adicionarRevisores');
+
+                Route::get('comissaoCientifica/cadastrarComissao', [EventoController::class, 'cadastrarComissao'])->name('cadastrarComissao');
+                Route::get('comissaoCientifica/definirCoordComissao', [EventoController::class, 'definirCoordComissao'])->name('definirCoordComissao');
+                Route::get('comissaoCientifica/definirCoordEixo', [EventoController::class, 'definirCoordEixo'])->name('definirCoordEixo');
+                Route::get('comissaoCientifica/listarComissao', [EventoController::class, 'listarComissao'])->name('listarComissao');
+                Route::get('/evento/{evento}/exportar-comissao-cientifica', [EventoController::class, 'exportarComissaoCientificaXLSX'])->name('evento.exportarComissaoCientifica');
+                //Outras comissoes
+                Route::get('/{evento}/tipocomissao/{comissao}', [TipoComissaoController::class, 'show'])->name('tipocomissao.show');
+                Route::get('/{evento}/tipocomissao', [TipoComissaoController::class, 'create'])->name('tipocomissao.create');
+                Route::post('/{evento}/tipocomissao', [TipoComissaoController::class, 'store'])->name('tipocomissao.store');
+                Route::put('/{evento}/tipocomissao/{comissao}', [TipoComissaoController::class, 'update'])->name('tipocomissao.update');
+                Route::delete('/{evento}/tipocomissao/{comissao}', [TipoComissaoController::class, 'destroy'])->name('tipocomissao.destroy');
+                Route::post('/{evento}/tipocomissao/{comissao}/addmembro', [TipoComissaoController::class, 'adicionarMembro'])->name('tipocomissao.addmembro');
+                Route::put('/{evento}/tipocomissao/{comissao}/editmembro/{membro}', [TipoComissaoController::class, 'editarMembro'])->name('tipocomissao.editmembro');
+                Route::delete('/{evento}/tipocomissao/{comissao}/removermembro', [TipoComissaoController::class, 'removerMembro'])->name('tipocomissao.removermembro');
+                Route::get('comissao', [TipoComissaoController::class, 'membroIndex'])->name('membroOutrasComissoes');
+                //Mensangens de parecer
+                Route::get('/{evento}/mensagem/parecer', [MensagemParecerController::class, 'create'])->name('mensagem.parecer.create');
+                Route::post('/{evento}/mensagem/parecer', [MensagemParecerController::class, 'store'])->name('mensagem.parecer.store');
+                Route::put('/{evento}/mensagem/parecer', [MensagemParecerController::class, 'update'])->name('mensagem.parecer.update');
+                //Palestrantes
+                Route::get('palestrantes/listarPalestrantes', [PalestranteController::class, 'index'])->name('palestrantes.index');
+                Route::get('palestrantes/cadastrarPalestrante', [PalestranteController::class, 'create'])->name('palestrantes.create');
+                Route::post('palestrantes/cadastrarPalestrante', [PalestranteController::class, 'store'])->name('palestrantes.store');
+                Route::post('palestrantes/exportar/{evento}', [PalestranteController::class, 'exportar'])->name('palestrantes.exportar');
+                Route::put('palestrantes/cadastrarPalestrante', [PalestranteController::class, 'update'])->name('palestrantes.update');
+                Route::delete('palestrantes/{palestra}/deletePalestra', [PalestranteController::class, 'destroy'])->name('palestrantes.destroy');
+                //Assinaturas
+                Route::get('certificados/cadastrarAssinatura', [AssinaturaController::class, 'create'])->name('cadastrarAssinatura');
+                Route::get('certificados/listarAssinatura', [AssinaturaController::class, 'index'])->name('listarAssinaturas');
+                Route::get('certificados/{id}/editarAssinatura', [AssinaturaController::class, 'edit'])->name('editarAssinatura');
+                Route::post('certificados/cadastrarAssinatura', [AssinaturaController::class, 'store'])->name('assinatura.store');
+                Route::post('certificados/{id}/deleteAssinatura', [AssinaturaController::class, 'destroy'])->name('assinatura.destroy');
+                Route::post('certificados/{id}/editAssinatura', [AssinaturaController::class, 'update'])->name('assinatura.update');
+                //Certificados
+                Route::post('certificados/cadastrarmedida', [CertificadoController::class, 'salvarMedida'])->name('cadastrarmedida');
+                Route::get('certificados/cadastrarCertificado', [CertificadoController::class, 'create'])->name('cadastrarCertificado');
+                Route::get('certificados/listarEmissoes/{certificado}', [CertificadoController::class, 'listarEmissoes'])->name('listarEmissoes');
+                Route::get('certificados/{id}/modelo', [CertificadoController::class, 'modelo'])->name('modeloCertificado');
+                Route::get('certificados/{id}/editarCertificado', [CertificadoController::class, 'edit'])->name('editarCertificado');
+                Route::get('certificados/emitir', [CertificadoController::class, 'emitir'])->name('emitirCertificado');
+                Route::post('certificados/enviar-certificado', [CertificadoController::class, 'enviarCertificacao'])->name('enviarCertificado')->middleware('throttle:1,1');;
+                Route::get('certificados/listarCertificado', [CertificadoController::class, 'index'])->name('listarCertificados');
+                Route::post('certificados/cadastrarCertificado', [CertificadoController::class, 'store'])->name('certificado.store');
+                Route::post('certificados/{id}/deleteCertificado', [CertificadoController::class, 'destroy'])->name('certificado.destroy');
+                Route::post('certificados/{certificado}/duplicar', [CertificadoController::class, 'duplicar'])->name('certificado.duplicar');
+                Route::post('certificados/{id}/editCertificado', [CertificadoController::class, 'update'])->name('certificado.update');
+                Route::get('certificados/ajax-listar-destinatarios', [CertificadoController::class, 'ajaxDestinatarios'])->name('ajax.listar.destinatarios');
+                Route::get('certificados/{certificadoId}/preview-destinatario/{destinatarioId}/trabalho/{trabalhoId}', [CertificadoController::class, 'previewCertificado'])->name('previewCertificado');
+                Route::delete('certificados/emissoes/deletar', [CertificadoController::class, 'deletarEmissao'])->name('deletar.emissao');
+
+                Route::get('modalidade/create', [ModalidadeController::class, 'create'])->name('modalidade.create');
+                Route::get('modalidade/edit/{modalidade_id}', [ModalidadeController::class, 'edit'])->name('modalidade.edit');
+
+                Route::post('/formularios/{form}/publicar', [FormController::class, 'publicar'])->name('forms.publicar');
+                Route::get('modalidade/', [ModalidadeController::class, 'index'])->name('modalidade.index');
+                Route::get('modalidade/cadastrarCriterio', [EventoController::class, 'cadastrarCriterio'])->name('cadastrarCriterio');
+                Route::get('modalidade/listarCriterios', [EventoController::class, 'listarCriterios'])->name('listarCriterios');
+                Route::get('modalidade/{modalidade_id}/forms', [FormController::class, 'forms'])->name('forms');
+                Route::get('modalidade/atribuir/form', [FormController::class, 'create'])->name('atribuir.form');
+                Route::post('modalidade/form/salvar', [FormController::class, 'salvarForm'])->name('salvar.form');
+                Route::put('modalidade/form/{form_id}/update', [FormController::class, 'modalidadeFormUpdate'])->name('update.form');
+                Route::get('modalidade/form/visualizar', [FormController::class, 'visualizarForm'])->name('visualizar.form');
+                Route::get('{evento}/modalidade/form/edit/{form}', [FormController::class, 'modalidadeFormEdit'])->name('modalidades.form.edit');
+
+                Route::get('modalidade/form/respostas', [EventoController::class, 'respostas'])->name('respostas');
+                Route::get('modalidade/form/respostasToPdf/{modalidade}', [FormController::class, 'respostasToPdf'])->name('respostasToPdf');
+                Route::get('modalidade/form/{id}/excluir', [FormController::class, 'destroyForm'])->name('deletar.form');
+
+                Route::post('/evento/{evento}/avisoCorrecao', [EventoController::class, 'avisoCorrecao'])->name('evento.avisoCorrecao');
+
+                Route::get('atividades/{id}', [AtividadeController::class, 'index'])->name('atividades');
+                // Atenção se mudar url da rota abaixo mudar função setVisibilidadeAtv na view detalhesEvento.blade.php
+                Route::post('atividades/{id}/visibilidade', [AtividadeController::class, 'setVisibilidadeAjax'])->name('atividades.visibilidade');
+                Route::post('atividade/nova', [AtividadeController::class, 'store'])->name('atividades.store');
+                Route::post('atividade/{id}/editar', [AtividadeController::class, 'update'])->name('atividades.update');
+                Route::post('atividade/{id}/excluir', [AtividadeController::class, 'destroy'])->name('atividade.destroy');
+                Route::post('{id}/atividade/salvar-pdf-programacao', [EventoController::class, 'pdfProgramacao'])->name('evento.pdf.programacao');
+                Route::post('{id}/atividade/salvar-pdf-adicional', [EventoController::class, 'pdfAdicional'])->name('evento.pdf.adicional');
+                Route::get('tipo-de-atividade/new', [AtividadeController::class, 'storeAjax'])->name('tipo.store.ajax');
+                Route::get('eventos/editarEtiqueta', [EventoController::class, 'editarEtiqueta'])->name('editarEtiqueta');
+                Route::get('eventos/etiquetasTrabalhos', [EventoController::class, 'etiquetasTrabalhos'])->name('etiquetasTrabalhos');
+                Route::get('{id}/modulos', [FormEventoController::class, 'indexModulo'])->name('modulos');
+                Route::get('{evento}/arquivos', [ArquivoInfoController::class, 'index'])->name('arquivos-adicionais');
+                Route::post('{evento}/arquivos', [ArquivoInfoController::class, 'store'])->name('arquivos-adicionais.store');
+                Route::delete('{arquivoInfo}/arquivos', [ArquivoInfoController::class, 'delete'])->name('arquivos-adicionais.delete');
+                Route::put('{arquivoInfo}/arquivos', [ArquivoInfoController::class, 'update'])->name('arquivos-adicionais.update');
+                Route::post('arquivoInfo/reorder', [ArquivoInfoController::class, 'reorder'])->name('arquivos-adicionais.reorder');
+
+            });
+            //Evento
+            Route::get('/criar/evento', [EventoController::class, 'create'])->name('evento.criar');
+            Route::post('/evento/criar', [EventoController::class, 'store'])->name('evento.store');
+            Route::delete('/evento/excluir/{evento}', [EventoController::class, 'destroy'])->name('evento.deletar');
+            Route::get('/evento/editar/{id}', [EventoController::class, 'edit'])->name('evento.editar');
+            Route::post('/evento/editar/{id}', [EventoController::class, 'update'])->name('evento.update');
+            Route::post('/evento/setResumo', [EventoController::class, 'setResumo'])->name('evento.setResumo');
+            Route::post('/evento/setFoto', [EventoController::class, 'setFotoEvento'])->name('evento.setFotoEvento');
+            Route::post('/evento/numTrabalhos', [EventoController::class, 'numTrabalhos'])->name('trabalho.numTrabalhos');
+            Route::get('/evento/habilitar/{id}', [EventoController::class, 'habilitar'])->name('evento.habilitar');
+            Route::get('/evento/desabilitar/{id}', [EventoController::class, 'desabilitar'])->name('evento.desabilitar');
+
+
+            //Sub-Evento
+            Route::get('/subevento/criar/{id}', [EventoController::class, 'createSubEvento'])->name('subevento.criar');
+            //Modalidade
+            Route::post('/modalidade/criar/{evento_id}', [ModalidadeController::class, 'store'])->name('modalidade.store');
+            Route::post('/modalidade/{id}/delete', [ModalidadeController::class, 'destroy'])->name('modalidade.destroy');
+            Route::post('modalidades/reorder', [ModalidadeController::class, 'reorder'])->name('modalidades.reorder');
+
+            //Trabalho
+            Route::get('/trabalho/submeter/{modalidade_id}', [TrabalhoController::class, 'create'])->name('trabalho.create');
+            Route::post('/trabalho/novaVersao', [TrabalhoController::class, 'novaVersao'])->name('trabalho.novaVersao');
+            Route::post('/trabalho/criar', [TrabalhoController::class, 'store'])->name('trabalho.store');
+            Route::get('/trabalho/pesquisa', [TrabalhoController::class, 'pesquisaAjax'])->name('trabalho.pesquisa.ajax');
+            Route::post('/trabalho/{id}/avaliar', [TrabalhoController::class, 'avaliarTrabalho'])->name('trabalho.avaliacao.revisor');
+            Route::post('/trabalho/{id}/excluir', [TrabalhoController::class, 'destroy'])->name('excluir.trabalho');
+            Route::post('/trabalho/{id}/editar', [TrabalhoController::class, 'update'])->name('editar.trabalho');
+            Route::get('/trabalho/status/{id}/{status}', [TrabalhoController::class, 'statusTrabalho'])->name('trabalho.status');
+            Route::get('/trabalho/encaminhar/{id}/{revisor}', [TrabalhoController::class, 'encaminharTrabalho'])->name('trabalho.encaminhar');
+            Route::post('/trabalho/{id}/aprovar-reprovar', [TrabalhoController::class, 'aprovacaoTrabalho'])->name('trabalho.aprovacao');
+            Route::post('/trabalho/{id}/correcao', [TrabalhoController::class, 'correcaoTrabalho'])->name('trabalho.correcao');
+            Route::post('/trabalho/importar-apresentacoes/{eventoId}', [TrabalhoController::class, 'importarApresentacoes'])->name('trabalho.importar.apresentacoes');
+            //Atribuição
+            Route::get('/atribuir', [AtribuicaoController::class, 'distribuicaoAutomatica'])->name('distribuicao');
+            Route::get('/atribuirPorArea', [AtribuicaoController::class, 'distribuicaoPorArea'])->name('distribuicaoAutomaticaPorArea');
+            Route::post('/distribuicaoManual', [AtribuicaoController::class, 'distribuicaoManual'])->name('distribuicaoManual');
+            Route::post('{id}/removerAtribuicao', [AtribuicaoController::class, 'deletePorRevisores'])->name('atribuicao.delete');
+            Route::post('/atribuir/check', [AtribuicaoController::class, 'atribuirCheck'])->name('atribuicao.check');
+            Route::post('/atribuir/revisor/lote', [AtribuicaoController::class, 'atribuirRevisorLote'])->name('atribuir.revisor.lote');
+            // rota downloadArquivo
+
+            // rota download do arquivo do trabalho
+            Route::get('/download-trabalho/{id}', [TrabalhoController::class, 'downloadArquivo'])->name('downloadTrabalho');
+            Route::get('/download-trabalho/{trabalhoId}/arquivo-extra/{arquivoExtraId}', [TrabalhoController::class, 'downloadArquivoExtra'])->name('downloadArquivoExtra');
+            Route::get('/download-trabalho/{id}/midia-extra/{id_midia}', [TrabalhoController::class, 'downloadMidiaExtra'])->name('downloadMidiaExtra');
+            //rota download do arquivo do trabalho
+            Route::get('/download-avaliacao', [TrabalhoController::class, 'downloadArquivoAvaliacao'])->name('downloadAvaliacao');
+            Route::get('/trabalho/{id}/download-correcao', [TrabalhoController::class, 'downloadArquivoCorrecao'])->name('downloadCorrecao');
+            // rota download da foto do evento
+            Route::get('/download-logo-evento/{id}', [EventoController::class, 'downloadFotoEvento'])->name('download.foto.evento');
+
+            // atualizar etiquetas do form de eventos
+            Route::post('/etiquetas/editar/{id}', [FormEventoController::class, 'update'])->name('etiquetas.update');
+            // atualizar etiquetas do form de submissão de trabalhos
+            Route::post('/etiquetas/submissao_trabalhos/editar/{id}', [FormSubmTrabaController::class, 'update'])->name('etiquetas_sub_trabalho.update');
+            // Inserir novos campos para o form de submissão de trabalhos
+            Route::post('/adicionarnovocampo/{id}', [FormSubmTrabaController::class, 'store'])->name('novocampo.store');
+            // Exibir ou ocultar modulos do card de eventos
+            Route::post('/modulos/{id}', [FormEventoController::class, 'exibirModulo'])->name('exibir.modulo');
+            // Ajax para encontrar modalidade especifica e enviar para o modal de edição
+            Route::get('/encontrarModalidade', [ModalidadeController::class, 'find'])->name('findModalidade');
+            // Ajax para encontrar modalidade especifica e enviar para o modal de edição
+            Route::post('/atualizarModalidade/{modalidade_id}', [ModalidadeController::class, 'update'])->name('modalidade.update');
+            //
+
+            Route::get('/evento/{evento}/downloadResumos', [EventoController::class, 'resumosToPdf'])->name('evento.downloadResumos');
+            Route::get('/evento/{evento}/exportar-relatorio-geral', [EventoController::class, 'exportarRelatorioGeral'])->name('evento.exportarRelatorioGeral');
+            Route::get('/evento/{evento}/downloadInscritos', [EventoController::class, 'exportInscritos'])->name('evento.downloadInscritos');
+            Route::get('/evento/{evento}/exportar-inscritos-xlsx', [EventoController::class, 'exportarInscritosXLSX'])->name('evento.exportarInscritosXLSX');
+            Route::get('/evento/{evento}/downloadInscritosCertifica', [EventoController::class, 'exportInscritosCertifica'])->name('evento.downloadInscritosCertifica');
+            Route::get('/evento/{evento}/downloadTrabalhos', [EventoController::class, 'exportTrabalhos'])->name('evento.downloadTrabalhos');
+            Route::get('/evento/{evento}/downloadTrabalhosAprovadosPDF', [EventoController::class, 'downloadTrabalhosAprovadosPDF'])->name('evento.downloadTrabalhosAprovadosPDF');
+            Route::post('/evento/{evento}/downloadTrabalhosCertifica', [EventoController::class, 'exportTrabalhosCertifica'])->name('evento.downloadTrabalhosCertifica');
+            Route::get('/evento/{evento}/downloadAvaliacoes/{modalidade}/form/{form}', [EventoController::class, 'exportAvaliacoes'])->name('evento.downloadAvaliacoes');
+            Route::get('/evento/{evento}/exportar-avaliadores-eixos/{eixo}', [EventoController::class, 'exportarAvaliadoresXLSX'])->name('evento.exportarAvaliadoresEixos');
+            Route::get('/evento/{evento}/import/listaPresenca', [EventoController::class, 'importListaPresenca'])->name('evento.importListaPresenca');
+            Route::post('/evento/import/listaPresenca', [EventoController::class, 'processarListaPresenca'])->name('evento.processarListaPresenca');
+
+
+
+            // Encontrar resumo especifico para trabalhos
+            Route::get('/encontrarResumo', [TrabalhoController::class, 'findResumo'])->name('trabalhoResumo');
+            // Critérios
+            Route::post('/criterio/', [CriteriosController::class, 'store'])->name('cadastrar.criterio');
+            Route::post('/criterio/{id}/atualizar', [CriteriosController::class, 'update'])->name('atualizar.criterio');
+            Route::get('/{evento_id}/criterio/{id}/deletar', [CriteriosController::class, 'destroy'])->name('criterio.destroy');
+            Route::get('/encontrarCriterio', [CriteriosController::class, 'findCriterio'])->name('encontrar.criterio');
+        });
+
+        Route::namespace('Users')->group(function () {
+            // Controllers Within The "App\Http\Controllers\Admin" Namespace
+            Route::prefix('/comissao/cientifica/evento/')->name('comissao.cientifica.')->group(function () {
+                Route::get('detalhes', [ComissaoController::class, 'informacoes'])->name('detalhesEvento');
+            });
+
+            //Revisores
+            Route::post('/revisor/criar', [RevisorController::class, 'store'])->name('revisor.store');
+            Route::post('revisores/editarRevisor', [RevisorController::class, 'update'])->name('revisor.update');
+            Route::get('/revisor/listarTrabalhos', [RevisorController::class, 'indexListarTrabalhos'])->name('revisor.listarTrabalhos');
+            Route::post('/revisor/email', [RevisorController::class, 'enviarEmailRevisor'])->name('revisor.email');
+            Route::get('{id}/revisor/convite', [RevisorController::class, 'conviteParaEvento'])->name('revisor.convite.evento');
+            Route::post('/revisor/emailTodos', [RevisorController::class, 'enviarEmailTodosRevisores'])->name('revisor.emailTodos');
+            Route::post('{evento}/revisor/emailCadastroTodos', [RevisorController::class, 'enviarEmailCadastroTodosRevisores'])->name('revisor.emailCadastroTodos');
+            Route::get('/revisores-por-area/{id}', [RevisorController::class, 'revisoresPorAreaAjax'])->name('revisores.area');
+            Route::post('/remover/revisor/{id}/{evento_id}', [RevisorController::class, 'destroy'])->name('remover.revisor');
+            Route::get('/area/revisores/trabalhos/area/{area_id}/modalidade/{modalidade_id}', [RevisorController::class, 'indexListarTrabalhos'])->name('avaliar.listar.trabalhos.filtro');
+            Route::get('/area/revisores/{id}/trabalhos', [RevisorController::class, 'trabalhosDoEvento'])->name('revisor.trabalhos.evento');
+            Route::get('/area/revisores', [RevisorController::class, 'index'])->name('revisor.index');
+            Route::get('revisores/responde', [RevisorController::class, 'responde'])->name('revisor.responde');
+            Route::post('revisores/resposta/salvar', [RevisorController::class, 'salvarRespostas'])->name('revisor.salvar.respostas');
+            Route::post('revisores/resposta/editar', [RevisorController::class, 'editarRespostasFormulario'])->name('revisor.editar.respostas');
+            Route::post('/reenviaremail/revisor/{id}/{evento_id}', [RevisorController::class, 'reenviarEmailRevisor'])->name('revisor.reenviarEmail');
+            Route::put('revisores/correcao/{trabalho_id}', [RevisorController::class, 'verificarCorrecao'])->name('revisor.verificarCorrecao');
+
+        });
+        // Visualizar trabalhos do usuário
+        Route::get('/user/trabalhos', [UserController::class, 'meusTrabalhos'])->name('user.meusTrabalhos');
+        Route::get('/user/trabalho/{id}/parecer/', [UserController::class, 'visualizarParecer'])->name('user.visualizarParecer');
+
+        // Cadastrar Comissão
+        Route::post('/evento/cadastrarComissao', [ComissaoController::class, 'store'])->name('cadastrar.comissao');
+        Route::post('/evento/cadastrarCoordComissao', [ComissaoController::class, 'coordenadorComissao'])->name('cadastrar.coordComissao');
+        Route::post('/evento/cadastrarCoordEixo', [ComissaoController::class, 'coordenadorEixo'])->name('cadastrar.coordEixo');
+
+        Route::name('coord.')->group(function () {
+            Route::get('comissaoOrganizadora/{id}/cadastrar', [ComissaoOrganizadoraController::class, 'create'])->name('comissao.organizadora.create');
+            Route::get('comissaoOrganizadora/{id}/definir-coordenador', [ComissaoOrganizadoraController::class, 'definirCoordenador'])->name('definir.coordComissaoOrganizadora');
+            Route::get('comissaoOrganizadora/{id}/listar', [ComissaoOrganizadoraController::class, 'index'])->name('listar.comissaoOrganizadora');
+            Route::post('remover/comissaoOrganizadora/{id}', [ComissaoOrganizadoraController::class, 'destroy'])->name('remover.comissao.organizadora');
+            Route::post('remover/comissao/{id}', [ComissaoController::class, 'destroy'])->name('remover.comissao');
+        });
+
+        // ROTAS DO MODULO DE INSCRIÇÃO
+        Route::get('{evento}/inscricoes', [InscricaoController::class, 'inscritos'])->name('inscricao.inscritos');
+        Route::get('{evento}/inscricoes/formulario', [InscricaoController::class, 'formulario'])->name('inscricao.formulario');
+        Route::get('{evento}/inscricoes/categorias', [InscricaoController::class, 'categorias'])->name('inscricao.categorias');
+        Route::get('{id}/inscricoes/nova-inscricao', [InscricaoController::class, 'create'])->name('inscricao.create');
+        Route::post('/inscricoes/inscrever', [InscricaoController::class, 'inscrever'])->name('inscricao.inscrever');
+        Route::delete('/inscricoes/{inscricao}/cancelar/', [InscricaoController::class, 'cancelar'])->name('inscricao.cancelar');
+        Route::post('inscricoes/{inscricao}/aprovar', [InscricaoController::class, 'aprovar'])->name('coord.inscricoes.aprovar');
+        Route::get('inscricoes/atividades-da-promocao', [PromocaoController::class, 'atividades'])->name('promocao.atividades');
+        Route::get('inscricoes/checar-cupom', [CupomDeDescontoController::class, 'checar'])->name('checar.cupom');
+        Route::post('{id}/inscricoes/nova-inscricao/checar', [InscricaoController::class, 'checarDados'])->name('inscricao.checar');
+        Route::get('{id}/inscricoes/nova-inscricao/voltar', [InscricaoController::class, 'voltarTela'])->name('inscricao.voltar');
+        Route::post('/inscricoes/salvar-campo-formulario', [CampoFormularioController::class, 'store'])->name('campo.formulario.store');
+        Route::post('/inscricoes/campo-excluir/{id}', [CampoFormularioController::class, 'destroy'])->name('campo.destroy');
+        Route::post('inscricoes/editar-campo/{id}', [CampoFormularioController::class, 'update'])->name('campo.edit');
+        Route::post('/inscricoes/inscreverParticipante/{evento_id}', [InscricaoController::class, 'inscreverParticipante'])->name('inscricao.inscreverParticipante');
+        Route::post('/inscricoes/gerenciar-alimentacao/{evento_id}', [InscricaoController::class, 'gerenciarAlimentacao'])->name('inscricao.gerenciarAlimentacao');
+        Route::put('/inscricoes/{inscricao}/alterar-categoria', [InscricaoController::class, 'alterarCategoria'])->name('inscricao.alterarCategoria');
+        Route::get('/inscricoes/{inscricao}/recibo', [InscricaoController::class, 'recibo'])->name('inscricao.recibo');
+        Route::get('/validar/recibo/{codigo}', [InscricaoController::class, 'validarRecibo'])->name('validar.recibo');
+
+        // Processamento de Planilha de Alimentação
+        Route::get('/processar-planilha', [PlanilhaAlimentacaoController::class, 'index'])->name('processar-planilha.index');
+        Route::post('/processar-planilha', [PlanilhaAlimentacaoController::class, 'processar'])->name('processar-planilha.processar');
+
+        // Inscrição Automática via Planilha
+        Route::get('/inscricao-automatica', [InscricaoController::class, 'inscricaoAutomaticaIndex'])->name('inscricao-automatica.index');
+        Route::post('/inscricao-automatica', [InscricaoController::class, 'inscricaoAutomaticaProcessar'])->name('inscricao-automatica.processar');
+        Route::get('/inscricao-automatica/progresso', [InscricaoController::class, 'inscricaoAutomaticaProgresso'])->name('inscricao-automatica.progresso');
+        Route::get('/inscricao-automatica/status', [InscricaoController::class, 'inscricaoAutomaticaStatusProgresso'])->name('inscricao-automatica.status');
+        Route::get('/inscricao-automatica/download', [InscricaoController::class, 'inscricaoAutomaticaDownloadResultado'])->name('inscricao-automatica.download');
+
+        // Checkout
+        Route::prefix('checkout')->name('checkout.')->group(function () {
+            Route::get('/tela-pagamento/{evento}', [CheckoutController::class, 'telaPagamento'])->name('telaPagamento');
+            Route::get('/status-pagamento/{evento}', [CheckoutController::class, 'statusPagamento'])->name('statusPagamento');
+            Route::post('/process_payment', [CheckoutController::class, 'processPayment'])->name('processPayment');
+            Route::post('/confirmar-inscricao/{id}', [CheckoutController::class, 'index'])->name('index');
+            Route::post('/proccess', [CheckoutController::class, 'proccess'])->name('proccess');
+            Route::get('/obrigado', [CheckoutController::class, 'obrigado'])->name('obrigado');
+                Route::get('/{id}/pagamentos', [CheckoutController::class, 'listarPagamentos'])->name('pagamentos');
+        Route::post('/pag-boleto', [CheckoutController::class, 'pagBoleto'])->name('boleto');
+        Route::post('/nova-tentativa/{evento}', [CheckoutController::class, 'novaTentativa'])->name('novaTentativa');
+
+        });
+        //Pagamentos
+
+        Route::get('inscricoes/evento-{id}/index', [InscricaoController::class, 'index'])->name('inscricoes');
+        Route::post('inscricoes/criar-promocao', [PromocaoController::class, 'store'])->name('promocao.store');
+        Route::post('inscricoes/{id}/editar-promocao', [PromocaoController::class, 'update'])->name('promocao.update');
+        Route::post('inscricoes/destroy/{id}-promocao', [PromocaoController::class, 'destroy'])->name('promocao.destroy');
+        Route::get('inscricoes/{idInscricao}/download/{idCampo}', [InscricaoController::class, 'downloadFileCampoExtra'])->name('download.arquivo.inscricao');
+        Route::post('inscricoes/criar-cupom', [CupomDeDescontoController::class, 'store'])->name('cupom.store');
+        Route::post('inscricoes/editar-cupom/{id}', [CupomDeDescontoController::class, 'update'])->name('cupom.update');
+        Route::get('inscricoes/destroy/{id}-cupom', [CupomDeDescontoController::class, 'destroy'])->name('cupom.destroy');
+
+        Route::post('inscricoes/criar-categoria-participante', [CategoriaController::class, 'store'])->name('categoria.participante.store');
+        Route::delete('{id}/inscricoes/excluir-categoria', [CategoriaController::class, 'destroy'])->name('categoria.participante.destroy');
+        Route::delete('{id}/inscricoes/excluir-link-pagamento', [CategoriaController::class, 'destroyLink'])->name('link.pagamento.destroy');
+        Route::put('{id}/inscricoes/atualizar-categoria', [CategoriaController::class, 'update'])->name('categoria.participante.update');
+        Route::get('valor/categoria', [CategoriaController::class, 'valorAjax'])->name('ajax.valor.categoria');
+        Route::get('confirmar-inscricao', [InscricaoController::class, 'store'])->name('inscricao.confirmar');
+        Route::get('/home', [HomeController::class, 'home'])->name('home');
+
+        Route::namespace('Submissao')->group(function () {
+            Route::get('{id}/regras', [ModalidadeController::class, 'downloadRegras'])->name('modalidade.regras.download');
+            Route::get('{modalidade}/instrucoes', [ModalidadeController::class, 'downloadInstrucoes'])->name('modalidade.instrucoes.download');
+            Route::get('{id}/modalidade-arquivo-modelos', [ModalidadeController::class, 'downloadModelos'])->name('modalidade.modelos.download');
+            Route::get('{id}/modalidade-template', [ModalidadeController::class, 'downloadTemplate'])->name('modalidade.template.download');
+
+        });
     });
-    // Visualizar trabalhos do usuário
-    Route::get('/user/trabalhos', [UserController::class, 'meusTrabalhos'])->name('user.meusTrabalhos');
-    Route::get('/user/trabalho/{id}/parecer/', [UserController::class, 'visualizarParecer'])->name('user.visualizarParecer');
 
-    // Cadastrar Comissão
-    Route::post('/evento/cadastrarComissao', [ComissaoController::class, 'store'])->name('cadastrar.comissao');
-    Route::post('/evento/cadastrarCoordComissao', [ComissaoController::class, 'coordenadorComissao'])->name('cadastrar.coordComissao');
-    Route::post('/evento/cadastrarCoordEixo', [ComissaoController::class, 'coordenadorEixo'])->name('cadastrar.coordEixo');
-
-    Route::name('coord.')->group(function () {
-        Route::get('comissaoOrganizadora/{id}/cadastrar', [ComissaoOrganizadoraController::class, 'create'])->name('comissao.organizadora.create');
-        Route::get('comissaoOrganizadora/{id}/definir-coordenador', [ComissaoOrganizadoraController::class, 'definirCoordenador'])->name('definir.coordComissaoOrganizadora');
-        Route::get('comissaoOrganizadora/{id}/listar', [ComissaoOrganizadoraController::class, 'index'])->name('listar.comissaoOrganizadora');
-        Route::post('remover/comissaoOrganizadora/{id}', [ComissaoOrganizadoraController::class, 'destroy'])->name('remover.comissao.organizadora');
-        Route::post('remover/comissao/{id}', [ComissaoController::class, 'destroy'])->name('remover.comissao');
-    });
-
-    // ROTAS DO MODULO DE INSCRIÇÃO
-    Route::get('{evento}/inscricoes', [InscricaoController::class, 'inscritos'])->name('inscricao.inscritos');
-    Route::get('{evento}/inscricoes/formulario', [InscricaoController::class, 'formulario'])->name('inscricao.formulario');
-    Route::get('{evento}/inscricoes/categorias', [InscricaoController::class, 'categorias'])->name('inscricao.categorias');
-    Route::get('{id}/inscricoes/nova-inscricao', [InscricaoController::class, 'create'])->name('inscricao.create');
-    Route::post('/inscricoes/inscrever', [InscricaoController::class, 'inscrever'])->name('inscricao.inscrever');
-    Route::delete('/inscricoes/{inscricao}/cancelar/', [InscricaoController::class, 'cancelar'])->name('inscricao.cancelar');
-    Route::post('inscricoes/{inscricao}/aprovar', [InscricaoController::class, 'aprovar'])->name('coord.inscricoes.aprovar');
-    Route::get('inscricoes/atividades-da-promocao', [PromocaoController::class, 'atividades'])->name('promocao.atividades');
-    Route::get('inscricoes/checar-cupom', [CupomDeDescontoController::class, 'checar'])->name('checar.cupom');
-    Route::post('{id}/inscricoes/nova-inscricao/checar', [InscricaoController::class, 'checarDados'])->name('inscricao.checar');
-    Route::get('{id}/inscricoes/nova-inscricao/voltar', [InscricaoController::class, 'voltarTela'])->name('inscricao.voltar');
-    Route::post('/inscricoes/salvar-campo-formulario', [CampoFormularioController::class, 'store'])->name('campo.formulario.store');
-    Route::post('/inscricoes/campo-excluir/{id}', [CampoFormularioController::class, 'destroy'])->name('campo.destroy');
-    Route::post('inscricoes/editar-campo/{id}', [CampoFormularioController::class, 'update'])->name('campo.edit');
-    Route::post('/inscricoes/inscreverParticipante/{evento_id}', [InscricaoController::class, 'inscreverParticipante'])->name('inscricao.inscreverParticipante');
-    Route::post('/inscricoes/gerenciar-alimentacao/{evento_id}', [InscricaoController::class, 'gerenciarAlimentacao'])->name('inscricao.gerenciarAlimentacao');
-    Route::put('/inscricoes/{inscricao}/alterar-categoria', [InscricaoController::class, 'alterarCategoria'])->name('inscricao.alterarCategoria');
-    Route::get('/inscricoes/{inscricao}/recibo', [InscricaoController::class, 'recibo'])->name('inscricao.recibo');
-    Route::get('/validar/recibo/{codigo}', [InscricaoController::class, 'validarRecibo'])->name('validar.recibo');
-
-    // Processamento de Planilha de Alimentação
-    Route::get('/processar-planilha', [PlanilhaAlimentacaoController::class, 'index'])->name('processar-planilha.index');
-    Route::post('/processar-planilha', [PlanilhaAlimentacaoController::class, 'processar'])->name('processar-planilha.processar');
-
-    // Inscrição Automática via Planilha
-    Route::get('/inscricao-automatica', [InscricaoController::class, 'inscricaoAutomaticaIndex'])->name('inscricao-automatica.index');
-    Route::post('/inscricao-automatica', [InscricaoController::class, 'inscricaoAutomaticaProcessar'])->name('inscricao-automatica.processar');
-    Route::get('/inscricao-automatica/progresso', [InscricaoController::class, 'inscricaoAutomaticaProgresso'])->name('inscricao-automatica.progresso');
-    Route::get('/inscricao-automatica/status', [InscricaoController::class, 'inscricaoAutomaticaStatusProgresso'])->name('inscricao-automatica.status');
-    Route::get('/inscricao-automatica/download', [InscricaoController::class, 'inscricaoAutomaticaDownloadResultado'])->name('inscricao-automatica.download');
-
-    // Checkout
-    Route::prefix('checkout')->name('checkout.')->group(function () {
-        Route::get('/tela-pagamento/{evento}', [CheckoutController::class, 'telaPagamento'])->name('telaPagamento');
-        Route::get('/status-pagamento/{evento}', [CheckoutController::class, 'statusPagamento'])->name('statusPagamento');
-        Route::post('/process_payment', [CheckoutController::class, 'processPayment'])->name('processPayment');
-        Route::post('/confirmar-inscricao/{id}', [CheckoutController::class, 'index'])->name('index');
-        Route::post('/proccess', [CheckoutController::class, 'proccess'])->name('proccess');
-        Route::get('/obrigado', [CheckoutController::class, 'obrigado'])->name('obrigado');
-            Route::get('/{id}/pagamentos', [CheckoutController::class, 'listarPagamentos'])->name('pagamentos');
-    Route::post('/pag-boleto', [CheckoutController::class, 'pagBoleto'])->name('boleto');
-    Route::post('/nova-tentativa/{evento}', [CheckoutController::class, 'novaTentativa'])->name('novaTentativa');
-
-    });
-    //Pagamentos
-
-    Route::get('inscricoes/evento-{id}/index', [InscricaoController::class, 'index'])->name('inscricoes');
-    Route::post('inscricoes/criar-promocao', [PromocaoController::class, 'store'])->name('promocao.store');
-    Route::post('inscricoes/{id}/editar-promocao', [PromocaoController::class, 'update'])->name('promocao.update');
-    Route::post('inscricoes/destroy/{id}-promocao', [PromocaoController::class, 'destroy'])->name('promocao.destroy');
-    Route::get('inscricoes/{idInscricao}/download/{idCampo}', [InscricaoController::class, 'downloadFileCampoExtra'])->name('download.arquivo.inscricao');
-    Route::post('inscricoes/criar-cupom', [CupomDeDescontoController::class, 'store'])->name('cupom.store');
-    Route::post('inscricoes/editar-cupom/{id}', [CupomDeDescontoController::class, 'update'])->name('cupom.update');
-    Route::get('inscricoes/destroy/{id}-cupom', [CupomDeDescontoController::class, 'destroy'])->name('cupom.destroy');
-
-    Route::post('inscricoes/criar-categoria-participante', [CategoriaController::class, 'store'])->name('categoria.participante.store');
-    Route::delete('{id}/inscricoes/excluir-categoria', [CategoriaController::class, 'destroy'])->name('categoria.participante.destroy');
-    Route::delete('{id}/inscricoes/excluir-link-pagamento', [CategoriaController::class, 'destroyLink'])->name('link.pagamento.destroy');
-    Route::put('{id}/inscricoes/atualizar-categoria', [CategoriaController::class, 'update'])->name('categoria.participante.update');
-    Route::get('valor/categoria', [CategoriaController::class, 'valorAjax'])->name('ajax.valor.categoria');
-    Route::get('confirmar-inscricao', [InscricaoController::class, 'store'])->name('inscricao.confirmar');
 
 });
-
-//Localization Route
-
-
-// Auth::routes();
-
-Route::get('/home', [HomeController::class, 'home'])->name('home')->middleware('verified', 'isTemp');
-
-Route::namespace('Submissao')->group(function () {
-    Route::get('{id}/regras', [ModalidadeController::class, 'downloadRegras'])->name('modalidade.regras.download');
-    Route::get('{modalidade}/instrucoes', [ModalidadeController::class, 'downloadInstrucoes'])->name('modalidade.instrucoes.download');
-    Route::get('{id}/modalidade-arquivo-modelos', [ModalidadeController::class, 'downloadModelos'])->name('modalidade.modelos.download');
-    Route::get('{id}/modalidade-template', [ModalidadeController::class, 'downloadTemplate'])->name('modalidade.template.download');
-
-});
-
-});
-
-Route::get('/cadastro/validacao-cadastro', [PreRegistroController::class, 'preRegistro'])->name('preRegistro');
-Route::post('/cadastro/enviar-email-codigo', [PreRegistroController::class, 'enviarCodigo'])->name('enviarCodigo');
-Route::get('/cadastro/inserir-codigo/{id}', [PreRegistroController::class, 'inserirCodigo'])->name('inserirCodigo');
-Route::post('/cadastro/validar-codigo', [PreRegistroController::class, 'verificarCodigo'])->name('verificarCodigo');
 
 Route::get('/avaliador/aceitar/{token}', [AtribuicaoController::class, 'aceitarConvite'])->name('avaliador.aceitar');
 Route::get('/avaliador/recusar/{token}', [AtribuicaoController::class, 'recusarConvite'])->name('avaliador.show_recusar');
