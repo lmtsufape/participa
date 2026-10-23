@@ -8,7 +8,7 @@ use App\Http\Requests\TrabalhoUpdateRequest;
 use App\Mail\CartaDeAceiteMail;
 use App\Mail\EmailCorrecaoTrabalho;
 use App\Mail\EmailParaUsuarioNaoCadastrado;
-use App\Mail\EmailParecerDisponivel;
+use App\Mail\ParecerDisponivelMail;
 use App\Mail\SubmissaoTrabalho;
 use App\Models\Submissao\Area;
 use App\Models\Submissao\AreaModalidade;
@@ -44,6 +44,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\ApresentacoesImport;
+use App\Mail\CorrecaoTrabalhoLiberadaMail;
 
 class TrabalhoController extends Controller
 {
@@ -417,7 +418,6 @@ class TrabalhoController extends Controller
         }
         $trabalho->update(['status' => $status]);
         if ($status == 'avaliado') {
-            Mail::to($trabalho->autor->email)->send(new EmailParecerDisponivel($trabalho->evento, $trabalho));
 
             return redirect()->back()->with(['message' => 'Trabalho encaminhado ao autor com sucesso!', 'class' => 'success']);
         }
@@ -442,7 +442,7 @@ class TrabalhoController extends Controller
         } else {
             if ($trabalho->avaliado($revisor->user)) {
                 $trabalho->revisores()->where('revisor_id', $revisor->id)->first()->pivot->update(['parecer' => 'encaminhado']);
-                Mail::to($trabalho->autor->email)->send(new EmailParecerDisponivel($trabalho->evento, $trabalho));
+                Mail::to($trabalho->autor->email)->send(new ParecerDisponivelMail($trabalho, route('user.meusTrabalhos')));
 
                 return redirect()->back()->with(['success' => 'Trabalho encaminhado ao autor com sucesso!']);
             }
@@ -1128,7 +1128,7 @@ class TrabalhoController extends Controller
                             $trabalho->aprovacao_emitida_em   = now();
                             $trabalho->saveOrFail();
 
-                            Mail::to($trabalho->autor->email)->send(new CartaDeAceiteMail($trabalho, $codigo));
+                            Mail::to($trabalho->autor->email)->send(new CartaDeAceiteMail($trabalho, $codigo))->afterCommit();
                             return ['flash' => 'success', 'msg' => 'Trabalho aprovado com sucesso!'];
 
                         }else{
@@ -1139,7 +1139,7 @@ class TrabalhoController extends Controller
                             $trabalho->aprovacao_emitida_em   = now();
                             $trabalho->saveOrFail();
 
-                            Mail::to($trabalho->autor->email)->send(new CartaDeAceiteMail($trabalho, $codigo));
+                            Mail::to($trabalho->autor->email)->send(new CartaDeAceiteMail($trabalho, $codigo))->afterCommit();
                             return ['flash' => 'success', 'msg' => 'Trabalho aprovado com sucesso!'];
                         }
                     }
@@ -1164,6 +1164,8 @@ class TrabalhoController extends Controller
                 case 'null':
                     if(!$trabalho->permite_correcao){
                         $trabalho->update(['permite_correcao' => true]);
+
+                        Mail::to($trabalho->autor->email)->send(new CorrecaoTrabalhoLiberadaMail($trabalho, route('user.meusTrabalhos')))->afterCommit();
 
                         return ['flash' => 'success', 'msg' => 'Trabalho liberado para correção com sucesso!'];
                     }else{
