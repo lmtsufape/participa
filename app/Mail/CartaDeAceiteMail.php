@@ -8,8 +8,9 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Storage;
 
-class CartaDeAceiteMail extends Mailable
+class CartaDeAceiteMail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
@@ -30,7 +31,7 @@ class CartaDeAceiteMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Carta De Aceite',
+            subject: config('app.name').' - Carta de Aceite',
         );
     }
 
@@ -39,15 +40,28 @@ class CartaDeAceiteMail extends Mailable
      */
     public function content(): Content
     {
-        $relative = ltrim($this->trabalho->evento->fotoEvento ?? '', '/');
-        $imgPath = storage_path('app/public/' . $relative);
+        $fotoEvento = $this->trabalho->evento->fotoEvento;
+
+        $imgPath = null;
+
+        if ($fotoEvento) {
+            $relative = ltrim($fotoEvento, '/');
+
+            if (Storage::disk('public')->exists($relative)) {
+                $path = Storage::disk('public')->path($relative);
+
+                $imgPath = is_file($path) && is_readable($path)
+                    ? $path
+                    : null;
+            }
+        }
 
         return new Content(
             view: 'emails.carta-de-aceite',
             with: [
                 'trabalho' => $this->trabalho,
-                'codigo'    => $this->codigo,
-                'imgPath' =>  file_exists($imgPath) ? $imgPath : null,
+                'codigo' => $this->codigo,
+                'imgPath' => $imgPath,
             ],
         );
     }
