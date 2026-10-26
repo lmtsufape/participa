@@ -8,7 +8,7 @@ use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithMultipleSheets;
 
-class TrabalhosExport implements WithMultipleSheets
+class TrabalhosExport implements FromCollection, WithHeadings, ShouldAutoSize
 {
     use Exportable;
 
