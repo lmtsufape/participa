@@ -1243,7 +1243,7 @@
                 <div>
                     <strong>${escapeHtml(inicio)} - ${escapeHtml(fim)}</strong>
                     ${ativ.tipo_atividade?.descricao ? `<div class="my-2"><span class="badge bg-light text-dark border">${escapeHtml(ativ.tipo_atividade.descricao)}</span></div>` : ''}
-                    <p class="mb-2">${escapeHtml(ativ.titulo)}</p>
+                    <p class="mb-2 fw-bold">${escapeHtml(ativ.titulo)}</p>
                     ${ativ.local ? `<p class="small text-muted mb-1"><strong>Local:</strong> ${escapeHtml(ativ.local)}</p>` : ''}
                     ${Array.isArray(ativ.proponentes) && ativ.proponentes.length ? `<p class="small text-muted mb-0" tabindex="0" data-ministrantes-popover data-bs-content="${escapeHtml(ativ.proponentes.join('; ')).replace(/"/g, '&quot;')}" aria-label="Proponentes / Ministrantes: ${escapeHtml(ativ.proponentes.join('; ')).replace(/"/g, '&quot;')}" style="cursor: help;"><strong>Proponentes / Ministrantes:</strong> ${escapeHtml(ativ.proponentes.join('; ').length > 120 ? ativ.proponentes.join('; ').slice(0, 120) + '…' : ativ.proponentes.join('; '))}</p>` : ''}
                 </div>
