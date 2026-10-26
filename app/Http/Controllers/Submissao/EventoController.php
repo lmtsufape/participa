@@ -2541,10 +2541,13 @@ class EventoController extends Controller
             ->get();
 
         $atividades = Atividade::join('datas_atividades', 'atividades.id', '=', 'datas_atividades.atividade_id')
+        ->where('atividades.eventoId', $id)
+        ->where('atividades.visibilidade_participante', true)
         ->select('atividades.*', 'datas_atividades.data', 'datas_atividades.hora_inicio')
         ->orderBy('datas_atividades.data')
         ->orderBy('datas_atividades.hora_inicio')
-        ->with('datasAtividade')
+        ->with(['datasAtividade', 'tipoAtividade'])
+        ->withExists(['users as usuario_inscrito' => fn ($query) => $query->where('users.id', Auth::id() ?? 0)])
         ->get();
         $atividadesAgrupadas = $atividades->groupBy('data');
 
