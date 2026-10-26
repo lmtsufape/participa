@@ -375,6 +375,7 @@
                             @endif
                             @endfor
                             <hr>
+                            @include('coordenador.programacao.proponentes', ['atividadeProponentes' => $atv])
                             <button id="buttonAbrirDadosAdicionais{{$atv->id}}" type="button" class="btn btn-primary" style="background-color: white; color: rgb(50, 132, 255); border-color: rgb(50, 132, 255); @if (old('vagas')!=null||old('valor')!=null||old('carga_horaria')!=null||old('palavrasChaves')!=null||old('nomeConvidado')!=null||old('emailConvidado')!=null) display: none; @else display: block; @endif" onclick="abrirDadosAdicionais({{$atv->id}})">+Abrir dados opcionais</button>
                             <button id="buttonFecharDadosAdicionais{{$atv->id}}" type="button" class="btn btn-primary" style="background-color: white; color: rgb(41, 109, 211); border-color: rgb(50, 132, 255); @if (old('vagas')!=null||old('valor')!=null||old('carga_horaria')!=null||old('palavrasChaves')!=null||old('nomeConvidado')!=null||old('emailConvidado')!=null) display: block; @else display: none; @endif" onclick="fecharDadosAdicionais({{$atv->id}})">-Fechar dados opcionais</button>
                             <div id="dadosAdicionaisNovaAtividade{{$atv->id}}" @if (old('vagas')!=null||old('valor')!=null||old('carga_horaria')!=null||old('palavrasChaves')!=null||old('nomeConvidado')!=null||old('emailConvidado')!=null) @else style="display: none;" @endif>
@@ -830,6 +831,7 @@
                             </div>
                         </div>
                         <hr>
+                        @include('coordenador.programacao.proponentes', ['atividadeProponentes' => null])
                         <button id="buttonAbrirDadosAdicionais" type="button" class="btn btn-primary" style="background-color: white; color: rgb(50, 132, 255); border-color: rgb(50, 132, 255); @if (old('vagas')!=null||old('valor')!=null||old('carga_horaria')!=null||old('palavrasChaves')!=null||old('nomeConvidado')!=null||old('emailConvidado')!=null) display: none; @else display: block; @endif" onclick="abrirDadosAdicionais(0)">+Abrir dados opcionais</button>
                         <button id="buttonFecharDadosAdicionais" type="button" class="btn btn-primary" style="background-color: white; color: rgb(41, 109, 211); border-color: rgb(50, 132, 255); @if (old('vagas')!=null||old('valor')!=null||old('carga_horaria')!=null||old('palavrasChaves')!=null||old('nomeConvidado')!=null||old('emailConvidado')!=null) display: block; @else display: none; @endif" onclick="fecharDadosAdicionais(0)">-Fechar dados opcionais</button>
                         <div id="dadosAdicionaisNovaAtividade" @if (old('vagas')!=null||old('valor')!=null||old('carga_horaria')!=null||old('palavrasChaves')!=null||old('nomeConvidado')!=null||old('emailConvidado')!=null) @else style="display: none;" @endif>

@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Atividade extends Model
 {
+    protected $casts = ['proponentes' => 'array'];
+
     /**
      * The attributes that are mass assignable.
      *

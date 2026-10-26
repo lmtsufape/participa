@@ -72,6 +72,8 @@ class AtividadeController extends Controller
 
         $validated = $request->validate([
             'idNovaAtividade' => ['required', 'integer'],
+            'proponentes' => ['nullable', 'array', 'max:100'],
+            'proponentes.*' => ['nullable', 'string', 'max:255'],
             'título' => ['required', 'max:512'],
             'tipo' => ['required', 'string'],
             'descrição' => ['required', 'max:1500'],
@@ -151,6 +153,7 @@ class AtividadeController extends Controller
         $atividade->vagas = $request->vagas;
         $atividade->valor = $request->valor;
         $atividade->descricao = $request->input('descrição');
+        $atividade->proponentes = collect($validated['proponentes'] ?? [])->map(fn ($nome) => trim($nome ?? ''))->filter(fn ($nome) => $nome !== '')->values()->all();
         $atividade->local = $request->local;
         $atividade->palavras_chave = $request->palavrasChaves;
         $atividade->carga_horaria = $request->carga_horaria;
@@ -271,6 +274,8 @@ class AtividadeController extends Controller
 
         $validated = $request->validate([
             'idAtividade' => ['required', 'integer'],
+            'proponentes' => ['nullable', 'array', 'max:100'],
+            'proponentes.*' => ['nullable', 'string', 'max:255'],
             'titulo' => ['required', 'max:512'],
             'tipo' => ['required', 'string'],
             'descricao' => ['required', 'max:1500'],
@@ -348,6 +353,9 @@ class AtividadeController extends Controller
         $atividade->vagas = $request->vagas;
         $atividade->valor = $request->valor;
         $atividade->descricao = $request->descricao;
+        if ($request->has('proponentes')) {
+            $atividade->proponentes = collect($validated['proponentes'] ?? [])->map(fn ($nome) => trim($nome ?? ''))->filter(fn ($nome) => $nome !== '')->values()->all();
+        }
         $atividade->local = $request->local;
         $atividade->palavras_chave = $request->palavrasChaves;
         $atividade->carga_horaria = $request->carga_horaria;

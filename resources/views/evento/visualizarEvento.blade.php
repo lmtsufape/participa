@@ -1051,7 +1051,7 @@
                                 <hr>
                                 <div class="row">
                                     <div class="col-sm-12">
-                                        <label for="carga_horaria">{{ __('Carga horária para estudantes') }}:</label>
+                                        <label for="carga_horaria">{{ __('Carga horária') }}:</label>
                                         <h4 class="carga_horaria">{{ $atv->carga_horaria }}</h4>
                                     </div>
                                 </div>
@@ -1068,6 +1068,15 @@
                                 </div>
                             @endif
                         </div>
+                        @if (!empty($atv->proponentes))
+                            <hr>
+                            <h5>Proponentes / Ministrantes</h5>
+                            <ul>
+                                @foreach($atv->proponentes as $proponente)
+                                    <li>{{ $proponente }}</li>
+                                @endforeach
+                            </ul>
+                        @endif
                         @if (count($atv->convidados) > 0)
                             <hr class="border-dark">
                             <h7>{{ __('Convidados') }}</h7>
