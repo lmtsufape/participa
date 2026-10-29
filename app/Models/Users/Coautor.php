@@ -21,7 +21,7 @@ class Coautor extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'autorId');
+        return $this->belongsTo(User::class, 'autorId')->withTrashed();
     }
 
     public function trabalhos()
@@ -31,6 +31,6 @@ class Coautor extends Model
 
     public function eventos()
     {
-        return $this->belongsTo(Evento::class); 
+        return $this->belongsTo(Evento::class);
     }
 }
