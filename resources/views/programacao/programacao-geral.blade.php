@@ -9,7 +9,7 @@
             </h1>
 
             <div class="shadow-sm p-4 mb-5 bg-white rounded border-start border-4" style="border-color: #f2a440 !important;">
-                <img src="{{ asset('/img/programacao-geral.png') }}" alt="Programação Geral" style="width: 100%;">
+                <img src="{{ asset('/img/programacao-geral-v2.png') }}" alt="Programação Geral" style="width: 100%;">
             </div>
         </div>
     </div>
