@@ -1240,6 +1240,10 @@ class EventoController extends Controller
         $emails = [];
         $celulares = [];
 
+        $trabalho->load([
+            'coautors.user' => fn ($query) => $query->withTrashed(),
+        ]);
+
         foreach ($trabalho->coautors as $coautor) {
             if ($coautor->user->id != $trabalho->autorId) {
                 $nomes[] = $coautor->user->name;
