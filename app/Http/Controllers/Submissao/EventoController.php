@@ -1404,6 +1404,7 @@ class EventoController extends Controller
                                 'modalidade',
                                 'area',
                                 'autor' => fn ($query) => $query->withTrashed(),
+                                'coautors.user' => fn ($query) => $query->withTrashed(),
                                 'arquivoCorrecao',
                                 'revisores.user',
                             ]);
