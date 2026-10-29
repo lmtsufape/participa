@@ -206,7 +206,9 @@ class EventoController extends Controller
                 'modalidade:id,nome',
                 'autor:id,name,email',
                 'coautors:id,trabalhoId,autorId',
-                'coautors.user:id,name,cpf,email',
+                'coautors.user' => fn ($query) => $query
+                    ->withTrashed()
+                    ->select('id', 'name', 'cpf', 'email'),
                 'arquivo:id,trabalhoId',
                 'midiasExtra:id,nome,modalidade_id',
                 'midiasExtra.modalidade:id,nome'
