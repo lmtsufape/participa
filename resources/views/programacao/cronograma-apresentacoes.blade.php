@@ -12,14 +12,43 @@
                 $arquivoPosters = 'documentos/CronogramaSessoesPosteres.pdf';
                 $arquivoComunicacoesOrais = 'documentos/CronogramaComunicacoesOrais.pdf';
                 $cronogramas = [
-                    ['titulo' => '1. Cronograma das Sessões de Pôsters', 'arquivo' => $arquivoPosters, 'botao' => 'Baixar Cronograma das Sessões de Pôsters (.pdf)'],
-                    ['titulo' => '2. Cronograma de Comunicações Orais', 'arquivo' => $arquivoComunicacoesOrais, 'botao' => 'Baixar Cronograma de Comunicações Orais (.pdf)'],
+                    [
+                        'titulo' => '1. Cronograma das Sessões de Pôsters',
+                        'arquivo' => $arquivoPosters,
+                        'botao' => 'Baixar Cronograma das Sessões de Pôsters (.pdf)',
+                        'orientacoes_titulo' => 'Apresentação de Poster - Orientações',
+                        'orientacoes' => [
+                            'Você pode baixar o modelo do banner na aba normas deste site;',
+                            'É permitido que outro autor ou autora (que não seja o principal) apresente o trabalho;',
+                            'Serão dois dias de exposição, porém cada trabalho será apresentado somente em um dia (quarta ou quinta-feira). Fique atento(a) no cronograma para saber sua data de exposição;',
+                            'Entre em contato com a organização do evento se necessitar indicações de gráficas para impressão do seu banner em Belo Horizonte.',
+                        ],
+                    ],
+                    [
+                        'titulo' => '2. Cronograma de Comunicações Orais',
+                        'arquivo' => $arquivoComunicacoesOrais,
+                        'botao' => 'Baixar Cronograma de Comunicações Orais (.pdf)',
+                        'orientacoes_titulo' => 'Comunicação Oral - Orientações',
+                        'orientacoes' => [
+                            'Você pode baixar o modelo de apresentação em PowerPoint na aba normas deste site;',
+                            'As apresentações serão de até 15 minutos. Após um período de tempo, abriremos para discussão dos trabalhos apresentados. Portanto, permaneça na sala antes e após a sua apresentação para participar das discussões.',
+                            'Salve seu trabalho na nuvem e em um PenDrive para evitar possíveis problemas com internet;',
+                            'Se possível, leve seu computador para a projeção dos slides;',
+                            'É permitido que outro autor ou autora (que não seja o principal) apresente o trabalho, basta comunicar o avaliador no momento da apresentação.',
+                        ],
+                    ],
                 ];
             @endphp
 
             @foreach ($cronogramas as $cronograma)
                 <div class="shadow-sm p-4 mb-5 bg-white rounded border-start border-4" style="border-color: #f2a440 !important;">
                     <h2 class="h4 mb-4 fw-bold" style="color: #3d93a9;">{{ $cronograma['titulo'] }}</h2>
+                    <p class="fw-bold mb-2">{{ $cronograma['orientacoes_titulo'] }}</p>
+                    <ul class="mb-4" style="line-height: 1.6;">
+                        @foreach ($cronograma['orientacoes'] as $orientacao)
+                            <li class="mb-2">{{ $orientacao }}</li>
+                        @endforeach
+                    </ul>
                     <div class="my-3">
                         <a href="{{ $cronograma['arquivo'] !== '' ? asset($cronograma['arquivo']) : '' }}"
                            download
