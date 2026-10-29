@@ -1400,7 +1400,13 @@ class EventoController extends Controller
 
         $query = Trabalho::where('eventoId', $evento->id)
                         ->where('status', '!=', 'arquivado')
-                        ->with(['modalidade', 'area', 'autor', 'arquivoCorrecao', 'revisores.user']);
+                        ->with([
+                                'modalidade',
+                                'area',
+                                'autor' => fn ($query) => $query->withTrashed(),
+                                'arquivoCorrecao',
+                                'revisores.user',
+                            ]);
 
         if ($request->filled('titulo')) {
             $query->where('titulo', 'ilike', '%' . $request->titulo . '%');
