@@ -121,6 +121,7 @@ Auth::routes(['verify' => true, 'register' => false]);
             Route::view('/cronograma', 'cronograma')->name('cronograma');
             Route::view('/programacao-geral', 'programacao.programacao-geral')->name('programacao.geral');
             Route::view('/feira', 'programacao.feira')->name('programacao.feira');
+            Route::view('/cronograma-apresentacoes', 'programacao.cronograma-apresentacoes')->name('programacao.cronograma-apresentacoes');
             Route::view('/mostra-audiovisual', 'programacao.mostra')->name('programacao.mostra');
             Route::view('/premiacoes', 'premiacoes')->name('premiacoes');
             Route::view('/normas', 'normas')->name('normas');

@@ -128,6 +128,7 @@
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="{{ route('programacao.geral', ['locale' => app()->getLocale()]) }}">Programação Geral</a></li>
                             <li><a class="dropdown-item" href="{{ route('programacao.feira', ['locale' => app()->getLocale()]) }}">Feira da Agrobiodiversidade</a></li>
+                            <li><a class="dropdown-item" href="{{ route('programacao.cronograma-apresentacoes', ['locale' => app()->getLocale()]) }}">Cronograma de Apresentação Oral e Pôsters</a></li>
                         </ul>
                     </li>
 
