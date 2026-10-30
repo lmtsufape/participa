@@ -9,7 +9,7 @@
             </h1>
 
             @php
-                $arquivoPosters = 'documentos/CronogramaSessoesPosteres.pdf';
+                $arquivoPosters = 'documentos/CronogramaSessoesPosteresV2.pdf';
                 $arquivoComunicacoesOrais = 'documentos/CronogramaComunicacoesOrais.pdf';
                 $cronogramas = [
                     [
@@ -18,10 +18,15 @@
                         'botao' => 'Baixar Cronograma das Sessões de Pôsters (.pdf)',
                         'orientacoes_titulo' => 'Apresentação de Poster - Orientações',
                         'orientacoes' => [
-                            'Você pode baixar o modelo do banner na aba normas deste site;',
+                            [
+                                'texto' => 'Você pode baixar o modelo do banner na aba normas deste site',
+                                'url' => 'https://cbee.etnobiologia.org/pt-BR/normas',
+                                'link' => 'clicando aqui',
+                            ],
                             'É permitido que outro autor ou autora (que não seja o principal) apresente o trabalho;',
                             'Serão dois dias de exposição, porém cada trabalho será apresentado somente em um dia (quarta ou quinta-feira). Fique atento(a) no cronograma para saber sua data de exposição;',
-                            'Entre em contato com a organização do evento se necessitar indicações de gráficas para impressão do seu banner em Belo Horizonte.',
+                            'Entre em contato com a organização do evento se necessitar indicações de gráficas para impressão do seu banner em Belo Horizonte;',
+                            'Você pode já pela manhã deixar o seu pôster pendurado no hall da FAFICH (local onde será a apresentação), uma vez que está programada a sessão para as 17:30.',
                         ],
                     ],
                     [
@@ -46,7 +51,13 @@
                     <p class="fw-bold mb-2">{{ $cronograma['orientacoes_titulo'] }}</p>
                     <ul class="mb-4" style="line-height: 1.6;">
                         @foreach ($cronograma['orientacoes'] as $orientacao)
-                            <li class="mb-2">{{ $orientacao }}</li>
+                            <li class="mb-2">
+                                @if (is_array($orientacao))
+                                    {{ $orientacao['texto'] }} <a href="{{ $orientacao['url'] }}" target="_blank" rel="noopener noreferrer">{{ $orientacao['link'] }}</a>
+                                @else
+                                    {{ $orientacao }}
+                                @endif
+                            </li>
                         @endforeach
                     </ul>
                     <div class="my-3">
