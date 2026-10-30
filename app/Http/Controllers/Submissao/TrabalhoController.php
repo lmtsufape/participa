@@ -1128,7 +1128,7 @@ class TrabalhoController extends Controller
                             $trabalho->aprovacao_emitida_em   = now();
                             $trabalho->saveOrFail();
 
-                            Mail::to($trabalho->autor->email)->send(new CartaDeAceiteMail($trabalho, $codigo))->afterCommit();
+                            Mail::to($trabalho->autor->email)->send((new CartaDeAceiteMail($trabalho, $codigo))->afterCommit());
                             return ['flash' => 'success', 'msg' => 'Trabalho aprovado com sucesso!'];
 
                         }else{
@@ -1139,7 +1139,7 @@ class TrabalhoController extends Controller
                             $trabalho->aprovacao_emitida_em   = now();
                             $trabalho->saveOrFail();
 
-                            Mail::to($trabalho->autor->email)->send(new CartaDeAceiteMail($trabalho, $codigo))->afterCommit();
+                            Mail::to($trabalho->autor->email)->send((new CartaDeAceiteMail($trabalho, $codigo))->afterCommit());
                             return ['flash' => 'success', 'msg' => 'Trabalho aprovado com sucesso!'];
                         }
                     }
@@ -1165,7 +1165,7 @@ class TrabalhoController extends Controller
                     if(!$trabalho->permite_correcao){
                         $trabalho->update(['permite_correcao' => true]);
 
-                        Mail::to($trabalho->autor->email)->send(new CorrecaoTrabalhoLiberadaMail($trabalho, route('user.meusTrabalhos')))->afterCommit();
+                        Mail::to($trabalho->autor->email)->send((new CorrecaoTrabalhoLiberadaMail($trabalho, route('user.meusTrabalhos')))->afterCommit());
 
                         return ['flash' => 'success', 'msg' => 'Trabalho liberado para correção com sucesso!'];
                     }else{
