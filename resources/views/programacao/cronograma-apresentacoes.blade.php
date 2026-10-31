@@ -10,7 +10,7 @@
 
             @php
                 $arquivoPosters = 'documentos/CronogramaSessoesPosteresV2.pdf';
-                $arquivoComunicacoesOrais = 'documentos/CronogramaComunicacoesOrais.pdf';
+                $arquivoComunicacoesOrais = 'documentos/CronogramaComunicacoesOraisAtualizado.pdf';
                 $cronogramas = [
                     [
                         'titulo' => '1. Cronograma das Sessões de Pôsters',
