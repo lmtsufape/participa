@@ -129,6 +129,10 @@
                             <li><a class="dropdown-item" href="{{ route('programacao.geral', ['locale' => app()->getLocale()]) }}">Programação Geral</a></li>
                             <li><a class="dropdown-item" href="{{ route('programacao.feira', ['locale' => app()->getLocale()]) }}">Feira da Agrobiodiversidade</a></li>
                             <li><a class="dropdown-item" href="{{ route('programacao.cronograma-apresentacoes', ['locale' => app()->getLocale()]) }}">Cronograma de Apresentação Oral e Pôsters</a></li>
+                            <li><a class="dropdown-item" href="{{ route('programacao.dia-16', ['locale' => app()->getLocale()]) }}">16/11 — Segunda-feira</a></li>
+                            <li><a class="dropdown-item" href="{{ route('programacao.dia-17', ['locale' => app()->getLocale()]) }}">17/11 — Terça-feira</a></li>
+                            <li><a class="dropdown-item" href="{{ route('programacao.dia-18', ['locale' => app()->getLocale()]) }}">18/11 — Quarta-feira</a></li>
+                            <li><a class="dropdown-item" href="{{ route('programacao.dia-19', ['locale' => app()->getLocale()]) }}">19/11 — Quinta-feira</a></li>
                         </ul>
                     </li>
 
