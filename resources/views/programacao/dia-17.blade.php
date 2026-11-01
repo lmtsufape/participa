@@ -8,6 +8,17 @@
             <section class="shadow-sm p-4 mb-4 bg-white rounded border-start border-4" style="border-color: #f2a440 !important;">
                 <h3 class="h4 mb-3" style="color: #3d93a9;">Grupos de Trabalho - 08:00 às 12:00</h3>
             </section>
+            <section class="shadow-sm p-4 mb-4 bg-white rounded border-start border-4" style="border-color: #f2a440 !important;">
+                <h3 class="h4 mb-3" style="color: #3d93a9;">Sessão de Pôsteres – 17:30 às 18:30</h3>
+            </section>
+            <section class="shadow-sm p-4 mb-4 bg-white rounded border-start border-4" style="border-color: #f2a440 !important;">
+                <h3 class="h4 mb-3" style="color: #3d93a9;">Mostra Audiovisual – 17:30 às 18:30 e 19:30 às 21:30</h3>
+                @include('programacao.local', ['local' => "Auditório da Escola de Belas Artes (EBA)"])
+            </section>
+            <section class="shadow-sm p-4 mb-4 bg-white rounded border-start border-4" style="border-color: #f2a440 !important;">
+                <h3 class="h4 mb-3" style="color: #3d93a9;">Lançamento de Livros - 19:30 às 21:30</h3>
+                @include('programacao.local', ['local' => "Auditório Bicalho (FAFICH)"])
+            </section>
             <h2 class="h3 mt-5 mb-4" style="color: #3d93a9;">Mesas-redondas</h2>
             <section class="shadow-sm p-4 mb-4 bg-white rounded border-start border-4" style="border-color: #f2a440 !important;">
                 <h3 class="h4 mb-3" style="color: #3d93a9;">Mesa redonda 1 - 13:00 às 15:00</h3>
@@ -18,6 +29,7 @@
                 <p class="mb-2">Renata Paulina Rosa (Quilombo de Pontinha - Paraopeba/MG)</p>
                 <p class="mb-2">Normelia Gonçalves Batista Moreira (Quilombo de Pontinha - Paraopeba/MG)</p>
                 <p class="mb-2">Regina Barros Goulart Nogueira (Fórum Nacional de Segurança Alimentar e Nutricional dos Povos Tradicionais de Matriz Africana)</p>
+                @include('programacao.local', ['local' => "Auditório Baesse (FAFICH)"])
             </section>
             <section class="shadow-sm p-4 mb-4 bg-white rounded border-start border-4" style="border-color: #f2a440 !important;">
                 <h3 class="h4 mb-3" style="color: #3d93a9;">Mesa redonda 2 - 13:00 às 15:00</h3>
@@ -26,6 +38,7 @@
                 <p class="mb-2">Sérgio Papagaio (Associação dos Garimpeiros e Garimpeiras Tradicionais do Alto Rio Doce</p>
                 <p class="mb-2">Baba Edvaldo de Jesus (PCTRAMA - Coletivo Povos e Comunidades de Tradição Religiosa Ancestral de Matriz Africana)</p>
                 <p class="mb-2">Kenya Pataxó (Comunidade Indígena Pataxó Hierú TGA)</p>
+                @include('programacao.local', ['local' => "Auditório Carangola (FAFICH)"])
             </section>
             <section class="shadow-sm p-4 mb-4 bg-white rounded border-start border-4" style="border-color: #f2a440 !important;">
                 <h3 class="h4 mb-3" style="color: #3d93a9;">Mesa redonda 3 - 13:00 às 15:00</h3>
@@ -36,6 +49,7 @@
                 <p class="mb-2">Pedrina de Lourdes Santos (Guarda de Massambique de Nossa Senhora das Mercês de Oliveira, MG)</p>
                 <p class="mb-2">Daru Tikuna (Mestra Saberes Tradicionais – UFMG/UEMG)</p>
                 <p class="mb-2">Flávio dos Santos (Comunidade Quilombola do Açude – Jaboticatubas/MG, Secretaria de Cultura de Santana do Riacho/MG)</p>
+                @include('programacao.local', ['local' => "Auditório Bicalho (FAFICH)"])
             </section>
             <section class="shadow-sm p-4 mb-4 bg-white rounded border-start border-4" style="border-color: #f2a440 !important;">
                 <h3 class="h4 mb-3" style="color: #3d93a9;">Mesa redonda 4 - 15:30 às 17:30</h3>
@@ -46,6 +60,7 @@
                 <p class="mb-2">Jõprãmre Rãrãkre Jõkumti (ParkatêjêPovo Gavião Parkatêjê - Escola Estadual Indígena Peptykre Parkatêjê - Aldeia Parkatêjê)</p>
                 <p class="mb-2">Maiara Cristina Gonçalves (UFSC)</p>
                 <p class="mb-2">Taline Cristina da Silva (UNEAL)</p>
+                @include('programacao.local', ['local' => "Auditório Carangola (FAFICH)"])
             </section>
             <section class="shadow-sm p-4 mb-4 bg-white rounded border-start border-4" style="border-color: #f2a440 !important;">
                 <h3 class="h4 mb-3" style="color: #3d93a9;">Mesa redonda 5 - 15:30 às 17:30</h3>
@@ -54,6 +69,7 @@
                 <p class="mb-2">Maria Júlia Ferreira (INPA)</p>
                 <p class="mb-2">Nivaldo Peroni (UFSC)</p>
                 <p class="mb-2">Tiago Hermenegildo (UFMG)</p>
+                @include('programacao.local', ['local' => "Auditório Bicalho (FAFICH)"])
             </section>
             <section class="shadow-sm p-4 mb-4 bg-white rounded border-start border-4" style="border-color: #f2a440 !important;">
                 <h3 class="h4 mb-3" style="color: #3d93a9;">Mesa redonda 6 - 15:30 às 17:30</h3>
@@ -62,6 +78,7 @@
                 <p class="mb-2">Maxuell Moreira Pio (Comunidade Tradicional Carroceira – RMBH)</p>
                 <p class="mb-2">Aderval Costa Filho (UFMG)</p>
                 <p class="mb-2">Maria de Fátima Alves (Comissão em Defesa dos Direitos das Comunidades Extrativistas Apanhadoras de Flores Sempre-Vivas – CODECEX)</p>
+                @include('programacao.local', ['local' => "Auditório Baesse (FAFICH)"])
             </section>
             <h2 class="h3 mt-5 mb-4" style="color: #3d93a9;">Simpósios Especiais</h2>
             <section class="shadow-sm p-4 mb-4 bg-white rounded border-start border-4" style="border-color: #f2a440 !important;">
@@ -74,6 +91,7 @@
                 <p class="mb-2">Joelson Moreno Brito de Moura (UNIFESSPA)</p>
                 <p class="mb-2">André Luiz Borba Nascimento (UFMA)</p>
                 <p class="mb-2">Ana Haydée Ladio (UNCOMA, Argentina)</p>
+                @include('programacao.local', ['local' => "Auditório Adriana Bogliolo (Escola de Ciência da Informação)"])
             </section>
             <section class="shadow-sm p-4 mb-4 bg-white rounded border-start border-4" style="border-color: #f2a440 !important;">
                 <h3 class="h4 mb-3" style="color: #3d93a9;">Simpósio Especial 2 - 13:00 às 17:00</h3>
@@ -85,6 +103,7 @@
                 <p class="mb-2">Flávia Maria Galizoni (UFMG)</p>
                 <p class="mb-2">Fábio de Oliveira Freitas (EMBRAPA)</p>
                 <p class="mb-2">Enedina Souza dos Santos (Comunidade Tradicional Quilombola, Pesqueira e Vazanteira de Croatá, Januári/MG)</p>
+                @include('programacao.local', ['local' => "Auditório 3 – Cerrado – Instituto de Ciências Biológicas"])
             </section>
             <section class="shadow-sm p-4 mb-4 bg-white rounded border-start border-4" style="border-color: #f2a440 !important;">
                 <h3 class="h4 mb-3" style="color: #3d93a9;">Simpósio Especial 3 - 13:00 às 17:00</h3>
@@ -98,6 +117,7 @@
                 <p class="mb-2">Gisele Siqueira (Comunidade do Retiro - Serra do Cipó/MG)</p>
                 <p class="mb-2">Raquel Inácio Aparício (Comunidade do Retiro - Serra do Cipó/MG)</p>
                 <p class="mb-2">Andrea Zanetti (Serra da Canastra/MG)</p>
+                @include('programacao.local', ['local' => "Auditório da Escola de Belas Artes (EBA)"])
             </section>
             <section class="shadow-sm p-4 mb-4 bg-white rounded border-start border-4" style="border-color: #f2a440 !important;">
                 <h3 class="h4 mb-3" style="color: #3d93a9;">Simpósio Especial 4 - 13:00 às 17:00</h3>
@@ -110,27 +130,32 @@
                 <p class="mb-2">Dona Maria dos Remédios (Morro do pilar/MG)</p>
                 <p class="mb-2">Aparecida Arruda (Ervanário São Francisco de Assis, Sabará/MG)</p>
                 <p class="mb-2">Vivian Camacho (Salud de los Pueblos, Bolívia)</p>
+                @include('programacao.local', ['local' => "Auditório do Instituto de Geociências (IGC)"])
             </section>
             <h2 class="h3 mt-5 mb-4" style="color: #3d93a9;">Palestras</h2>
             <section class="shadow-sm p-4 mb-4 bg-white rounded border-start border-4" style="border-color: #f2a440 !important;">
                 <h3 class="h4 mb-3" style="color: #3d93a9;">Palestra 1 - 18:30 às 19:30</h3>
                 <p class="fw-bold mb-3">O que a etnobiologia ainda não consegue ver?</p>
                 <p class="mb-2">Ulysses Paulino de Albuquerque (UFPE)</p>
+                @include('programacao.local', ['local' => "Auditório 3 – Cerrado – Instituto de Ciências Biológicas"])
             </section>
             <section class="shadow-sm p-4 mb-4 bg-white rounded border-start border-4" style="border-color: #f2a440 !important;">
                 <h3 class="h4 mb-3" style="color: #3d93a9;">Palestra 2 - 18:30 às 19:30</h3>
                 <p class="fw-bold mb-3">Medicina tradicional ancestral para el cuidado intregral de la vida</p>
                 <p class="mb-2">Vivian Camacho (Salud de los Pueblos, Bolívia)</p>
+                @include('programacao.local', ['local' => "Auditório Carangola (FAFICH)"])
             </section>
             <section class="shadow-sm p-4 mb-4 bg-white rounded border-start border-4" style="border-color: #f2a440 !important;">
                 <h3 class="h4 mb-3" style="color: #3d93a9;">Palestra 3 - 18:30 às 19:30</h3>
                 <p class="fw-bold mb-3">De águas a água - conhecimentos tradicionais, políticas públicas e clima no Seminário mineiro (Jequitinhonha e Norte).</p>
                 <p class="mb-2">Flávia Maria Galizoni (UFMG)</p>
+                @include('programacao.local', ['local' => "Auditório Adriana Bogliolo (Escola de Ciência da Informação)"])
             </section>
             <section class="shadow-sm p-4 mb-4 bg-white rounded border-start border-4" style="border-color: #f2a440 !important;">
                 <h3 class="h4 mb-3" style="color: #3d93a9;">Palestra 4 - 18:30 às 19:30</h3>
                 <p class="fw-bold mb-3">La Etnobiólogía y la Agroecología que necesitamos en Latinoamérica&quot;</p>
                 <p class="mb-2">Ramón Mariaca Méndez (El Colegio de la Frontera Sur, México)</p>
+                @include('programacao.local', ['local' => "Auditório da Escola de Belas Artes (EBA)"])
             </section>
             <section class="shadow-sm p-4 mb-4 bg-white rounded border-start border-4" style="border-color: #f2a440 !important;">
                 <h3 class="h4 mb-3" style="color: #3d93a9;">Palestra 5 - 18:30 às 19:30</h3>

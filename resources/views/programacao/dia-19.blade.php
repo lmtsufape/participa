@@ -5,6 +5,9 @@
     <div class="row justify-content-center">
         <div class="col-md-10">
             <h1 class="display-4 mb-4 fw-bold" style="color: #3d93a9; border-bottom: 3px solid #f2a440; padding-bottom: 10px;">Programação — 19/11/2026</h1>
+            <section class="shadow-sm p-4 mb-4 bg-white rounded border-start border-4" style="border-color: #f2a440 !important;">
+                <h3 class="h4 mb-3" style="color: #3d93a9;">Grupos de Trabalho - 08:00 às 12:00</h3>
+            </section>
             <h2 class="h3 mt-5 mb-4" style="color: #3d93a9;">Mesas-redondas</h2>
             <section class="shadow-sm p-4 mb-4 bg-white rounded border-start border-4" style="border-color: #f2a440 !important;">
                 <h3 class="h4 mb-3" style="color: #3d93a9;">Mesa redonda 13- 13:00 às 15:00</h3>
@@ -12,6 +15,7 @@
                 <p class="mb-2">Carolina Alves (UFG)</p>
                 <p class="mb-2">Luiza Soares Sotto (UFG)</p>
                 <p class="mb-2">Michele Duarte (IF Goiano)</p>
+                @include('programacao.local', ['local' => "Auditório Baesse (FAFICH)"])
             </section>
             <section class="shadow-sm p-4 mb-4 bg-white rounded border-start border-4" style="border-color: #f2a440 !important;">
                 <h3 class="h4 mb-3" style="color: #3d93a9;">Mesa redonda 14- 13:00 às 15:00</h3>
@@ -22,6 +26,7 @@
                 <p class="mb-2">Ramón Mariaca Méndez (El Colegio de la Frontera Sur, México)</p>
                 <p class="mb-2">Rumi Regina Kubo (UFRGS)</p>
                 <p class="mb-2">Álvaro Sepúlveda-Pío (Sociedad Colombiana de Etnobiología)</p>
+                @include('programacao.local', ['local' => "Auditório Carangola (FAFICH)"])
             </section>
             <section class="shadow-sm p-4 mb-4 bg-white rounded border-start border-4" style="border-color: #f2a440 !important;">
                 <h3 class="h4 mb-3" style="color: #3d93a9;">Mesa redonda 15- 13:00 às 15:00</h3>
@@ -31,6 +36,7 @@
                 <p class="mb-2">Viviane Stern da Fonseca-Kruel (UFRJ, Jardim Botânico do Rio de Janeiro)</p>
                 <p class="mb-2">Márlia Coelho Fereira (Museu Paraense Emílio Goeldi)</p>
                 <p class="mb-2">Lin Chau Ming (UFAM)</p>
+                @include('programacao.local', ['local' => "Auditório Bicalho (FAFICH)"])
             </section>
             <section class="shadow-sm p-4 mb-4 bg-white rounded border-start border-4" style="border-color: #f2a440 !important;">
                 <h3 class="h4 mb-3" style="color: #3d93a9;">Mesa redonda 16- 15:30 às 17:30</h3>
@@ -38,6 +44,7 @@
                 <p class="mb-2">Marcelo Derzi Vidal (ICMBio)</p>
                 <p class="mb-2">Gustavo Hallwass (UFLA)</p>
                 <p class="mb-2">Renata Emin-Lima (Museu Paraense Emílio Goeld)</p>
+                @include('programacao.local', ['local' => "Auditório Bicalho (FAFICH)"])
             </section>
             <section class="shadow-sm p-4 mb-4 bg-white rounded border-start border-4" style="border-color: #f2a440 !important;">
                 <h3 class="h4 mb-3" style="color: #3d93a9;">Mesa redonda 17- 15:30 às 17:30</h3>
@@ -52,6 +59,7 @@
                 <p class="mb-2">Lidiane Taverny (Rede dos Povos e Comunidades Tradicionais do Brasil)</p>
                 <p class="mb-2">Ana Paula Santos (Rede dos Povos e Comunidades Tradicionais do Brasil)</p>
                 <p class="mb-2">Mabel Apurinã (Coordenação das Organizações Indígenas da Amazônia Brasileira - COIAB)</p>
+                @include('programacao.local', ['local' => "Auditório Carangola (FAFICH)"])
             </section>
             <section class="shadow-sm p-4 mb-4 bg-white rounded border-start border-4" style="border-color: #f2a440 !important;">
                 <h3 class="h4 mb-3" style="color: #3d93a9;">Mesa redonda 18- 15:30 às 17:30</h3>
@@ -60,6 +68,7 @@
                 <p class="mb-2">Danielly Cristina Pereira Vieira (UNICENTRO)</p>
                 <p class="mb-2">Joelson Moreno Brito de Moura (UNIFESSPA)</p>
                 <p class="mb-2">Regina Célia da Silva Oliveira (UNIVASF)</p>
+                @include('programacao.local', ['local' => "Auditório Baesse (FAFICH)"])
             </section>
             <h2 class="h3 mt-5 mb-4" style="color: #3d93a9;">Simpósios Especiais</h2>
             <section class="shadow-sm p-4 mb-4 bg-white rounded border-start border-4" style="border-color: #f2a440 !important;">
@@ -76,7 +85,8 @@
                 <p class="mb-2">Gilberto Lopes dos Reis (Comunidade Pesqueira e Vazanteira da Venda - Pedras de maria da Cruz/MG)</p>
                 <p class="mb-2">Letícia Aparecida Rocha (Conselho Pastoral dos Pescadores - CPP)</p>
                 <p class="mb-2">Clarindo Pereira dos Santos (Movimento dos Pescadores e Pescadoras Artesanais - MPP)</p>
-                <p class="mb-2">Ernando Ferreira Pinto (Coordenação de Inclusão Produtiva e Etnodesenvolvimento Quilombola e de Povos e Comunidades Tradicionais (CGETNO) da SETEQ/MDA)</p>
+                <p class="mb-2">Ernando Ferreira Pinto (Coordenação de Inclusão Produtiva e Etnodesenvolvimento Quilombola e de Povos e Comunidades Tradicionais (CGETNO) da SETEQ/MDA</p>
+                @include('programacao.local', ['local' => "Auditório 3 – Cerrado – Instituto de Ciências Biológicas"])
             </section>
             <section class="shadow-sm p-4 mb-4 bg-white rounded border-start border-4" style="border-color: #f2a440 !important;">
                 <h3 class="h4 mb-3" style="color: #3d93a9;">Simpósio Especial 10 - 13:00 às 17:00</h3>
@@ -89,6 +99,10 @@
                 <p class="mb-2">Lin Chau Ming (UFAM)</p>
                 <p class="mb-2">Flávio Bezerra Barros (UFPA)</p>
                 <p class="mb-2">Gustavo Taboada Soldati (UFJF)</p>
+                @include('programacao.local', ['local' => "Auditório do Instituto de Geociências (IGC)"])
+            </section>
+            <section class="shadow-sm p-4 mb-4 bg-white rounded border-start border-4" style="border-color: #f2a440 !important;">
+                <h3 class="h4 mb-3" style="color: #3d93a9;">Cerimônia de Encerramento 18:30 às 20:00</h3>
             </section>
         </div>
     </div>
