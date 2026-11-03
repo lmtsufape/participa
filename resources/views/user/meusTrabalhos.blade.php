@@ -716,7 +716,7 @@
                                         <div class="row justify-content-center">
                                             @foreach ($modalidade->midiasExtra as $midia)
                                                 <div class="col-sm-12" style="margin-top: 20px;">
-                                                    <label for="{{ $midia->hyphenizeNome() }}"
+                                                    <label for="{{ $midia->hyphenizeNome }}"
                                                         class="col-form-label"><strong>{{ $midia->nome }}</strong>
                                                     </label>
                                                     <a
@@ -728,7 +728,7 @@
                                                         <input type="file" class="filestyle"
                                                             data-placeholder="Nenhum arquivo" data-text="Selecionar"
                                                             data-btnClass="btn-primary-lmts"
-                                                            name="{{ $midia->hyphenizeNome() }}">
+                                                            name="{{ $midia->hyphenizeNome }}">
                                                     </div>
                                                     <small><strong>Extensão de arquivos aceitas:</strong>
                                                         @if ($midia->pdf == true)
