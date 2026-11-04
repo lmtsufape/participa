@@ -27,7 +27,13 @@
             </div>
         </form>
     </div></div>
-    <p>{{ $trabalhos->total() }} trabalho(s) com trabalho completo enviado.</p>
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+        <p class="mb-0">{{ $trabalhos->total() }} trabalho(s) com trabalho completo enviado.</p>
+        <a class="btn btn-success d-inline-flex align-items-center gap-2"
+           href="{{ route('coord.exportarAutoresVersoesFinais', array_merge(['evento' => $evento->id], request()->only(['id', 'titulo', 'eixo_id', 'modalidade_id']))) }}">
+            <i class="fas fa-file-excel" aria-hidden="true"></i> Exportar autores (.xlsx)
+        </a>
+    </div>
     <div class="table-responsive"><table class="table table-hover">
         <thead><tr><th>ID</th><th>Título</th><th>Autor</th><th>Modalidade</th><th>Eixo</th><th>Enviado em</th><th>Arquivo</th></tr></thead>
         <tbody>

@@ -215,6 +215,7 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
         // Rotas para o coordenador gerir as solicitações
         Route::prefix('/coord/evento/')->name('coord.')->group(function () {
             Route::get('{evento}/versoes-finais', [VersaoFinalController::class, 'listar'])->name('listarVersoesFinais');
+            Route::get('{evento}/versoes-finais/autores.xlsx', [VersaoFinalController::class, 'exportarAutores'])->name('exportarAutoresVersoesFinais');
             Route::get('inscricoes-pcd', [InscricaoPCDController::class, 'listar'])->name('inscricoes.pcd.listar');
             Route::post('/inscricao-pcd/{solicitacao}/aprovar', [InscricaoPCDController::class, 'aprovar'])->name('inscricao.pcd.aprovar');
             Route::post('/inscricao-pcd/{solicitacao}/rejeitar', [InscricaoPCDController::class, 'rejeitar'])->name('inscricao.pcd.rejeitar');
