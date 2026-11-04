@@ -17,6 +17,28 @@ class VersaoFinalController extends Controller
 {
     public function listar(Request $request, \App\Models\Submissao\Evento $evento)
     {
+        [$query, $areas] = $this->consultaListagem($request, $evento);
+
+        return view('coordenador.trabalhos.listarVersoesFinais', [
+            'evento' => $evento,
+            'trabalhos' => $query->orderBy('titulo')->orderBy('id')->paginate(15)->withQueryString(),
+            'modalidades' => $evento->modalidades()->orderBy('nome')->get(),
+            'areas' => $areas->get(),
+        ]);
+    }
+
+    public function exportarAutores(Request $request, \App\Models\Submissao\Evento $evento)
+    {
+        [$query] = $this->consultaListagem($request, $evento);
+
+        return \Maatwebsite\Excel\Facades\Excel::download(
+            new \App\Exports\AutoresTrabalhosCompletosExport($query->orderBy('titulo')->orderBy('id')),
+            'autores-trabalhos-completos-'.(Str::slug($evento->nome) ?: 'evento').'.xlsx'
+        );
+    }
+
+    private function consultaListagem(Request $request, \App\Models\Submissao\Evento $evento): array
+    {
         $this->authorize('isCoordenadorOrCoordCientificaOrCoordEixo', $evento);
         $filtros = $request->validate([
             'id' => ['nullable', 'integer', 'min:1'],
@@ -42,12 +64,7 @@ class VersaoFinalController extends Controller
             $query->whereRaw('LOWER(titulo) LIKE ?', ['%'.mb_strtolower($filtros['titulo']).'%']);
         }
 
-        return view('coordenador.trabalhos.listarVersoesFinais', [
-            'evento' => $evento,
-            'trabalhos' => $query->orderBy('titulo')->orderBy('id')->paginate(15)->withQueryString(),
-            'modalidades' => $evento->modalidades()->orderBy('nome')->get(),
-            'areas' => $areas->get(),
-        ]);
+        return [$query, $areas];
     }
 
     public function index(Trabalho $trabalho)
