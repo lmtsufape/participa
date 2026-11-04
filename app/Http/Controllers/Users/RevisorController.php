@@ -335,7 +335,7 @@ class RevisorController extends Controller
         $subject = config('app.name').' - Lembrete  de trabalho';
 
         $revisores = json_decode($request->input('revisores'));
-        foreach ($revisores as $revisor) {
+        foreach ($revisores->data as $revisor) {
             $user = User::find($revisor->id);
             //dd($user->revisor[0]->correcoesEmAndamento);
             $revisorTemp = $user->revisor[0];
