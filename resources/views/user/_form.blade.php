@@ -13,7 +13,7 @@
                 <div class="row">
                     <div class="form-group col-md-6">
                         <label for="name" class="col-form-label"><strong>{{ __('Nome completo') }}</strong></label>
-                        <input id="name" type="text" class="form-control apenasLetras @error('name') is-invalid @enderror" name="name" value="{{ old('name', $user->name) }}" autocomplete="name" autofocus required>
+                        <input id="name" type="text" class="form-control apenasLetras @error('name') is-invalid @enderror" name="name" value="{{ old('name', $user->name ?? '') }}" autocomplete="name" autofocus required>
                         @error('name')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ __($message) }}</strong>
@@ -57,7 +57,7 @@
                         </div>
                         <div id="fieldCPF" class="mt-2">
                             <input id="cpf" type="text" class="form-control @error('cpf') is-invalid @enderror"
-                                name="cpf" value="{{ old('cpf', $user->cpf) }}" placeholder="CPF">
+                                name="cpf" value="{{ old('cpf', $user->cpf ?? '') }}" placeholder="CPF">
                             @error('cpf')
                                 <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
                             @enderror
@@ -65,7 +65,7 @@
                         {{-- Campo CNPJ --}}
                         <div id="fieldCNPJ" class="mt-2" style="display: none;">
                             <input id="cnpj" type="text" class="form-control @error('cnpj') is-invalid @enderror"
-                                name="cnpj" value="{{ old('cnpj', $user->cnpj) }}" placeholder="{{ __('CNPJ') }}">
+                                name="cnpj" value="{{ old('cnpj', $user->cnpj ?? '') }}" placeholder="{{ __('CNPJ') }}">
                             @error('cnpj')
                                 <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
                             @enderror
@@ -73,7 +73,7 @@
                         {{-- Campo Passaporte --}}
                         <div id="fieldPassaporte" class="mt-2" style="display: none;">
                             <input id="passaporte" type="text" class="form-control @error('passaporte') is-invalid @enderror"
-                                name="passaporte" value="{{ old('passaporte', $user->passaporte) }}" placeholder="{{ __('Passaporte') }}">
+                                name="passaporte" value="{{ old('passaporte', $user->passaporte ?? '') }}" placeholder="{{ __('Passaporte') }}">
                             @error('passaporte')
                                 <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
                             @enderror
@@ -81,7 +81,7 @@
                     </div>
                     <div class="col-md-6">
                         <label for="instituicao" class="col-form-label"><strong>{{ __('Instituição') }}</strong></label>
-                        <input id="instituicao" type="text" class="form-control apenasLetras @error('instituicao') is-invalid @enderror" name="instituicao" value="{{ old('instituicao', $user->instituicao) }}" autocomplete="instituicao">
+                        <input id="instituicao" type="text" class="form-control apenasLetras @error('instituicao') is-invalid @enderror" name="instituicao" value="{{ old('instituicao', $user->instituicao ?? '') }}" autocomplete="instituicao">
                         @error('instituicao')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ __($message) }}</strong>
@@ -92,7 +92,7 @@
                 <div class="row">
                     <div class="col-md-4 form-group">
                         <label for="celular" class="col-form-label"><strong>{{ __('Celular') }}</strong></label><br>
-                        <input id="celular" class="form-control celular @error('celular') is-invalid @enderror" type="tel" name="celular" value="{{old('celular', $user->celular)}}" style="width: 100% !important;" autocomplete="celular" required onkeyup="process(event)">
+                        <input id="celular" class="form-control celular @error('celular') is-invalid @enderror" type="tel" name="celular" value="{{old('celular', $user->celular ?? '')}}" style="width: 100% !important;" autocomplete="celular" required onkeyup="process(event)">
                         <div class="alert alert-info mt-1" style="display: none"></div>
                         <div id="celular-invalido" class="alert alert-danger mt-1" role="alert" style="display: none"></div>
                         @error('celular')
@@ -103,7 +103,7 @@
                     </div>
                     <div class="col-md-4 form-group">
                         <label for="data_nascimento" class="col-form-label"><strong>{{ __('Data de nascimento') }}</strong></label>
-                        <input id="data_nascimento" type="date" class="form-control @error('data_nascimento') is-invalid @enderror" name="data_nascimento" value="{{ old('data_nascimento', $user->data_nascimento?->format('Y-m-d'))}}" autocomplete="data_nascimento" required>
+                        <input id="data_nascimento" type="date" class="form-control @error('data_nascimento') is-invalid @enderror" name="data_nascimento" value="{{ old('data_nascimento', ($user ?? null)?->data_nascimento?->format('Y-m-d') ?? '')}}" autocomplete="data_nascimento" required>
                         @error('data_nascimento')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ __($message) }}</strong>
@@ -112,13 +112,36 @@
                     </div>
                     <div class="col-md-4 form-group">
                         <label for="email" class="col-form-label"><strong>{{ __('E-mail') }}</strong></label>
-                        <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email', $user->email)}}" autocomplete="email" required>
+                        <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email', $user->email ?? '')}}" autocomplete="email" required>
                         @error('email')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ __($message) }}</strong>
                             </span>
                         @enderror
                     </div>
+                    @guest
+                        <div class="form-group row mb-3">
+                            <div class="col-md-6">
+                                <label for="password" class="col-form-label"><strong>{{ __('Senha') }}</strong></label>
+                                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" autocomplete="new-password">
+                                @error('password')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ __($message) }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="password-confirm" class="col-form-label"><strong>{{ __('Confirmar senha') }}</strong></label>
+                                <input id="password-confirm" type="password" class="form-control" name="password_confirmation" autocomplete="new-password">
+                            </div>
+                            <div class="col-md-12">
+                                <small class="text-muted">
+                                    A senha deve ter no mínimo 8 caracteres. Digite a mesma senha nos dois campos.
+                                </small>
+                            </div>
+                        </div>
+                    @endguest
                 </div>
             </div>
         </div>
@@ -200,7 +223,7 @@
                         <select class="form-control @error('uf') is-invalid @enderror" id="uf" name="uf" required>
                             <option value="" disabled selected hidden>{{__('Selecione o estado')}}</option>
                             @foreach ($estados as $sigla => $nome)
-                                <option @selected(old('uf', $user->endereco?->uf->value) == $sigla) value="{{ $sigla }}">{{ $nome }}</option>
+                                <option @selected(old('uf', $user->endereco?->uf->value ?? '') == $sigla) value="{{ $sigla }}">{{ $nome }}</option>
                             @endforeach
                         </select>
                         @error('uf')
@@ -248,12 +271,12 @@
                                         name="genero"
                                         id="genero_{{ $key }}"
                                         value="{{ $key }}"
-                                        @checked(old('genero', $user->perfilIdentitario?->genero) == $key)
+                                        @checked(old('genero', $user->perfilIdentitario?->genero ?? '') == $key)
                                         >
                                     <label class="form-check-label" for="genero_{{ $key }}">{{ $label }}</label>
                                 </div>
                             @endforeach
-                            <input type="text" name="outroGenero" value="{{ old('outroGenero', $user->perfilIdentitario?->outroGenero) }}" id="outroGenero" class="form-control mt-2" placeholder="Se marcou 'Outro', especifique" style="max-width: 300px;" maxlength="200">
+                            <input type="text" name="outroGenero" value="{{ old('outroGenero', $user->perfilIdentitario?->outroGenero ?? '') }}" id="outroGenero" class="form-control mt-2" placeholder="Se marcou 'Outro', especifique" style="max-width: 300px;" maxlength="200">
                         </div>
                     </div>
                     {{-- Raça (auto-declaração) --}}
@@ -278,11 +301,11 @@
                                         name="raca"
                                         id="raca_{{ $key }}"
                                         value="{{ $key }}"
-                                        @checked(old('raca', $user->perfilIdentitario?->raca) == $key)>
+                                        @checked(old('raca', $user->perfilIdentitario?->raca ?? '') == $key)>
                                     <label class="form-check-label" for="raca_{{ $key }}">{{ $label }}</label>
                                 </div>
                             @endforeach
-                            <input type="text" name="outraRaca" value="{{ old('outraRaca', $user->perfilIdentitario?->outraRaca) }}" id="outraRaca" class="form-control mt-4" placeholder="Se marcou 'Outra', especifique" style="max-width: 300px;" maxlength="200">
+                            <input type="text" name="outraRaca" value="{{ old('outraRaca', $user->perfilIdentitario?->outraRaca ?? '') }}" id="outraRaca" class="form-control mt-4" placeholder="Se marcou 'Outra', especifique" style="max-width: 300px;" maxlength="200">
                         </div>
                     </div>
                 </div>
@@ -292,11 +315,11 @@
                         <label class="col-form-label"><strong>Você se identifica como Pessoa LGBTQIA+?</strong></label>
                         <div>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="lgbtqia" @checked(old('lgbtqia', $user->perfilIdentitario?->lgbtqia) == true) id="lgbtqia_sim" value="true">
+                                <input class="form-check-input" type="radio" name="lgbtqia" @checked(old('lgbtqia', $user->perfilIdentitario?->lgbtqia ?? '') == true) id="lgbtqia_sim" value="true">
                                 <label class="form-check-label" for="lgbtqia_sim">Sim</label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="lgbtqia" @checked(old('lgbtqia', $user->perfilIdentitario?->lgbtqia) == false) id="lgbtqia_nao" value="false">
+                                <input class="form-check-input" type="radio" name="lgbtqia" @checked(old('lgbtqia', $user->perfilIdentitario?->lgbtqia ?? '') == false) id="lgbtqia_nao" value="false">
                                 <label class="form-check-label" for="lgbtqia_nao">Não</label>
                             </div>
                         </div>
@@ -328,7 +351,7 @@
                                     <label class="form-check-label" for="necessidade_{{ $key }}">{{ $label }}</label>
                                 </div>
                             @endforeach
-                            <input type="text" name="outraNecessidadeEspecial" value="{{ old('outraNecessidadeEspecial', $user->perfilIdentitario?->outraNecessidadeEspecial) }}" id="outraNecessidadeEspecial" class="form-control mt-2" placeholder="Se marcou 'Outra', especifique" style="max-width: 300px;" maxlength="200">
+                            <input type="text" name="outraNecessidadeEspecial" value="{{ old('outraNecessidadeEspecial', $user->perfilIdentitario?->outraNecessidadeEspecial ?? '') }}" id="outraNecessidadeEspecial" class="form-control mt-2" placeholder="Se marcou 'Outra', especifique" style="max-width: 300px;" maxlength="200">
                         </div>
                     </div>
                     {{-- Pessoa com deficiência ou idosos --}}
@@ -336,11 +359,11 @@
                         <label class="col-form-label"><strong>Você é uma pessoa idosa ou com deficiência?</strong></label>
                         <div>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" @checked(old('deficienciaIdoso', $user->perfilIdentitario?->deficienciaIdoso) == true) name="deficienciaIdoso" id="deficiencia_sim" value="true">
+                                <input class="form-check-input" type="radio" @checked(old('deficienciaIdoso', $user->perfilIdentitario?->deficienciaIdoso ?? '') == true) name="deficienciaIdoso" id="deficiencia_sim" value="true">
                                 <label class="form-check-label" for="deficiencia_sim">Sim</label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" @checked(old('deficienciaIdoso', $user->perfilIdentitario?->deficienciaIdoso) == false) name="deficienciaIdoso" id="deficiencia_nao" value="false">
+                                <input class="form-check-input" type="radio" @checked(old('deficienciaIdoso', $user->perfilIdentitario?->deficienciaIdoso ?? '') == false) name="deficienciaIdoso" id="deficiencia_nao" value="false">
                                 <label class="form-check-label" for="deficiencia_nao">Não</label>
                             </div>
                         </div>
@@ -352,14 +375,14 @@
                         <label class="col-form-label"><strong>Você pertence ou atua em alguma comunidade ou povo tradicional?</strong></label>
                         <div>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" @checked(old('comunidadeTradicional', $user->perfilIdentitario?->comunidadeTradicional) == true) name="comunidadeTradicional" id="comunidade_sim" value="true">
+                                <input class="form-check-input" type="radio" @checked(old('comunidadeTradicional', $user->perfilIdentitario?->comunidadeTradicional ?? '') == true) name="comunidadeTradicional" id="comunidade_sim" value="true">
                                 <label class="form-check-label" for="comunidade_sim">Sim</label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" @checked(old('comunidadeTradicional', $user->perfilIdentitario?->deficiencomunidadeTradicionalciaIdoso) == false) name="comunidadeTradicional" id="comunidade_nao" value="false">
+                                <input class="form-check-input" type="radio" @checked(old('comunidadeTradicional', $user->perfilIdentitario?->deficiencomunidadeTradicionalciaIdoso ?? '') == false) name="comunidadeTradicional" id="comunidade_nao" value="false">
                                 <label class="form-check-label" for="comunidade_nao">Não</label>
                             </div>
-                            <input type="text" name="nomeComunidadeTradicional" value="{{ old('nomeComunidadeTradicional', $user->perfilIdentitario?->nomeComunidadeTradicional) }}" id="nomeComunidadeTradicional" class="form-control mt-2" placeholder="Se sim, qual?" style="max-width: 400px;" maxlength="200">
+                            <input type="text" name="nomeComunidadeTradicional" value="{{ old('nomeComunidadeTradicional', $user->perfilIdentitario?->nomeComunidadeTradicional ?? '') }}" id="nomeComunidadeTradicional" class="form-control mt-2" placeholder="Se sim, qual?" style="max-width: 400px;" maxlength="200">
                         </div>
                     </div>
                     {{-- Participa de organização, rede ou movimento --}}
@@ -367,26 +390,26 @@
                         <label class="col-form-label"><strong>Você participa de alguma organização, rede ou movimento?</strong></label>
                         <div>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="participacaoOrganizacao" @checked(old('participacaoOrganizacao', $user->perfilIdentitario?->participacaoOrganizacao) == true) id="participa_sim" value="true">
+                                <input class="form-check-input" type="radio" name="participacaoOrganizacao" @checked(old('participacaoOrganizacao', $user->perfilIdentitario?->participacaoOrganizacao ?? '') == true) id="participa_sim" value="true">
                                 <label class="form-check-label" for="participa_sim">Sim</label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="participacaoOrganizacao" @checked(old('participacaoOrganizacao', $user->perfilIdentitario?->participacaoOrganizacao) == false) id="participa_nao" value="false">
+                                <input class="form-check-input" type="radio" name="participacaoOrganizacao" @checked(old('participacaoOrganizacao', $user->perfilIdentitario?->participacaoOrganizacao ?? '') == false) id="participa_nao" value="false">
                                 <label class="form-check-label" for="participa_nao">Não</label>
                             </div>
-                            <input type="text" name="nomeOrganizacao" value="{{ old('nomeOrganizacao', $user->perfilIdentitario?->nomeOrganizacao) }}" id="nomeOrganizacao" class="form-control mt-2" placeholder="Se sim, qual?" style="max-width: 400px;" maxlength="200">
+                            <input type="text" name="nomeOrganizacao" value="{{ old('nomeOrganizacao', $user->perfilIdentitario?->nomeOrganizacao ?? '') }}" id="nomeOrganizacao" class="form-control mt-2" placeholder="Se sim, qual?" style="max-width: 400px;" maxlength="200">
                         </div>
                     </div>
                     {{-- Informações institucionais e de atuação --}}
                     <div>
                         <div class="form-group mt-3">
                             <label for="vinculoInstitucional" class="col-form-label"><strong>Informações Institucionais e de Atuação (preenchimento opcional)</strong></label>
-                            <textarea name="vinculoInstitucional" id="vinculoInstitucional" class="form-control" placeholder="Vínculo institucional ou coletivo (se houver)" maxlength="1000" rows="5" style="height: 120px; resize: none; overflow: hidden;">{{ old('vinculoInstitucional', $user->perfilIdentitario?->vinculoInstitucional) }}</textarea>
+                            <textarea name="vinculoInstitucional" id="vinculoInstitucional" class="form-control" placeholder="Vínculo institucional ou coletivo (se houver)" maxlength="1000" rows="5" style="height: 120px; resize: none; overflow: hidden;">{{ old('vinculoInstitucional', $user->perfilIdentitario?->vinculoInstitucional ?? '') }}</textarea>
                         </div>
                     </div>
                 </div>
                 <div class="row">
-                    @if ($user->membroComissaoEvento != null && count($user->membroComissaoEvento) > 0)
+                    @if (($user ?? null)?->membroComissaoEvento?->isNotEmpty())
                         <div class="col-md-4">
                             <label for="especialidade" class="col-form-label">{{ __('Especialidade profissional') }}</label>
                             <input id="especialidade" type="text" class="form-control apenasLetras @error('especialidade') is-invalid @enderror" name="especialidade" autocomplete="new-password">

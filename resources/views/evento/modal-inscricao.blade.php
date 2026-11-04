@@ -29,7 +29,7 @@
                             ) !!}
                         </p>
                         <div class="modal-footer text-center">
-                            <a href="{{ route('preRegistro') }}" target="_blank">
+                            <a href="{{ route('register', app()->getLocale()) }}" target="_blank">
                                 <button type="button" class="btn btn-secondary">{{ __('Cadastrar-se') }}</button>
                             </a>
 

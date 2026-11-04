@@ -34,7 +34,6 @@
 
         <form method="POST" action="{{ route('perfil.update') }}">
             @csrf
-
             @include('user._form', ['user' => $user])
 
             <div class="row justify-content-center" style="margin: 20px 0 20px 0">
