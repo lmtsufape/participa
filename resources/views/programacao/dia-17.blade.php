@@ -7,9 +7,11 @@
             <h1 class="display-4 mb-4 fw-bold" style="color: #3d93a9; border-bottom: 3px solid #f2a440; padding-bottom: 10px;">Programação — 17/11/2026</h1>
             <section class="shadow-sm p-4 mb-4 bg-white rounded border-start border-4" style="border-color: #f2a440 !important;">
                 <h3 class="h4 mb-3" style="color: #3d93a9;">Grupos de Trabalho - 08:00 às 12:00</h3>
+                @include('programacao.local', ['local' => "FAFICH e ECI"])
             </section>
             <section class="shadow-sm p-4 mb-4 bg-white rounded border-start border-4" style="border-color: #f2a440 !important;">
                 <h3 class="h4 mb-3" style="color: #3d93a9;">Sessão de Pôsteres – 17:30 às 18:30</h3>
+                @include('programacao.local', ['local' => "FAFICH – Hall do 1° andar"])
             </section>
             <section class="shadow-sm p-4 mb-4 bg-white rounded border-start border-4" style="border-color: #f2a440 !important;">
                 <h3 class="h4 mb-3" style="color: #3d93a9;">Mostra Audiovisual – 17:30 às 18:30 e 19:30 às 21:30</h3>
@@ -19,11 +21,16 @@
                 <h3 class="h4 mb-3" style="color: #3d93a9;">Lançamento de Livros - 19:30 às 21:30</h3>
                 @include('programacao.local', ['local' => "Auditório Bicalho (FAFICH)"])
             </section>
+            <section class="shadow-sm p-4 mb-4 bg-white rounded border-start border-4" style="border-color: #f2a440 !important;">
+                <h3 class="h4 mb-3" style="color: #3d93a9;">Atração artística – 12:00 às 13:00</h3>
+                <p class="fw-bold mb-3">Vivência Cultural com Mestre Farinhada, educador popular:</p>
+                <p class="mb-2">Cantigas de Roda, Calango, Poesia e Histórias da Cultura Popular de Minas Gerais</p>
+                @include('programacao.local', ['local' => "Praça de Serviços"])
+            </section>
             <h2 class="h3 mt-5 mb-4" style="color: #3d93a9;">Mesas-redondas</h2>
             <section class="shadow-sm p-4 mb-4 bg-white rounded border-start border-4" style="border-color: #f2a440 !important;">
                 <h3 class="h4 mb-3" style="color: #3d93a9;">Mesa redonda 1 - 13:00 às 15:00</h3>
                 <p class="fw-bold mb-3">Territórios, povos tradicionais e a sociobiodiversidade brasileira na promoção e fortalecimento da segurança alimentar e nutricional</p>
-                <p class="mb-2">Erika Marafon Rodrigues Ciacchi  (UFRN)</p>
                 <p class="mb-2">Flávio Bezerra Barros (UFPA)</p>
                 <p class="mb-2">Gabriela Coelho de Souza (UFRGS)</p>
                 <p class="mb-2">Renata Paulina Rosa (Quilombo de Pontinha - Paraopeba/MG)</p>
@@ -38,6 +45,8 @@
                 <p class="mb-2">Sérgio Papagaio (Associação dos Garimpeiros e Garimpeiras Tradicionais do Alto Rio Doce</p>
                 <p class="mb-2">Baba Edvaldo de Jesus (PCTRAMA - Coletivo Povos e Comunidades de Tradição Religiosa Ancestral de Matriz Africana)</p>
                 <p class="mb-2">Kenya Pataxó (Comunidade Indígena Pataxó Hierú TGA)</p>
+                <p class="mb-2">Ana na Mesa Redonda (Quilombola de Queimadas, Serro/MG)</p>
+                <p class="mb-2">Adair Pereira de Almeida (Conselho Intermunicipal Comunitário do Território Tradicional Geraizeiro e Vacariano do Vale das Cancelas – Grão Mongol/MG)</p>
                 @include('programacao.local', ['local' => "Auditório Carangola (FAFICH)"])
             </section>
             <section class="shadow-sm p-4 mb-4 bg-white rounded border-start border-4" style="border-color: #f2a440 !important;">
@@ -78,7 +87,17 @@
                 <p class="mb-2">Maxuell Moreira Pio (Comunidade Tradicional Carroceira – RMBH)</p>
                 <p class="mb-2">Aderval Costa Filho (UFMG)</p>
                 <p class="mb-2">Maria de Fátima Alves (Comissão em Defesa dos Direitos das Comunidades Extrativistas Apanhadoras de Flores Sempre-Vivas – CODECEX)</p>
+                <p class="mb-2">Adair Pereira de Almeida (Conselho Intermunicipal Comunitário do Território Tradicional Geraizeiro e Vacariano do Vale das Cancelas – Grão Mongol/MG)</p>
                 @include('programacao.local', ['local' => "Auditório Baesse (FAFICH)"])
+            </section>
+            <section class="shadow-sm p-4 mb-4 bg-white rounded border-start border-4" style="border-color: #f2a440 !important;">
+                <h3 class="h4 mb-3" style="color: #3d93a9;">Mesa redonda 7 - 15:30 às 17:30</h3>
+                <p class="fw-bold mb-3">Etnoconservação da natureza: 25 anos depois</p>
+                <p class="mb-2">Gustavo Goulart Moreira Moura (UFPA)</p>
+                <p class="mb-2">Sueli Angelo Furlan (USP)</p>
+                <p class="mb-2">Roberto Adrian Ribaric (USP)</p>
+                <p class="mb-2">Ana Paula Diegues (USP)</p>
+                @include('programacao.local', ['local' => "Sala 1204 Teleconferências (Faculdade de Educação)"])
             </section>
             <h2 class="h3 mt-5 mb-4" style="color: #3d93a9;">Simpósios Especiais</h2>
             <section class="shadow-sm p-4 mb-4 bg-white rounded border-start border-4" style="border-color: #f2a440 !important;">
@@ -102,7 +121,7 @@
                 <p class="mb-2">Maria de Fátima Alves (Comissão em Defesa dos Direitos das Comunidades Extrativistas Apanhadoras de Flores Sempre-Vivas – CODECEX)</p>
                 <p class="mb-2">Flávia Maria Galizoni (UFMG)</p>
                 <p class="mb-2">Fábio de Oliveira Freitas (EMBRAPA)</p>
-                <p class="mb-2">Enedina Souza dos Santos (Comunidade Tradicional Quilombola, Pesqueira e Vazanteira de Croatá, Januári/MG)</p>
+                <p class="mb-2">Enedina Souza dos Santos (Comunidade Tradicional Quilombola, Pesqueira e Vazanteira de Croatá)</p>
                 @include('programacao.local', ['local' => "Auditório 3 – Cerrado – Instituto de Ciências Biológicas"])
             </section>
             <section class="shadow-sm p-4 mb-4 bg-white rounded border-start border-4" style="border-color: #f2a440 !important;">
@@ -117,12 +136,15 @@
                 <p class="mb-2">Gisele Siqueira (Comunidade do Retiro - Serra do Cipó/MG)</p>
                 <p class="mb-2">Raquel Inácio Aparício (Comunidade do Retiro - Serra do Cipó/MG)</p>
                 <p class="mb-2">Andrea Zanetti (Serra da Canastra/MG)</p>
+                <p class="mb-2">Renata Almeida dos Santos (ICMBio)</p>
+                <p class="mb-2">Gabriela Almeida dos Santos (ICMBio)</p>
+                <p class="mb-2">Maria Aparecida Alves Monteiro (Comunidade do Retiro - Serra do Cipó/MG)</p>
                 @include('programacao.local', ['local' => "Auditório da Escola de Belas Artes (EBA)"])
             </section>
             <section class="shadow-sm p-4 mb-4 bg-white rounded border-start border-4" style="border-color: #f2a440 !important;">
                 <h3 class="h4 mb-3" style="color: #3d93a9;">Simpósio Especial 4 - 13:00 às 17:00</h3>
                 <p class="fw-bold mb-3">Práticas tradicionais de cura e cuidado: lutas, visibilidade e descriminalização</p>
-                <p class="mb-2">Sabrina Almeida (UnB)</p>
+                <p class="mb-2">Sabrina Almeida (UFMG)</p>
                 <p class="mb-2">Silvia Guimarães (UnB)</p>
                 <p class="mb-2">Cleonice Pankararu (Aldeia Cinta Vermelha-Jundiba, Araçuaí/MG)</p>
                 <p class="mb-2">Shirlene Sabino (Comunidade Quilombola do Açude, Jaboticatubas/MG)</p>
@@ -153,14 +175,14 @@
             </section>
             <section class="shadow-sm p-4 mb-4 bg-white rounded border-start border-4" style="border-color: #f2a440 !important;">
                 <h3 class="h4 mb-3" style="color: #3d93a9;">Palestra 4 - 18:30 às 19:30</h3>
-                <p class="fw-bold mb-3">La Etnobiólogía y la Agroecología que necesitamos en Latinoamérica&quot;</p>
+                <p class="fw-bold mb-3">La Etnobiología y la Agroecología que necesitamos en Latinoamérica&quot;</p>
                 <p class="mb-2">Ramón Mariaca Méndez (El Colegio de la Frontera Sur, México)</p>
                 @include('programacao.local', ['local' => "Auditório da Escola de Belas Artes (EBA)"])
             </section>
             <section class="shadow-sm p-4 mb-4 bg-white rounded border-start border-4" style="border-color: #f2a440 !important;">
                 <h3 class="h4 mb-3" style="color: #3d93a9;">Palestra 5 - 18:30 às 19:30</h3>
-                <p class="fw-bold mb-3">A pesca artesanal de Cabo Verde frente à máquina antipolítica do desenvolvimento</p>
-                <p class="mb-2">João Paulo Araújo Silva (UFMG)</p>
+                <p class="fw-bold mb-3">Valorizaciones múltiples de los camélidos em las comunidades andinas de la Puna de Argentina</p>
+                <p class="mb-2">Bibiana Leonor Vilá (CONICET, Argentina)</p>
             </section>
         </div>
     </div>

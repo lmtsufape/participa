@@ -7,10 +7,16 @@
             <h1 class="display-4 mb-4 fw-bold" style="color: #3d93a9; border-bottom: 3px solid #f2a440; padding-bottom: 10px;">Programação — 19/11/2026</h1>
             <section class="shadow-sm p-4 mb-4 bg-white rounded border-start border-4" style="border-color: #f2a440 !important;">
                 <h3 class="h4 mb-3" style="color: #3d93a9;">Grupos de Trabalho - 08:00 às 12:00</h3>
+                @include('programacao.local', ['local' => "FAFICH e ECI"])
+            </section>
+            <section class="shadow-sm p-4 mb-4 bg-white rounded border-start border-4" style="border-color: #f2a440 !important;">
+                <h3 class="h4 mb-3" style="color: #3d93a9;">Atração artística – 12:00 às 13:00</h3>
+                <p class="fw-bold mb-3">Mestre Faria e o Boi Livre - cortejo festivo</p>
+                @include('programacao.local', ['local' => "Praça de Serviços"])
             </section>
             <h2 class="h3 mt-5 mb-4" style="color: #3d93a9;">Mesas-redondas</h2>
             <section class="shadow-sm p-4 mb-4 bg-white rounded border-start border-4" style="border-color: #f2a440 !important;">
-                <h3 class="h4 mb-3" style="color: #3d93a9;">Mesa redonda 13- 13:00 às 15:00</h3>
+                <h3 class="h4 mb-3" style="color: #3d93a9;">Mesa redonda 14- 13:00 às 15:00</h3>
                 <p class="fw-bold mb-3">Dimensões humanas da conservação: análise da percepção social sobre comunidades tradicionais</p>
                 <p class="mb-2">Carolina Alves (UFG)</p>
                 <p class="mb-2">Luiza Soares Sotto (UFG)</p>
@@ -18,7 +24,7 @@
                 @include('programacao.local', ['local' => "Auditório Baesse (FAFICH)"])
             </section>
             <section class="shadow-sm p-4 mb-4 bg-white rounded border-start border-4" style="border-color: #f2a440 !important;">
-                <h3 class="h4 mb-3" style="color: #3d93a9;">Mesa redonda 14- 13:00 às 15:00</h3>
+                <h3 class="h4 mb-3" style="color: #3d93a9;">Mesa redonda 15- 13:00 às 15:00</h3>
                 <p class="fw-bold mb-3">Etnobiologia em Abya Yala: memória biocultural e decolonialidade</p>
                 <p class="mb-2">Ana Haydée Ladio (UNCOMA, Argentina)</p>
                 <p class="mb-2">Bibiana Leonor Vilá (CONICET, Argentina)</p>
@@ -29,17 +35,18 @@
                 @include('programacao.local', ['local' => "Auditório Carangola (FAFICH)"])
             </section>
             <section class="shadow-sm p-4 mb-4 bg-white rounded border-start border-4" style="border-color: #f2a440 !important;">
-                <h3 class="h4 mb-3" style="color: #3d93a9;">Mesa redonda 15- 13:00 às 15:00</h3>
+                <h3 class="h4 mb-3" style="color: #3d93a9;">Mesa redonda 16- 13:00 às 15:00</h3>
                 <p class="fw-bold mb-3">As “expedições científicas” com Etnobiologia dentro da iniciativa Amazônia+10</p>
                 <p class="mb-2">Bernardo Tomchinsky (UNIFESSPA)</p>
                 <p class="mb-2">Moacir Haverroth (EMBRAPA)</p>
                 <p class="mb-2">Viviane Stern da Fonseca-Kruel (UFRJ, Jardim Botânico do Rio de Janeiro)</p>
                 <p class="mb-2">Márlia Coelho Fereira (Museu Paraense Emílio Goeldi)</p>
                 <p class="mb-2">Lin Chau Ming (UFAM)</p>
+                <p class="mb-2">Juarez Pezzuti (UFPA)</p>
                 @include('programacao.local', ['local' => "Auditório Bicalho (FAFICH)"])
             </section>
             <section class="shadow-sm p-4 mb-4 bg-white rounded border-start border-4" style="border-color: #f2a440 !important;">
-                <h3 class="h4 mb-3" style="color: #3d93a9;">Mesa redonda 16- 15:30 às 17:30</h3>
+                <h3 class="h4 mb-3" style="color: #3d93a9;">Mesa redonda 17- 15:30 às 17:30</h3>
                 <p class="fw-bold mb-3">Pescadores e mamíferos aquáticos: a Etnobiologia como ferramenta para a pesquisa e a conservação de espécies amazônicas ameaçadas de extinção</p>
                 <p class="mb-2">Marcelo Derzi Vidal (ICMBio)</p>
                 <p class="mb-2">Gustavo Hallwass (UFLA)</p>
@@ -47,7 +54,7 @@
                 @include('programacao.local', ['local' => "Auditório Bicalho (FAFICH)"])
             </section>
             <section class="shadow-sm p-4 mb-4 bg-white rounded border-start border-4" style="border-color: #f2a440 !important;">
-                <h3 class="h4 mb-3" style="color: #3d93a9;">Mesa redonda 17- 15:30 às 17:30</h3>
+                <h3 class="h4 mb-3" style="color: #3d93a9;">Mesa redonda 18- 15:30 às 17:30</h3>
                 <p class="fw-bold mb-3">Programa nacional CNPq/ MCTI sobre pesquisas interculturais: uma contrução popular</p>
                 <p class="mb-2">Gustavo Taboada Soldati (UFJF)</p>
                 <p class="mb-2">Sofia Zank (UFSC)</p>
@@ -62,7 +69,7 @@
                 @include('programacao.local', ['local' => "Auditório Carangola (FAFICH)"])
             </section>
             <section class="shadow-sm p-4 mb-4 bg-white rounded border-start border-4" style="border-color: #f2a440 !important;">
-                <h3 class="h4 mb-3" style="color: #3d93a9;">Mesa redonda 18- 15:30 às 17:30</h3>
+                <h3 class="h4 mb-3" style="color: #3d93a9;">Mesa redonda 19- 15:30 às 17:30</h3>
                 <p class="fw-bold mb-3">Racismo ambiental no Brasil: raízes históricas, conflitos territoriais e implicações para a justiça socioambiental</p>
                 <p class="mb-2">Cristiano Bento da Silva (UNIFESSPA)</p>
                 <p class="mb-2">Danielly Cristina Pereira Vieira (UNICENTRO)</p>
@@ -84,8 +91,7 @@
                 <p class="mb-2">Gustavo Goulart Moreira Moura (UFPA)</p>
                 <p class="mb-2">Gilberto Lopes dos Reis (Comunidade Pesqueira e Vazanteira da Venda - Pedras de maria da Cruz/MG)</p>
                 <p class="mb-2">Letícia Aparecida Rocha (Conselho Pastoral dos Pescadores - CPP)</p>
-                <p class="mb-2">Clarindo Pereira dos Santos (Movimento dos Pescadores e Pescadoras Artesanais - MPP)</p>
-                <p class="mb-2">Ernando Ferreira Pinto (Coordenação de Inclusão Produtiva e Etnodesenvolvimento Quilombola e de Povos e Comunidades Tradicionais (CGETNO) da SETEQ/MDA</p>
+                <p class="mb-2">Maria das Dores Pereira Silva (Comunidade Tradicional Quilombola, Pesqueira e Vazanteira de Croatá, Januária/MG)</p>
                 @include('programacao.local', ['local' => "Auditório 3 – Cerrado – Instituto de Ciências Biológicas"])
             </section>
             <section class="shadow-sm p-4 mb-4 bg-white rounded border-start border-4" style="border-color: #f2a440 !important;">
@@ -94,7 +100,7 @@
                 <p class="mb-2">Gabriela Coelho de Souza (UFRGS)</p>
                 <p class="mb-2">Eraldo Medeiro Costa Neto (UEFS)</p>
                 <p class="mb-2">Regina Rumi Kubo (UFRGS)</p>
-                <p class="mb-2">Emmanuel Duarte Almad (UFMG)</p>
+                <p class="mb-2">Emmanuel Duarte Almada (UFMG)</p>
                 <p class="mb-2">Ulysses Paulino de Albuquerque (UFPE)</p>
                 <p class="mb-2">Lin Chau Ming (UFAM)</p>
                 <p class="mb-2">Flávio Bezerra Barros (UFPA)</p>
