@@ -23,7 +23,7 @@
                                 'url' => 'https://cbee.etnobiologia.org/pt-BR/normas',
                                 'link' => 'clicando aqui',
                             ],
-                            'É permitido que outro autor ou autora (que não seja o principal) apresente o trabalho;',
+                            'É permitido que outro autor ou autora (que não seja o12 principal) apresente o trabalho;',
                             'Serão dois dias de exposição, porém cada trabalho será apresentado somente em um dia (quarta ou quinta-feira). Fique atento(a) no cronograma para saber sua data de exposição;',
                             'Entre em contato com a organização do evento se necessitar indicações de gráficas para impressão do seu banner em Belo Horizonte;',
                             'Você pode já pela manhã deixar o seu pôster pendurado no hall da FAFICH (local onde será a apresentação), uma vez que está programada a sessão para as 17:30.',
