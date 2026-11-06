@@ -84,7 +84,6 @@
                 <p class="mb-2">Clara Cabral Noronha (UFBA)</p>
                 <p class="mb-2">Gabriela Teixeira Vanegas De La Rosa (UFBA)</p>
                 <p class="mb-2">Jéssica Sacramento da Hora (INCT IN-TREE)</p>
-                <p class="mb-2">Nina Garcia de Almeida Prado (USP)</p>
                 <p class="mb-2">Taiala Viviane Menezes de Jesus (UFBA)</p>
                 <p class="mb-2">Adriana Maria Espinoza Fernando (EMBRAPA – Pantanal)</p>
                 <p class="mb-2">Ana Paula Thé (UNIMONTES)</p>

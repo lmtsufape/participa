@@ -70,8 +70,8 @@
             <section class="shadow-sm p-4 mb-4 bg-white rounded border-start border-4" style="border-color: #f2a440 !important;">
                 <h3 class="h4 mb-3" style="color: #3d93a9;">Mesa redonda 12 - 15:30 às 17:30</h3>
                 <p class="fw-bold mb-3">Pluriversidades: a interculturalidade na formação de pesquisadores socioambientais</p>
-                <p class="mb-2">Celso Sánchez Pereira ((UNIRIO/GEASur))</p>
-                <p class="mb-2">Yanina Micaela Sammarc ((UFPR/PPGMADE/GEPE Socioambiental))</p>
+                <p class="mb-2">Celso Sánchez Pereira (UNIRIO/GEASur)</p>
+                <p class="mb-2">Yanina Micaela Sammarc (UFPR/PPGMADE/GEPE Socioambiental)</p>
                 <p class="mb-2">Geilsa Costa Santos-Baptista (UEFS)</p>
                 <p class="mb-2">Geilsa Costa Santos-Baptista (UEFS)</p>
                 <p class="mb-2">Fabíola Cardoso Vieira (UFMG, Instituto Awêry)</p>
@@ -156,19 +156,13 @@
             </section>
             <section class="shadow-sm p-4 mb-4 bg-white rounded border-start border-4" style="border-color: #f2a440 !important;">
                 <h3 class="h4 mb-3" style="color: #3d93a9;">Palestra 9 - 18:30 às 19:30</h3>
-                <p class="fw-bold mb-3">A pesca artesanal de Cabo Verde frente à máquina antipolítica do desenvolvimento</p>
-                <p class="mb-2">João Paulo Araújo Silva (UFMG)</p>
-                @include('programacao.local', ['local' => "Auditório da Escola de Belas Artes (EBA)"])
-            </section>
-            <section class="shadow-sm p-4 mb-4 bg-white rounded border-start border-4" style="border-color: #f2a440 !important;">
-                <h3 class="h4 mb-3" style="color: #3d93a9;">Palestra 10 - 18:30 às 19:30</h3>
                 <p class="fw-bold mb-3">Ações de enfretamento à vassoura de bruxa da mandioca nas Terras Indígenas de Oiapoque, Amapá</p>
                 <p class="mb-2">Cacique Janina Forte (Iepé – Instituto de Pesquisa e Formação Indígena)</p>
                 <p class="mb-2">Adilaudo dos Santos (Iepé – Instituto de Pesquisa e Formação Indígena)</p>
                 @include('programacao.local', ['local' => "Auditório Carangola (FAFICH)"])
             </section>
             <section class="shadow-sm p-4 mb-4 bg-white rounded border-start border-4" style="border-color: #f2a440 !important;">
-                <h3 class="h4 mb-3" style="color: #3d93a9;">Palestra 11 - 18:30 às 19:30</h3>
+                <h3 class="h4 mb-3" style="color: #3d93a9;">Palestra 10 - 18:30 às 19:30</h3>
                 <p class="fw-bold mb-3">Etnobiología Comprometida y sus importancia en el contexto actual de América Latina.</p>
                 <p class="mb-2">Álvaro Sepúlveda-Pío (Sociedad Colombiana de Etnobiología)</p>
                 @include('programacao.local', ['local' => "Auditório Baesse (FAFICH)"])
