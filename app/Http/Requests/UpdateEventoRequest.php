@@ -28,7 +28,7 @@ class UpdateEventoRequest extends FormRequest
     {
         return [
             'nome' => ['required', 'string'],
-            'descricao' => ['required', 'string'],
+            'descricao' => ['required', 'string', 'min:10', 'max:3000', 'not_regex:/<[^>]*>/',],
             'tipo' => ['required', 'string'],
             'dataInicio' => ['required', 'date'],
             'dataFim' => ['required', 'date'],
@@ -44,6 +44,13 @@ class UpdateEventoRequest extends FormRequest
             'email_coordenador' => ['nullable', 'exclude_if:email_coordenador,null', 'email'],
             'instagram' => ['nullable', 'string'],
             'contato_suporte' => ['nullable', 'string'],
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'descricao.not_regex' => 'A descrição não pode conter tags HTML.',
         ];
     }
 }
