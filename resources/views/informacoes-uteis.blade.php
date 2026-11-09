@@ -12,6 +12,23 @@
                 <div class="col-md-8">
                     <div class="card shadow-sm border-0 mb-4">
                         <div class="card-body p-4 border-start border-4" style="border-color: #f2a440 !important;">
+                            <h2 class="h3 mb-3" style="color: #3d93a9;">Guia do Participante</h2>
+                            <p class="text-muted">
+                                Não conhece o campus da UFMG, precisa de orientação quanto a acessibilidade do evento ou sobre as salas e auditórios da programação? Não se preocupe! Fizemos este guia detalhado para você, congressista!
+                            </p>
+                            <p class="text-muted">Baixe o PDF abaixo e fique por dentro de tudo sobre o evento!</p>
+
+                            <hr class="my-4">
+
+                            <div class="d-grid d-md-flex gap-3">
+                                <a href="{{ asset('documentos/CBEE_GuiaDeParticipantes_2026.pdf') }}"
+                                   class="btn btn-outline-info d-flex align-items-center"
+                                   download="CBEE_GuiaDeParticipantes_2026.pdf">
+                                    <i class="bi bi-file-earmark-text me-2" aria-hidden="true"></i> Baixar Guia do Participante (.pdf)
+                                </a>
+                            </div>
+                        </div>
+                        <div class="card-body p-4 border-start border-4" style="border-color: #f2a440 !important;">
                             <h2 class="h3 mb-3" style="color: #3d93a9;">Sugestão de Hospedagem</h2>
                             <p class="text-muted">
                                 Confira abaixo as informações detalhadas sobre a sugestão de hospedagem para o evento.
