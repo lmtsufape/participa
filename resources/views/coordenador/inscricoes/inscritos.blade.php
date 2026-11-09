@@ -614,10 +614,15 @@
                                     <img src="{{asset('img/icons/file-download-solid.svg')}}" alt="Confirmar presença" style="width: 48px; height: 48px;">
                                 </div>
                                 <h5 class="card-title">Confirmar presença</h5>
-                                <p class="card-text">Importação da listagem de presença dos inscritos</p>
-                                <a href="{{route('evento.importListaPresenca', $evento)}}" class="btn btn-success w-100">
-                                    Importar lista de presença
-                                </a>
+                                <p class="card-text">Registre presenças por planilha ou marque os participantes individualmente.</p>
+                                <div class="d-flex flex-column flex-sm-row gap-2">
+                                    <a href="{{route('evento.importListaPresenca', $evento)}}" class="btn btn-outline-success flex-fill">
+                                        Importar lista de presença
+                                    </a>
+                                    <a href="{{ route('inscricao.presencas', $evento) }}" class="btn btn-success flex-fill">
+                                        <i class="fas fa-user-check me-2" aria-hidden="true"></i> Confirmar presenças
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>

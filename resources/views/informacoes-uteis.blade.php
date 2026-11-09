@@ -29,6 +29,22 @@
                             </div>
                         </div>
                         <div class="card-body p-4 border-start border-4" style="border-color: #f2a440 !important;">
+                            <h2 class="h3 mb-3" style="color: #3d93a9;">Recursos de acessibilidade e inclusão disponíveis XV CBEE</h2>
+                            <p class="text-muted">
+                                Confira o mapeamento dos recursos de acessibilidade, inclusão e parentalidade disponíveis no evento. Neste documento, você encontra informações sobre os espaços e as estruturas de apoio para uma participação mais acessível e acolhedora para todas as pessoas!
+                            </p>
+
+                            <hr class="my-4">
+
+                            <div class="d-grid d-md-flex gap-3">
+                                <a href="{{ asset('documentos/Mapa_Recursos_Detalhamento-3.pdf') }}"
+                                   class="btn btn-outline-info d-flex align-items-center"
+                                   download="Mapa_Recursos_Detalhamento-3.pdf">
+                                    <i class="bi bi-file-earmark-text me-2" aria-hidden="true"></i> Baixar Mapa dos Recursos de Acessibilidade e Inclusão (.pdf)
+                                </a>
+                            </div>
+                        </div>
+                        <div class="card-body p-4 border-start border-4" style="border-color: #f2a440 !important;">
                             <h2 class="h3 mb-3" style="color: #3d93a9;">Sugestão de Hospedagem</h2>
                             <p class="text-muted">
                                 Confira abaixo as informações detalhadas sobre a sugestão de hospedagem para o evento.
