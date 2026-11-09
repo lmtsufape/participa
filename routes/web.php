@@ -524,6 +524,8 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
 
     // ROTAS DO MODULO DE INSCRIÇÃO
     Route::get('{evento}/inscricoes', [InscricaoController::class, 'inscritos'])->name('inscricao.inscritos');
+    Route::get('{evento}/inscricoes/presencas', [\App\Http\Controllers\Inscricao\PresencaController::class, 'index'])->middleware('auth')->name('inscricao.presencas');
+    Route::patch('{evento}/inscricoes/presencas/{inscricao}', [\App\Http\Controllers\Inscricao\PresencaController::class, 'update'])->middleware('auth')->name('inscricao.presencas.update');
     Route::get('{evento}/inscricoes/formulario', [InscricaoController::class, 'formulario'])->name('inscricao.formulario');
     Route::get('{evento}/inscricoes/categorias', [InscricaoController::class, 'categorias'])->name('inscricao.categorias');
     Route::get('{id}/inscricoes/nova-inscricao', [InscricaoController::class, 'create'])->name('inscricao.create');
