@@ -12,6 +12,7 @@ use App\Models\Submissao\Endereco;
 use App\Models\Submissao\Evento;
 use App\Models\Users\Administrador;
 use App\Models\Users\User;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -111,12 +112,50 @@ class AdministradorController extends Controller
 
     public function eventos()
     {
-        $eventos = Evento::latest()->withCount([
+        $eventos = QueryBuilder::for(Evento::class)
+            ->allowedFilters(
+                AllowedFilter::callback('search', function (Builder $query, $value) {
+                    $search = trim((string) $value);
+
+                    if ($search === '') {
+                        return;
+                    }
+
+                    $query->where(function (Builder $query) use ($search) {
+                        $query->where('nome', 'ilike', "%{$search}%")
+                            ->orWhere('descricao', 'ilike', "%{$search}%")
+                            ->orWhere('email', 'ilike', "%{$search}%");
+
+                        if (ctype_digit($search)) {
+                            $query->orWhere('id', $search);
+                        }
+                    });
+                }),
+
+
+                AllowedFilter::exact('tipo'),
+
+                AllowedFilter::exact('publicado'),
+
+                AllowedFilter::callback('classificacao', function (Builder $query, $value) {
+                    if ($value === 'principal') {
+                        $query->whereNull('evento_pai_id');
+                    }
+
+                    if ($value === 'subevento') {
+                        $query->whereNotNull('evento_pai_id');
+                    }
+                }),
+            )
+            ->latest()
+            ->withCount([
                 'inscricaos as inscricoes_finalizadas_count' => function ($query) {
                         $query->where('finalizada', true);
                     },
                 'modalidades'
-            ])->paginate(15);
+            ])->paginate(15)
+            ->withQueryString();
+
 
         return view('coordenador.index', ['eventos' => $eventos]);
     }
@@ -131,7 +170,41 @@ class AdministradorController extends Controller
     public function users()
     {
         $this->authorize('isAdmin', Administrador::class);
-        $users = User::orderBy('updated_at', 'ASC')->paginate(100);
+
+        $users = QueryBuilder::for(User::class)
+            ->allowedFilters(
+                AllowedFilter::trashed(),
+
+                AllowedFilter::callback('search', function ($query, $value) {
+                    $value = trim($value);
+
+                    if ($value === '') {
+                        return;
+                    }
+
+                    $documento = preg_replace('/\D/', '', $value);
+
+                    $query->where(function ($query) use ($value, $documento) {
+                        $query->where('name', 'ILIKE', "%{$value}%")
+                            ->orWhere('email', 'ILIKE', "%{$value}%")
+                            ->orWhere('passaporte', 'ILIKE', "%{$value}%");
+
+                        if ($documento !== '') {
+                            $query->orWhereRaw(
+                                "REGEXP_REPLACE(cpf, '[^0-9]', '', 'g') LIKE ?",
+                                ["%{$documento}%"]
+                            )->orWhereRaw(
+                                "REGEXP_REPLACE(cnpj, '[^0-9]', '', 'g') LIKE ?",
+                                ["%{$documento}%"]
+                            );
+                        }
+                    });
+                }),
+            )
+            ->orderBy('name')
+            ->paginate(50)
+            ->withQueryString();
+
         return view('administrador.users', compact('users'));
     }
 
@@ -222,31 +295,6 @@ class AdministradorController extends Controller
             'success',
             'Senha redefinida com sucesso!'
         );
-    }
-
-    public function search(Request $request)
-    {
-        $this->authorize('isAdmin', Administrador::class);
-        $busca = $request->search;
-
-        try {
-            $users = User::whereRaw('unaccent(lower(email)) ILIKE unaccent(lower(?))', ['%' . $busca . '%'])
-                ->orWhereRaw('unaccent(lower(name)) ILIKE unaccent(lower(?))', ['%' . $busca . '%'])
-                ->orWhereRaw('unaccent(lower(cpf)) ILIKE unaccent(lower(?))', ['%' . $busca . '%'])
-                ->paginate(100);
-        } catch (\Exception $e) {
-            $busca = strtolower($busca);
-            $users = User::whereRaw('LOWER(email) like ?', ['%' . $busca . '%'])
-                ->orWhereRaw('LOWER(name) like ?', ['%' . $busca . '%'])
-                ->orWhereRaw('LOWER(cpf) like ?', ['%' . $busca . '%'])
-                ->paginate(100);
-        }
-
-        if ($users->count() == 0) {
-            return view('administrador.users', compact('users'))->with(['message' => 'Nenhum Resultado encontrado!']);
-        }
-
-        return view('administrador.users', compact('users'));
     }
 
     public function createUser()
