@@ -112,6 +112,7 @@
                 <p class="mb-2">Anna Karolina Martins Borges (UFRPE)</p>
                 <p class="mb-2">Thiago da Silva Novato (USP)</p>
                 <p class="mb-2">Yedda Christina Bezerra Barbosa de Oliveira (Instituto Nacional de Ciência Cidadã (INCC))</p>
+                @include('programacao.local', ['local' => "Auditório da Escola de Belas Artes (EBA)"])
             </section>
             <section class="shadow-sm p-4 mb-4 bg-white rounded border-start border-4" style="border-color: #f2a440 !important;">
                 <h3 class="h4 mb-3" style="color: #3d93a9;">Simpósio Especial 8 - 13:00 às 17:00</h3>

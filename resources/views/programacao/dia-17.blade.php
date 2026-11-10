@@ -61,7 +61,16 @@
                 @include('programacao.local', ['local' => "Auditório Bicalho (FAFICH)"])
             </section>
             <section class="shadow-sm p-4 mb-4 bg-white rounded border-start border-4" style="border-color: #f2a440 !important;">
-                <h3 class="h4 mb-3" style="color: #3d93a9;">Mesa redonda 4 - 15:30 às 17:30</h3>
+                <h3 class="h4 mb-3" style="color: #3d93a9;">Mesa redonda 4 - 13:00 às 15:00</h3>
+                <p class="fw-bold mb-3">Etnoconservação da natureza: 25 anos depois</p>
+                <p class="mb-2">Gustavo Goulart Moreira Moura (UFPA)</p>
+                <p class="mb-2">Sueli Angelo Furlan (USP)</p>
+                <p class="mb-2">Roberto Adrian Ribaric (USP)</p>
+                <p class="mb-2">Ana Paula Diegues (USP)</p>
+                @include('programacao.local', ['local' => "Sala 1204 Teleconferências (Faculdade de Educação)"])
+            </section>
+            <section class="shadow-sm p-4 mb-4 bg-white rounded border-start border-4" style="border-color: #f2a440 !important;">
+                <h3 class="h4 mb-3" style="color: #3d93a9;">Mesa redonda 5 - 15:30 às 17:30</h3>
                 <p class="fw-bold mb-3">Etnobiologia na escola: saberes, poder e emancipação</p>
                 <p class="mb-2">Ângelo Giuseppe Chaves Alves (UFRPE)</p>
                 <p class="mb-2">Elizete de Lima Queiroz (Povo Gavião Parkatêjê - Escola Estadual Indígena Peptykre Parkatêjê - Aldeia Parkatêjê)</p>
@@ -72,7 +81,7 @@
                 @include('programacao.local', ['local' => "Auditório Carangola (FAFICH)"])
             </section>
             <section class="shadow-sm p-4 mb-4 bg-white rounded border-start border-4" style="border-color: #f2a440 !important;">
-                <h3 class="h4 mb-3" style="color: #3d93a9;">Mesa redonda 5 - 15:30 às 17:30</h3>
+                <h3 class="h4 mb-3" style="color: #3d93a9;">Mesa redonda 6 - 15:30 às 17:30</h3>
                 <p class="fw-bold mb-3">Domesticação de paisagens e espécies</p>
                 <p class="mb-2">Carolina Levis (UFSC)</p>
                 <p class="mb-2">Maria Júlia Ferreira (INPA)</p>
@@ -81,7 +90,7 @@
                 @include('programacao.local', ['local' => "Auditório Bicalho (FAFICH)"])
             </section>
             <section class="shadow-sm p-4 mb-4 bg-white rounded border-start border-4" style="border-color: #f2a440 !important;">
-                <h3 class="h4 mb-3" style="color: #3d93a9;">Mesa redonda 6 - 15:30 às 17:30</h3>
+                <h3 class="h4 mb-3" style="color: #3d93a9;">Mesa redonda 7 - 15:30 às 17:30</h3>
                 <p class="fw-bold mb-3">Povos e comunidades tradicionais em Minas Gerais: violações e luta por direitos</p>
                 <p class="mb-2">João Pio (Quilombo dos Arturos)</p>
                 <p class="mb-2">Maxuell Moreira Pio (Comunidade Tradicional Carroceira – RMBH)</p>
@@ -90,15 +99,7 @@
                 <p class="mb-2">Adair Pereira de Almeida (Conselho Intermunicipal Comunitário do Território Tradicional Geraizeiro e Vacariano do Vale das Cancelas – Grão Mongol/MG)</p>
                 @include('programacao.local', ['local' => "Auditório Baesse (FAFICH)"])
             </section>
-            <section class="shadow-sm p-4 mb-4 bg-white rounded border-start border-4" style="border-color: #f2a440 !important;">
-                <h3 class="h4 mb-3" style="color: #3d93a9;">Mesa redonda 7 - 15:30 às 17:30</h3>
-                <p class="fw-bold mb-3">Etnoconservação da natureza: 25 anos depois</p>
-                <p class="mb-2">Gustavo Goulart Moreira Moura (UFPA)</p>
-                <p class="mb-2">Sueli Angelo Furlan (USP)</p>
-                <p class="mb-2">Roberto Adrian Ribaric (USP)</p>
-                <p class="mb-2">Ana Paula Diegues (USP)</p>
-                @include('programacao.local', ['local' => "Sala 1204 Teleconferências (Faculdade de Educação)"])
-            </section>
+            
             <h2 class="h3 mt-5 mb-4" style="color: #3d93a9;">Simpósios Especiais</h2>
             <section class="shadow-sm p-4 mb-4 bg-white rounded border-start border-4" style="border-color: #f2a440 !important;">
                 <h3 class="h4 mb-3" style="color: #3d93a9;">Simpósio Especial 1 - 13:00 às 17:00</h3>
@@ -183,6 +184,7 @@
                 <h3 class="h4 mb-3" style="color: #3d93a9;">Palestra 5 - 18:30 às 19:30</h3>
                 <p class="fw-bold mb-3">Valorizaciones múltiples de los camélidos em las comunidades andinas de la Puna de Argentina</p>
                 <p class="mb-2">Bibiana Leonor Vilá (CONICET, Argentina)</p>
+                @include('programacao.local', ['local' => "Auditório Bicalho - FAFICH"])
             </section>
         </div>
     </div>
