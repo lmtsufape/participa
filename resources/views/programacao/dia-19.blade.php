@@ -108,6 +108,7 @@
             </section>
             <section class="shadow-sm p-4 mb-4 bg-white rounded border-start border-4" style="border-color: #f2a440 !important;">
                 <h3 class="h4 mb-3" style="color: #3d93a9;">Cerimônia de Encerramento 18:30 às 20:00</h3>
+                @include('programacao.local', ['local' => "Auditório CAD 1"])
             </section>
         </div>
     </div>
