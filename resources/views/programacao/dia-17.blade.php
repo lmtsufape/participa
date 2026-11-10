@@ -102,7 +102,7 @@
             
             <h2 class="h3 mt-5 mb-4" style="color: #3d93a9;">Simpósios Especiais</h2>
             <section class="shadow-sm p-4 mb-4 bg-white rounded border-start border-4" style="border-color: #f2a440 !important;">
-                <h3 class="h4 mb-3" style="color: #3d93a9;">Simpósio Especial 1 - 13:00 às 17:00</h3>
+                <h3 class="h4 mb-3" style="color: #3d93a9;">Simpósio Especial 1 - 13:00 às 17:30</h3>
                 <p class="fw-bold mb-3">Etnobiologia Evolutiva</p>
                 <p class="mb-2">Flávia Rosa Santoro (UENF)</p>
                 <p class="mb-2">Patrícia Muniz de Medeiros (UFAL)</p>
@@ -114,7 +114,7 @@
                 @include('programacao.local', ['local' => "Auditório Adriana Bogliolo (Escola de Ciência da Informação)"])
             </section>
             <section class="shadow-sm p-4 mb-4 bg-white rounded border-start border-4" style="border-color: #f2a440 !important;">
-                <h3 class="h4 mb-3" style="color: #3d93a9;">Simpósio Especial 2 - 13:00 às 17:00</h3>
+                <h3 class="h4 mb-3" style="color: #3d93a9;">Simpósio Especial 2 - 13:00 às 17:30</h3>
                 <p class="fw-bold mb-3">Sistemas Agrícolas Tradicionais: pesquisas, políticas públicas e salvaguarda do patrimônio biocultural</p>
                 <p class="mb-2">Ana Paula Glinfskoi Thé (UNIMONTES)</p>
                 <p class="mb-2">Breno Trindade da Silva (IEPHA-MG)</p>
@@ -126,7 +126,7 @@
                 @include('programacao.local', ['local' => "Auditório 3 – Cerrado – Instituto de Ciências Biológicas"])
             </section>
             <section class="shadow-sm p-4 mb-4 bg-white rounded border-start border-4" style="border-color: #f2a440 !important;">
-                <h3 class="h4 mb-3" style="color: #3d93a9;">Simpósio Especial 3 - 13:00 às 17:00</h3>
+                <h3 class="h4 mb-3" style="color: #3d93a9;">Simpósio Especial 3 - 13:00 às 17:30</h3>
                 <p class="fw-bold mb-3">Áreas protegidas e territórios tradicionais: tensões e limites da gestão territorial</p>
                 <p class="mb-2">Ana Beatriz Viana Mendes (UFMG)</p>
                 <p class="mb-2">Henyo Trindade Barreto Filho (UnB)</p>
@@ -143,7 +143,7 @@
                 @include('programacao.local', ['local' => "Auditório da Escola de Belas Artes (EBA)"])
             </section>
             <section class="shadow-sm p-4 mb-4 bg-white rounded border-start border-4" style="border-color: #f2a440 !important;">
-                <h3 class="h4 mb-3" style="color: #3d93a9;">Simpósio Especial 4 - 13:00 às 17:00</h3>
+                <h3 class="h4 mb-3" style="color: #3d93a9;">Simpósio Especial 4 - 13:00 às 17:30</h3>
                 <p class="fw-bold mb-3">Práticas tradicionais de cura e cuidado: lutas, visibilidade e descriminalização</p>
                 <p class="mb-2">Sabrina Almeida (UFMG)</p>
                 <p class="mb-2">Silvia Guimarães (UnB)</p>
