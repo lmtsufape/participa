@@ -91,7 +91,7 @@ class StoreUserRequest extends FormRequest
             'cidade' => $data['cidade'],
             'complemento' => $data['complemento'],
             'cep' => $data['cep'],
-            'uf' => $data['uf'],
+            'uf' => $data['uf'] ?? null,
         ];
 
         $perfilIdentitario = [
