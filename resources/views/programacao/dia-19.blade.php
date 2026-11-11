@@ -79,7 +79,7 @@
             </section>
             <h2 class="h3 mt-5 mb-4" style="color: #3d93a9;">Simpósios Especiais</h2>
             <section class="shadow-sm p-4 mb-4 bg-white rounded border-start border-4" style="border-color: #f2a440 !important;">
-                <h3 class="h4 mb-3" style="color: #3d93a9;">Simpósio Especial 8 - 13:00 às 17:30</h3>
+                <h3 class="h4 mb-3" style="color: #3d93a9;">Simpósio Especial 7 - 13:00 às 17:30</h3>
                 <p class="fw-bold mb-3">Pesca artesanal no Brasil: racismo ambiental, violações de direitos, epistemologias situadas e práticas de cuidado</p>
                 <p class="mb-2">Clara Cabral Noronha (UFBA)</p>
                 <p class="mb-2">Gabriela Teixeira Vanegas De La Rosa (UFBA)</p>
@@ -94,7 +94,7 @@
                 @include('programacao.local', ['local' => "Auditório 3 – Cerrado – Instituto de Ciências Biológicas"])
             </section>
             <section class="shadow-sm p-4 mb-4 bg-white rounded border-start border-4" style="border-color: #f2a440 !important;">
-                <h3 class="h4 mb-3" style="color: #3d93a9;">Simpósio Especial 9 - 13:00 às 17:30</h3>
+                <h3 class="h4 mb-3" style="color: #3d93a9;">Simpósio Especial 8 - 13:00 às 17:30</h3>
                 <p class="fw-bold mb-3">Sociedade Brasileira de Etnobiologia e Etnoecologia: 30 anos</p>
                 <p class="mb-2">Gabriela Coelho de Souza (UFRGS)</p>
                 <p class="mb-2">Eraldo Medeiro Costa Neto (UEFS)</p>

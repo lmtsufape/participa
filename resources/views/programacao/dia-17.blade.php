@@ -143,7 +143,7 @@
                 @include('programacao.local', ['local' => "Auditório da Escola de Belas Artes (EBA)"])
             </section>
             <section class="shadow-sm p-4 mb-4 bg-white rounded border-start border-4" style="border-color: #f2a440 !important;">
-                <h3 class="h4 mb-3" style="color: #3d93a9;">Simpósio Especial 4 - 13:00 às 17:30</h3>
+                <h3 class="h4 mb-3" style="color: #3d93a9;">Simpósio Especial 4 (Seção 1) - 13:00 às 17:30</h3>
                 <p class="fw-bold mb-3">Práticas tradicionais de cura e cuidado: lutas, visibilidade e descriminalização</p>
                 <p class="mb-2">Sabrina Almeida (UFMG)</p>
                 <p class="mb-2">Silvia Guimarães (UnB)</p>

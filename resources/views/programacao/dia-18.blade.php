@@ -73,7 +73,6 @@
                 <p class="mb-2">Celso Sánchez Pereira (UNIRIO/GEASur)</p>
                 <p class="mb-2">Yanina Micaela Sammarc (UFPR/PPGMADE/GEPE Socioambiental)</p>
                 <p class="mb-2">Geilsa Costa Santos-Baptista (UEFS)</p>
-                <p class="mb-2">Geilsa Costa Santos-Baptista (UEFS)</p>
                 <p class="mb-2">Fabíola Cardoso Vieira (UFMG, Instituto Awêry)</p>
                 <p class="mb-2">Norma Constanza Castaño Cuéllar (Universidad Pedagógica Nacional, Colombia)</p>
                 @include('programacao.local', ['local' => "Sala 1204 Teleconferências (Faculdade de Educação)"])
@@ -87,7 +86,7 @@
             </section>
             <h2 class="h3 mt-5 mb-4" style="color: #3d93a9;">Simpósios Especiais</h2>
             <section class="shadow-sm p-4 mb-4 bg-white rounded border-start border-4" style="border-color: #f2a440 !important;">
-                <h3 class="h4 mb-3" style="color: #3d93a9;">Simpósio Especial 5 - 13:00 às 17:30</h3>
+                <h3 class="h4 mb-3" style="color: #3d93a9;">Simpósio Especial 4 (Seção 2) - 13:00 às 17:30</h3>
                 <p class="fw-bold mb-3">Práticas tradicionais de cura e cuidado: lutas, visibilidade e descriminalização</p>
                 <p class="mb-2">(Entrega da declaração como Patrimônio Cultural do Brasil do Oficio de Raizeiras e Raizeiros do Cerrado pelo IPHAN)</p>
                 <p class="mb-2">Daniela Ribeiro de Souza (Pastoral da Saúde, Rede dos Povos e Comunidades Tradicionais do Brasil)</p>
@@ -104,7 +103,7 @@
                 @include('programacao.local', ['local' => "Auditório do Instituto de Geociências (IGC)"])
             </section>
             <section class="shadow-sm p-4 mb-4 bg-white rounded border-start border-4" style="border-color: #f2a440 !important;">
-                <h3 class="h4 mb-3" style="color: #3d93a9;">Simpósio Especial 6 - 13:00 às 17:30</h3>
+                <h3 class="h4 mb-3" style="color: #3d93a9;">Simpósio Especial 5 - 13:00 às 17:30</h3>
                 <p class="fw-bold mb-3">Manejo e conservação da fauna no Brasil: abordagens interdisciplinares e transdisciplinares</p>
                 <p class="mb-2">Dídac Santos Fita (UCM, Espanha)</p>
                 <p class="mb-2">George Henrique Rebêlo (INPA)</p>
@@ -115,7 +114,7 @@
                 @include('programacao.local', ['local' => "Auditório da Escola de Belas Artes (EBA)"])
             </section>
             <section class="shadow-sm p-4 mb-4 bg-white rounded border-start border-4" style="border-color: #f2a440 !important;">
-                <h3 class="h4 mb-3" style="color: #3d93a9;">Simpósio Especial 7 - 13:00 às 17:30</h3>
+                <h3 class="h4 mb-3" style="color: #3d93a9;">Simpósio Especial 6 - 13:00 às 17:30</h3>
                 <p class="fw-bold mb-3">Estratégias populares de salvaguarda dos conhecimentos tradicionais, rastreabilidade e repartição de benefícios</p>
                 <p class="mb-2">Aparecida Arruda (Ervanário São Francisco de Assis, Sabará/MG)</p>
                 <p class="mb-2">Carolina Levis  (UFSC)</p>
