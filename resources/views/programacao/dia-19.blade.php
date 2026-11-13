@@ -54,7 +54,7 @@
                 @include('programacao.local', ['local' => "Auditório Bicalho (FAFICH)"])
             </section>
             <section class="shadow-sm p-4 mb-4 bg-white rounded border-start border-4" style="border-color: #f2a440 !important;">
-                <h3 class="h4 mb-3" style="color: #3d93a9;">Mesa redonda 18- 15:30 às 17:30</h3>
+                <h3 class="h4 mb-3" style="color: #3d93a9;">Mesa redonda 18 - 15:30 às 17:30</h3>
                 <p class="fw-bold mb-3">Programa nacional CNPq/ MCTI sobre pesquisas interculturais: uma contrução popular</p>
                 <p class="mb-2">Gustavo Taboada Soldati (UFJF)</p>
                 <p class="mb-2">Sofia Zank (UFSC)</p>
