@@ -45,6 +45,20 @@
                             </div>
                         </div>
                         <div class="card-body p-4 border-start border-4" style="border-color: #f2a440 !important;">
+                            <h2 class="h3 mb-3" style="color: #3d93a9;">CARDÁPIO DO RESTAURANTE UNIVERSITÁRIO (RU)</h2>
+
+                            <hr class="my-4">
+
+                            <div class="d-grid d-md-flex gap-3">
+                                <a href="https://fump.ufmg.br/cardapio-do-dia"
+                                   class="btn btn-outline-info d-flex align-items-center"
+                                   target="_blank"
+                                   rel="noopener noreferrer">
+                                    <i class="bi bi-box-arrow-up-right me-2" aria-hidden="true"></i> Acessar cardápio do RU
+                                </a>
+                            </div>
+                        </div>
+                        <div class="card-body p-4 border-start border-4" style="border-color: #f2a440 !important;">
                             <h2 class="h3 mb-3" style="color: #3d93a9;">Sugestão de Hospedagem</h2>
                             <p class="text-muted">
                                 Confira abaixo as informações detalhadas sobre a sugestão de hospedagem para o evento.

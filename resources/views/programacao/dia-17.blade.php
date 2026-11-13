@@ -82,7 +82,7 @@
             </section>
             <section class="shadow-sm p-4 mb-4 bg-white rounded border-start border-4" style="border-color: #f2a440 !important;">
                 <h3 class="h4 mb-3" style="color: #3d93a9;">Mesa redonda 6 - 15:30 às 17:30</h3>
-                <p class="fw-bold mb-3">Domesticação de paisagens e espécies</p>
+                <p class="fw-bold mb-3">Domesticação e manejo da agrobiodiversidade</p>
                 <p class="mb-2">Carolina Levis (UFSC)</p>
                 <p class="mb-2">Maria Júlia Ferreira (INPA)</p>
                 <p class="mb-2">Nivaldo Peroni (UFSC)</p>
