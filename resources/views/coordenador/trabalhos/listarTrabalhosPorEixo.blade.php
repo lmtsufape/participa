@@ -89,6 +89,12 @@
                             <img src="{{ asset('img/icons/file-download-solid.svg') }}" style="width: 16px; margin-right: 5px;" alt="Download">
                             Baixar Todos os Trabalhos Aprovados (ZIP)
                         </a>
+                        <a href="{{ route('coord.downloadResumosEixo', ['evento' => $evento->id, 'eixo_id' => $eixoSelecionado, 'status' => $status]) }}"
+                        class="btn btn-info mt-2"
+                        onclick="return confirm('Deseja gerar um PDF por resumo e baixar todos em um arquivo ZIP?');">
+                            <img src="{{ asset('img/icons/file-download-solid.svg') }}" style="width: 16px; margin-right: 5px;" alt="Download">
+                            Baixar Resumos (ZIP)
+                        </a>
                     </div>
                 @endif
             </div>
