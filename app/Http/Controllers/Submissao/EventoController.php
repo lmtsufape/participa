@@ -571,6 +571,102 @@ class EventoController extends Controller
         return response()->download($caminhoZip, $nomeZip)->deleteFileAfterSend(true);
     }
 
+    public function downloadResumosEixo(Request $request, Evento $evento)
+    {
+        $this->authorize('isCoordenadorOrCoordCientificaOrCoordEixo', $evento);
+
+        $request->validate([
+            'eixo_id' => ['required', 'integer'],
+            'status' => ['nullable', 'string', 'max:50'],
+        ]);
+
+        $area = Area::where('eventoId', $evento->id)->find($request->integer('eixo_id'));
+        if (! $area) {
+            return redirect()->back()->with('error', 'Eixo não encontrado para este evento.');
+        }
+
+        $usuario = $request->user();
+        $podeConsultarTodosOsEixos = $usuario->can('isCoordenadorOrCoordenadorDaComissaoCientifica', $evento);
+        $coordenaEsteEixo = $usuario->areasComoCoordEixoNoEvento($evento->id)
+            ->where('areas.id', $area->id)
+            ->exists();
+
+        if (! $podeConsultarTodosOsEixos && ! $coordenaEsteEixo) {
+            abort(403);
+        }
+
+        $status = $request->input('status', 'rascunho');
+        $query = Trabalho::where('eventoId', $evento->id)
+            ->where('areaId', $area->id)
+            ->with([
+                'modalidade:id,nome',
+                'autor:id,name',
+                'coautors:id,autorId,ordem',
+                'coautors.user:id,name',
+            ]);
+
+        if ($status === 'rascunho') {
+            $query->where('status', '!=', 'arquivado');
+        } elseif ($status === 'with_revisor') {
+            $query->has('atribuicoes')->where('status', '!=', 'arquivado');
+        } elseif ($status === 'no_revisor') {
+            $query->doesntHave('atribuicoes')->where('status', '!=', 'arquivado');
+        } else {
+            $query->where('status', $status);
+        }
+
+        $trabalhos = $query->orderBy('titulo')->get();
+        if ($trabalhos->isEmpty()) {
+            return redirect()->back()->with('error', 'Nenhum trabalho encontrado para gerar os resumos deste eixo.');
+        }
+
+        set_time_limit(1200);
+        ini_set('memory_limit', '512M');
+
+        $diretorioTemporario = storage_path('app/temp');
+        if (! is_dir($diretorioTemporario) && ! mkdir($diretorioTemporario, 0755, true) && ! is_dir($diretorioTemporario)) {
+            return redirect()->back()->with('error', 'Não foi possível preparar o arquivo de resumos.');
+        }
+
+        $nomeZip = 'resumos_'.Str::slug($area->nome).'_'.date('Y-m-d_His').'_'.Str::lower(Str::random(8)).'.zip';
+        $caminhoZip = $diretorioTemporario.DIRECTORY_SEPARATOR.$nomeZip;
+        $zip = new \ZipArchive();
+
+        if ($zip->open($caminhoZip, \ZipArchive::CREATE | \ZipArchive::OVERWRITE) !== true) {
+            return redirect()->back()->with('error', 'Não foi possível criar o arquivo ZIP de resumos.');
+        }
+
+        try {
+            foreach ($trabalhos as $trabalho) {
+                $tituloArquivo = Str::slug(Str::limit($trabalho->titulo, 120, '')) ?: 'trabalho';
+                $nomePdf = sprintf('%04d_%s.pdf', $trabalho->id, $tituloArquivo);
+                $conteudoPdf = Pdf::loadView('coordenador.trabalhos.resumoIndividualPdf', [
+                    'evento' => $evento,
+                    'area' => $area,
+                    'trabalho' => $trabalho,
+                ])->setOptions(['defaultFont' => 'sans-serif'])->output();
+
+                if (! $zip->addFromString($nomePdf, $conteudoPdf)) {
+                    throw new \RuntimeException("Não foi possível adicionar o resumo do trabalho {$trabalho->id} ao ZIP.");
+                }
+
+                unset($conteudoPdf);
+            }
+
+            $zip->close();
+        } catch (\Throwable $exception) {
+            $zip->close();
+            if (is_file($caminhoZip)) {
+                unlink($caminhoZip);
+            }
+            report($exception);
+
+            return redirect()->back()->with('error', 'Não foi possível gerar todos os resumos deste eixo.');
+        }
+
+        return response()->download($caminhoZip, $nomeZip)->deleteFileAfterSend(true);
+    }
+
     public function listarAvaliacoes(Request $request, $column = 'titulo', $direction = 'asc', $status = 'rascunho')
     {
         $status = $request->input('status', $status);

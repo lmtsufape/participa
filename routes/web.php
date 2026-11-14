@@ -250,6 +250,7 @@ Route::group(['middleware' => ['auth', 'verified', 'isTemp']], function () {
             Route::get('trabalhos/listarTrabalhosPorEixo/{column?}/{direction?}/{status?}', [EventoController::class, 'listarTrabalhosPorEixo'])->name('listarTrabalhosPorEixo');
             Route::get('trabalhos/downloadTrabalhosEixo', [EventoController::class, 'downloadTrabalhosEixo'])->name('downloadTrabalhosEixo');
             Route::get('trabalhos/download-aprovados-eixo', [EventoController::class, 'downloadTrabalhosAprovadosEixo'])->name('downloadTrabalhosAprovadosEixo');
+            Route::get('trabalhos/{evento}/download-resumos-eixo', [EventoController::class, 'downloadResumosEixo'])->name('downloadResumosEixo');
             Route::get('trabalhos/listarTrabalhosModalidades/{column?}/{direction?}/{status?}', [EventoController::class, 'listarTrabalhosModalidades'])->name('listarTrabalhosModalidades');
             Route::get('trabalhos/{id}/resultados/{column?}/{direction?}/{status?}', [TrabalhoController::class, 'resultados'])->name('resultados');
             Route::post('trabalhos/parecer_final', [TrabalhoController::class, 'parecerFinalTrabalho'])->name('parecer.final');
