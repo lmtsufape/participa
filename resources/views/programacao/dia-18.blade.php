@@ -80,7 +80,7 @@
             <section class="shadow-sm p-4 mb-4 bg-white rounded border-start border-4" style="border-color: #f2a440 !important;">
                 <h3 class="h4 mb-3" style="color: #3d93a9;">Mesa redonda 13 - 15:30 às 17:30</h3>
                 <p class="fw-bold mb-3">Quem produz conhecimento em Etnobiologia? Desigualdades, colonialidade e produção científica</p>
-                <p class="mb-2">Kitanji Goulart (FSSANPOTMA)</p>
+                <p class="mb-2">Kitanji Goulart (UFPEL / FONSANPOTMA)</p>
                 <p class="mb-2">David Jiménez-Escobar(UNC, Argentina)</p>
                 <p class="mb-2">Flávia Rosa Santoro (UENF)</p>
                 <p class="mb-2">Manoela Olegário da Costa (UFRPE)</p>
