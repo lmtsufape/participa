@@ -33,7 +33,7 @@ class AtividadeController extends Controller
 
         $evento = Evento::find($id);
         $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
-        $atividades = Atividade::where('eventoId', $id)->orderBy('titulo')->get();
+        $atividades = Atividade::where('eventoId', $id)->withCount('users')->orderBy('titulo')->get();
 
         foreach ($atividades as $atv) {
             $datasAtividades = DatasAtividade::where('atividade_id', $atv->id)->get();

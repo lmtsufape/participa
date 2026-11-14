@@ -376,13 +376,19 @@
                             @endfor
                             <hr>
                             @include('coordenador.programacao.proponentes', ['atividadeProponentes' => $atv])
+                            <div class="rounded border bg-light p-3 my-3">
+                                <h3 class="h5 mb-2">Vagas da atividade</h3>
+                                @include('coordenador.programacao.resumo-vagas', ['atividade' => $atv])
+                                <small class="text-muted d-block mt-2">Situação atual. O total corresponde às vagas disponíveis mais as inscrições existentes.</small>
+                            </div>
                             <button id="buttonAbrirDadosAdicionais{{$atv->id}}" type="button" class="btn btn-primary" style="background-color: white; color: rgb(50, 132, 255); border-color: rgb(50, 132, 255); @if (old('vagas')!=null||old('valor')!=null||old('carga_horaria')!=null||old('palavrasChaves')!=null||old('nomeConvidado')!=null||old('emailConvidado')!=null) display: none; @else display: block; @endif" onclick="abrirDadosAdicionais({{$atv->id}})">+Abrir dados opcionais</button>
                             <button id="buttonFecharDadosAdicionais{{$atv->id}}" type="button" class="btn btn-primary" style="background-color: white; color: rgb(41, 109, 211); border-color: rgb(50, 132, 255); @if (old('vagas')!=null||old('valor')!=null||old('carga_horaria')!=null||old('palavrasChaves')!=null||old('nomeConvidado')!=null||old('emailConvidado')!=null) display: block; @else display: none; @endif" onclick="fecharDadosAdicionais({{$atv->id}})">-Fechar dados opcionais</button>
                             <div id="dadosAdicionaisNovaAtividade{{$atv->id}}" @if (old('vagas')!=null||old('valor')!=null||old('carga_horaria')!=null||old('palavrasChaves')!=null||old('nomeConvidado')!=null||old('emailConvidado')!=null) @else style="display: none;" @endif>
                                 <div class="row form-group">
                                     <div class="col-sm-6">
-                                        <label for="vagas">Vagas:</label>
-                                        <input class="form-control" type="number" name="vagas" id="vagas{{$atv->id}}" placeholder="Quantidade de vagas" value="@if (old('vagas') != null){{old('vagas')}}@else{{$atv->vagas}}@endif">
+                                        <label for="vagas{{$atv->id}}">Vagas disponíveis:</label>
+                                        <input class="form-control" type="number" min="0" name="vagas" id="vagas{{$atv->id}}" placeholder="Sem limite" value="{{ old('vagas', $atv->vagas) }}">
+                                        <small class="text-muted">Informe apenas as vagas restantes, sem incluir os já inscritos. Use 0 para vagas preenchidas ou deixe vazio para vagas ilimitadas. Alterar este valor ajusta o total após salvar.</small>
                                     </div>
                                     <div class="col-sm-6">
                                         <label for="valor">Valor:</label>
@@ -1056,7 +1062,9 @@
                         <th>
                         <td data-bs-toggle="modal" data-bs-target="#modalAtividadeEdit{{$atv->id}}" onclick="abrirEditor({{$atv->id}})">{{$atv->titulo}}</td>
                         <td data-bs-toggle="modal" data-bs-target="#modalAtividadeEdit{{$atv->id}}" onclick="abrirEditor({{$atv->id}})">{{$atv->tipoAtividade->descricao}}</td>
-                        <td data-bs-toggle="modal" data-bs-target="#modalAtividadeEdit{{$atv->id}}" onclick="abrirEditor({{$atv->id}})">@if(empty($atv->vagas)) Ilimitado @else {{$atv->vagas}} @endif</td>
+                        <td data-bs-toggle="modal" data-bs-target="#modalAtividadeEdit{{$atv->id}}" onclick="abrirEditor({{$atv->id}})">
+                            @include('coordenador.programacao.resumo-vagas', ['atividade' => $atv])
+                        </td>
                         <td data-bs-toggle="modal" data-bs-target="#modalAtividadeEdit{{$atv->id}}" onclick="abrirEditor({{$atv->id}})">@if(empty($atv->valor)) Grátis @else R$ {{$atv->valor}},00 @endif</td>
                         <td data-bs-toggle="modal" data-bs-target="#modalAtividadeEdit{{$atv->id}}" onclick="abrirEditor({{$atv->id}})">{{$atv->local}}</td>
                         <td data-bs-toggle="modal" data-bs-target="#modalAtividadeEdit{{$atv->id}}" onclick="abrirEditor({{$atv->id}})">@if(empty($atv->carga_horaria)) Nenhuma @else {{$atv->carga_horaria}} @endif</td>

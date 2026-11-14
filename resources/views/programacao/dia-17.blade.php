@@ -35,7 +35,7 @@
                 <p class="mb-2">Gabriela Coelho de Souza (UFRGS)</p>
                 <p class="mb-2">Renata Paulina Rosa (Quilombo de Pontinha - Paraopeba/MG)</p>
                 <p class="mb-2">Normelia Gonçalves Batista Moreira (Quilombo de Pontinha - Paraopeba/MG)</p>
-                <p class="mb-2">Regina Barros Goulart Nogueira (Fórum Nacional de Segurança Alimentar e Nutricional dos Povos Tradicionais de Matriz Africana)</p>
+                <p class="mb-2">Kota Mulangi - Prof Regina Barros Goulart Nogueira (UCPEL; Observa PICS FIOCRUZ E FONSANPOTMA)</p>
                 @include('programacao.local', ['local' => "Auditório Baesse (FAFICH)"])
             </section>
             <section class="shadow-sm p-4 mb-4 bg-white rounded border-start border-4" style="border-color: #f2a440 !important;">
@@ -45,7 +45,7 @@
                 <p class="mb-2">Sérgio Papagaio (Associação dos Garimpeiros e Garimpeiras Tradicionais do Alto Rio Doce</p>
                 <p class="mb-2">Baba Edvaldo de Jesus (PCTRAMA - Coletivo Povos e Comunidades de Tradição Religiosa Ancestral de Matriz Africana)</p>
                 <p class="mb-2">Kenya Pataxó (Comunidade Indígena Pataxó Hierú TGA)</p>
-                <p class="mb-2">Ana na Mesa Redonda (Quilombola de Queimadas, Serro/MG)</p>
+                <p class="mb-2">Ana Maria Cruz (Quilombola e benzedeira de Queimadas - Serro/MG)</p>
                 <p class="mb-2">Adair Pereira de Almeida (Conselho Intermunicipal Comunitário do Território Tradicional Geraizeiro e Vacariano do Vale das Cancelas – Grão Mongol/MG)</p>
                 @include('programacao.local', ['local' => "Auditório Carangola (FAFICH)"])
             </section>
