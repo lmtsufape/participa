@@ -54,7 +54,6 @@
                 <p class="fw-bold mb-3">Encontro de saberes e diálogos interepistêmicos</p>
                 <p class="mb-2">Rafael Fares (Programa Encontro de Saberes – UEMG)</p>
                 <p class="mb-2">Maria Aparecida Moura (Saberes Tradicionais – UFMG)</p>
-                <p class="mb-2">Mestre Dirceu Pereira Sérgio (Irmandade de Nossa Senhora do Rosário de Justinópolis , Ribeirão das Neves/MG)</p>
                 <p class="mb-2">Pedrina de Lourdes Santos (Guarda de Massambique de Nossa Senhora das Mercês de Oliveira, MG)</p>
                 <p class="mb-2">Daru Tikuna (Mestra Saberes Tradicionais – UFMG/UEMG)</p>
                 <p class="mb-2">Flávio dos Santos (Comunidade Quilombola do Açude – Jaboticatubas/MG, Secretaria de Cultura de Santana do Riacho/MG)</p>
