@@ -50,7 +50,7 @@
                 <p class="fw-bold mb-3">Pescadores e mamíferos aquáticos: a Etnobiologia como ferramenta para a pesquisa e a conservação de espécies amazônicas ameaçadas de extinção</p>
                 <p class="mb-2">Marcelo Derzi Vidal (ICMBio)</p>
                 <p class="mb-2">Gustavo Hallwass (UFLA)</p>
-                <p class="mb-2">Renata Emin-Lima (Museu Paraense Emílio Goeld)</p>
+                <p class="mb-2">Renata Emin-Lima (Instituto Bicho D'água)</p>
                 @include('programacao.local', ['local' => "Auditório Bicalho (FAFICH)"])
             </section>
             <section class="shadow-sm p-4 mb-4 bg-white rounded border-start border-4" style="border-color: #f2a440 !important;">
