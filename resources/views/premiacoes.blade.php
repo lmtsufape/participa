@@ -42,6 +42,15 @@
                                    <i class="bi bi-file-earmark-text me-2"></i> Lista Preliminar Prêmio Darrel Posey
                                 </a>
                             </div>
+
+                            <div class="d-grid d-md-flex gap-3 mt-3">
+                                <!-- Link Apresentações -->
+                                <a href="{{ asset('documentos/premios/CronogramaApresentacoesPremioDarrellPosey.pdf') }}"
+                                   class="btn btn-outline-info d-flex align-items-center"
+                                   target="_blank">
+                                   <i class="bi bi-file-earmark-text me-2"></i> Programação Apresentações Prêmio Darrell Posey
+                                </a>
+                            </div>
                         </div>
                         <div class="card-body p-4 border-start border-4" style="border-color: #f2a440 !important;">
                             <h2 class="h3 mb-3" style="color: #3d93a9;">Prêmio EtnociênciAção</h2>
