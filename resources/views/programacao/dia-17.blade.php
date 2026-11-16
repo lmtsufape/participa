@@ -86,6 +86,7 @@
                 <p class="mb-2">Maria Júlia Ferreira (INPA)</p>
                 <p class="mb-2">Nivaldo Peroni (UFSC)</p>
                 <p class="mb-2">Tiago Hermenegildo (UFMG)</p>
+                <p class="mb-2">Marciano Toledo da Silva (MPA)</p>
                 @include('programacao.local', ['local' => "Auditório Bicalho (FAFICH)"])
             </section>
             <section class="shadow-sm p-4 mb-4 bg-white rounded border-start border-4" style="border-color: #f2a440 !important;">
@@ -96,6 +97,7 @@
                 <p class="mb-2">Aderval Costa Filho (UFMG)</p>
                 <p class="mb-2">Maria de Fátima Alves (Comissão em Defesa dos Direitos das Comunidades Extrativistas Apanhadoras de Flores Sempre-Vivas – CODECEX)</p>
                 <p class="mb-2">Adair Pereira de Almeida (Conselho Intermunicipal Comunitário do Território Tradicional Geraizeiro e Vacariano do Vale das Cancelas – Grão Mongol/MG)</p>
+                <p class="mb-2">Karine Aparecida Nunes Oliveira (Povo Xacriabá, Coletivo de Estudantes Indígenas da UFMG)</p>
                 @include('programacao.local', ['local' => "Auditório Baesse (FAFICH)"])
             </section>
             
