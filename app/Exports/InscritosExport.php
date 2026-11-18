@@ -4,15 +4,15 @@ namespace App\Exports;
 
 use App\Models\Submissao\Evento;
 use App\Models\Inscricao\Inscricao;
-use App\Models\PerfilIdentitario; 
-use App\Models\User; 
+use App\Models\PerfilIdentitario;
+use App\Models\User;
 use Carbon\Carbon;
-use Maatwebsite\Excel\Concerns\FromQuery; 
+use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Illuminate\Database\Eloquent\Builder;
 
-class InscritosExport implements FromQuery, WithHeadings, WithMapping 
+class InscritosExport implements FromQuery, WithHeadings, WithMapping
 {
     protected $evento;
     protected $filtros;
@@ -41,7 +41,7 @@ class InscritosExport implements FromQuery, WithHeadings, WithMapping
 
         $query->with([
             'user.endereco',
-            'user.perfilIdentitario', 
+            'user.perfilIdentitario',
             'categoria',
             'camposPreenchidos.campoFormulario'
         ]);
@@ -100,17 +100,17 @@ class InscritosExport implements FromQuery, WithHeadings, WithMapping
             return [
                 $inscricao->id,
                 'Erro: Usuário não encontrado para esta inscrição.',
-                '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '' 
+                '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''
             ];
         }
 
         $categoria = $inscricao->categoria;
-        
+
         $perfil = $user->perfilIdentitario;
 
         $valor = $categoria ? number_format($categoria->valor_total, 2, ',', '.') : 'N/A';
         $documento = $user->cpf ?? ($user->cnpj ?? $user->passaporte);
-        
+
         $generoValue = optional($perfil)->genero;
         $genero = $generoValue === 'outro' ? optional($perfil)->outroGenero : ucfirst($generoValue ?? '');
 
@@ -158,7 +158,7 @@ class InscritosExport implements FromQuery, WithHeadings, WithMapping
             $user->instituicao,
             $user->celular,
             optional($user->endereco)->pais ?? '',
-            optional($user->endereco)->uf ?? '',
+            optional($user->endereco)->uf->nome ?? '',
             optional($user->endereco)->cidade ?? '',
             optional($user->endereco)->bairro ?? '',
             optional($user->endereco)->rua ?? '',
