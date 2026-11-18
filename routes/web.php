@@ -128,6 +128,7 @@ Auth::routes(['verify' => true, 'register' => false]);
             Route::view('/cronograma-apresentacoes', 'programacao.cronograma-apresentacoes')->name('programacao.cronograma-apresentacoes');
             Route::view('/programacao-minicursos-vivencias-oficinas', 'programacao.minicursos-vivencias-oficinas')->name('programacao.minicursos-vivencias-oficinas');
             Route::view('/mostra-audiovisual', 'programacao.mostra')->name('programacao.mostra');
+            Route::view('/programacao/mostra-audiovisual', 'programacao.mostra-audiovisual-programacao')->name('programacao.mostra-audiovisual');
             Route::view('/premiacoes', 'premiacoes')->name('premiacoes');
             Route::view('/normas', 'normas')->name('normas');
             Route::view('/noticias', 'noticias')->name('noticias');
