@@ -65,21 +65,15 @@
                             <label for="tipo"><b>{{__('Tipo')}}</b></label>
                             <select name="tipo" id="tipo" class="form-control @error('tipo') is-invalid @enderror" required onchange="mostrarTags()">
                                 <option value="">-- Selecione o tipo do certificado --</option>
-                                <option value="{{$tipos['inscrito']}}">Inscrito no evento</option>
-                                <option value="{{$tipos['apresentador']}}">Apresentador</option>
-                                <option value="{{$tipos['comissao_cientifica']}}">Membro da comissão Científica</option>
-                                <option value="{{$tipos['coordenador_comissao_cientifica']}}">Coordenador da Comissão Científica</option>
-                                <option value="{{$tipos['comissao_organizadora']}}">Membro da comissão Organizadora</option>
-                                <option value="{{$tipos['expositor']}}">Palestrante</option>
-                                <option value="{{$tipos['participante']}}">Participante</option>
-                                <option value="{{$tipos['revisor']}}">Avaliador</option>
-                                <option value="{{$tipos['outras_comissoes']}}">Membro de outra comissão</option>
-                                <option value="{{$tipos['inscrito_atividade']}}">Inscrito em uma atividade</option>
+                                @foreach ($tipos as $id => $tipo)
+                                    <option value="{{ $id }}">{{$tipo}}</option>
+                                @endforeach
                             </select>
+
                             @error('tipo')
-                            <div id="validationServer03Feedback" class="invalid-feedback">
-                                {{ $message }}
-                            </div>
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
                             @enderror
                         </div>
                         <div class="col-12 form-group" id="outrasComissoesDivSelect" style="display: none;">

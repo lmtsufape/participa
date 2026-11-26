@@ -158,7 +158,7 @@ class CertificadoController extends Controller
         $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
         $certificado = Certificado::find($id);
         $assinaturas = Assinatura::where('evento_id', $evento->id)->get();
-        $tipos = [1 => 'Apresentadores', 'Membro da comissão científica', 'Membro da comissão organizadora', 'Revisores', 'Participantes', 'Palestrante', 'Coordenador da comissão científica', 'Membro de outra comissão', 'Inscrito em uma atividade', 'Inscrito no evento'];
+        $tipos = TipoCertificado::options();
 
         return view('coordenador.certificado.edit', compact('assinaturas', 'certificado', 'evento', 'tipos'));
     }
@@ -489,8 +489,7 @@ class CertificadoController extends Controller
         $evento = Evento::find($request->eventoId);
         $this->authorize('isCoordenadorOrCoordenadorDaComissaoOrganizadora', $evento);
         $certificados = Certificado::where('evento_id', $evento->id)->get();
-        $destinatarios = [1 => 'Apresentadores', 'Membro da comissão científica', 'Membro da comissão organizadora', 'Revisores', 'Participantes', 'Palestrante', 'Coordenador da comissão científica', 'Membro de outra comissão', 'Inscrito em uma atividade', 'Inscrito no evento', TipoCertificado::Credenciado => 'Credenciados (Com presença confirmada)'];
-
+        $destinatarios = TipoCertificado::options();
         return view('coordenador.certificado.emissao', [
             'evento' => $evento,
             'certificados' => $certificados,
